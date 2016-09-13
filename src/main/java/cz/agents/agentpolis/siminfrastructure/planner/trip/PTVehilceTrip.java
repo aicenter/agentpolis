@@ -1,0 +1,68 @@
+package cz.agents.agentpolis.siminfrastructure.planner.trip;
+
+import java.util.LinkedList;
+
+import org.apache.commons.lang.NotImplementedException;
+
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+
+/**
+ * 
+ * The public transport trip representation wrapping needed the information for
+ * driver to be able to execute his/her plan
+ * 
+ * @author Zbynek Moler
+ * 
+ */
+public class PTVehilceTrip extends Trip<DepartureTripItem> {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5087844407678432807L;
+
+    public PTVehilceTrip(LinkedList<DepartureTripItem> trip, GraphType graphType) {
+        super(trip, graphType);
+    }
+
+    @Override
+    public void visit(TripVisitior tripVisitior) {
+        throw new NotImplementedException();
+
+    }
+
+    @Override
+    public PTVehilceTrip clone() {
+        LinkedList<DepartureTripItem> clonedTrip = new LinkedList<DepartureTripItem>();
+        DepartureTripItemCloneVisotr cloneVisotr = new DepartureTripItemCloneVisotr();
+
+        for (DepartureTripItem tripItem : trip) {
+            tripItem.visitDepartureTripItem(cloneVisotr);
+            clonedTrip.addLast(cloneVisotr.departureTripItemClone);
+
+        }
+        return new PTVehilceTrip(clonedTrip, graphType);
+
+    }
+
+    private static class DepartureTripItemCloneVisotr implements DepartureTripItemVisitor {
+
+        public DepartureTripItem departureTripItemClone;
+
+        @Override
+        public void visitDepartureTripItem(NotWaitingDepartureTripItem notWaitingDepartureTripItem) {
+            departureTripItemClone = new NotWaitingDepartureTripItem(
+                    notWaitingDepartureTripItem.tripPositionByNodeId);
+
+        }
+
+        @Override
+        public void visitDepartureTripItem(WaitingDepartureTripItem waitingDepartureTripItem) {
+            departureTripItemClone = new WaitingDepartureTripItem(
+                    waitingDepartureTripItem.tripPositionByNodeId,
+                    waitingDepartureTripItem.departureTime, waitingDepartureTripItem.overMidnight);
+        }
+
+    }
+
+}

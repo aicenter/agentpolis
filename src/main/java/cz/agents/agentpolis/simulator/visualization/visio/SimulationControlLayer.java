@@ -1,0 +1,222 @@
+package cz.agents.agentpolis.simulator.visualization.visio;
+
+import com.google.inject.Injector;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.alite.simulation.Simulation;
+import cz.agents.alite.vis.Vis;
+import cz.agents.alite.vis.layer.AbstractLayer;
+import cz.agents.alite.vis.layer.VisLayer;
+import cz.agents.alite.vis.layer.common.HelpLayer;
+import cz.agents.alite.vis.layer.toggle.KeyToggleLayer;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.text.Format;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+
+/**
+ * The layer shows the status of the simulation and controls it through various key bindings.
+ * <p>
+ * The information shown, tells the user, the current simulation speed (ratio of the real time and simulation time) and
+ * the state of the simulation.
+ * <p>
+ * The simulation speed ratio can be controlled by '+' and '-' keys. And additionally, Ctrl+'*' sets the fastest
+ * possible speed (infinite ratio), and '*' pressed sets the ratio to its default value.
+ * <p>
+ * All the possible key strokes are described in the internal help showed by the {@link HelpLayer}.
+ *
+ * @author Antonin Komenda
+ * @author Ondrej Milenovsky
+ * @author Zbynek Moler
+ */
+public class SimulationControlLayer extends AbstractLayer {
+
+	protected static Logger logger = Logger.getLogger(SimulationControlLayer.class);
+
+	private final Simulation simulation;
+
+	private final Injector injector;
+
+	private SimulationControlLayer(Simulation simulation, Injector injector) {
+		this.simulation = simulation;
+		this.injector = injector;
+	}
+
+	@Override
+	public void init(Vis vis) {
+		super.init(vis);
+
+		vis.addKeyListener(new KeyListener() {
+
+			public void keyTyped(KeyEvent e) {
+			}
+
+			public void keyReleased(KeyEvent e) {
+			}
+
+			public void keyPressed(KeyEvent e) {
+
+				if (injector == null) {
+					System.err.println("Unable to open stats window, missing reference to environment");
+				}
+
+				if (e.getKeyChar() == '+') {
+					simulation.setSimulationSpeed(simulation.getSimulationSpeed() * 0.9);
+				} else if (e.getKeyChar() == '-') {
+					simulation.setSimulationSpeed(simulation.getSimulationSpeed() * 1.1);
+				} else if (e.getKeyChar() == '(') {
+					simulation.turnOnEventStepSimulation();
+
+				} else if (e.getKeyChar() == ')') {
+					simulation.turnOffEventStepSimulation();
+
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					simulation.turnOffWaitingOnNextEventToInterruption();
+
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+					simulation.turnOnWaitingOnNextEventToInterruption();
+
+				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					simulation.interruptionWaitingOnNextEvent();
+
+				} else if (e.getKeyChar() == ' ') {
+					if (simulation.isRunning()) {
+						simulation.setRunning(false);
+					} else {
+						simulation.setRunning(true);
+					}
+				} else if (e.getKeyChar() == '*') {
+					if ((e.getModifiers() & (KeyEvent.CTRL_MASK | KeyEvent.CTRL_DOWN_MASK)) != 0) {
+						simulation.setSimulationSpeed(0);
+					} else {
+						simulation.setSimulationSpeed(1);
+					}
+				} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					javax.swing.JOptionPane.showConfirmDialog(null, "Delete GE files on exit to generate new?\n" +
+																	"      Yes - delete only static.kmz\n" +
+																	"      No - delete all GE files\n" +
+																	"      Cancel - delete nothing", "UrbanSim",
+															  JOptionPane.YES_NO_CANCEL_OPTION);
+					// if (selected == JOptionPane.YES_OPTION) {
+					// File f = new File(KmlFileGE.TMP_PATH +
+					// GECreateStatic.LINK);
+					// logger.info("Deleting " + f);
+					// f.deleteOnExit();
+					// } else if (selected == JOptionPane.NO_OPTION) {
+					// ClearCreator cc = new ClearCreator();
+					// cc.init(new String[] { ClearCreator.DELETE_ON_EXIT });
+					// cc.create();
+					// }
+				}
+			}
+		});
+	}
+
+	@Override
+	public void paint(Graphics2D canvas) {
+		StringBuilder label = new StringBuilder();
+		label.append("TIME: ");
+		label.append(simulation.getCurrentTime() / 1000.0);
+		label.append(' ');
+		Dimension dim = Vis.getDrawingDimension();
+		if (simulation.isFinished()) {
+			label.append("(FINISHED)");
+		} else {
+			if (simulation.getCurrentTime() == 0) {
+				label.append("(INITIALIZING)");
+
+				canvas.setColor(new Color(0, 0, 0, 200));
+				canvas.fillRect(200, 400, dim.width - 400, dim.height - 800);
+
+				Font oldFont = canvas.getFont();
+				canvas.setFont(new Font("Arial", 0, 20));
+				canvas.setColor(Color.WHITE);
+				canvas.drawString("INITIALIZING...", dim.width / 2 - 60, dim.height / 2 + 7);
+
+				canvas.setFont(oldFont);
+			} else {
+				if (simulation.isRunning()) {
+					label.append('(');
+					label.append(MessageFormat.format("{0,number,#.##}", 1 / simulation.getSimulationSpeed()));
+					label.append("x)");
+				} else {
+					label.append("(PAUSED)");
+				}
+			}
+		}
+
+		canvas.setColor(Color.BLUE);
+		canvas.drawString(label.toString(), 15, 20);
+
+		Font font = canvas.getFont();
+		canvas.setFont(new Font(font.getName(), Font.BOLD, 18));
+
+		TimeProvider timeProvider = injector.getInstance(TimeProvider.class);
+
+		canvas.drawString(converSimTimeForVis(timeProvider), 180, 22);
+
+		canvas.setFont(new Font(font.getName(), 0, 12));
+		// canvas.drawString(TimeStorage.printDate(environment.getTimeStorage().getActualTime()),
+		// 257,
+		// 22);
+		canvas.setFont(font);
+	}
+
+	private static final long DAY_IN_MILLIS = Duration.ofDays(1).toMillis();
+	private static final long HOUR_IN_MILLIS = Duration.ofHours(1).toMillis();
+	private static final long MIN_IN_MILLIS = Duration.ofMinutes(1).toMillis();
+	private static final Format formatter = new SimpleDateFormat("HH:mm");
+	private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+
+	private String converSimTimeForVis(TimeProvider timeProvider) {
+
+		long timeFromSimulationStart = timeProvider.getCurrentSimTime();
+
+		long timeInDayRange = timeFromSimulationStart % DAY_IN_MILLIS;
+		long hours = timeInDayRange / HOUR_IN_MILLIS;
+		long min = (timeInDayRange % HOUR_IN_MILLIS) / MIN_IN_MILLIS;
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, (int) hours);
+		calendar.set(Calendar.MINUTE, (int) min);
+
+		return formatter.format(calendar.getTime()) + " " + timeProvider.getCurrentDayInWeek().toString() + " " +
+			   fmt.format(timeProvider.getCurrentDate());
+	}
+
+	@Override
+	public String getLayerDescription() {
+		String description =
+				"[Simulation Control] Layer controls the simulation and shows simulation time and speed,\n" +
+				"by pressing '<space>', the simulation can be paused and unpaused,\n" +
+				"by pressing '+'/'-', the simulation can be speed up and slow down,\n" +
+				"by pressing '*', the speed of simulation is set to default value (1x),\n" +
+				"by pressing Ctrl+'*', the speed of simulation is set to fastest possible speed (????)\n" +
+				"by pressing '<delete>', delete GE static file on exit, so next run new file will be generated.\n";
+		return buildLayersDescription(description);
+	}
+
+	public static VisLayer create(Simulation simulation) {
+		return create(simulation, null);
+	}
+
+	public static VisLayer create(Simulation simulation, Injector injector) {
+		VisLayer simulationControl = new SimulationControlLayer(simulation, injector);
+
+		KeyToggleLayer toggle = KeyToggleLayer.create("s");
+		toggle.addSubLayer(simulationControl);
+		toggle.setHelpOverrideString(simulationControl.getLayerDescription() + "\n" +
+									 "By pressing 's', the simulation info can be turned off and on.");
+
+		return toggle;
+	}
+
+}
