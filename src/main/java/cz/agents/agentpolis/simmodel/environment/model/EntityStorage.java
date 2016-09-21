@@ -36,7 +36,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
      * 
      * @param entity
      */
-    public void addEntity(TEntity entity) {
+    public synchronized void addEntity(TEntity entity) {
         checkArgument(entities.containsKey(entity.getId()) == false, "Duplicate entity i storage: "
                 + entity.getId());
 
@@ -49,6 +49,11 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
 
         entitiesByType.get(type).add(entity.getId());
     }
+	
+	public synchronized void removeEntity(TEntity entity){
+		entities.remove(entity.getId());
+		entitiesByType.get(entity.getType()).remove(entity.getId());
+	}
 
     /**
      * 
@@ -62,7 +67,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
     }
 
     /** Returns all entity ids */
-    public ImmutableSet<String> getEntityIds() {
+    public synchronized ImmutableSet<String> getEntityIds() {
         return ImmutableSet.copyOf(entities.keySet());
     }
 

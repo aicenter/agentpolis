@@ -2,6 +2,7 @@ package cz.agents.agentpolis.simmodel.agent;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
+import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 
 /**
  * 
@@ -21,6 +22,10 @@ public abstract class Agent extends AgentPolisEntity {
     }
 
     public abstract void born();
+	
+	public void die(){
+		
+	};
 
     public EntityType getType() {
         return type;
@@ -30,5 +35,9 @@ public abstract class Agent extends AgentPolisEntity {
     public String toString() {
         return "Agent " + getType().toString() + " " + getId();
     }
+	
+	protected void exit(){
+		SimulationCreator.removeAgentStatic(this);
+	}
 
 }

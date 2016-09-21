@@ -75,6 +75,12 @@ public class SimulationCreator {
      * Logger for creator classes.
      */
     private static Logger LOGGER = Logger.getLogger(SimulationCreator.class);
+	
+	public static SimulationCreator instance;
+	
+	public static void removeAgentStatic(Agent agent){
+		instance.removeAgent(agent);
+	}
 
 
     private Simulation simulation;
@@ -107,6 +113,7 @@ public class SimulationCreator {
     public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params) {
         this.factoryEnvironment = factoryEnvironment;
         this.params = params;
+		instance = this;
     }
 
     public void startSimulation(final MapInitFactory mapInitFactory) {
@@ -261,6 +268,25 @@ public class SimulationCreator {
         }
         LOGGER.info("Initialized agents");
     }
+	
+	public void addAgent(Agent agent){
+		addEntityMaxSpeedToStorage(agent.getId(), params.agentMoveSpeedInMps);
+		injector.getInstance(AgentStorage.class).addEntity(agent);
+		if(params.showVisio){
+			VisEntityLayer.addEntity(agent);
+		}
+		agent.born();
+	}
+	
+	public void removeAgent(Agent agent){
+		agent.die();
+		
+		if(params.showVisio){
+			VisEntityLayer.removeEntity(agent);
+		}
+		injector.getInstance(AgentStorage.class).removeEntity(agent);
+		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
+	}
 
     private void initLoggers() {
         LOGGER.info("Initialization of logger - event bus");

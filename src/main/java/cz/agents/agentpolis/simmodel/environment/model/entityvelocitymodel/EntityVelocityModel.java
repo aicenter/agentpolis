@@ -36,6 +36,10 @@ public class EntityVelocityModel{
         }
         maxSpeedPerEntity.put(entityId, velocityInmps);
     }
+	
+	public void removeEntityMaxVelocity(String entityId){
+        maxSpeedPerEntity.remove(entityId);
+    }
     
     /**
      * Returns the maximum velocity for the given entity.

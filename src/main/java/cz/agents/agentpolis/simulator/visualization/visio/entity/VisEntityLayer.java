@@ -39,6 +39,8 @@ public class VisEntityLayer extends CommonLayer {
 	 * minimal remaining time in ms when creating points
 	 */
 	private static int MIN_TIME = 5;
+	
+	private static ThisElements thisElements;
 
 	public static VisLayer createSynchronized(final EntityStorage<AgentPolisEntity> container,
 											  final EntityPositionModel agentPositionModel,
@@ -48,7 +50,8 @@ public class VisEntityLayer extends CommonLayer {
 											  final Map<EntityType, VisEntity> entityStyles, Projection projection) {
 		GroupLayer group = GroupLayer.create();
 		group.setHelpOverrideString("Entity layer");
-		group.addSubLayer(StyledPointLayer.create(new ThisElements(container, agentPositionModel, vehiclePositionModel, nodesFromAllGraphs, drawListener, entityStyles, projection)));
+		thisElements = new ThisElements(container, agentPositionModel, vehiclePositionModel, nodesFromAllGraphs, drawListener, entityStyles, projection);
+		group.addSubLayer(StyledPointLayer.create(thisElements));
 		return group;
 	}
 
@@ -59,6 +62,14 @@ public class VisEntityLayer extends CommonLayer {
 								  final Map<EntityType, VisEntity> entityStyles, Projection projection) {
 		return createSynchronized(container, agentPositionModel, vehiclePositionModel, nodesFromAllGraphs, null,
                 entityStyles, projection);
+	}
+	
+	public static void addEntity(AgentPolisEntity entity){
+		thisElements.addEntity(entity);
+	}
+	
+	public static void removeEntity(AgentPolisEntity entity){
+		thisElements.removeEntity(entity);
 	}
 
 	private static class ThisElements implements StyledPointElements, DrawListener {
@@ -84,6 +95,14 @@ public class VisEntityLayer extends CommonLayer {
 			lastPoints = new ArrayList<>();
 			this.entityStyles = entityStyles;
 			this.projection = projection;
+		}
+		
+		public void addEntity(AgentPolisEntity entity){
+			storage.addEntity(entity);
+		}
+		
+		public void removeEntity(AgentPolisEntity entity){
+			storage.removeEntity(entity);
 		}
 
 		public Iterable<? extends StyledPoint> getPoints() {
