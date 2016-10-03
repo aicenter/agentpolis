@@ -114,6 +114,15 @@ public class SimulationCreator {
     public BoundingBox boundsOfMap = null;
 	
 	
+	
+	
+	public Map<EntityType, VisEntity> getEntityStyles() {
+		return entityStyles;
+	}
+	
+	
+	
+	
     public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params) {
         this.factoryEnvironment = factoryEnvironment;
         this.params = params;
