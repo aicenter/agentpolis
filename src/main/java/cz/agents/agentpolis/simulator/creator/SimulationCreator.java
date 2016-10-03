@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.LoggerModul;
@@ -16,6 +17,7 @@ import cz.agents.agentpolis.simmodel.environment.EnvironmentFactory;
 import cz.agents.agentpolis.simmodel.environment.model.*;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.*;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
+import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.agentpolis.simulator.creator.initializator.AgentInitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.InitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.InitModuleFactory;
@@ -25,10 +27,10 @@ import cz.agents.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.SimulationControlLayer;
+import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntity;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntityLayer;
 import cz.agents.agentpolis.simulator.visualization.visio.graph.VisGraph;
-import cz.agents.agentpolis.simulator.visualization.visio.graph.VisGraphLayer;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.agentpolis.utils.io.ResourceReader;
 import cz.agents.agentpolis.utils.processing.post.CSVPostprocessingGroovyExecutor;
@@ -38,7 +40,6 @@ import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.EventProcessorEventType;
 import cz.agents.alite.googleearth.cameraalt.factory.CameraAltUpdateKmlProviderFacotryImpl;
 import cz.agents.alite.googleearth.updates.Synthetiser;
-import cz.agents.alite.simulation.MultipleDrawListener;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
 import cz.agents.alite.vis.VisManager.SceneParams;
@@ -66,21 +67,24 @@ import java.util.List;
 /**
  * The {@code SimulationCreator} initializes the simulation model according to added initializers including the
  * environment and agents.
- * <p/>
  * The initialized simulation model is possible to run.
  */
+@Singleton
 public class SimulationCreator {
 
     /**
      * Logger for creator classes.
      */
-    private static Logger LOGGER = Logger.getLogger(SimulationCreator.class);
+    private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
 	
 	public static SimulationCreator instance;
 	
 	public static void removeAgentStatic(Agent agent){
 		instance.removeAgent(agent);
 	}
+	
+	
+	
 
 
     private Simulation simulation;
@@ -106,15 +110,19 @@ public class SimulationCreator {
     private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer = new HashSet<>();
 
     private final EnvironmentFactory factoryEnvironment;
-    private SimulationParameters params;
+    private final SimulationParameters params;
     public BoundingBox boundsOfMap = null;
-
-
+	
+	
     public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params) {
         this.factoryEnvironment = factoryEnvironment;
         this.params = params;
 		instance = this;
     }
+	
+	public void setMainEnvironment(Injector injector){
+		this.injector = injector;
+	}
 
     public void startSimulation(final MapInitFactory mapInitFactory) {
         startSimulation(mapInitFactory, 0L);
@@ -204,12 +212,15 @@ public class SimulationCreator {
         simulation = new Simulation(params.simulationDurationInMillis);
         simulation.setSleepTimeIfWaitToOtherEvent(50);
         simulation.setPrintouts(10000000);
+		injector.getInstance(SimulationProvider.class).setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
 
     }
 
     private void initEnvironment(MapData osmDTO, long seed) {
         LOGGER.info("Creating instance of environment");
+		injector.getInstance(AllNetworkNodes.class).setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
+		injector.getInstance(Graphs.class).setGraphs(osmDTO.graphByType);
         injector = factoryEnvironment.injectEnvironment(injector, simulation, seed, osmDTO.graphByType, osmDTO
                 .nodesFromAllGraphs);
         LOGGER.info("Created instance of environment");
@@ -303,7 +314,7 @@ public class SimulationCreator {
         if (params.showVisio) {
             LOGGER.info("Initializing Visio");
             visFirst(projection);
-            visSim(boundsOfMap, projection);
+			injector.getInstance(VisioInitializer.class).initialize(simulation, projection);
             visLast();
 
             simulation.setSimulationSpeed(1);
@@ -386,42 +397,6 @@ public class SimulationCreator {
         VisManager.registerLayer(ColorLayer.create(Color.LIGHT_GRAY));
     }
 
-    /**
-     * creates layers to vis window
-     */
-    protected void visSim(BoundingBox bounds, Projection projection) {
-        MultipleDrawListener drawListener = new MultipleDrawListener(simulation, 1000, 40);
-
-        // add layers
-
-        // TODO: Make custom visualization for infinity graph
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(PedestrianNetwork.class)
-                .getNetwork()), Color.GRAY, 2, Color.GRAY, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(BikewayNetwork.class).getNetwork
-                ()), Color.DARK_GRAY, 2, Color.DARK_GRAY, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(HighwayNetwork.class).getNetwork
-                ()), Color.BLACK, 4, Color.BLACK, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(TramwayNetwork.class).getNetwork
-                ()), Color.ORANGE, 3, Color.ORANGE, 5, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(MetrowayNetwork.class).getNetwork
-                ()), Color.RED, 3, Color.RED, 5, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(injector.getInstance(RailwayNetwork.class).getNetwork
-                ()), Color.MAGENTA, 3, Color.MAGENTA, 5, projection));
-
-        EntityStorage<AgentPolisEntity> entityStorage = new EntityStorage<>(new HashMap<>(), new HashMap<>());
-        for (String entityId : injector.getInstance(AgentStorage.class).getEntityIds()) {
-            entityStorage.addEntity(injector.getInstance(AgentStorage.class).getEntityById(entityId));
-        }
-
-        for (String entityId : injector.getInstance(VehicleStorage.class).getEntityIds()) {
-            entityStorage.addEntity(injector.getInstance(VehicleStorage.class).getEntityById(entityId));
-        }
-
-        VisManager.registerLayer(VisEntityLayer.createSynchronized(entityStorage, injector.getInstance
-                (AgentPositionModel.class), injector.getInstance(VehiclePositionModel.class), injector.getInstance
-                (AllNetworkNodes.class).getAllNetworkNodes(), drawListener, entityStyles, projection));
-    }
-
     public void addEntityStyleVis(final EntityType entityType, Color colorOfEntityInVis, int widthOfEntityInVis) {
         entityStyles.put(entityType, new VisEntity(colorOfEntityInVis, widthOfEntityInVis));
     }
@@ -502,10 +477,12 @@ public class SimulationCreator {
             sim.addEvent(this, Duration.ofHours(24).toMillis());
         }
 
+		@Override
         public EventProcessor getEventProcessor() {
             return sim;
         }
 
+		@Override
         public void handleEvent(Event event) {
             // System.exit(0);
             setTimer();

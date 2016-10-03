@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
@@ -17,13 +18,15 @@ import cz.agents.agentpolis.simmodel.entity.EntityType;
  * The general storage for entity in a simulation model (e.g. for vehicle,
  * agents).
  * 
- * */
+ *
+ * @param <TEntity> Entity type */
 @Singleton
 public class EntityStorage<TEntity extends AgentPolisEntity> {
 
     private final Map<String, TEntity> entities;
     private final Map<EntityType, Set<String>> entitiesByType;
 
+	@Inject
     public EntityStorage(Map<String, TEntity> entities, Map<EntityType, Set<String>> entitiesByType) {
         super();
         this.entities = entities;
@@ -62,7 +65,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
      * @param entityId
      * @return
      */
-    public TEntity getEntityById(String entityId) {
+    public synchronized TEntity getEntityById(String entityId) {
         return entities.get(checkNotNull(entityId));
     }
 

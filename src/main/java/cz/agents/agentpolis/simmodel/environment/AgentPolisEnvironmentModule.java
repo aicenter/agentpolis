@@ -13,22 +13,10 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
-import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.callback.VehicleArrivedCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.BikewayNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.MetrowayNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.PedestrianNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.RailwayNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TramwayNetwork;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.DelayModel;
@@ -41,9 +29,7 @@ import cz.agents.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeA
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeAndToNodeKey;
 import cz.agents.agentpolis.simmodel.environment.model.key.VehicleAndPositionKey;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.PassengerBeforePlanNotifySensor;
-import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
-import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Edge;
@@ -66,7 +52,6 @@ public class AgentPolisEnvironmentModule extends AbstractModule {
 	private final EventProcessor eventProcessor;
 	private final Random random;
 	private final Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs;
-	private final Map<Integer, SimulationNode> nodesFromAllGraphs;
 	private final DelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
 	private final ZonedDateTime initDate;
 
@@ -77,7 +62,6 @@ public class AgentPolisEnvironmentModule extends AbstractModule {
 		this.eventProcessor = eventProcessor;
 		this.random = random;
 		this.graphs = graphs;
-		this.nodesFromAllGraphs = nodesFromAllGraphs;
 		this.initDate = initDate;
 		this.delayingSegmentCapacityDeterminer = new DefaultDelayingSegmentCapacityDeterminer();
 	}
@@ -91,7 +75,6 @@ public class AgentPolisEnvironmentModule extends AbstractModule {
 		this.eventProcessor = eventProcessor;
 		this.random = random;
 		this.graphs = graphs;
-		this.nodesFromAllGraphs = nodesFromAllGraphs;
 		this.delayingSegmentCapacityDeterminer = delayingSegmentCapacityDeterminer;
 		this.initDate = initDate;
 	}
@@ -103,13 +86,6 @@ public class AgentPolisEnvironmentModule extends AbstractModule {
 		}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {
 		}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<EntityType, Set<String>>>() {
-		}).toInstance(new HashMap<>());
-
-		bind(new TypeLiteral<Map<String, Agent>>() {
-		}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<String, Vehicle>>() {
-		}).toInstance(new HashMap<>());
 
 		bind(new TypeLiteral<Map<String, PassengerBeforePlanNotifySensor>>() {
 		}).toInstance(new HashMap<>());
@@ -120,72 +96,11 @@ public class AgentPolisEnvironmentModule extends AbstractModule {
 		bind(new TypeLiteral<Map<String, MovingActionCallback>>() {
 		}).toInstance(new HashMap<>());
 
-		bind(new TypeLiteral<Map<String, Integer>>() {
-		}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<String, Set<PositionUpdated>>>() {
-		}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<KeyWithString, Set<PositionUpdated>>>() {
-		}).toInstance(new HashMap<>());
-
 		bind(new TypeLiteral<Map<VehicleAndPositionKey, Set<String>>>() {
 		}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, VehicleArrivedCallback>>() {
 		}).toInstance(new HashMap<>());
 
-	}
-
-	@Provides
-	@Singleton
-	AllNetworkNodes provideAllNetworkNodes() {
-		return new AllNetworkNodes(nodesFromAllGraphs);
-	}
-
-	@Provides
-	@Singleton
-	MetrowayNetwork provideMetrowayNetwork() {
-		return new MetrowayNetwork(graphs.get(EGraphType.METROWAY));
-	}
-
-	@Provides
-	@Singleton
-	BikewayNetwork provideBikewayNetwork() {
-		return new BikewayNetwork(graphs.get(EGraphType.BIKEWAY));
-	}
-
-	@Provides
-	@Singleton
-	TramwayNetwork provideTramwayNetwork() {
-		return new TramwayNetwork(graphs.get(EGraphType.TRAMWAY));
-	}
-
-	@Provides
-	@Singleton
-	RailwayNetwork provideRailwayNetwork() {
-		return new RailwayNetwork(graphs.get(EGraphType.RAILWAY));
-	}
-
-	@Provides
-	@Singleton
-	HighwayNetwork provideHighwayNetwork() {
-		return new HighwayNetwork(graphs.get(EGraphType.HIGHWAY));
-	}
-
-	@Provides
-	@Singleton
-	PedestrianNetwork providePedestrianNetwork() {
-		return new PedestrianNetwork(graphs.get(EGraphType.PEDESTRIAN));
-	}
-
-	@Provides
-	@Singleton
-	TransportNetworks provideTransportNetworks() {
-		return new TransportNetworks(graphs);
-	}
-
-	@Provides
-	@Singleton
-	EventProcessor provideEventProcessor() {
-		return eventProcessor;
 	}
 
 	@Provides
