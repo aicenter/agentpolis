@@ -26,7 +26,6 @@ import cz.agents.alite.common.event.EventProcessor;
  * @author Libor Wagner
  * @author Zbynek Moler
  */
-@Singleton
 public abstract class EntityPositionModel {
 
 	/**

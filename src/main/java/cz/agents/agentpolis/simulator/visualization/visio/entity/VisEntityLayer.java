@@ -41,6 +41,17 @@ public class VisEntityLayer extends CommonLayer {
 	private static int MIN_TIME = 5;
 	
 	private static ThisElements thisElements;
+    
+    private static boolean active = false;
+
+    public static boolean isActive() {
+        return active;
+    }
+    
+    
+    
+    
+    
 
 	public static VisLayer createSynchronized(final EntityStorage<AgentPolisEntity> container,
 											  final EntityPositionModel agentPositionModel,
@@ -52,6 +63,7 @@ public class VisEntityLayer extends CommonLayer {
 		group.setHelpOverrideString("Entity layer");
 		thisElements = new ThisElements(container, agentPositionModel, vehiclePositionModel, nodesFromAllGraphs, drawListener, entityStyles, projection);
 		group.addSubLayer(StyledPointLayer.create(thisElements));
+        active = true;
 		return group;
 	}
 

@@ -11,7 +11,6 @@ import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.LoggerModul;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.agent.Agent;
-import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.EnvironmentFactory;
 import cz.agents.agentpolis.simmodel.environment.model.*;
@@ -26,6 +25,7 @@ import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.agents.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
+import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.SimulationControlLayer;
 import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntity;
@@ -153,6 +153,7 @@ public class SimulationCreator {
 
         // Projection
         Projection projection = Projection.createGPSTo3DProjector(boundsOfMap, 1000, 1000);
+        injector.getInstance(ProjectionProvider.class).setProjection(projection);
 
         initCSV(params.pathToCSVEventLogFile);
         if (params.showEventViewer) {
@@ -292,7 +293,7 @@ public class SimulationCreator {
 	public void addAgent(Agent agent){
 		addEntityMaxSpeedToStorage(agent.getId(), params.agentMoveSpeedInMps);
 		injector.getInstance(AgentStorage.class).addEntity(agent);
-		if(params.showVisio){
+		if(params.showVisio && VisEntityLayer.isActive()){
 			VisEntityLayer.addEntity(agent);
 		}
 		agent.born();
@@ -301,7 +302,7 @@ public class SimulationCreator {
 	public void removeAgent(Agent agent){
 		agent.die();
 		
-		if(params.showVisio){
+		if(params.showVisio  && VisEntityLayer.isActive()){
 			VisEntityLayer.removeEntity(agent);
 		}
 		injector.getInstance(AgentStorage.class).removeEntity(agent);

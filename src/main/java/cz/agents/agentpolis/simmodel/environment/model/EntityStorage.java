@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
+import java.util.Iterator;
 
 /**
  * The general storage for entity in a simulation model (e.g. for vehicle,
@@ -73,5 +74,23 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
     public synchronized ImmutableSet<String> getEntityIds() {
         return ImmutableSet.copyOf(entities.keySet());
     }
+    
+    public class EntityIterator{
+		
+		private final Iterator<String> idIterator;
+
+		public EntityIterator() {
+			idIterator = getEntityIds().iterator();
+		}
+		
+		public TEntity getNextEntity(){
+			while(idIterator.hasNext()){
+				TEntity entity = getEntityById(idIterator.next());
+				return entity;
+			}
+			return null;
+		}
+		
+	}
 
 }

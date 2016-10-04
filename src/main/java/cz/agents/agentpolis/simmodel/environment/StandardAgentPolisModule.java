@@ -27,6 +27,8 @@ import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.agentpolis.simulator.creator.SimulationParameters;
+import cz.agents.agentpolis.simulator.visualization.visio.Projection;
+import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.DefaultVisioInitializer;
 import cz.agents.agentpolis.utils.key.KeyWithString;
@@ -75,7 +77,7 @@ public class StandardAgentPolisModule extends AbstractModule{
 		configureNext();
 	}
 
-	private void configureNext() {
+	protected void configureNext() {
 		
 	}
 	
@@ -89,6 +91,12 @@ public class StandardAgentPolisModule extends AbstractModule{
 	@Singleton
 	public EventProcessor getEventProcessor(SimulationProvider simulationProvider){
 		return simulationProvider.getSimulation();
+	}
+    
+    @Provides 
+	@Singleton
+	public Projection getProjection(ProjectionProvider projectionProvider){
+		return projectionProvider.getProjection();
 	}
 	
 	@Provides

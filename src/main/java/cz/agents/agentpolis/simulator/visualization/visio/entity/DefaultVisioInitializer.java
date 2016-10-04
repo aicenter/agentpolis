@@ -94,11 +94,23 @@ public class DefaultVisioInitializer implements VisioInitializer{
 
 	@Override
 	public void initialize(Simulation simulation, Projection projection) {
-		MultipleDrawListener drawListener = new MultipleDrawListener(simulation, 1000, 40);
+        initGraphLayers(projection);
+        initEntityLayers(simulation, projection);
+		
+	}
+	
+	private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
 
-        // add layers
+        List<Node> nodes = new ArrayList<>(graph.getAllNodes());
+        Map<Integer, Node> nodesWithIds = new HashMap<>();
+        for (Node node : nodes) {
+            nodesWithIds.put(node.id, node);
+        }
 
-        // TODO: Make custom visualization for infinity graph
+        return new VisGraph(nodesWithIds, nodes, new ArrayList<>(graph.getAllEdges()));
+    }
+
+    protected void initGraphLayers(Projection projection) {
         VisManager.registerLayer(VisGraphLayer.create(wrapGraph(pedestrianNetwork.getNetwork()), Color.GRAY, 2, 
 				Color.GRAY, 2, projection));
         VisManager.registerLayer(VisGraphLayer.create(wrapGraph(bikewayNetwork.getNetwork()), Color.DARK_GRAY, 2, 
@@ -111,6 +123,10 @@ public class DefaultVisioInitializer implements VisioInitializer{
 				5, projection));
         VisManager.registerLayer(VisGraphLayer.create(wrapGraph(railwayNetwork.getNetwork()), Color.MAGENTA, 3, 
 				Color.MAGENTA, 5, projection));
+    }
+
+    protected void initEntityLayers(Simulation simulation, Projection projection) {
+        MultipleDrawListener drawListener = new MultipleDrawListener(simulation, 1000, 40);
 
         for (String entityId : agentStorage.getEntityIds()) {
             entityStorage.addEntity(agentStorage.getEntityById(entityId));
@@ -123,17 +139,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
         VisManager.registerLayer(VisEntityLayer.createSynchronized(entityStorage, agentPositionModel, 
 				vehiclePositionModel, allNetworkNodes.getAllNetworkNodes(), drawListener, 
 				simulationCreator.getEntityStyles(), projection));
-	}
-	
-	private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
-
-        List<Node> nodes = new ArrayList<>(graph.getAllNodes());
-        Map<Integer, Node> nodesWithIds = new HashMap<>();
-        for (Node node : nodes) {
-            nodesWithIds.put(node.id, node);
-        }
-
-        return new VisGraph(nodesWithIds, nodes, new ArrayList<>(graph.getAllEdges()));
     }
 	
 }
