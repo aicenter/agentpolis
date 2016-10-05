@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import com.google.inject.Singleton;
 
 import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.utils.InitAndGetterUtil;
@@ -14,6 +13,7 @@ import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandlerAdapter;
 import cz.agents.alite.common.event.EventProcessor;
+import java.util.Iterator;
 
 /**
  * The EntityPositionStorage holds positions of mobile objects (citizens, cars, ...) in the UrbanSim environment.
@@ -70,7 +70,7 @@ public abstract class EntityPositionModel {
 	 * @param silent
 	 * 		If true the position sensing is omitted.
 	 */
-	public void setNewEntityPosition(String entityId, int positionByNodeId, boolean silent) {
+	public synchronized void setNewEntityPosition(String entityId, int positionByNodeId, boolean silent) {
 		entityPositionMap.put(entityId, positionByNodeId);
 		if (!silent) {
 			callCallbacks(entityId, positionByNodeId);
@@ -103,11 +103,11 @@ public abstract class EntityPositionModel {
 	 * @param entityId
 	 * 		Name of entity to be removed.
 	 */
-	public void removeEntity(String entityId) {
+	public synchronized void removeEntity(String entityId) {
 		entityPositionMap.remove(entityId);
 	}
 
-	public void addSensingPositionNode(String entityId, PositionUpdated positionSensor) {
+	public synchronized void addSensingPositionNode(String entityId, PositionUpdated positionSensor) {
 
 		Set<PositionUpdated> callbacks = InitAndGetterUtil.getDataOrInitFromMap(entityPositionSensors, entityId, new
 				HashSet<>());
@@ -118,7 +118,7 @@ public abstract class EntityPositionModel {
 
 	}
 
-	public void removeSensingPositionNode(String entityId, PositionUpdated sensingPositionNode) {
+	public synchronized void removeSensingPositionNode(String entityId, PositionUpdated sensingPositionNode) {
 
 		Set<PositionUpdated> callbacks = InitAndGetterUtil.getDataOrInitFromMap(entityPositionSensors, entityId, new
 				HashSet<>());
@@ -132,18 +132,18 @@ public abstract class EntityPositionModel {
 	/**
 	 * returns names of all bodies
 	 */
-	public Set<String> getIDs() {
+	public synchronized Set<String> getIDs() {
 		return entityPositionMap.keySet();
 	}
 
 	/**
 	 * returns names of all bodies
 	 */
-	public Set<String> getCopyIDs() {
+	public synchronized Set<String> getCopyIDs() {
 		return new HashSet<>(entityPositionMap.keySet());
 	}
 
-	public Integer getEntityPositionByNodeId(String entityId) {
+	public synchronized Integer getEntityPositionByNodeId(String entityId) {
 		return entityPositionMap.get(entityId);
 	}
 
@@ -212,6 +212,23 @@ public abstract class EntityPositionModel {
 
 	public Map<String, Integer> getCurrentTargetPositions() {
 		return currentTargetPosition;
+	}
+    
+    public class EntityNodePositionIterator{
+		
+		private final Iterator<String> idIterator;
+
+		public EntityNodePositionIterator() {
+			idIterator = getCopyIDs().iterator();
+		}
+		
+		public Integer getNextEntityNodeId(){
+			while(idIterator.hasNext()){
+				return entityPositionMap.get(idIterator.next());
+			}
+			return null;
+		}
+		
 	}
 
 }

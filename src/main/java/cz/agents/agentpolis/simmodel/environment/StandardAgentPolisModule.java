@@ -30,7 +30,7 @@ import cz.agents.agentpolis.simulator.creator.SimulationParameters;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
-import cz.agents.agentpolis.simulator.visualization.visio.entity.DefaultVisioInitializer;
+import cz.agents.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
 import java.util.HashMap;

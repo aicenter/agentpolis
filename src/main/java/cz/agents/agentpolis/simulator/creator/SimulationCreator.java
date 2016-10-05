@@ -307,6 +307,7 @@ public class SimulationCreator {
 		}
 		injector.getInstance(AgentStorage.class).removeEntity(agent);
 		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
+        injector.getInstance(EntityPositionModel.class).removeEntity(agent.getId());
 	}
 
     private void initLoggers() {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simulator.visualization.visio.entity;
+package cz.agents.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
@@ -20,8 +20,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.RailwayNetwork;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TramwayNetwork;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
-import cz.agents.agentpolis.simulator.visualization.visio.Projection;
-import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
+import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntityLayer;
 import cz.agents.agentpolis.simulator.visualization.visio.graph.VisGraph;
 import cz.agents.agentpolis.simulator.visualization.visio.graph.VisGraphLayer;
 import cz.agents.alite.simulation.MultipleDrawListener;
@@ -95,8 +94,9 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	@Override
 	public void initialize(Simulation simulation, Projection projection) {
         initGraphLayers(projection);
+        initLayersBeforeEntityLayers();
         initEntityLayers(simulation, projection);
-		
+		initLayersAfterEntityLayers();
 	}
 	
 	private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
@@ -139,6 +139,14 @@ public class DefaultVisioInitializer implements VisioInitializer{
         VisManager.registerLayer(VisEntityLayer.createSynchronized(entityStorage, agentPositionModel, 
 				vehiclePositionModel, allNetworkNodes.getAllNetworkNodes(), drawListener, 
 				simulationCreator.getEntityStyles(), projection));
+    }
+
+    protected void initLayersAfterEntityLayers() {
+        
+    }
+
+    protected void initLayersBeforeEntityLayers() {
+        
     }
 	
 }
