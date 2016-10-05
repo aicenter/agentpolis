@@ -224,7 +224,7 @@ public abstract class EntityPositionModel {
 		
 		public Integer getNextEntityNodeId(){
 			while(idIterator.hasNext()){
-				return entityPositionMap.get(idIterator.next());
+				return getEntityPositionByNodeId(idIterator.next());
 			}
 			return null;
 		}
