@@ -69,7 +69,6 @@ public class StandardAgentPolisModule extends AbstractModule{
 		bind(new TypeLiteral<Map<EntityType, Set<String>>>(){}).toInstance(new HashMap<>());
 		
 		// bindings for position models
-		bind(new TypeLiteral<Map<String, Integer>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<KeyWithString, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
 		

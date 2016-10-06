@@ -173,7 +173,7 @@ public abstract class EntityPositionModel {
 		callbackBoundedWithPosition.put(keyWithString, positionCallbacksForNode);
 	}
 
-	private void newEntityPosition(final String entityId, final int nodeId, final PositionUpdated entityCallback) {
+	private synchronized void newEntityPosition(final String entityId, final int nodeId, final PositionUpdated entityCallback) {
 
 		Integer targetNode = currentTargetPosition.get(entityId);
 		if (targetNode == null || !targetNode.equals(nodeId)) {
@@ -183,10 +183,23 @@ public abstract class EntityPositionModel {
 		eventProcessor.addEvent(new EntityPositionHandler(entityId, nodeId, entityCallback));
 	}
 
-	public boolean setTargetPositionAndReturnIfWasSame(String entityId, int nodeId) {
+	public synchronized boolean setTargetPositionAndReturnIfWasSame(String entityId, int nodeId) {
 		Integer old = currentTargetPosition.put(entityId, nodeId);
 		return old != null && old.equals(nodeId);
 	}
+    
+    public synchronized Map<String, Integer> getCurrentTargetPositions() {
+		return new HashMap<>(currentTargetPosition);
+	}
+    
+    public synchronized Map<String, Integer> getCurrentPositions() {
+		return new HashMap<>(entityPositionMap);
+	}
+    
+    public synchronized void removetargetPosition(String entityId){
+        currentTargetPosition.remove(entityId);
+    }
+    
 
 	class EntityPositionHandler extends EventHandlerAdapter {
 
@@ -202,14 +215,12 @@ public abstract class EntityPositionModel {
 
 		@Override
 		public void handleEvent(Event event) {
-			currentTargetPosition.remove(entityId);
+            removetargetPosition(entityId);
 			entityCallback.newEntityPosition(entityId, nodeId);
 		}
 	}
 
-	public Map<String, Integer> getCurrentTargetPositions() {
-		return currentTargetPosition;
-	}
+	
     
     public class EntityNodePositionIterator{
 		
