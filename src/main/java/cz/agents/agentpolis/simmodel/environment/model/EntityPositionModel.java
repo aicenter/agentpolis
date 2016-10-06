@@ -44,16 +44,13 @@ public abstract class EntityPositionModel {
 
 	private final EventProcessor eventProcessor;
 
-	public EntityPositionModel(Map<String, Integer> entityPositionMap,
-							   Map<String, Set<PositionUpdated>> sensingPositionNodeMap,
+	public EntityPositionModel(Map<String, Set<PositionUpdated>> sensingPositionNodeMap,
 							   Map<KeyWithString, Set<PositionUpdated>> callbackBoundedWithPosition,
 							   EventProcessor eventProcessor) {
 		super();
-
-		this.entityPositionMap = entityPositionMap;
 		this.callbackBoundedWithPosition = callbackBoundedWithPosition;
 		this.eventProcessor = eventProcessor;
-
+        this.entityPositionMap = new HashMap<>();
 	}
 
 	public void setNewEntityPosition(String entityId, int positionByNodeId) {

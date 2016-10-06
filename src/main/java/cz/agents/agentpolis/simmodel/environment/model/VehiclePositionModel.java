@@ -22,11 +22,10 @@ import cz.agents.alite.common.event.EventProcessor;
 public class VehiclePositionModel extends EntityPositionModel {
 
     @Inject
-    public VehiclePositionModel(Map<String, Integer> entityPositionMap,
-            Map<String, Set<PositionUpdated>> sensingPositionNodeMap,
+    public VehiclePositionModel(Map<String, Set<PositionUpdated>> sensingPositionNodeMap,
             Map<KeyWithString, Set<PositionUpdated>> callbackBoundedWithPosition,
             EventProcessor eventProcessor) {
-        super(entityPositionMap, sensingPositionNodeMap, callbackBoundedWithPosition,
+        super(sensingPositionNodeMap, callbackBoundedWithPosition,
                 eventProcessor);
     }
 
