@@ -205,14 +205,14 @@ public class Mocks extends AbstractModule {
 		positionCallbacksAPS = new HashMap<>();
 		callbackBoundedWithPositionAPS = new HashMap<>();
 
-		agentPositionModel = new AgentPositionModel(entityPositionAPS, positionCallbacksAPS,
+		agentPositionModel = new AgentPositionModel(positionCallbacksAPS,
                 callbackBoundedWithPositionAPS, eventProcessor);
 
 		entityPositionVPS = new HashMap<>();
 		positionCallbacksVPS = new HashMap<>();
 		callbackBoundedWithPositionVPS = new HashMap<>();
 
-		vehiclePositionModel = new VehiclePositionModel(entityPositionVPS, positionCallbacksVPS,
+		vehiclePositionModel = new VehiclePositionModel(positionCallbacksVPS,
                 callbackBoundedWithPositionVPS, eventProcessor);
 
 		linkedEntityModel = new LinkedEntityModel();
