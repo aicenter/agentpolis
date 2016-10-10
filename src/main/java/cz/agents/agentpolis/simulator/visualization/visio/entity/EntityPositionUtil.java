@@ -12,7 +12,6 @@ import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
 import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
-import cz.agents.alite.vis.Vis;
 import cz.agents.basestructures.Node;
 import java.util.Iterator;
 import java.util.Map;
