@@ -44,6 +44,7 @@ public class SimulationParameters {
     public final File osmFile;
     private int iterationNumber;
     public final String dataFolder;
+    public final int srid;
 
 
     public SimulationParameters(File experimentPath, ConfigReader configReader) throws ConfigReaderException {
@@ -82,6 +83,8 @@ public class SimulationParameters {
         skipSimulation = configReader.getBooleanWithDefault("skipSimulation", false);
         pathToScriptsAndTheirInputParameters = configReader
                 .getMap("pathToScriptsAndTheirInputParameters");
+        
+        srid = configReader.getInteger("epsg");
 
 
         LOGGER.info("Loaded configuration");

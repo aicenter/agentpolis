@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
@@ -60,6 +61,7 @@ public class StandardAgentPolisModule extends AbstractModule{
 
 	@Override
 	protected void configure() {
+        bindConstant().annotatedWith(Names.named("mapSrid")).to(parameters.srid);
 		
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
@@ -71,7 +73,7 @@ public class StandardAgentPolisModule extends AbstractModule{
 		// bindings for position models
 		bind(new TypeLiteral<Map<String, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<KeyWithString, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
-		
+        
 		bindVisioInitializer();
 		configureNext();
 	}

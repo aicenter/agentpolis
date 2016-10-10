@@ -112,6 +112,8 @@ public class SimulationCreator {
     private final EnvironmentFactory factoryEnvironment;
     private final SimulationParameters params;
     public BoundingBox boundsOfMap = null;
+    
+    private Projection projection;
 	
 	
 	
@@ -132,15 +134,10 @@ public class SimulationCreator {
 	public void setMainEnvironment(Injector injector){
 		this.injector = injector;
 	}
-
-    public void startSimulation(final MapInitFactory mapInitFactory) {
-        startSimulation(mapInitFactory, 0L);
-    }
-
-    public void startSimulation(final MapInitFactory mapInitFactory, final long seed) {
+    
+    public void prepareSimulation(final MapInitFactory mapInitFactory, final long seed){
         LOGGER.debug("SEED = " + seed);
-        long simTimeInit = System.currentTimeMillis();
-
+        
         initLogger();
         initLoggers();
         initSimulation();
@@ -152,7 +149,7 @@ public class SimulationCreator {
         initEnvironment(osmDTO, seed);
 
         // Projection
-        Projection projection = Projection.createGPSTo3DProjector(boundsOfMap, 1000, 1000);
+        projection = Projection.createGPSTo3DProjector(boundsOfMap, 1000, 1000);
         injector.getInstance(ProjectionProvider.class).setProjection(projection);
 
         initCSV(params.pathToCSVEventLogFile);
@@ -178,6 +175,14 @@ public class SimulationCreator {
         if (reportDays) {
             new DayReporter(simulation);
         }
+    }
+
+    public void prepareSimulation(final MapInitFactory mapInitFactory) {
+        prepareSimulation(mapInitFactory, 0L);
+    }
+
+    public void startSimulation() {
+        long simTimeInit = System.currentTimeMillis();
 
         initVisioAndGE(projection);
 
