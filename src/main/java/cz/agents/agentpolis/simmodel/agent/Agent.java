@@ -21,7 +21,9 @@ public abstract class Agent extends AgentPolisEntity {
         this.type = agentType;
     }
 
-    public abstract void born();
+    public void born(){
+        
+    }
 	
 	public void die(){
 		

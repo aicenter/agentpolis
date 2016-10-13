@@ -1,15 +1,10 @@
 package cz.agents.agentpolis.simulator.creator;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
-import cz.agents.agentpolis.siminfrastructure.logger.LoggerModul;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.EnvironmentFactory;
@@ -22,7 +17,6 @@ import cz.agents.agentpolis.simulator.creator.initializator.InitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.InitModuleFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.MapInitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
-import cz.agents.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
@@ -57,8 +51,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.Duration;
 import java.util.*;
@@ -90,7 +82,7 @@ public class SimulationCreator {
     private Simulation simulation;
     private Injector injector = Guice.createInjector();
     private Synthetiser synthetiser;
-    private LogItemViewer logItemViewer;
+    
 
     /**
      * write info about day to console
@@ -105,12 +97,11 @@ public class SimulationCreator {
     private final List<InitModuleFactory> initModuleFactories = new ArrayList<>();
     private final List<InitFactory> initFactories = new ArrayList<>();
 
-    private final List<Object> loggers = new ArrayList<>();
-    private final Set<Class<? extends LogItem>> allowedLogItemClassesForCSV = new HashSet<>();
-    private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer = new HashSet<>();
-
     private final EnvironmentFactory factoryEnvironment;
     private final SimulationParameters params;
+    
+    private final LogItemViewer logItemViewer;
+    
     public BoundingBox boundsOfMap = null;
     
     private Projection projection;
@@ -125,9 +116,11 @@ public class SimulationCreator {
 	
 	
 	
-    public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params) {
+    public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params,
+            LogItemViewer logItemViewer) {
         this.factoryEnvironment = factoryEnvironment;
         this.params = params;
+        this.logItemViewer = logItemViewer;
 		instance = this;
     }
 	
@@ -139,7 +132,6 @@ public class SimulationCreator {
         LOGGER.debug("SEED = " + seed);
         
         initLogger();
-        initLoggers();
         initSimulation();
 
         LOGGER.info(">>> MAPS CREATION");
@@ -151,13 +143,6 @@ public class SimulationCreator {
         // Projection
         projection = Projection.createGPSTo3DProjector(boundsOfMap, 1000, 1000);
         injector.getInstance(ProjectionProvider.class).setProjection(projection);
-
-        initCSV(params.pathToCSVEventLogFile);
-        if (params.showEventViewer) {
-            logItemViewer = new LogItemViewer(allowedLogItemClassesLogItemViewer, injector.getInstance(TimeProvider
-                    .class), params.simulationDurationInMillis);
-            addLogger(logItemViewer);
-        }
 
         for (InitModuleFactory initFactory : initModuleFactories) {
             LOGGER.debug("Injecting module: " + initFactory);
@@ -229,7 +214,6 @@ public class SimulationCreator {
         simulation.setPrintouts(10000000);
 		injector.getInstance(SimulationProvider.class).setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
-
     }
 
     private void initEnvironment(MapData osmDTO, long seed) {
@@ -314,11 +298,8 @@ public class SimulationCreator {
 		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
         injector.getInstance(EntityPositionModel.class).removeEntity(agent.getId());
 	}
-
-    private void initLoggers() {
-        LOGGER.info("Initialization of logger - event bus");
-        injector = injector.createChildInjector(new LoggerModul(loggers));
-    }
+    
+    
 
     private void initVisioAndGE(Projection projection) {
         if (params.turnOnGeneratingGELinks) {
@@ -507,49 +488,6 @@ public class SimulationCreator {
     }
 
     /**
-     * Add your own logger which processes the incoming the implementations of {@code LogItem}. These
-     * implementations of
-     * {@code LogItem} should be subscribed by logger via {@code Subscribe} annotation
-     *
-     * @param logger
-     */
-    public void addLogger(Object logger) {
-
-        if (isSubscribeAnnotationIncluded(logger)) {
-            loggers.add(logger);
-        } else {
-            LOGGER.info("The logger [" + logger + "] was skipped because it does not cointains Subscribe annotation");
-        }
-
-    }
-
-    private boolean isSubscribeAnnotationIncluded(Object logger) {
-        for (Method method : logger.getClass().getMethods()) {
-            if (method.isAnnotationPresent(Subscribe.class)) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    public void addAllowedLogItemForCSVLogger(Class<? extends LogItem> allowedLogItemClass) {
-        allowedLogItemClassesForCSV.add(allowedLogItemClass);
-    }
-
-    public void addAllowedLogItemForCSVLogger(Set<Class<? extends LogItem>> allowedLogItemClasses) {
-        allowedLogItemClassesForCSV.addAll(allowedLogItemClasses);
-    }
-
-    public void addAllowEventForEventViewer(Class<? extends LogItem> allowedLogItemClass) {
-        this.allowedLogItemClassesLogItemViewer.add(allowedLogItemClass);
-    }
-
-    public void addAllowEventForEventViewer(Set<Class<? extends LogItem>> allowedLogItemClasses) {
-        this.allowedLogItemClassesLogItemViewer.addAll(allowedLogItemClasses);
-    }
-
-    /**
      * @param initFactory
      * @deprecated Please use addInitModuleFactory (same functionality, only fixing a name).
      */
@@ -568,22 +506,6 @@ public class SimulationCreator {
 
     public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
         simulationFinishedListeners.add(simulationFinishedListener);
-    }
-
-    private void initCSV(String pathToCSVEventLogFile) {
-
-        try {
-            if (!allowedLogItemClassesForCSV.isEmpty()) {
-                CSVLogSubscriber csvLogSubscriber = CSVLogSubscriber.newInstance(ImmutableSet.copyOf
-                        (allowedLogItemClassesForCSV), new File(pathToCSVEventLogFile));
-                addLogger(csvLogSubscriber);
-                addSimulationFinishedListener(csvLogSubscriber);
-                return;
-            }
-        } catch (IOException e) {
-            LOGGER.warn("CSV Logger was not initialized", e);
-        }
-        LOGGER.warn("CSV Logger was not initialized");
     }
 
     // -------------- cancel simulation --------------

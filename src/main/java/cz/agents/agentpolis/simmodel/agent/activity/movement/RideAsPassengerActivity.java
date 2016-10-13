@@ -1,5 +1,6 @@
 package cz.agents.agentpolis.simmodel.agent.activity.movement;
 
+import com.google.inject.Inject;
 import org.apache.log4j.Logger;
 
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.PassengerActivityLogger;
@@ -35,8 +36,9 @@ public class RideAsPassengerActivity<TTrip extends Trip<TripItem>> implements
     private String passengerId;
     private TTrip trip;
 
-    public RideAsPassengerActivity(PassengerAction useVehicleAction,
-            PassengerTripAction passengerTripAction, PassengerActivityLogger passengerActivityLogger) {
+    @Inject
+    public RideAsPassengerActivity(PassengerAction useVehicleAction, PassengerTripAction passengerTripAction, 
+            PassengerActivityLogger passengerActivityLogger) {
         super();
 
         this.useVehicleAction = useVehicleAction;

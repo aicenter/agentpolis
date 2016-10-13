@@ -1,5 +1,6 @@
 package cz.agents.agentpolis.siminfrastructure.planner.path;
 
+import com.google.inject.Inject;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,8 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 
 import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
@@ -32,10 +35,50 @@ public class ShortestPathPlanner {
 
 	private final DirectedWeightedMultigraph<Integer, PlannerEdge> plannerGraph;
 
+    
+    
+    
 	private ShortestPathPlanner(DirectedWeightedMultigraph<Integer, PlannerEdge> plannerGraph) {
 		super();
 		this.plannerGraph = plannerGraph;
 	}
+
+    @Inject
+    public ShortestPathPlanner(TransportNetworks transportNetworks, @Assisted Set<GraphType> allowedGraphTypes) {
+        DirectedWeightedMultigraph<Integer, PlannerEdge> plannerGraph 
+                = new DirectedWeightedMultigraph<>(PlannerEdge.class);
+		Set<Integer> addedNodes = new HashSet<>();
+
+		for (GraphType graphType : allowedGraphTypes) {
+			Graph<SimulationNode, SimulationEdge> graph = transportNetworks.getGraph(graphType);
+			for (Node node : graph.getAllNodes()) {
+				int fromPositionByNodeId = node.id;
+				if (!addedNodes.contains(fromPositionByNodeId)) {
+					addedNodes.add(fromPositionByNodeId);
+					plannerGraph.addVertex(fromPositionByNodeId);
+				}
+
+				for (Edge edge : graph.getOutEdges(node.id)) {
+					Integer toPositionByNodeId = edge.toId;
+					if (!addedNodes.contains(toPositionByNodeId)) {
+						addedNodes.add(toPositionByNodeId);
+						plannerGraph.addVertex(toPositionByNodeId);
+					}
+
+					PlannerEdge plannerEdge = new PlannerEdge(graphType, fromPositionByNodeId, toPositionByNodeId);
+					plannerGraph.addEdge(fromPositionByNodeId, toPositionByNodeId, plannerEdge);
+					plannerGraph.setEdgeWeight(plannerEdge, edge.length);
+				}
+
+			}
+
+		}
+        this.plannerGraph = plannerGraph;
+    }
+    
+    
+    
+    
 
 	public Trips findTrip(String vehicleId, int startNodeById, int destinationNodeById) throws TripPlannerException {
 
@@ -141,5 +184,9 @@ public class ShortestPathPlanner {
 		}
 
 	}
+    
+    public interface ShortestPathPlannerFactory {
+        public ShortestPathPlanner create(Set<GraphType> allowedGraphTypes);
+    }
 
 }

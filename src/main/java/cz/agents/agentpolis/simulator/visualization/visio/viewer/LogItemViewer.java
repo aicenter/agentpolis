@@ -1,6 +1,7 @@
 package cz.agents.agentpolis.simulator.visualization.visio.viewer;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Provider;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.historian.event.ViewLogItemImpl;
@@ -35,11 +36,11 @@ public class LogItemViewer {
     private NewHistorianView newHistorianView;
 
     private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer;
-    private final TimeProvider timeProvider;
+    private final Provider<TimeProvider> timeProvider;
     private final long simulationDuration;
 
     public LogItemViewer(Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer,
-                         final TimeProvider timeProvider, final long simulationDuration) {
+                         final Provider<TimeProvider> timeProvider, final long simulationDuration) {
         super();
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
         this.timeProvider = timeProvider;
@@ -62,13 +63,13 @@ public class LogItemViewer {
 
         String eventName = logItemClass.getSimpleName();
         int currentTimeOfSimulationInSecond = Integer.MAX_VALUE;
-        long currentTimeOfSimInSecond = (timeProvider.getCurrentSimTime() / HALF_MINUTE_FACTOR);
+        long currentTimeOfSimInSecond = (timeProvider.get().getCurrentSimTime() / HALF_MINUTE_FACTOR);
 
         if (currentTimeOfSimInSecond < Integer.MAX_VALUE) {
             currentTimeOfSimulationInSecond = (int) currentTimeOfSimInSecond;
         }
 
-        return new ViewLogItemImpl(wrapper, "", eventName, "", timeProvider.getCurrentZonedDateTime(), currentTimeOfSimulationInSecond);
+        return new ViewLogItemImpl(wrapper, "", eventName, "", timeProvider.get().getCurrentZonedDateTime(), currentTimeOfSimulationInSecond);
     }
 
     /**

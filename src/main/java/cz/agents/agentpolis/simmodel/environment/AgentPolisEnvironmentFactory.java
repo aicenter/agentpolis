@@ -34,8 +34,7 @@ public class AgentPolisEnvironmentFactory implements EnvironmentFactory {
             Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType,
             Map<Integer, SimulationNode> nodesFromAllGraphs) {
 
-        injector.createChildInjector(new AgentPolisEnvironmentModule(simulation, new Random(seed),
-                graphByGraphType, nodesFromAllGraphs, initDate));
+        injector.createChildInjector(new AgentPolisEnvironmentModule(new Random(seed), initDate));
 
         return injector;
     }
