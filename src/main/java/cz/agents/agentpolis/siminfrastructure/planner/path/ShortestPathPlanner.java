@@ -11,12 +11,10 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 
 import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trips;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
@@ -80,7 +78,7 @@ public class ShortestPathPlanner {
     
     
 
-	public Trips findTrip(String vehicleId, int startNodeById, int destinationNodeById) throws TripPlannerException {
+	public VehicleTrip findTrip(String vehicleId, int startNodeById, int destinationNodeById) throws TripPlannerException {
 
 		assert startNodeById != destinationNodeById : "Start finding position should not be the same as end finding "
 				+ "position";
@@ -104,22 +102,20 @@ public class ShortestPathPlanner {
 
 	}
 
-	private Trips createTrips(List<PlannerEdge> plannerEdges, String vehicleId) {
-		Trips trips = new Trips();
-
+	private VehicleTrip createTrips(List<PlannerEdge> plannerEdges, String vehicleId) {
+        PlannerEdge plannerEdge = plannerEdges.get(0);
+        GraphType graphType = plannerEdge.graphType;
+        LinkedList<TripItem> path = new LinkedList<>();
+        
 		if (plannerEdges.size() > 0) {
-			PlannerEdge plannerEdge = plannerEdges.get(0);
-
-			GraphType graphType = plannerEdge.graphType;
-			LinkedList<TripItem> path = new LinkedList<>();
 			path.add(new TripItem(plannerEdge.fromPositionByNodeId));
 
 			for (PlannerEdge plannerEdgeInner : plannerEdges) {
 
 				if (graphType != plannerEdgeInner.graphType) {
-					trips.addTrip(new VehicleTrip(path, graphType, vehicleId));
-					path = new LinkedList<>();
-					graphType = plannerEdgeInner.graphType;
+//					trips.addTrip(new VehicleTrip(path, graphType, vehicleId));
+//					path = new LinkedList<>();
+//					graphType = plannerEdgeInner.graphType;
 					path.add(new TripItem(plannerEdgeInner.fromPositionByNodeId));
 				}
 
@@ -127,11 +123,11 @@ public class ShortestPathPlanner {
 
 			}
 
-			trips.addTrip(new VehicleTrip(path, graphType, vehicleId));
+//			trips.addTrip(new VehicleTrip(path, graphType, vehicleId));
 
 		}
 
-		return trips;
+		return new VehicleTrip(path, graphType, vehicleId);
 	}
 
 	public static ShortestPathPlanner createShortestPathPlanner(Injector injector, Set<GraphType> allowedGraphTypes) {

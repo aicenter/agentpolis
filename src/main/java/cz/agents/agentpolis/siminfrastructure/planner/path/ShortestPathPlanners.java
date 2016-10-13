@@ -9,10 +9,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trips;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.utils.nearestelement.NearestElementUtil;
-import cz.agents.basestructures.GPSLocation;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -32,7 +30,7 @@ public class ShortestPathPlanners {
         this.shortestPathPlannersMappedByGraphTypes = new HashMap<>();
     }
     
-    public Trips findTrip(String vehicleId, int startNodeById, int destinationNodeById, Set<GraphType> graphTypes) 
+    public VehicleTrip findTrip(String vehicleId, int startNodeById, int destinationNodeById, Set<GraphType> graphTypes) 
             throws TripPlannerException{
         if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
             createShortestPathPlanner(graphTypes);
