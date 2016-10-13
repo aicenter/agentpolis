@@ -22,7 +22,7 @@ import java.util.Iterator;
  *
  * @param <TEntity> Entity type */
 @Singleton
-public class EntityStorage<TEntity extends AgentPolisEntity> {
+public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable<TEntity>{
 
     private final Map<String, TEntity> entities;
     private final Map<EntityType, Set<String>> entitiesByType;
@@ -74,8 +74,13 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
     public synchronized ImmutableSet<String> getEntityIds() {
         return ImmutableSet.copyOf(entities.keySet());
     }
+
+    @Override
+    public Iterator<TEntity> iterator() {
+        return new EntityIterator();
+    }
     
-    public class EntityIterator{
+    public class EntityIterator implements Iterator<TEntity>{
 		
 		private final Iterator<String> idIterator;
 
@@ -90,6 +95,16 @@ public class EntityStorage<TEntity extends AgentPolisEntity> {
 			}
 			return null;
 		}
+
+        @Override
+        public boolean hasNext() {
+            return idIterator.hasNext();
+        }
+
+        @Override
+        public TEntity next() {
+            return getEntityById(idIterator.next());
+        }
 		
 	}
 
