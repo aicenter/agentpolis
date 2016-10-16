@@ -7,8 +7,11 @@ package cz.agents.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
 import cz.agents.alite.vis.Vis;
 import cz.agents.basestructures.GPSLocation;
+import cz.agents.basestructures.Node;
+import java.util.Map;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 
@@ -20,19 +23,29 @@ import javax.vecmath.Point3d;
 public class PositionUtil {
     
     private final Projection projection;
+	
+	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
     
     
     @Inject
-    public PositionUtil(Projection projection) {
+    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes) {
         this.projection = projection;
+		this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
     }
     
     
-    
+    public Point2d getPosition(GPSLocation position){
+        Point3d projectedPoint = projection.project(position);
+        return new Point2d(projectedPoint.x, projectedPoint.y);
+    }
     
     public Point2d getCanvasPosition(GPSLocation position){
         Point3d projectedPoint = projection.project(position);
         return new Point2d(Vis.transX(projectedPoint.x), Vis.transY(projectedPoint.y));
+    }
+	
+	public Point2d getCanvasPosition(int nodeId){
+        return getCanvasPosition(nodesFromAllGraphs.get(nodeId));
     }
 }

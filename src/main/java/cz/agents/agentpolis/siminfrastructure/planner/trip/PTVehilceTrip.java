@@ -8,13 +8,13 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 
 /**
  * 
- * The public transport trip representation wrapping needed the information for
- * driver to be able to execute his/her plan
+ * The public transport locations representation wrapping needed the information for
+ driver to be able to execute his/her plan
  * 
  * @author Zbynek Moler
  * 
  */
-public class PTVehilceTrip extends Trip<DepartureTripItem> {
+public class PTVehilceTrip extends GraphTrip<DepartureTripItem> {
 
     /**
      * 
@@ -36,7 +36,7 @@ public class PTVehilceTrip extends Trip<DepartureTripItem> {
         LinkedList<DepartureTripItem> clonedTrip = new LinkedList<DepartureTripItem>();
         DepartureTripItemCloneVisotr cloneVisotr = new DepartureTripItemCloneVisotr();
 
-        for (DepartureTripItem tripItem : trip) {
+        for (DepartureTripItem tripItem : locations) {
             tripItem.visitDepartureTripItem(cloneVisotr);
             clonedTrip.addLast(cloneVisotr.departureTripItemClone);
 

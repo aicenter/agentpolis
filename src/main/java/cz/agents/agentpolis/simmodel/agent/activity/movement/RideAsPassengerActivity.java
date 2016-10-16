@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import org.apache.log4j.Logger;
 
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.PassengerActivityLogger;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.PassengerAction;
@@ -20,7 +20,7 @@ import cz.agents.agentpolis.simmodel.environment.model.linkedentitymodel.sensor.
  * 
  * @param <TTrip>
  */
-public class RideAsPassengerActivity<TTrip extends Trip<TripItem>> implements
+public class RideAsPassengerActivity<TTrip extends GraphTrip<TripItem>> implements
         VehicleArrivedCallback, LinkedEntitySensor {
 
     private static final Logger LOGGER = Logger.getLogger(RideAsPassengerActivity.class);

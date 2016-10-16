@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @author Zbynek Moler
  * 
  */
-public class TeleportTrip extends Trip<TripItem> {
+public class TeleportTrip extends GraphTrip<TripItem> {
 
     /**
      * 

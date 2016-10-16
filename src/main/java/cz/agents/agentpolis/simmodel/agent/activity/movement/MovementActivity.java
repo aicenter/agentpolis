@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.MovementActivityLogger;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.MovementActivityCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.AgentPositionAction;
@@ -42,7 +42,7 @@ public abstract class MovementActivity<TTripItem extends TripItem> implements Po
 
     private MovementActivityCallback movementCallback = null;
     private MovingAction<? super TTripItem> movingAction = null;
-    private Trip<TTripItem> trip = null;
+    private GraphTrip<TTripItem> trip = null;
     private GraphType tripGraphType = null;
     private String agentId = null;
 
@@ -61,7 +61,7 @@ public abstract class MovementActivity<TTripItem extends TripItem> implements Po
      * Start move based on trip
      */
     public void move(String agentId, MovementActivityCallback movementCallback,
-            MovingAction<TTripItem> movingAction, Trip<TTripItem> trip) {
+            MovingAction<TTripItem> movingAction, GraphTrip<TTripItem> trip) {
 
         assert this.movementCallback == null && this.movingAction == null && this.trip == null
                 && this.tripGraphType == null && this.agentId == null : "Instance of current movement is using";

@@ -1,6 +1,6 @@
 package cz.agents.agentpolis.simmodel.agent.activity.movement.callback;
 
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 
 /**
  * Declaration of callback methods for passenger activity
@@ -9,7 +9,7 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
  * 
  * @param <TTrip>
  */
-public interface PassengerActivityCallback<TTrip extends Trip<?>> {
+public interface PassengerActivityCallback<TTrip extends GraphTrip<?>> {
 
     /**
      * Callback method - it is invoked, if passenger finished traveling by a

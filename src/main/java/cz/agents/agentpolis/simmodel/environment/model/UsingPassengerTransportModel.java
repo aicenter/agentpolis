@@ -5,7 +5,7 @@ import java.util.Map;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
 import cz.agents.alite.common.event.Event;
@@ -64,7 +64,7 @@ public class UsingPassengerTransportModel {
 
     }
 
-    public <TTrip extends Trip<?>> void donePartTrip(String passengerId, final TTrip partNotDoneTrip) {
+    public <TTrip extends GraphTrip<?>> void donePartTrip(String passengerId, final TTrip partNotDoneTrip) {
         @SuppressWarnings("unchecked")
         PassengerActivityCallback<TTrip> passengerActivityCallback = (PassengerActivityCallback<TTrip>) passengerTripCallbacks
                 .get(passengerId);
@@ -72,7 +72,7 @@ public class UsingPassengerTransportModel {
 
     }
 
-    public <TTrip extends Trip<?>> void tripFail(String passengerId, final TTrip failedTrip) {
+    public <TTrip extends GraphTrip<?>> void tripFail(String passengerId, final TTrip failedTrip) {
         @SuppressWarnings("unchecked")
         PassengerActivityCallback<TTrip> passengerActivityCallback = (PassengerActivityCallback<TTrip>) passengerTripCallbacks
                 .get(passengerId);
@@ -82,7 +82,7 @@ public class UsingPassengerTransportModel {
 
     // --------- callback callers
 
-    private <TTrip extends Trip<?>> void donePartTrip(
+    private <TTrip extends GraphTrip<?>> void donePartTrip(
             final PassengerActivityCallback<TTrip> passengerActivityCallback,
             final TTrip partNotDoneTrip) {
 
@@ -100,7 +100,7 @@ public class UsingPassengerTransportModel {
         });
     }
 
-    private <TTrip extends Trip<?>> void tripFail(
+    private <TTrip extends GraphTrip<?>> void tripFail(
             final PassengerActivityCallback<TTrip> passengerActivityCallback, final TTrip failedTrip) {
         eventProcessor.addEvent(new EventHandler() {
 

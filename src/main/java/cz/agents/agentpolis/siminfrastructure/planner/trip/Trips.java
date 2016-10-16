@@ -10,28 +10,28 @@ import java.util.NoSuchElementException;
  *
  * @author Zbynek Moler
  */
-public class Trips implements CloneTrip, Serializable, Iterable<Trip<?>> {
+public class Trips implements CloneTrip, Serializable, Iterable<GraphTrip<?>> {
 
     /**
      * 
      */
     private static final long serialVersionUID = 9057034765971304800L;
     
-    private final LinkedList<Trip<?>> trips = new LinkedList<Trip<?>>();
+    private final LinkedList<GraphTrip<?>> trips = new LinkedList<GraphTrip<?>>();
 
-    public void addTrip(Trip<?> trip) {
+    public void addTrip(GraphTrip<?> trip) {
         trips.add(trip);
     }
 
-    public void addBeforeCurrentTrips(Trip<?> trip) {
+    public void addBeforeCurrentTrips(GraphTrip<?> trip) {
         trips.addFirst(trip);
     }
 
-    public void addEndCurrentTrips(Trip<?> trip) {
+    public void addEndCurrentTrips(GraphTrip<?> trip) {
         trips.addLast(trip);
     }
 
-    public Trip<?> getAndRemoveFirstTrip() {
+    public GraphTrip<?> getAndRemoveFirstTrip() {
         return trips.poll();
     }
 
@@ -46,7 +46,7 @@ public class Trips implements CloneTrip, Serializable, Iterable<Trip<?>> {
     @Override
     public Trips clone() {
         Trips newCloneTrips = new Trips();
-        for (Trip<?> tTrip : trips) {
+        for (GraphTrip<?> tTrip : trips) {
             newCloneTrips.addTrip(tTrip.clone());
         }
         return newCloneTrips;
@@ -56,8 +56,8 @@ public class Trips implements CloneTrip, Serializable, Iterable<Trip<?>> {
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
-        Trip<?> lastTrip = null;
-        for (Trip<?> t : trips) {
+        GraphTrip<?> lastTrip = null;
+        for (GraphTrip<?> t : trips) {
 
             if (t != null) {
                 builder.append(" To: ");
@@ -81,9 +81,9 @@ public class Trips implements CloneTrip, Serializable, Iterable<Trip<?>> {
      * The iterator servers just for showing of element without removing
      */
     @Override
-    public Iterator<Trip<?>> iterator() {
+    public Iterator<GraphTrip<?>> iterator() {
 
-        return new Iterator<Trip<?>>() {
+        return new Iterator<GraphTrip<?>>() {
 
             private int i = 0;
 
@@ -93,7 +93,7 @@ public class Trips implements CloneTrip, Serializable, Iterable<Trip<?>> {
             }
 
             @Override
-            public Trip<?> next() {
+            public GraphTrip<?> next() {
                 checkCondition();
                 return trips.get(i++);
             }

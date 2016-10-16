@@ -1,20 +1,20 @@
 package cz.agents.agentpolis.siminfrastructure.planner.trip;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.LinkedList;
 
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * 
- * The class represents a trip which relating with traveling as passenger or
- * driver of a vehicle
+ * The class represents a locations which relating with traveling as passenger or
+ driver of a vehicle
  * 
  * @author Zbynek Moler
  * 
  */
-public class VehicleTrip extends Trip<TripItem> {
+public class VehicleTrip extends GraphTrip<TripItem> {
 
     /**
      * 
@@ -40,7 +40,7 @@ public class VehicleTrip extends Trip<TripItem> {
     @Override
     public VehicleTrip clone() {
         LinkedList<TripItem> clonedTrip = new LinkedList<TripItem>();
-        for (TripItem node : trip) {
+        for (TripItem node : locations) {
             clonedTrip.addLast(new TripItem(node.tripPositionByNodeId));
 
         }
@@ -53,14 +53,14 @@ public class VehicleTrip extends Trip<TripItem> {
         stringBuilder.append('\n');
         stringBuilder.append(graphType);
         stringBuilder.append('(');
-        if (trip.isEmpty() == false) {
-            stringBuilder.append(trip.getFirst().tripPositionByNodeId);
+        if (locations.isEmpty() == false) {
+            stringBuilder.append(locations.getFirst().tripPositionByNodeId);
             stringBuilder.append("------------>");
-            stringBuilder.append(trip.getLast().tripPositionByNodeId);
+            stringBuilder.append(locations.getLast().tripPositionByNodeId);
         }
 
-//        if (trip.isEmpty() == false) {
-//            for (TripItem tripItem : trip) {
+//        if (locations.isEmpty() == false) {
+//            for (TripItem tripItem : locations) {
 //                stringBuilder.append(" ---> ");
 //                stringBuilder.append(tripItem);
 //            }

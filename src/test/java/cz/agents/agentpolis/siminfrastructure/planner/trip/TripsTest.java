@@ -20,12 +20,12 @@ public class TripsTest {
         LinkedList<TripItem> linkedList = new LinkedList<TripItem>();
         linkedList.add(new TripItem(1));
         linkedList.add(new TripItem(2));
-        Trip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
+        GraphTrip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
 
         LinkedList<TripItem> linkedList2 = new LinkedList<TripItem>();
         linkedList2.add(new TripItem(3));
         linkedList2.add(new TripItem(4));
-        Trip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId");
+        GraphTrip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId");
 
         Trips trips = new Trips();
         trips.addTrip(trip);
@@ -35,7 +35,7 @@ public class TripsTest {
         assertEquals(2, cloneTrips.numTrips());
         assertEquals(2, trips.numTrips());
 
-        Trip<?> trip3 = cloneTrips.getAndRemoveFirstTrip();
+        GraphTrip<?> trip3 = cloneTrips.getAndRemoveFirstTrip();
         assertEquals(1, cloneTrips.numTrips());
         assertEquals(2, trips.numTrips());
 
@@ -71,7 +71,7 @@ public class TripsTest {
         assertEquals(2, cloneTrips.numTrips());
         assertEquals(2, trips.numTrips());
 
-        Trip<?> trip3 = cloneTrips.getAndRemoveFirstTrip();
+        GraphTrip<?> trip3 = cloneTrips.getAndRemoveFirstTrip();
         assertEquals(1, cloneTrips.numTrips());
         assertEquals(2, trips.numTrips());
 
@@ -79,7 +79,7 @@ public class TripsTest {
         assertEquals(new TripItem(2), trip3.getAndRemoveFirstTripItem());
         assertFalse(trip3.hasNextTripItem());
 
-        Trip<?> trip4 = trips.getAndRemoveFirstTrip();
+        GraphTrip<?> trip4 = trips.getAndRemoveFirstTrip();
         assertEquals(new TripItem(1), trip4.getAndRemoveFirstTripItem());
         assertEquals(new TripItem(2), trip4.getAndRemoveFirstTripItem());
 
@@ -90,18 +90,18 @@ public class TripsTest {
         LinkedList<TripItem> linkedList = new LinkedList<TripItem>();
         linkedList.add(new TripItem(1));
         linkedList.add(new TripItem(2));
-        Trip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
+        GraphTrip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
 
         LinkedList<TripItem> linkedList2 = new LinkedList<TripItem>();
         linkedList2.add(new TripItem(3));
         linkedList2.add(new TripItem(4));
-        Trip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId1");
+        GraphTrip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId1");
 
         Trips trips = new Trips();
         trips.addTrip(trip);
         trips.addTrip(trip2);
 
-        Iterator<Trip<?>> iterator = trips.iterator();
+        Iterator<GraphTrip<?>> iterator = trips.iterator();
         assertTrue(iterator.hasNext());
         assertEquals(1, iterator.next().getAndRemoveFirstTripItem().tripPositionByNodeId);
         assertTrue(iterator.hasNext());
@@ -123,12 +123,12 @@ public class TripsTest {
         LinkedList<TripItem> linkedList = new LinkedList<TripItem>();
         linkedList.add(new TripItem(1));
         linkedList.add(new TripItem(2));
-        Trip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
+        GraphTrip<?> trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
 
         LinkedList<TripItem> linkedList2 = new LinkedList<TripItem>();
         linkedList2.add(new TripItem(3));
         linkedList2.add(new TripItem(4));
-        Trip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId1");
+        GraphTrip<?> trip2 = new VehicleTrip(linkedList2, EGraphType.TRAMWAY, "vehicleId1");
 
         Trips trips = new Trips();
         trips.addTrip(trip);
@@ -136,7 +136,7 @@ public class TripsTest {
 
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < 1000000; i++) {
-            Iterator<Trip<?>> iterator = trips.iterator();
+            Iterator<GraphTrip<?>> iterator = trips.iterator();
             while (iterator.hasNext()) {
                 iterator.next();
             }

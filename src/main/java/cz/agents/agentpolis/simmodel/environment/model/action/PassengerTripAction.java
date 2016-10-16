@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import com.google.inject.Inject;
 
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.agents.agentpolis.simmodel.environment.model.UsingPassengerTransportModel;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
@@ -100,7 +100,7 @@ public class PassengerTripAction {
     /**
      * Passenger is informed, that was not possible to execute his trip
      */
-    public <TTrip extends Trip<?>> void tripFail(final String passengerId, final TTrip failedTrip) {
+    public <TTrip extends GraphTrip<?>> void tripFail(final String passengerId, final TTrip failedTrip) {
 
         eventProcessor.addEvent(new EventHandler() {
 
@@ -120,7 +120,7 @@ public class PassengerTripAction {
     /**
      * Passenger is informed, that was executed just part of trip
      */
-    public <TTrip extends Trip<?>> void donePartTrip(final String passengerId,
+    public <TTrip extends GraphTrip<?>> void donePartTrip(final String passengerId,
             final TTrip partNotDoneTrip) {
 
         eventProcessor.addEvent(new EventHandler() {

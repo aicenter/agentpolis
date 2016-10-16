@@ -6,7 +6,7 @@ import cz.agents.agentpolis.siminfrastructure.description.Description;
 import cz.agents.agentpolis.siminfrastructure.description.DescriptionImpl;
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.VehicleDrivingActivityLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.DepartureTripItem;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.DrivingFinishedActivityCallback;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.MovementActivityCallback;
@@ -75,7 +75,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
      * 
      */
     public void driveBaseOnDepartureTime(String agentId, Vehicle vehicle,
-            Trip<DepartureTripItem> trip, DrivingFinishedActivityCallback drivingActivityCallback) {
+            GraphTrip<DepartureTripItem> trip, DrivingFinishedActivityCallback drivingActivityCallback) {
 
         drive(agentId,
                 vehicle,
@@ -93,7 +93,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
      * 
      * @param trip
      */
-    public void drive(String agentId, Vehicle vehicle, Trip<TripItem> trip,
+    public void drive(String agentId, Vehicle vehicle, GraphTrip<TripItem> trip,
             DrivingFinishedActivityCallback drivingActivityCallback) {
 
         drive(agentId, vehicle, trip, new DriveMovingAction(driveAction, vehiclePlanNotifyAction,
@@ -115,7 +115,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
     }
 
     private <TTripItem extends TripItem> void drive(String driverId, Vehicle vehicle,
-            Trip<TTripItem> trip, MovingAction<TTripItem> movingAction,
+            GraphTrip<TTripItem> trip, MovingAction<TTripItem> movingAction,
             DrivingFinishedActivityCallback drivingActivityCallback,
             MovementActivity<TTripItem> movementActivity) {
 

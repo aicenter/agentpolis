@@ -13,7 +13,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 
 public class TripTest {
 
-    private Trip<TripItem> trip;
+    private GraphTrip<TripItem> trip;
     private LinkedList<TripItem> linkedList;
 
     @Before
@@ -27,7 +27,7 @@ public class TripTest {
 
     @Test
     public void mockCloneTest() throws CloneNotSupportedException {
-        Trip<?> cloneTrip = trip.clone();
+        GraphTrip<?> cloneTrip = trip.clone();
 
         assertEquals(2, linkedList.size());
 

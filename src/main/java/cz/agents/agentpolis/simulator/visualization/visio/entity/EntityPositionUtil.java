@@ -43,6 +43,17 @@ public class EntityPositionUtil {
 		this.entityStorage = entityStorage;
 	}
 	
+	public Point2d getEntityPosition(AgentPolisEntity entity){
+        if(entityPositionModel.getEntityPositionByNodeId(entity.getId()) == null){
+            return null;
+        }
+        
+        Node entityPositionNode = nodesFromAllGraphs.get(
+					entityPositionModel.getEntityPositionByNodeId(entity.getId()));
+        
+		return positionUtil.getPosition(entityPositionNode);
+	}
+	
 	public Point2d getEntityCanvasPosition(AgentPolisEntity entity){
         if(entityPositionModel.getEntityPositionByNodeId(entity.getId()) == null){
             return null;

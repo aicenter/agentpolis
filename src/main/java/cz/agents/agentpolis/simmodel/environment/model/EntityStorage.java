@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -106,6 +107,14 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
             return getEntityById(idIterator.next());
         }
 		
+	}
+	
+	public boolean isEmpty(){
+		return entities.isEmpty();
+	}
+	
+	public Collection getEntities(){
+		return entities.values();
 	}
 
 }

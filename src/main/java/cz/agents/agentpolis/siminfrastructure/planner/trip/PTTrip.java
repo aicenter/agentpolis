@@ -6,13 +6,13 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 
 /**
  * 
- * The public transport trip representation wrapping needed the information for
- * passenger to be able to execute his/her plan
+ * The public transport locations representation wrapping needed the information for
+ passenger to be able to execute his/her plan
  * 
  * @author Zbynek Moler
  * 
  */
-public class PTTrip extends Trip<TripItem> {
+public class PTTrip extends GraphTrip<TripItem> {
 
     /**
      * 
@@ -39,18 +39,18 @@ public class PTTrip extends Trip<TripItem> {
     }
 
     public String showCurrentStationId() {
-        return stations.get(stations.size() - trip.size());
+        return stations.get(stations.size() - locations.size());
     }
 
     public void addTripItemBeforeCurrentFirstAndChangeStation(String stationId, TripItem tripItem) {
         addTripItemBeforeCurrentFirst(tripItem);
-        stations.set(stations.size() - trip.size(), stationId);
+        stations.set(stations.size() - locations.size(), stationId);
     }
 
     @Override
     public PTTrip clone() {
         LinkedList<TripItem> clonedTrip = new LinkedList<TripItem>();
-        for (TripItem tripItem : trip) {
+        for (TripItem tripItem : locations) {
             clonedTrip.addLast(new TripItem(tripItem.tripPositionByNodeId));
         }
 

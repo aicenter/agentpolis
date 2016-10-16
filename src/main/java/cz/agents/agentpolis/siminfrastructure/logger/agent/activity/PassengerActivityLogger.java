@@ -18,7 +18,7 @@ import cz.agents.agentpolis.siminfrastructure.logger.agent.passenger.activity.lo
 import cz.agents.agentpolis.siminfrastructure.logger.agent.passenger.activity.logitem.PassengerMissVehicleLogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.agent.passenger.activity.logitem.PassengerMoveAcrossNodeLogItem;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.PTTrip;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.alite.common.event.EventProcessor;
 
@@ -48,7 +48,7 @@ public class PassengerActivityLogger extends Logger {
      * @param tripClone
      * @param positionByNodeId
      */
-    public <TTrip extends Trip<TripItem>> void logPassengerGotInToVehicle(String publisherId,
+    public <TTrip extends GraphTrip<TripItem>> void logPassengerGotInToVehicle(String publisherId,
             TTrip tripClone, long positionByNodeId) {
 
         if (tripClone instanceof PTTrip) {
@@ -69,7 +69,7 @@ public class PassengerActivityLogger extends Logger {
      * @param tripClone
      * @param place
      */
-    public <TTrip extends Trip<TripItem>> void logPassengerGotInToVehicle(String relatedEntityId,
+    public <TTrip extends GraphTrip<TripItem>> void logPassengerGotInToVehicle(String relatedEntityId,
             TTrip tripClone, TripItem place) {
         logPassengerGotInToVehicle(relatedEntityId, tripClone, place.tripPositionByNodeId);
     }
@@ -81,7 +81,7 @@ public class PassengerActivityLogger extends Logger {
      * @param publisherId
      * @param tripClone
      */
-    public <TTrip extends Trip<TripItem>> void logMissVehicle(String publisherId, TTrip tripClone) {
+    public <TTrip extends GraphTrip<TripItem>> void logMissVehicle(String publisherId, TTrip tripClone) {
         if (tripClone instanceof PTTrip) {
             log(new PassengerMissPTVehicleLogItem(publisherId, getCurrentSimulationTime(),
                     getLineId(tripClone)));
@@ -102,7 +102,7 @@ public class PassengerActivityLogger extends Logger {
      * @param passengerId
      * @param tripClone
      */
-    public <TTrip extends Trip<TripItem>> void logPassengerGotOffToVehiclePartTrip(
+    public <TTrip extends GraphTrip<TripItem>> void logPassengerGotOffToVehiclePartTrip(
             String passengerId, TTrip tripClone) {
         long exitPositionByNodeId = tripClone.getAndRemoveFirstTripItem().tripPositionByNodeId;
 
@@ -148,7 +148,7 @@ public class PassengerActivityLogger extends Logger {
      * @param tripClone
      * @param tripItem
      */
-    public <TTrip extends Trip<TripItem>> void logPassengerGotOffToVehicleDoneFullTrip(
+    public <TTrip extends GraphTrip<TripItem>> void logPassengerGotOffToVehicleDoneFullTrip(
             String passengerId, TTrip tripClone, TripItem tripItem) {
         long exitPositionByNodeId = tripItem.tripPositionByNodeId;
 
@@ -170,7 +170,7 @@ public class PassengerActivityLogger extends Logger {
      * @param vehicleId
      * @param trip
      */
-    public <TTrip extends Trip<TripItem>> void logOvercrowdedVehicle(String vehicleId, TTrip trip) {
+    public <TTrip extends GraphTrip<TripItem>> void logOvercrowdedVehicle(String vehicleId, TTrip trip) {
         if (trip instanceof PTTrip) {
             log(new OvercrowdedPTVehicleLogItem(getCurrentSimulationTime(), vehicleId,
                     ((PTTrip) trip).showCurrentStationId()));
@@ -184,7 +184,7 @@ public class PassengerActivityLogger extends Logger {
      * @param agentId
      * @param trip
      */
-    public <TTrip extends Trip<TripItem>> void logStartWaitingOnPosition(String agentId, TTrip trip) {
+    public <TTrip extends GraphTrip<TripItem>> void logStartWaitingOnPosition(String agentId, TTrip trip) {
         if (trip instanceof PTTrip) {
             log(new StartWaitingOnStationLogItem(getCurrentSimulationTime(), agentId,
                     ((PTTrip) trip).showCurrentStationId()));
@@ -198,7 +198,7 @@ public class PassengerActivityLogger extends Logger {
      * @param agentId
      * @param trip
      */
-    public <TTrip extends Trip<TripItem>> void logEndWaitingOnPosition(String agentId, TTrip trip) {
+    public <TTrip extends GraphTrip<TripItem>> void logEndWaitingOnPosition(String agentId, TTrip trip) {
         if (trip instanceof PTTrip) {
             log(new EndWaitingOnStationLogItem(getCurrentSimulationTime(), agentId));
         }
