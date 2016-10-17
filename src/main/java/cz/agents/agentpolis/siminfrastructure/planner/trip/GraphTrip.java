@@ -21,7 +21,7 @@ public abstract class GraphTrip<TTripItem extends TripItem> extends Trip<TTripIt
 
     protected final GraphType graphType;
 
-    public GraphTrip(LinkedList<TTripItem> locations, GraphType graphType) {
+    public GraphTrip(LinkedList<TTripItem> locations, GraphType graphType){
         super(checkNotNull(locations));
         this.graphType = graphType;
     }

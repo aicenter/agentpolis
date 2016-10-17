@@ -1,6 +1,8 @@
 package cz.agents.agentpolis.siminfrastructure.planner.trip;
 
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,14 +20,22 @@ public class Trip<L> {
 	
 	
 	
-	public Trip(LinkedList<L> locations) throws TripException {
-		checkLocations(locations);
+	public Trip(LinkedList<L> locations){
+		try {
+			checkLocations(locations);
+		} catch (TripException ex) {
+			Logger.getLogger(Trip.class.getName()).log(Level.SEVERE, null, ex);
+		}
 		this.locations = locations;
 	}
 	
-	public Trip(L startLocation, L endLocation) throws TripException {
+	public Trip(L startLocation, L endLocation){
 		if(startLocation == null || endLocation == null){
-			throw new TripException();
+			try {
+				throw new TripException();
+			} catch (TripException ex) {
+				Logger.getLogger(Trip.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 		
 		locations = new LinkedList<>();
@@ -35,9 +45,13 @@ public class Trip<L> {
 	
 	
 	
-	public void extendTrip(L location) throws TripException{
+	public void extendTrip(L location){
 		if(location == null){
-			throw new TripException();
+			try {
+				throw new TripException();
+			} catch (TripException ex) {
+				Logger.getLogger(Trip.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 		locations.addLast(location);
 	}

@@ -23,7 +23,7 @@ public class VehicleTrip extends GraphTrip<TripItem> {
     
     private final String vehicleId;
 
-    public VehicleTrip(LinkedList<TripItem> trip, GraphType graphType, String vehicleId) {
+    public VehicleTrip(LinkedList<TripItem> trip, GraphType graphType, String vehicleId){
         super(trip, graphType);
         this.vehicleId = checkNotNull(vehicleId);
     }
@@ -44,7 +44,7 @@ public class VehicleTrip extends GraphTrip<TripItem> {
             clonedTrip.addLast(new TripItem(node.tripPositionByNodeId));
 
         }
-        return new VehicleTrip(clonedTrip, graphType, vehicleId);
+		return new VehicleTrip(clonedTrip, graphType, vehicleId);
     }
 
     @Override

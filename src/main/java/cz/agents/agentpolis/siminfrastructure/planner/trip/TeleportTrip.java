@@ -20,7 +20,7 @@ public class TeleportTrip extends GraphTrip<TripItem> {
     public final TripItem teleportTo;
     public final double distBetweenFromTo;
 
-    public TeleportTrip(TripItem teleportFrom, TripItem teleportTo, double distBetweenFromTo) {
+    public TeleportTrip(TripItem teleportFrom, TripItem teleportTo, double distBetweenFromTo){
         super(definePath(teleportFrom, teleportTo), null);
 
         this.teleportFrom = teleportFrom;
@@ -43,8 +43,8 @@ public class TeleportTrip extends GraphTrip<TripItem> {
 
     @Override
     public TeleportTrip clone() {
-        return new TeleportTrip(teleportFrom, teleportTo, distBetweenFromTo);
-    }
+		return new TeleportTrip(teleportFrom, teleportTo, distBetweenFromTo);
+	}
 
     @Override
     public String toString() {

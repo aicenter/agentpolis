@@ -21,7 +21,7 @@ public class PTVehilceTrip extends GraphTrip<DepartureTripItem> {
      */
     private static final long serialVersionUID = -5087844407678432807L;
 
-    public PTVehilceTrip(LinkedList<DepartureTripItem> trip, GraphType graphType) {
+    public PTVehilceTrip(LinkedList<DepartureTripItem> trip, GraphType graphType){
         super(trip, graphType);
     }
 
@@ -41,8 +41,7 @@ public class PTVehilceTrip extends GraphTrip<DepartureTripItem> {
             clonedTrip.addLast(cloneVisotr.departureTripItemClone);
 
         }
-        return new PTVehilceTrip(clonedTrip, graphType);
-
+		return new PTVehilceTrip(clonedTrip, graphType);
     }
 
     private static class DepartureTripItemCloneVisotr implements DepartureTripItemVisitor {

@@ -18,11 +18,10 @@ public class TripTest {
 
     @Before
     public void setUp() {
-        this.linkedList = new LinkedList<TripItem>();
-        linkedList.add(new TripItem(1));
-        linkedList.add(new TripItem(2));
-
-        this.trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
+		this.linkedList = new LinkedList<TripItem>();
+		linkedList.add(new TripItem(1));
+		linkedList.add(new TripItem(2));
+		this.trip = new VehicleTrip(linkedList, EGraphType.TRAMWAY, "vehicleId");
     }
 
     @Test

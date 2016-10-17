@@ -19,7 +19,7 @@ public class WalkTrip extends GraphTrip<TripItem> {
      */
     private static final long serialVersionUID = 2416011174348898223L;
 
-    public WalkTrip(LinkedList<TripItem> trip, GraphType graphType) {
+    public WalkTrip(LinkedList<TripItem> trip, GraphType graphType){
         super(trip, graphType);
     }
 
@@ -36,7 +36,7 @@ public class WalkTrip extends GraphTrip<TripItem> {
             clonedTrip.addLast(new TripItem(node.tripPositionByNodeId));
 
         }
-        return new WalkTrip(clonedTrip, graphType);
+		return new WalkTrip(clonedTrip, graphType);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class PTTrip extends GraphTrip<TripItem> {
             stationsClone.add(stationId);
         }
 
-        return new PTTrip(clonedTrip, graphType, lineId, stationsClone);
+		return new PTTrip(clonedTrip, graphType, lineId, stationsClone);
     }
 
     @Override
