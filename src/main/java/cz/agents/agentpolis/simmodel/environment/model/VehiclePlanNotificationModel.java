@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import java.util.logging.Level;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,6 +41,8 @@ public class VehiclePlanNotificationModel {
 	private final EventProcessor eventProcessor;
 
 	private final PassengerWaitingVehicle passengerWaitingVehicle = this::notifyWaitingPassenger;
+    
+    private final HashMap<String,VehicleAndPositionKey> zillionthDammHelperMap = new HashMap<>();
 
 	@Inject
 	public VehiclePlanNotificationModel(Map<VehicleAndPositionKey, Set<String>> waitingPassengersOnSpecificPosition,
@@ -59,6 +62,10 @@ public class VehiclePlanNotificationModel {
 		Set<String> waitingPassengersById = waitingPassengersOnSpecificPosition.get(key);
 		waitingPassengersById.remove(passengerId);
 		waitingPassengersOnSpecificPosition.put(key, waitingPassengersById);
+        
+        for(String passangerId : waitingPassengersById){
+            zillionthDammHelperMap.put(passangerId, key);
+        }
 
 		passengerWaitingSensorAndVehiclePlanCallback.remove(passengerId);
 		passengerAndVehiclePlanCallback.remove(passengerId);
@@ -109,6 +116,9 @@ public class VehiclePlanNotificationModel {
 
 		waitingPassengersById.add(passengerId);
 		waitingPassengersOnSpecificPosition.put(vehicleAndPositionKey, waitingPassengersById);
+        for(String passangerId : waitingPassengersById){
+            zillionthDammHelperMap.put(passangerId, vehicleAndPositionKey);
+        }
 
 		passengerAndVehiclePlanCallback.put(passengerId, vehiclePlanCallback);
 		passengerWaitingSensorAndVehiclePlanCallback.put(passengerId, passengerWaitingVehicleSensorCallback);
@@ -128,8 +138,16 @@ public class VehiclePlanNotificationModel {
 
 			addNotifyEntity(vehicleId, waitingPassengerId);
 
-			VehicleArrivedCallback passengerVehiclePlanCallback = passengerAndVehiclePlanCallback.get
-					(waitingPassengerId);
+			VehicleArrivedCallback passengerVehiclePlanCallback 
+                    = passengerAndVehiclePlanCallback.get(waitingPassengerId);
+            if(passengerVehiclePlanCallback == null){
+                try {
+                    throw new Exception("passengerVehiclePlanCallback cannot be null");
+                } catch (Exception ex) {
+                    java.util.logging.Logger.getLogger(VehiclePlanNotificationModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
 			PassengerWaitingVehicle passengerWaitingVehicle = passengerWaitingSensorAndVehiclePlanCallback.get
 					(waitingPassengerId);
 
@@ -182,6 +200,7 @@ public class VehiclePlanNotificationModel {
 	}
 
 	public void removePassengerVehiclePlanAndSensorCallback(String passengerId) {
+        waitingPassengersOnSpecificPosition.remove(zillionthDammHelperMap.get(passengerId));
 		passengerAndVehiclePlanCallback.remove(passengerId);
 	}
 
