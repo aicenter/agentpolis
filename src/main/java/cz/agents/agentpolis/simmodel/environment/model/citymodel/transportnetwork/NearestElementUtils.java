@@ -49,6 +49,16 @@ public class NearestElementUtils {
         
         return nearestElementUtil.getNearestElement(location);
     }
+    
+    public <E> E[] getNearestElements(GPSLocation location, GraphType graphType, int numberOfNearestElements){
+        if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
+            createNearestElementUtil(graphType);
+        }
+        
+        NearestElementUtil<E> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
+        
+        return (E[]) nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
+    }
 
     private void createNearestElementUtil(GraphType graphType) {
         List<Pair<Coordinate,Node>> pairs = new ArrayList<>();
