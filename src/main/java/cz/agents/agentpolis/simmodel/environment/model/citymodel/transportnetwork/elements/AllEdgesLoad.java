@@ -7,17 +7,19 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
-import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
+import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.basestructures.Graph;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
  * @author fido
  */
-public class AllEdgesLoad {
+public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
     
     private final HashMap<Long,Integer> loadPerEdge;
     
@@ -28,7 +30,7 @@ public class AllEdgesLoad {
     private final Graph<SimulationNode,SimulationEdge> network;
 
     @Inject
-    public AllEdgesLoad(EntityPositionModel entityPositionModel, HighwayNetwork highwayNetwork) {
+    public AllEdgesLoad(AgentPositionModel entityPositionModel, HighwayNetwork highwayNetwork) {
         loadPerEdge = new HashMap<>();
         positions = entityPositionModel.getCurrentPositions();
         targetPositions = entityPositionModel.getCurrentTargetPositions();
@@ -50,5 +52,24 @@ public class AllEdgesLoad {
         }
         return 0;
     }
+    
+    public int getNumberOfEdges(){
+        return network.getAllEdges().size();
+    }
+    
+
+    @Override
+    public Iterator<Entry<Long, Integer>> iterator() {
+        return loadPerEdge.entrySet().iterator();
+    }
+    
+    public Iterable<Integer> loadsIterator = new Iterable<Integer>() {
+        @Override
+        public Iterator<Integer> iterator() {
+            return loadPerEdge.values().iterator();
+        }
+    };
+    
+    
     
 }
