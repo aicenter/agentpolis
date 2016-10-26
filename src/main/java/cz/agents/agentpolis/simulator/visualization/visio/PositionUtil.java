@@ -8,7 +8,9 @@ package cz.agents.agentpolis.simulator.visualization.visio;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
+import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
+import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Node;
 import java.util.Map;
@@ -25,13 +27,16 @@ public class PositionUtil {
     private final Projection projection;
 	
 	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
+    
+    private final BoundingBox mapBounds;
 
     
     
     @Inject
-    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes) {
+    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator) {
         this.projection = projection;
 		this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
+        mapBounds = simulationCreator.getBoundsOfMap();
     }
     
     
@@ -47,5 +52,19 @@ public class PositionUtil {
 	
 	public Point2d getCanvasPosition(int nodeId){
         return getCanvasPosition(nodesFromAllGraphs.get(nodeId));
+    }
+    
+    public int getWorldWidth(){
+        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
+        
+        return (int) (minMax.x - minMin.x);
+    }
+    
+     public int getWorldHeight(){
+        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        
+        return (int) (minMin.y - maxMin.y);
     }
 }

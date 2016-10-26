@@ -112,6 +112,12 @@ public class SimulationCreator {
 	public Map<EntityType, VisEntity> getEntityStyles() {
 		return entityStyles;
 	}
+
+    public BoundingBox getBoundsOfMap() {
+        return boundsOfMap;
+    }
+    
+    
 	
 	
 	
@@ -141,7 +147,7 @@ public class SimulationCreator {
         initEnvironment(osmDTO, seed);
 
         // Projection
-        projection = Projection.createGPSTo3DProjector(boundsOfMap, 1000, 1000);
+        projection = Projection.createGPSTo3DProjector(boundsOfMap, 10000, 10000);
         injector.getInstance(ProjectionProvider.class).setProjection(projection);
 
         for (InitModuleFactory initFactory : initModuleFactories) {
