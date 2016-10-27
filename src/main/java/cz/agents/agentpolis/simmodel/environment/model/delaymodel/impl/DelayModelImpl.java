@@ -57,7 +57,6 @@ public class DelayModelImpl implements DelayModel {
         queueStorage.addQueueItems(fromByNodeId, toByNodeId, graphType, delayActor);
 
         callQueueGetter(fromByNodeId, toByNodeId, graphType);
-
     }
 
     private void callQueueGetter(long fromByNodeId, long toByNodeId, GraphType graphType) {

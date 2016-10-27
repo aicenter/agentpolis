@@ -24,6 +24,7 @@ import cz.agents.agentpolis.simmodel.environment.model.speed.SpeedInfluenceModel
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandler;
 import cz.agents.alite.common.event.EventProcessor;
+import java.util.HashMap;
 
 /**
  * Action provides logic for moving a vehicle from one place to other place,
@@ -54,6 +55,15 @@ public class MoveVehicleAction {
     private final DriveActionLogger driveActionLogger;
 
     // ---------- LOG ---------------------
+    
+    
+    
+    private final HashMap<String, DelayData> vehicleDelayData;
+    
+    
+    
+    
+    
 
     @Inject
     public MoveVehicleAction(EventProcessor eventProcessor, LinkEntityAction linkEntityAction,
@@ -75,7 +85,13 @@ public class MoveVehicleAction {
         this.positionQuery = positionQuery;
         this.speedInfluenceModels = speedInfluenceModels;
         this.driveActionLogger = driveActionLogger;
+        vehicleDelayData = new HashMap<>();
     }
+    
+    public DelayData getDelayDataForVehicle(String vehicleId){
+        return vehicleDelayData.get(vehicleId);
+    }
+    
 
     /**
      * Method moves vehicle from start place (node) to destination place (node).
@@ -124,6 +140,8 @@ public class MoveVehicleAction {
                 startNodeByNodeId, destinationByNodeId);
 
         long duration = MoveUtil.computeDuration(velocityInmps, lengthInMeter);
+        
+        vehicleDelayData.put(vehicleId, new DelayData(duration, eventProcessor.getCurrentTime()));
 
         moveToNextNodeAction.moveToNode(vehicleId, destinationByNodeId, duration,
                 vehiclePositionStorage);

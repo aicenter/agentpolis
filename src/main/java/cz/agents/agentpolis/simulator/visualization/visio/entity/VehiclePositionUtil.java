@@ -7,11 +7,20 @@ package cz.agents.agentpolis.simulator.visualization.visio.entity;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
+import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
+import cz.agents.agentpolis.simmodel.environment.model.action.driving.MoveVehicleAction;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
+import cz.agents.basestructures.Node;
+import javax.vecmath.Point2d;
 
 /**
  *
@@ -20,10 +29,56 @@ import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 @Singleton
 public class VehiclePositionUtil extends EntityPositionUtil{
     
+    private final MoveVehicleAction moveVehicleAction;
+    
+    private final TimeProvider timeProvider;
+    
+    private final AgentPositionModel agentPositionModel;
+    
+    
     @Inject
     public VehiclePositionUtil(PositionUtil positionUtil, VehiclePositionModel entityPositionModel, 
-            AllNetworkNodes allNetworkNodes, Projection projection, EntityStorage entityStorage) {
-        super(positionUtil, entityPositionModel, allNetworkNodes, projection, entityStorage);
+            AllNetworkNodes allNetworkNodes, Projection projection, EntityStorage entityStorage, 
+            HighwayNetwork highwayNetwork, MoveVehicleAction moveVehicleAction, TimeProvider timeProvider, 
+            AgentPositionModel agentPositionModel) {
+        super(positionUtil, entityPositionModel, allNetworkNodes, projection, entityStorage, highwayNetwork);
+        this.moveVehicleAction = moveVehicleAction;
+        this.timeProvider = timeProvider;
+        this.agentPositionModel = agentPositionModel;
     }
     
+    
+    
+    
+    public Point2d getVehicleCanvasPositionInterpolated(Vehicle vehicle, Agent driver){
+        if(entityPositionModel.getEntityPositionByNodeId(vehicle.getId()) == null){
+            return null;
+        }
+        
+        Node entityPositionNode = nodesFromAllGraphs.get(
+					entityPositionModel.getEntityPositionByNodeId(vehicle.getId()));
+        
+        Integer targetNodeId = agentPositionModel.getEntityTargetPositionByNodeId(driver.getId());
+        
+        if(targetNodeId == null){
+            return positionUtil.getCanvasPosition(entityPositionNode);
+        }
+        
+//		int currentEdgeLegth = getEdgeLength(entityPositionNode.getId(), targetNodeId);
+        
+        DelayData delayData = moveVehicleAction.getDelayDataForVehicle(vehicle.getId());
+        
+        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime()) 
+                / delayData.getDelay();
+        
+        Node targetNode = nodesFromAllGraphs.get(targetNodeId);
+        
+        Point2d startPosition = positionUtil.getCanvasPosition(entityPositionNode);
+        Point2d targetPosition = positionUtil.getCanvasPosition(targetNode);
+        
+        double xIncrement = (targetPosition.x - startPosition.x) * portionCompleted;
+        double yIncrement = (targetPosition.y - startPosition.y) * portionCompleted;
+        
+        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
+	}
 }

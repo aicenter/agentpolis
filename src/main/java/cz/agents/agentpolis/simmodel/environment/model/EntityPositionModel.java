@@ -143,6 +143,10 @@ public abstract class EntityPositionModel {
 	public synchronized Integer getEntityPositionByNodeId(String entityId) {
 		return entityPositionMap.get(entityId);
 	}
+    
+    public synchronized Integer getEntityTargetPositionByNodeId(String entityId) {
+		return currentTargetPosition.get(entityId);
+	}
 
 	public void removePositionCallbackForNode(String entityId, long nodeId, PositionUpdated positionEntityCallback) {
 

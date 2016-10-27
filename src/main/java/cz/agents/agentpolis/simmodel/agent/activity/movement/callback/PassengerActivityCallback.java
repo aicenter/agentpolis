@@ -31,5 +31,7 @@ public interface PassengerActivityCallback<TTrip extends GraphTrip<?>> {
      * 
      */
     public void tripFail(TTrip failedTrip);
+    
+    public void tripStarted();
 
 }

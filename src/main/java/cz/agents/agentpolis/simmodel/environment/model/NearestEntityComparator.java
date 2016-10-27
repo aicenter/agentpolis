@@ -9,15 +9,17 @@ import javax.vecmath.Point2d;
  *
  * @author F.I.D.O.
  * @param <E> entity type
+ * @param <EP> entityPositionUtil type
  */
-public class NearestEntityComparator<E extends AgentPolisEntity> implements Comparator<E>{
+public class NearestEntityComparator<E extends AgentPolisEntity, EP extends EntityPositionUtil> 
+        implements Comparator<E>{
 	
-	private final Point2d from;
+	protected final Point2d from;
 	
-	private final EntityPositionUtil entityPositionUtil;
+	protected final EP entityPositionUtil;
 
 	
-	public NearestEntityComparator(EntityPositionUtil entityPositionUtil, Point2d from) {
+	public NearestEntityComparator(EP entityPositionUtil, Point2d from) {
 		this.from = from;
 		this.entityPositionUtil = entityPositionUtil;
 	}

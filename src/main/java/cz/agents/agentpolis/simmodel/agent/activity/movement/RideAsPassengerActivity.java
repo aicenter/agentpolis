@@ -35,6 +35,8 @@ public class RideAsPassengerActivity<TTrip extends GraphTrip<TripItem>> implemen
 
     private String passengerId;
     private TTrip trip;
+    
+    private PassengerActivityCallback<TTrip> passengerActivityCallback;
 
     @Inject
     public RideAsPassengerActivity(PassengerAction useVehicleAction, PassengerTripAction passengerTripAction, 
@@ -60,6 +62,7 @@ public class RideAsPassengerActivity<TTrip extends GraphTrip<TripItem>> implemen
             PassengerActivityCallback<TTrip> passengerActivityCallback) {
 
         setUpPassenger(agentId, trip, passengerActivityCallback);
+        this.passengerActivityCallback = passengerActivityCallback;
 
         // --- LOG ----
         passengerActivityLogger.logStartWaitingOnPosition(agentId, trip);
@@ -178,6 +181,8 @@ public class RideAsPassengerActivity<TTrip extends GraphTrip<TripItem>> implemen
      */
     @Override
     public void notifyPassengerAboutVehiclePlan(int fromNodeId, int toNodeId, String vehicleId) {
+        
+        passengerActivityCallback.tripStarted();
 
         TripItem fromtripItem = new TripItem(fromNodeId);
         TripItem totripItem = new TripItem(toNodeId);
