@@ -374,6 +374,11 @@ public class PassengerActivityTest {
 			this.failedTrip = failedTrip;
 			
 		}
+
+        @Override
+        public void tripStarted() {
+            
+        }
 		
 	}
 	
