@@ -60,6 +60,7 @@ public class VehiclePositionUtil extends EntityPositionUtil{
         
         Integer targetNodeId = agentPositionModel.getEntityTargetPositionByNodeId(driver.getId());
         
+        // vehicle waits 
         if(targetNodeId == null){
             return positionUtil.getCanvasPosition(entityPositionNode);
         }
@@ -67,6 +68,11 @@ public class VehiclePositionUtil extends EntityPositionUtil{
 //		int currentEdgeLegth = getEdgeLength(entityPositionNode.getId(), targetNodeId);
         
         DelayData delayData = moveVehicleAction.getDelayDataForVehicle(vehicle.getId());
+        
+        // vehicle has no delay yet
+        if(delayData == null){
+            return positionUtil.getCanvasPosition(entityPositionNode);
+        }
         
         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime()) 
                 / delayData.getDelay();
