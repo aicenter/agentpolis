@@ -78,7 +78,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
     
-	private EnvironmentFactory envinromentFactory;
+	private EnvironmentFactory environmentFactory;
 	
 	private SimulationParameters parameters;
 
@@ -142,7 +142,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Provides 
 	@Singleton
 	public SimulationCreator getSimulationCreator(LogItemViewer logItemViewer){
-		return new SimulationCreator(envinromentFactory, parameters, logItemViewer);
+		return new SimulationCreator(environmentFactory, parameters, logItemViewer);
 	}
 	
 	@Provides 
@@ -279,7 +279,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     public void initializeParametrs(EnvironmentFactory envinromentFactory, SimulationParameters parameters, 
             List<Object> loggers, Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer, 
             ZonedDateTime initDate) {
-        this.envinromentFactory = envinromentFactory;
+        this.environmentFactory = envinromentFactory;
 		this.parameters = parameters;
         this.loggers = loggers;
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
