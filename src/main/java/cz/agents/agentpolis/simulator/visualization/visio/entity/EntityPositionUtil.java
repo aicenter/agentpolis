@@ -6,23 +6,21 @@
 package cz.agents.agentpolis.simulator.visualization.visio.entity;
 
 import com.google.inject.Inject;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
-import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
-import cz.agents.agentpolis.simmodel.environment.model.action.driving.MoveVehicleAction;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.agentpolis.simmodel.environment.model.delaymodel.DelayModel;
 import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import javax.vecmath.Point2d;
 
@@ -84,6 +82,21 @@ public class EntityPositionUtil {
 
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
         return network.getEdge(entityPositionNodeId, targetNodeId).getLength();
+    }
+    
+    public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip){
+        int lenght = 0;
+        
+        LinkedList<TripItem> locations = graphTrip.getLocations();
+        
+        int stratNodeId = locations.get(0).tripPositionByNodeId;
+        for (int i =1; i < locations.size(); i++) {
+            int targetNodeId = locations.get(i).tripPositionByNodeId;
+            lenght += getEdgeLength(stratNodeId, targetNodeId);
+            stratNodeId = targetNodeId;
+        }
+        
+        return lenght;
     }
     
     
