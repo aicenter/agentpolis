@@ -146,20 +146,26 @@ public abstract class MovementActivity<TTripItem extends TripItem> implements Po
     public void newEntityPosition(String entityId, long currentPositionByNodeId) {
 
         long lastFromPositionByNodeId = lastFromTripItem.tripPositionByNodeId;
+        
+        
+        /* OLD DELAY MODEL BYPASS */
 
-        if (trip.hasNextTripItem()) {
-            queueAction.addDelayActor(
-                    lastFromPositionByNodeId,
-                    currentPositionByNodeId,
-                    tripGraphType,
-                    new DelayActorWithNextDestMovingAction(movingAction, this,
-                            lastFromPositionByNodeId, currentPositionByNodeId, trip
-                                    .showCurrentTripItem().tripPositionByNodeId));
-        } else {
-            queueAction.addDelayActor(lastFromPositionByNodeId, currentPositionByNodeId,
-                    tripGraphType, new DelayActorMovingAction(movingAction, this,
-                            lastFromPositionByNodeId, currentPositionByNodeId));
-        }
+//        if (trip.hasNextTripItem()) {
+//            queueAction.addDelayActor(
+//                    lastFromPositionByNodeId,
+//                    currentPositionByNodeId,
+//                    tripGraphType,
+//                    new DelayActorWithNextDestMovingAction(movingAction, this,
+//                            lastFromPositionByNodeId, currentPositionByNodeId, trip
+//                                    .showCurrentTripItem().tripPositionByNodeId));
+//        } else {
+//            queueAction.addDelayActor(lastFromPositionByNodeId, currentPositionByNodeId,
+//                    tripGraphType, new DelayActorMovingAction(movingAction, this,
+//                            lastFromPositionByNodeId, currentPositionByNodeId));
+//        }
+
+
+        nextMove(lastFromPositionByNodeId, currentPositionByNodeId);
     }
 
     @Override
