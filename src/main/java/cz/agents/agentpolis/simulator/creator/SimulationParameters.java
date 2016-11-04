@@ -6,6 +6,7 @@ import cz.agents.agentpolis.utils.config.ConfigReaderException;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 public class SimulationParameters {
@@ -45,6 +46,7 @@ public class SimulationParameters {
     private int iterationNumber;
     public final String dataFolder;
     public final int srid;
+    public final ZonedDateTime initDate;
 
 
     public SimulationParameters(File experimentPath, ConfigReader configReader) throws ConfigReaderException {
@@ -85,7 +87,8 @@ public class SimulationParameters {
                 .getMap("pathToScriptsAndTheirInputParameters");
         
         srid = configReader.getInteger("epsg");
-
+        
+        initDate = ZonedDateTime.now();
 
         LOGGER.info("Loaded configuration");
     }

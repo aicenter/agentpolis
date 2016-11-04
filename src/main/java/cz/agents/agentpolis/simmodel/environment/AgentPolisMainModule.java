@@ -16,7 +16,6 @@ import java.util.Set;
  * @author fido
  */
 public interface AgentPolisMainModule {
-    public void initializeParametrs(EnvironmentFactory envinromentFactory, SimulationParameters parameters, 
-        List<Object> loggers, final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer,
-        ZonedDateTime initDate);
+    public void initializeParametrs(SimulationParameters parameters, 
+        List<Object> loggers, final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer);
 }

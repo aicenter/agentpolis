@@ -7,7 +7,6 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.environment.EnvironmentFactory;
 import cz.agents.agentpolis.simmodel.environment.model.*;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.*;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
@@ -97,7 +96,6 @@ public class SimulationCreator {
     private final List<InitModuleFactory> initModuleFactories = new ArrayList<>();
     private final List<InitFactory> initFactories = new ArrayList<>();
 
-    private final EnvironmentFactory factoryEnvironment;
     private final SimulationParameters params;
     
     private final LogItemViewer logItemViewer;
@@ -122,9 +120,7 @@ public class SimulationCreator {
 	
 	
 	
-    public SimulationCreator(final EnvironmentFactory factoryEnvironment, final SimulationParameters params,
-            LogItemViewer logItemViewer) {
-        this.factoryEnvironment = factoryEnvironment;
+    public SimulationCreator(final SimulationParameters params, LogItemViewer logItemViewer) {
         this.params = params;
         this.logItemViewer = logItemViewer;
 		instance = this;
@@ -226,10 +222,7 @@ public class SimulationCreator {
         LOGGER.info("Creating instance of environment");
 		injector.getInstance(AllNetworkNodes.class).setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
 		injector.getInstance(Graphs.class).setGraphs(osmDTO.graphByType);
-        injector = factoryEnvironment.injectEnvironment(injector, simulation, seed, osmDTO.graphByType, osmDTO
-                .nodesFromAllGraphs);
         LOGGER.info("Created instance of environment");
-
     }
 
     private void initLogger() {

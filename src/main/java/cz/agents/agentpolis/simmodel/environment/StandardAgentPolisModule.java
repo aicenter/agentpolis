@@ -77,16 +77,12 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
-    
-	private EnvironmentFactory environmentFactory;
-	
+
 	private SimulationParameters parameters;
 
     private List<Object> loggers;
     
     private Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer;
-    
-    private ZonedDateTime initDate;
     
     
 	
@@ -142,7 +138,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Provides 
 	@Singleton
 	public SimulationCreator getSimulationCreator(LogItemViewer logItemViewer){
-		return new SimulationCreator(environmentFactory, parameters, logItemViewer);
+		return new SimulationCreator(parameters, logItemViewer);
 	}
 	
 	@Provides 
@@ -225,7 +221,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Provides
 	@Singleton
 	TimeProvider provideTimeProvider(EventProcessor eventProcessor) {
-		return new TimeProvider(eventProcessor, initDate);
+		return new TimeProvider(eventProcessor, parameters.initDate);
 	}
     
     
@@ -276,14 +272,11 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	}
 
     @Override
-    public void initializeParametrs(EnvironmentFactory envinromentFactory, SimulationParameters parameters, 
-            List<Object> loggers, Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer, 
-            ZonedDateTime initDate) {
-        this.environmentFactory = envinromentFactory;
+    public void initializeParametrs(SimulationParameters parameters, List<Object> loggers, 
+            Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer) {
 		this.parameters = parameters;
         this.loggers = loggers;
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
-        this.initDate = initDate;
     }
         
     private static class DefaultDelayingSegmentCapacityDeterminer implements DelayingSegmentCapacityDeterminer {

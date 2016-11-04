@@ -7,13 +7,9 @@ package cz.agents.agentpolis;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.environment.AgentPolisMainModule;
-import cz.agents.agentpolis.simmodel.environment.EnvironmentFactory;
 import cz.agents.agentpolis.simmodel.environment.StandardAgentPolisModule;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.agentpolis.simulator.creator.SimulationParameters;
@@ -22,7 +18,6 @@ import cz.agents.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,17 +50,14 @@ public class AgentPolisInitializer {
     
     
     
-    public AgentPolisInitializer(EnvironmentFactory environmentFactory, SimulationParameters parameters, 
-            ZonedDateTime initDate, StandardAgentPolisModule mainModule) {
+    public AgentPolisInitializer(SimulationParameters parameters, StandardAgentPolisModule mainModule) {
         this.mainModule = mainModule;
         this.parameters = parameters;
-        mainModule.initializeParametrs(environmentFactory, parameters, loggers, allowedLogItemClassesLogItemViewer,
-                initDate);
+        mainModule.initializeParametrs(parameters, loggers, allowedLogItemClassesLogItemViewer);
     }
     
-    public AgentPolisInitializer(EnvironmentFactory environmentFactory, SimulationParameters parameters, 
-            ZonedDateTime initDate) {
-      this(environmentFactory, parameters, initDate, new StandardAgentPolisModule());
+    public AgentPolisInitializer(SimulationParameters parameters) {
+        this(parameters, new StandardAgentPolisModule());
     }
     
     
