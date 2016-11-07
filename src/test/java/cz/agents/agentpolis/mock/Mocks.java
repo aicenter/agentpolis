@@ -223,9 +223,9 @@ public class Mocks extends AbstractModule {
 
 		vehicleTimeModel = new VehicleTimeModel();
 
-		agents = new AgentStorage(new HashMap<>(), new HashMap<>());
+		agents = new AgentStorage();
 
-		vehicles = new VehicleStorage(new HashMap<>(), new HashMap<>());
+		vehicles = new VehicleStorage();
 
 		beforePlanNotifyModel = new BeforePlanNotifyModel(new HashMap<>(), new HashMap<>(), new HashMap<>(), new
                 HashMap<>(), eventProcessor);

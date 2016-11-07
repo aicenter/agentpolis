@@ -53,8 +53,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	
 	private final RailwayNetwork railwayNetwork;
 	
-	private final EntityStorage entityStorage;
-	
 	private final AgentStorage agentStorage;
 	
 	private final VehicleStorage vehicleStorage;
@@ -70,7 +68,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	@Inject
 	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
 			HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
-			RailwayNetwork railwayNetwork, EntityStorage<AgentPolisEntity> entityStorage, AgentStorage agentStorage, 
+			RailwayNetwork railwayNetwork, AgentStorage agentStorage, 
 			VehicleStorage vehicleStorage, AgentPositionModel agentPositionModel, 
 			VehiclePositionModel vehiclePositionModel, AllNetworkNodes allNetworkNodes, 
 			SimulationCreator simulationCreator) {
@@ -80,7 +78,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
 		this.tramwayNetwork = tramwayNetwork;
 		this.metrowayNetwork = metrowayNetwork;
 		this.railwayNetwork = railwayNetwork;
-		this.entityStorage = entityStorage;
 		this.agentStorage = agentStorage;
 		this.vehicleStorage = vehicleStorage;
 		this.agentPositionModel = agentPositionModel;
@@ -127,6 +124,8 @@ public class DefaultVisioInitializer implements VisioInitializer{
 
     protected void initEntityLayers(Simulation simulation, Projection projection) {
         MultipleDrawListener drawListener = new MultipleDrawListener(simulation, 1000, 40);
+        
+        EntityStorage<AgentPolisEntity> entityStorage = new EntityStorage<>();
 
         for (String entityId : agentStorage.getEntityIds()) {
             entityStorage.addEntity(agentStorage.getEntityById(entityId));

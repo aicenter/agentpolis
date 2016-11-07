@@ -102,7 +102,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, Vehicle>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<EntityStorage<AgentPolisEntity>>(){});
 		bind(new TypeLiteral<Map<String, AgentPolisEntity>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<EntityType, Set<String>>>(){}).toInstance(new HashMap<>());
 		

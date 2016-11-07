@@ -1,12 +1,9 @@
 package cz.agents.agentpolis.simmodel.environment.model;
 
-import java.util.Map;
-import java.util.Set;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 
 /**
@@ -20,8 +17,8 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 public class VehicleStorage extends EntityStorage<Vehicle> {
 
     @Inject
-    public VehicleStorage(Map<String, Vehicle> entities, Map<EntityType, Set<String>> entitiesByType) {
-        super(entities, entitiesByType);
+    public VehicleStorage() {
+        super();
     }
 
 }

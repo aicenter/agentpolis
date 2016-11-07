@@ -8,13 +8,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The general storage for entity in a simulation model (e.g. for vehicle,
@@ -22,17 +21,15 @@ import java.util.Iterator;
  * 
  *
  * @param <TEntity> Entity type */
-@Singleton
 public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable<TEntity>{
 
     private final Map<String, TEntity> entities;
     private final Map<EntityType, Set<String>> entitiesByType;
 
-	@Inject
-    public EntityStorage(Map<String, TEntity> entities, Map<EntityType, Set<String>> entitiesByType) {
+    public EntityStorage() {
         super();
-        this.entities = entities;
-        this.entitiesByType = entitiesByType;
+        this.entities = new ConcurrentHashMap<>();
+        this.entitiesByType = new ConcurrentHashMap<>();
     }
 
     /**
@@ -41,7 +38,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
      * 
      * @param entity
      */
-    public synchronized void addEntity(TEntity entity) {
+    public void addEntity(TEntity entity) {
         checkArgument(entities.containsKey(entity.getId()) == false, "Duplicate entity i storage: "
                 + entity.getId());
 
@@ -55,7 +52,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
         entitiesByType.get(type).add(entity.getId());
     }
 	
-	public synchronized void removeEntity(TEntity entity){
+	public void removeEntity(TEntity entity){
 		entities.remove(entity.getId());
 		entitiesByType.get(entity.getType()).remove(entity.getId());
 	}
@@ -67,12 +64,12 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
      * @param entityId
      * @return
      */
-    public synchronized TEntity getEntityById(String entityId) {
+    public TEntity getEntityById(String entityId) {
         return entities.get(checkNotNull(entityId));
     }
 
     /** Returns all entity ids */
-    public synchronized ImmutableSet<String> getEntityIds() {
+    public ImmutableSet<String> getEntityIds() {
         return ImmutableSet.copyOf(entities.keySet());
     }
 
@@ -82,16 +79,16 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
     }
     
     public class EntityIterator implements Iterator<TEntity>{
-		
-		private final Iterator<String> idIterator;
+        
+        private final Iterator<TEntity> iterator;
 
 		public EntityIterator() {
-			idIterator = getEntityIds().iterator();
+            iterator = entities.values().iterator();
 		}
 		
 		public TEntity getNextEntity(){
-			while(idIterator.hasNext()){
-				TEntity entity = getEntityById(idIterator.next());
+			while(iterator.hasNext()){
+                TEntity entity = iterator.next();
 				return entity;
 			}
 			return null;
@@ -99,12 +96,12 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
 
         @Override
         public boolean hasNext() {
-            return idIterator.hasNext();
+            return iterator.hasNext();
         }
 
         @Override
         public TEntity next() {
-            return getEntityById(idIterator.next());
+            return iterator.next();
         }
 		
 	}
