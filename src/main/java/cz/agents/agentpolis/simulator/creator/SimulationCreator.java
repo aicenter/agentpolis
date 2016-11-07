@@ -1,8 +1,7 @@
 package cz.agents.agentpolis.simulator.creator;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.simmodel.agent.Agent;
@@ -11,15 +10,11 @@ import cz.agents.agentpolis.simmodel.environment.model.*;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.*;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.agentpolis.simulator.SimulationProvider;
-import cz.agents.agentpolis.simulator.creator.initializator.AgentInitFactory;
-import cz.agents.agentpolis.simulator.creator.initializator.InitFactory;
-import cz.agents.agentpolis.simulator.creator.initializator.InitModuleFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.MapInitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
-import cz.agents.agentpolis.simulator.visualization.visio.SimulationControlLayer;
 import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntity;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.VisEntityLayer;
@@ -31,7 +26,6 @@ import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandler;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.EventProcessorEventType;
-import cz.agents.alite.googleearth.cameraalt.factory.CameraAltUpdateKmlProviderFacotryImpl;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
@@ -79,7 +73,7 @@ public class SimulationCreator {
 
 
     private Simulation simulation;
-    private Injector injector = Guice.createInjector();
+
     private Synthetiser synthetiser;
     
 
@@ -89,16 +83,28 @@ public class SimulationCreator {
     private boolean reportDays = false;
 
     private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
-    private final List<AgentInitFactory> agentInits = new ArrayList<>();
+    
     private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
     private final Map<EntityType, VisEntity> entityStyles = new HashMap<>();
-
-    private final List<InitModuleFactory> initModuleFactories = new ArrayList<>();
-    private final List<InitFactory> initFactories = new ArrayList<>();
 
     private final SimulationParameters params;
     
     private final LogItemViewer logItemViewer;
+    
+    private final ProjectionProvider projectionProvider;
+    
+    private final SimulationProvider simulationProvider;
+    
+    private final AllNetworkNodes allNetworkNodes;
+    
+    private final Graphs graphs;
+    
+    private final AgentStorage agentStorage;
+    
+    private final Provider<VisioInitializer> visioInitializerProvider;
+    
+    private final EntityVelocityModel entityVelocityModel;
+    
     
     public BoundingBox boundsOfMap = null;
     
@@ -119,16 +125,22 @@ public class SimulationCreator {
 	
 	
 	
-	
-    public SimulationCreator(final SimulationParameters params, LogItemViewer logItemViewer) {
+	@Inject
+    public SimulationCreator(final SimulationParameters params, LogItemViewer logItemViewer, 
+            ProjectionProvider projectionProvider, SimulationProvider simulationProvider,
+            AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
+            Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel) {
         this.params = params;
         this.logItemViewer = logItemViewer;
+        this.projectionProvider = projectionProvider;
+        this.simulationProvider = simulationProvider;
+        this.allNetworkNodes = allNetworkNodes;
+        this.graphs = graphs;
+        this.agentStorage = agentStorage;
+        this.visioInitializerProvider = visioInitializerProvider;
+        this.entityVelocityModel = entityVelocityModel;
 		instance = this;
     }
-	
-	public void setMainEnvironment(Injector injector){
-		this.injector = injector;
-	}
     
     public void prepareSimulation(final MapInitFactory mapInitFactory, final long seed){
         LOGGER.debug("SEED = " + seed);
@@ -137,27 +149,14 @@ public class SimulationCreator {
         initSimulation();
 
         LOGGER.info(">>> MAPS CREATION");
-        MapData osmDTO = mapInitFactory.initMap(params.osmFile, injector, params.simulationDurationInMillis);
+        MapData osmDTO = mapInitFactory.initMap(params.osmFile, params.simulationDurationInMillis);
         boundsOfMap = osmDTO.bounds;
 
         initEnvironment(osmDTO, seed);
 
         // Projection
         projection = Projection.createGPSTo3DProjector(boundsOfMap, 10000, 10000);
-        injector.getInstance(ProjectionProvider.class).setProjection(projection);
-
-        for (InitModuleFactory initFactory : initModuleFactories) {
-            LOGGER.debug("Injecting module: " + initFactory);
-            AbstractModule module = initFactory.injectModule(injector);
-            injector = injector.createChildInjector(module);
-        }
-
-        for (InitFactory initFactory : initFactories) {
-            LOGGER.debug("Factory initialization: " + initFactory);
-            initFactory.initRestEnvironment(injector);
-        }
-
-        initAgents();
+        projectionProvider.setProjection(projection);
 
         if (reportDays) {
             new DayReporter(simulation);
@@ -214,14 +213,14 @@ public class SimulationCreator {
         simulation = new Simulation(params.simulationDurationInMillis);
         simulation.setSleepTimeIfWaitToOtherEvent(50);
         simulation.setPrintouts(10000000);
-		injector.getInstance(SimulationProvider.class).setSimulation(simulation);
+		simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
     }
 
     private void initEnvironment(MapData osmDTO, long seed) {
         LOGGER.info("Creating instance of environment");
-		injector.getInstance(AllNetworkNodes.class).setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
-		injector.getInstance(Graphs.class).setGraphs(osmDTO.graphByType);
+		allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
+		graphs.setGraphs(osmDTO.graphByType);
         LOGGER.info("Created instance of environment");
     }
 
@@ -262,25 +261,10 @@ public class SimulationCreator {
 
         LOGGER.info("Failed to load log4j properties");
     }
-
-    private void initAgents() {
-        LOGGER.info("Initializing agents");
-        for (AgentInitFactory agentInit : agentInits) {
-            List<Agent> initedAgents = agentInit.initAllAgentLifeCycles(injector);
-            for (Agent agent : initedAgents) {
-                //                LOGGER.debug("Agent initialized: " + agent + " (move speed: " + agentMoveSpeedInMps
-                //                        + " m/s)");
-                addEntityMaxSpeedToStorage(agent.getId(), params.agentMoveSpeedInMps);
-                injector.getInstance(AgentStorage.class).addEntity(agent);
-                agent.born();
-            }
-        }
-        LOGGER.info("Initialized agents");
-    }
 	
 	public void addAgent(Agent agent){
 		addEntityMaxSpeedToStorage(agent.getId(), params.agentMoveSpeedInMps);
-		injector.getInstance(AgentStorage.class).addEntity(agent);
+		agentStorage.addEntity(agent);
 		if(params.showVisio && VisEntityLayer.isActive()){
 			VisEntityLayer.addEntity(agent);
 		}
@@ -293,9 +277,10 @@ public class SimulationCreator {
 		if(params.showVisio  && VisEntityLayer.isActive()){
 			VisEntityLayer.removeEntity(agent);
 		}
-		injector.getInstance(AgentStorage.class).removeEntity(agent);
-		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
-        injector.getInstance(EntityPositionModel.class).removeEntity(agent.getId());
+        
+		agentStorage.removeEntity(agent);
+//		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
+//        injector.getInstance(EntityPositionModel.class).removeEntity(agent.getId());
 	}
     
     
@@ -310,7 +295,7 @@ public class SimulationCreator {
         if (params.showVisio) {
             LOGGER.info("Initializing Visio");
             visFirst(projection);
-			injector.getInstance(VisioInitializer.class).initialize(simulation, projection);
+			visioInitializerProvider.get().initialize(simulation, projection);
             visLast();
 
             simulation.setSimulationSpeed(1);
@@ -332,8 +317,7 @@ public class SimulationCreator {
     // --------------------------------------------------
 
     private void addEntityMaxSpeedToStorage(String entityId, double agentMoveSpeedInkmph) {
-        injector.getInstance(EntityVelocityModel.class).addEntityMaxVelocity(entityId, agentMoveSpeedInkmph);
-
+        entityVelocityModel.addEntityMaxVelocity(entityId, agentMoveSpeedInkmph);
     }
 
     private void createGoogleEarthUpdaters(String nameOfKMLFile) {
@@ -349,9 +333,11 @@ public class SimulationCreator {
         RegionBounds regionBounds = RegionBounds.createRegionBounds(north, south, east, west);
 
         for (UpdateGEFactory factoryGoogleEarth : factoryGoogleEarths) {
-            synthetiser.addUpdateKmlView(new CameraAltUpdateKmlProviderFacotryImpl(factoryGoogleEarth
-                    .getCameraAltVisibility(), factoryGoogleEarth.getNameUpdateKmlView(), factoryGoogleEarth
-                    .createUpdateKmlView(injector, regionBounds)));
+            
+            // TODO - rework google earth to be able to work without injector
+//            synthetiser.addUpdateKmlView(new CameraAltUpdateKmlProviderFacotryImpl(factoryGoogleEarth
+//                    .getCameraAltVisibility(), factoryGoogleEarth.getNameUpdateKmlView(), factoryGoogleEarth
+//                    .createUpdateKmlView(injector, regionBounds)));
         }
 
         synthetiser.makeLinks(new File(nameOfKMLFile));
@@ -417,17 +403,8 @@ public class SimulationCreator {
         VisManager.registerLayer(VisInfoLayer.create());
         // VisManager.registerLayer(LogoLayer.create(ResourceReader.getPathToResource("/img/atg_blue.png")));
 
-        VisManager.registerLayer(SimulationControlLayer.create(simulation, injector));
-    }
-
-    /**
-     * Adding init agent.
-     *
-     * @param agentInit
-     */
-    public void addAgentInit(AgentInitFactory agentInit) {
-        agentInits.add(agentInit);
-
+        // TODO - rework SimulationControlLayer to be able to work without injector
+//        VisManager.registerLayer(SimulationControlLayer.create(simulation, injector));
     }
 
     /**
@@ -484,23 +461,6 @@ public class SimulationCreator {
             setTimer();
         }
 
-    }
-
-    /**
-     * @param initFactory
-     * @deprecated Please use addInitModuleFactory (same functionality, only fixing a name).
-     */
-    @Deprecated
-    public void addInitModulFactory(InitModuleFactory initFactory) {
-        initModuleFactories.add(initFactory);
-    }
-
-    public void addInitModuleFactory(InitModuleFactory initFactory) {
-        initModuleFactories.add(initFactory);
-    }
-
-    public void addInitFactory(InitFactory initFactory) {
-        initFactories.add(initFactory);
     }
 
     public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {

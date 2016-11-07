@@ -16,6 +16,6 @@ import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
  */
 public interface MapInitFactory {
 
-    public MapData initMap(File mapFile, Injector injector, long simulationDurationInMilisec);
+    public MapData initMap(File mapFile, long simulationDurationInMilisec);
 
 }

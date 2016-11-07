@@ -53,7 +53,8 @@ public class SimulationParameters {
         this(experimentPath, configReader, 0);
     }
 
-    public SimulationParameters(File experimentPath, ConfigReader configReader, int iterationNumber) throws ConfigReaderException {
+    public SimulationParameters(File experimentPath, ConfigReader configReader, int iterationNumber) 
+            throws ConfigReaderException {
         this.configReader = configReader;
         this.experimentPath = experimentPath;
         this.iterationNumber = iterationNumber;

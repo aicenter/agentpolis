@@ -23,7 +23,6 @@ import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerA
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.Graphs;
 import cz.agents.agentpolis.simmodel.environment.model.action.callback.VehicleArrivedCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
@@ -123,6 +122,8 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         bind(new TypeLiteral<Map<String, PassengerActivityCallback<?>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {}).toInstance(new HashMap<>());
         
+        bind(SimulationParameters.class).toInstance(parameters);
+        
         install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
             .build(ShortestPathPlannerFactory.class));
         
@@ -134,11 +135,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		
 	}
 	
-	@Provides 
-	@Singleton
-	public SimulationCreator getSimulationCreator(LogItemViewer logItemViewer){
-		return new SimulationCreator(parameters, logItemViewer);
-	}
 	
 	@Provides 
 	@Singleton
