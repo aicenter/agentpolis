@@ -28,12 +28,6 @@ import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.EventProcessorEventType;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
-import cz.agents.alite.vis.VisManager;
-import cz.agents.alite.vis.VisManager.SceneParams;
-import cz.agents.alite.vis.layer.common.ColorLayer;
-import cz.agents.alite.vis.layer.common.FpsLayer;
-import cz.agents.alite.vis.layer.common.HelpLayer;
-import cz.agents.alite.vis.layer.common.VisInfoLayer;
 import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
@@ -294,13 +288,11 @@ public class SimulationCreator {
 
         if (params.showVisio) {
             LOGGER.info("Initializing Visio");
-            visFirst(projection);
 			visioInitializerProvider.get().initialize(simulation, projection);
-            visLast();
-
             simulation.setSimulationSpeed(1);
             LOGGER.info("Initialized Visio");
-        } else {
+        } 
+        else {
             simulation.setSimulationSpeed(0);
         }
 
@@ -308,9 +300,7 @@ public class SimulationCreator {
             LOGGER.info("Initializing event viewer");
             logItemViewer.runView();
             LOGGER.info("Initialized event viewer");
-
         }
-
     }
 
     // -------------------- Create methods
@@ -350,35 +340,6 @@ public class SimulationCreator {
 
     }
 
-    /**
-     * creates the alite vis window
-     */
-    private void visFirst(final Projection projection) {
-
-        final int windowHight = 400;
-        final int windowWidth = 400;
-
-        VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
-        VisManager.init();
-
-        final double zoomFactor = windowWidth / projection.sceneWidth;
-
-        VisManager.setSceneParam(new SceneParams() {
-
-            @Override
-            public double getDefaultZoomFactor() {
-                return zoomFactor;
-            }
-
-            @Override
-            public Rectangle getWorldBounds() {
-                return new Rectangle(projection.sceneWidth, projection.sceneHeight);
-            }
-
-        });
-        VisManager.registerLayer(ColorLayer.create(Color.LIGHT_GRAY));
-    }
-
     public void addEntityStyleVis(final EntityType entityType, Color colorOfEntityInVis, int widthOfEntityInVis) {
         entityStyles.put(entityType, new VisEntity(colorOfEntityInVis, widthOfEntityInVis));
     }
@@ -392,19 +353,6 @@ public class SimulationCreator {
         }
 
         return new VisGraph(nodesWithIds, nodes, new ArrayList<>(graph.getAllEdges()));
-    }
-
-    /**
-     * creates upper layers
-     */
-    protected void visLast() {
-        VisManager.registerLayer(HelpLayer.create());
-        VisManager.registerLayer(FpsLayer.create());
-        VisManager.registerLayer(VisInfoLayer.create());
-        // VisManager.registerLayer(LogoLayer.create(ResourceReader.getPathToResource("/img/atg_blue.png")));
-
-        // TODO - rework SimulationControlLayer to be able to work without injector
-//        VisManager.registerLayer(SimulationControlLayer.create(simulation, injector));
     }
 
     /**

@@ -50,7 +50,6 @@ import cz.agents.agentpolis.simmodel.environment.model.sensor.PassengerBeforePla
 import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
 import cz.agents.agentpolis.simulator.SimulationProvider;
-import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.agentpolis.simulator.creator.SimulationParameters;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
@@ -59,10 +58,10 @@ import cz.agents.agentpolis.simulator.visualization.visio.DefaultVisioInitialize
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
+import cz.agents.alite.simulation.Simulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +133,13 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	protected void configureNext() {
 		
 	}
-	
+    
+    
+	@Provides 
+	@Singleton
+	public Simulation getSimulation(SimulationProvider simulationProvider){
+		return simulationProvider.getSimulation();
+	}
 	
 	@Provides 
 	@Singleton

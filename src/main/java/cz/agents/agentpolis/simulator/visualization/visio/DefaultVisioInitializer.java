@@ -26,10 +26,14 @@ import cz.agents.agentpolis.simulator.visualization.visio.graph.VisGraphLayer;
 import cz.agents.alite.simulation.MultipleDrawListener;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
+import cz.agents.alite.vis.layer.common.FpsLayer;
+import cz.agents.alite.vis.layer.common.HelpLayer;
+import cz.agents.alite.vis.layer.common.VisInfoLayer;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +68,12 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	private final AllNetworkNodes allNetworkNodes;
 	
 	private final SimulationCreator simulationCreator;
+    
+    private final SimulationControlLayer simulationControlLayer;
+    
+    private final Projection projection;
+    
+    
 
 	@Inject
 	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
@@ -71,7 +81,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 			RailwayNetwork railwayNetwork, AgentStorage agentStorage, 
 			VehicleStorage vehicleStorage, AgentPositionModel agentPositionModel, 
 			VehiclePositionModel vehiclePositionModel, AllNetworkNodes allNetworkNodes, 
-			SimulationCreator simulationCreator) {
+			SimulationCreator simulationCreator, SimulationControlLayer simulationControlLayer, Projection projection) {
 		this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
@@ -84,16 +94,20 @@ public class DefaultVisioInitializer implements VisioInitializer{
 		this.vehiclePositionModel = vehiclePositionModel;
 		this.allNetworkNodes = allNetworkNodes;
 		this.simulationCreator = simulationCreator;
+        this.simulationControlLayer = simulationControlLayer;
+        this.projection = projection;
 	}
 	
 	
 
 	@Override
 	public void initialize(Simulation simulation, Projection projection) {
+        initWindow();
         initGraphLayers(projection);
         initLayersBeforeEntityLayers();
         initEntityLayers(simulation, projection);
 		initLayersAfterEntityLayers();
+        initInfoLayers();
 	}
 	
 	private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
@@ -146,6 +160,40 @@ public class DefaultVisioInitializer implements VisioInitializer{
 
     protected void initLayersBeforeEntityLayers() {
         
+    }
+
+    protected void initInfoLayers() {
+        VisManager.registerLayer(HelpLayer.create());
+        VisManager.registerLayer(FpsLayer.create());
+        VisManager.registerLayer(VisInfoLayer.create());
+        
+        // VisManager.registerLayer(LogoLayer.create(ResourceReader.getPathToResource("/img/atg_blue.png")));
+        
+        VisManager.registerLayer(simulationControlLayer);
+    }
+
+    private void initWindow() {
+        final int windowHight = 400;
+        final int windowWidth = 400;
+
+        VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
+        VisManager.init();
+
+        final double zoomFactor = windowWidth / projection.sceneWidth;
+
+        VisManager.setSceneParam(new VisManager.SceneParams() {
+
+            @Override
+            public double getDefaultZoomFactor() {
+                return zoomFactor;
+            }
+
+            @Override
+            public Rectangle getWorldBounds() {
+                return new Rectangle(projection.sceneWidth, projection.sceneHeight);
+            }
+
+        });
     }
 	
 }

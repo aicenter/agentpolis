@@ -1,11 +1,11 @@
 package cz.agents.agentpolis.simulator.visualization.visio;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
-import cz.agents.alite.vis.layer.VisLayer;
 import cz.agents.alite.vis.layer.common.HelpLayer;
 import cz.agents.alite.vis.layer.toggle.KeyToggleLayer;
 import org.apache.log4j.Logger;
@@ -19,7 +19,6 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
 /**
@@ -37,19 +36,36 @@ import java.util.Calendar;
  * @author Ondrej Milenovsky
  * @author Zbynek Moler
  */
+@Singleton
 public class SimulationControlLayer extends AbstractLayer {
 
 	protected static Logger logger = Logger.getLogger(SimulationControlLayer.class);
 
+    
+    
+    
+    
 	private final Simulation simulation;
+    
+    private final TimeProvider timeProvider;
 
-	private final Injector injector;
+    
+    
 
-	private SimulationControlLayer(Simulation simulation, Injector injector) {
+    @Inject
+	private SimulationControlLayer(Simulation simulation, TimeProvider timeProvider) {
 		this.simulation = simulation;
-		this.injector = injector;
+        this.timeProvider = timeProvider;
+        
+        KeyToggleLayer toggle = KeyToggleLayer.create("s");
+		toggle.addSubLayer(this);
+		toggle.setHelpOverrideString(getLayerDescription() + "\n" +
+									 "By pressing 's', the simulation info can be turned off and on.");
 	}
 
+    
+    
+    
 	@Override
 	public void init(Vis vis) {
 		super.init(vis);
@@ -63,11 +79,6 @@ public class SimulationControlLayer extends AbstractLayer {
 			}
 
 			public void keyPressed(KeyEvent e) {
-
-				if (injector == null) {
-					System.err.println("Unable to open stats window, missing reference to environment");
-				}
-
 				if (e.getKeyChar() == '+') {
 					simulation.setSimulationSpeed(simulation.getSimulationSpeed() * 0.9);
 				} else if (e.getKeyChar() == '-') {
@@ -159,8 +170,6 @@ public class SimulationControlLayer extends AbstractLayer {
 		Font font = canvas.getFont();
 		canvas.setFont(new Font(font.getName(), Font.BOLD, 18));
 
-		TimeProvider timeProvider = injector.getInstance(TimeProvider.class);
-
 		canvas.drawString(converSimTimeForVis(timeProvider), 180, 22);
 
 		canvas.setFont(new Font(font.getName(), 0, 12));
@@ -205,21 +214,6 @@ public class SimulationControlLayer extends AbstractLayer {
 				"by pressing Ctrl+'*', the speed of simulation is set to fastest possible speed (????)\n" +
 				"by pressing '<delete>', delete GE static file on exit, so next run new file will be generated.\n";
 		return buildLayersDescription(description);
-	}
-
-	public static VisLayer create(Simulation simulation) {
-		return create(simulation, null);
-	}
-
-	public static VisLayer create(Simulation simulation, Injector injector) {
-		VisLayer simulationControl = new SimulationControlLayer(simulation, injector);
-
-		KeyToggleLayer toggle = KeyToggleLayer.create("s");
-		toggle.addSubLayer(simulationControl);
-		toggle.setHelpOverrideString(simulationControl.getLayerDescription() + "\n" +
-									 "By pressing 's', the simulation info can be turned off and on.");
-
-		return toggle;
 	}
 
 }
