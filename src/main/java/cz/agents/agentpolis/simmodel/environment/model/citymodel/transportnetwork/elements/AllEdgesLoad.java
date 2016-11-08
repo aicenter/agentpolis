@@ -29,6 +29,17 @@ public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
     
     private final Graph<SimulationNode,SimulationEdge> network;
 
+    
+    
+    
+    public HashMap<Long, Integer> getLoadPerEdge() {
+        return loadPerEdge;
+    }
+    
+    
+    
+    
+
     @Inject
     public AllEdgesLoad(AgentPositionModel entityPositionModel, HighwayNetwork highwayNetwork) {
         loadPerEdge = new HashMap<>();
