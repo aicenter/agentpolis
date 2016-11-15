@@ -19,9 +19,9 @@ import java.util.Map.Entry;
  *
  * @author fido
  */
-public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
+public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
     
-    private final HashMap<Long,Integer> loadPerEdge;
+    private final HashMap<String,Integer> loadPerEdge;
     
     private final Map<String,Integer> positions;
     
@@ -32,7 +32,7 @@ public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
     
     
     
-    public HashMap<Long, Integer> getLoadPerEdge() {
+    public HashMap<String, Integer> getLoadPerEdge() {
         return loadPerEdge;
     }
     
@@ -52,12 +52,14 @@ public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
             Integer currentNodeId = entry.getValue();
             Integer targetNodeId = targetPositions.get(key);
             if(targetNodeId != null && !targetNodeId.equals(currentNodeId)){
-                CollectionUtil.incrementMapValue(loadPerEdge, network.getEdge(currentNodeId, targetNodeId).wayID, 1);
+                String id = Long.toString(network.getNode(currentNodeId).getSourceId()) + "-"
+                        + Long.toString(network.getNode(targetNodeId).getSourceId());
+                CollectionUtil.incrementMapValue(loadPerEdge, id, 1);
             }
         }
     }
 
-    public int getLoadPerEdge(long wayID) {
+    public int getLoadPerEdge(String wayID) {
         if(loadPerEdge.containsKey(wayID)){
             return loadPerEdge.get(wayID);
         }
@@ -70,7 +72,7 @@ public class AllEdgesLoad implements Iterable<Entry<Long,Integer>>{
     
 
     @Override
-    public Iterator<Entry<Long, Integer>> iterator() {
+    public Iterator<Entry<String, Integer>> iterator() {
         return loadPerEdge.entrySet().iterator();
     }
     
