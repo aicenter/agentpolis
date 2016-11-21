@@ -46,15 +46,21 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
         positions = entityPositionModel.getCurrentPositions();
         targetPositions = entityPositionModel.getCurrentTargetPositions();
         network = highwayNetwork.getNetwork();
-        
-        for (Map.Entry<String, Integer> entry : positions.entrySet()) {
-            String key = entry.getKey();
-            Integer currentNodeId = entry.getValue();
-            Integer targetNodeId = targetPositions.get(key);
+    }
+    
+    
+    
+    
+    @Inject
+    public void compute(){
+        for (Map.Entry<String, Integer> positionEntry : positions.entrySet()) {
+            String entityId = positionEntry.getKey();
+            Integer currentNodeId = positionEntry.getValue();
+            Integer targetNodeId = targetPositions.get(entityId);
             if(targetNodeId != null && !targetNodeId.equals(currentNodeId)){
-                String id = Long.toString(network.getNode(currentNodeId).getSourceId()) + "-"
-                        + Long.toString(network.getNode(targetNodeId).getSourceId());
-                CollectionUtil.incrementMapValue(loadPerEdge, id, 1);
+                String edgeId = Long.toString(network.getNode(currentNodeId).getSourceId()) + "-"
+                    + Long.toString(network.getNode(targetNodeId).getSourceId());
+                countLoadForPosition(entityId, currentNodeId, targetNodeId, edgeId);
             }
         }
     }
@@ -82,7 +88,10 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
             return loadPerEdge.values().iterator();
         }
     };
-    
+
+    protected void countLoadForPosition(String entityId, int currentNodeId, int targetNodeId, String edgeId) {
+        CollectionUtil.incrementMapValue(loadPerEdge, edgeId, 1);
+    }
     
     
 }
