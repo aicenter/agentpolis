@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 
@@ -22,6 +23,7 @@ public class SimulationEdge extends RoadEdge {
      */
     private final SetMultimap<GraphType, GraphType> graphTypes;
     private Map<GraphType, Integer> laneCounts;
+    private String uniqueID;
 
     private SimulationEdge(int fromNodeId,
                            int toNodeId,
@@ -30,10 +32,12 @@ public class SimulationEdge extends RoadEdge {
                            float allowedMaxSpeedInMpS,
                            int lengthInMetres,
                            Map<GraphType, Integer> laneCounts,
-                           SetMultimap<GraphType, GraphType> graphTypes) {
+                           SetMultimap<GraphType, GraphType> graphTypes, HighwayNetwork highwayNetwork) {
         super(fromNodeId, toNodeId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
         this.graphTypes = graphTypes;
         this.laneCounts = laneCounts;
+        this.uniqueID = Long.toString(highwayNetwork.getNetwork().getNode(fromNodeId).getSourceId()) + "-" +
+                Long.toString(highwayNetwork.getNetwork().getNode(toNodeId).getSourceId());
     }
 
     public SetMultimap<GraphType, GraphType> getGraphTypes() {
@@ -49,6 +53,9 @@ public class SimulationEdge extends RoadEdge {
         return laneCounts;
     }
 
+    public String getUniqueID() {
+        return uniqueID;
+    }
 
     public static class SimulationEdgeBuilder {
 
@@ -92,7 +99,7 @@ public class SimulationEdge extends RoadEdge {
 
         }
 
-        public SimulationEdge build(int fromNodeId, int toNodeId) {
+        public SimulationEdge build(int fromNodeId, int toNodeId, HighwayNetwork highwayNetwork) {
             return new SimulationEdge(
                     fromNodeId,
                     toNodeId,
@@ -101,7 +108,8 @@ public class SimulationEdge extends RoadEdge {
                     allowedMaxSpeedInMpS,
                     lengthInMetres,
                     laneCounts,
-                    graphTypes);
+                    graphTypes,
+                    highwayNetwork);
         }
 
         public SimulationEdgeBuilder addType(GraphType type) {
