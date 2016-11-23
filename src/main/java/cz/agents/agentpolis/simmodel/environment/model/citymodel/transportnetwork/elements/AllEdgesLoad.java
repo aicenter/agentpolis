@@ -10,7 +10,6 @@ import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.basestructures.Graph;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
         if(loadPerEdge.containsKey(wayID)){
             return loadPerEdge.get(wayID);
         }
-        return -1;
+        return 0;
     }
     
     public int getNumberOfEdges(){
