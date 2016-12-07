@@ -38,6 +38,14 @@ import java.util.Calendar;
  */
 @Singleton
 public class SimulationControlLayer extends AbstractLayer {
+    
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    
+    private static final Color TEXT_COLOR = Color.BLUE;
+    
+    private static final Point STRING_POSITION = new Point(15, 20);
+    
+    private static final Point TIME_POSITION = new Point(180, 22);
 
 	protected static Logger logger = Logger.getLogger(SimulationControlLayer.class);
 
@@ -163,14 +171,14 @@ public class SimulationControlLayer extends AbstractLayer {
 				}
 			}
 		}
-
-		canvas.setColor(Color.BLUE);
-		canvas.drawString(label.toString(), 15, 20);
+        
+        VisioUtils.printTextWithBackgroud(canvas, label.toString(), STRING_POSITION, TEXT_COLOR, BACKGROUND_COLOR);
 
 		Font font = canvas.getFont();
 		canvas.setFont(new Font(font.getName(), Font.BOLD, 18));
 
-		canvas.drawString(converSimTimeForVis(timeProvider), 180, 22);
+        VisioUtils.printTextWithBackgroud(canvas, converSimTimeForVis(timeProvider), TIME_POSITION, TEXT_COLOR, 
+                BACKGROUND_COLOR);
 
 		canvas.setFont(new Font(font.getName(), 0, 12));
 		// canvas.drawString(TimeStorage.printDate(environment.getTimeStorage().getActualTime()),
