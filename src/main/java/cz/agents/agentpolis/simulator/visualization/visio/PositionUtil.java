@@ -54,6 +54,10 @@ public class PositionUtil {
         return getCanvasPosition(nodesFromAllGraphs.get(nodeId));
     }
     
+    public Point2d getCanvasPosition(Point2d position){
+        return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
+    }
+    
     public int getWorldWidth(){
         Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
         Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
