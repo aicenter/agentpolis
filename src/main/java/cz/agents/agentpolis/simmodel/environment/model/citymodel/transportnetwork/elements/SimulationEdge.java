@@ -106,7 +106,7 @@ public class SimulationEdge extends RoadEdge {
                     allowedMaxSpeedInMpS,
                     lengthInMetres,
                     laneCounts,
-                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toBinaryString(toNodeId));
+                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toString(toNodeId));
         }
 
         public SimulationEdgeBuilder addType(GraphType type) {
