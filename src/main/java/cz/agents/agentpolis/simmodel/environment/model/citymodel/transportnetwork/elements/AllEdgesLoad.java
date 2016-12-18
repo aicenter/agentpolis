@@ -10,6 +10,7 @@ import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.basestructures.Graph;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,16 +59,15 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
             Integer currentNodeId = positionEntry.getValue();
             Integer targetNodeId = targetPositions.get(entityId);
             if(targetNodeId != null && !targetNodeId.equals(currentNodeId)){
-                String edgeId = Long.toString(network.getNode(currentNodeId).getSourceId()) + "-"
-                    + Long.toString(network.getNode(targetNodeId).getSourceId());
+                String edgeId = network.getEdge(currentNodeId, targetNodeId).getUniqueID();
                 countLoadForPosition(entityId, currentNodeId, targetNodeId, edgeId);
             }
         }
     }
 
-    public int getLoadPerEdge(String wayID) {
-        if(loadPerEdge.containsKey(wayID)){
-            return loadPerEdge.get(wayID);
+    public int getLoadPerEdge(String uniqueID) {
+        if (loadPerEdge.containsKey(uniqueID)) {
+            return loadPerEdge.get(uniqueID);
         }
         return 0;
     }

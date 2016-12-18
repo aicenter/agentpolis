@@ -1,4 +1,4 @@
-  package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
@@ -22,6 +22,7 @@ public class SimulationEdge extends RoadEdge {
      */
     private final SetMultimap<GraphType, GraphType> graphTypes;
     private Map<GraphType, Integer> laneCounts;
+    private final String uniqueID;
 
     private SimulationEdge(int fromNodeId,
                            int toNodeId,
@@ -30,10 +31,11 @@ public class SimulationEdge extends RoadEdge {
                            float allowedMaxSpeedInMpS,
                            int lengthInMetres,
                            Map<GraphType, Integer> laneCounts,
-                           SetMultimap<GraphType, GraphType> graphTypes) {
+                           SetMultimap<GraphType, GraphType> graphTypes, String uniqueID) {
         super(fromNodeId, toNodeId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
         this.graphTypes = graphTypes;
         this.laneCounts = laneCounts;
+        this.uniqueID = uniqueID;
     }
 
     public SetMultimap<GraphType, GraphType> getGraphTypes() {
@@ -49,6 +51,9 @@ public class SimulationEdge extends RoadEdge {
         return laneCounts;
     }
 
+    public String getUniqueID() {
+        return uniqueID;
+    }
 
     public static class SimulationEdgeBuilder {
 
@@ -82,12 +87,12 @@ public class SimulationEdge extends RoadEdge {
         }
 
         private void initGraphTypes(Set<ModeOfTransport> permittedModes) {
-            permittedModes.stream().forEach(
+            permittedModes.forEach(
                     modeOfTransport -> addType(ModeOfTransportToGraphTypeConverter.convert(modeOfTransport)));
         }
 
         private void initLaneCounts(Set<ModeOfTransport> permittedModes) {
-            permittedModes.stream().forEach(
+            permittedModes.forEach(
                     modeOfTransport -> addLaneCount(ModeOfTransportToGraphTypeConverter.convert(modeOfTransport), 1));
 
         }
@@ -101,7 +106,7 @@ public class SimulationEdge extends RoadEdge {
                     allowedMaxSpeedInMpS,
                     lengthInMetres,
                     laneCounts,
-                    graphTypes);
+                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toBinaryString(toNodeId));
         }
 
         public SimulationEdgeBuilder addType(GraphType type) {
