@@ -18,6 +18,8 @@ import java.util.Set;
 /**
  * @author Marek Cuchy
  */
+
+@Deprecated
 public class ComplexGraphBuilder {
 
     private final Map<Integer, SimulationNode> nodes = new HashMap<>();

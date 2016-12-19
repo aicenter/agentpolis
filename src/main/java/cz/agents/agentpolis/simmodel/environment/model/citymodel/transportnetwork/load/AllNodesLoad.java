@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.load;
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel.EntityNodePositionIterator;
+
 import java.util.HashMap;
 
 /**
