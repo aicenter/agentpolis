@@ -1,16 +1,15 @@
 package cz.agents.agentpolis.simmodel.environment.model.query;
 
-import java.util.Map;
-
 import com.google.inject.Singleton;
-
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+
+import java.util.Map;
 
 /**
  * Position query provides information about position of some entity (e.g. agent).

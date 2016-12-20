@@ -1,28 +1,24 @@
 package cz.agents.agentpolis.simulator.visualization.googleearth.factories;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.inject.Injector;
-
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.updates.GraphUpdateGE;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.googleearth.entity.GraphGE;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 import cz.agents.alite.googleearth.updates.UpdateKmlView;
-import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * 

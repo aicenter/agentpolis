@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.ModeOfTransportToGraphTypeConverter;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 

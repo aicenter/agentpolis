@@ -1,9 +1,6 @@
 package cz.agents.agentpolis.simmodel.agent.activity.movement;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
-
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.MovementActivityLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
@@ -12,13 +9,12 @@ import cz.agents.agentpolis.simmodel.environment.model.action.AgentPositionActio
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.action.DelayAction;
-import cz.agents.agentpolis.simmodel.environment.model.delaymodel.impl.DelayActorMovingAction;
-import cz.agents.agentpolis.simmodel.environment.model.delaymodel.impl.DelayActorWithNextDestMovingAction;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
-import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
+import org.apache.log4j.Logger;
 
 /**
  * The abstract representation for a movement - using for driving, walking

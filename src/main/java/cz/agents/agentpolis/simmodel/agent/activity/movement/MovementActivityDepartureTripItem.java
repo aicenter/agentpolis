@@ -1,11 +1,10 @@
 package cz.agents.agentpolis.simmodel.agent.activity.movement;
 
 import com.google.inject.Inject;
-
 import cz.agents.agentpolis.siminfrastructure.logger.agent.activity.MovementActivityLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.DepartureTripItem;
 import cz.agents.agentpolis.simmodel.environment.model.action.AgentPositionAction;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.action.DelayAction;
 
 /**

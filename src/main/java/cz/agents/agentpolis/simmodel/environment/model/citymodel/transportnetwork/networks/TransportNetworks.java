@@ -1,12 +1,12 @@
-package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork;
-
-import java.util.Map;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks;
 
 import com.google.inject.Singleton;
-
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Graph;
+
+import java.util.Map;
 
 /**
  * 

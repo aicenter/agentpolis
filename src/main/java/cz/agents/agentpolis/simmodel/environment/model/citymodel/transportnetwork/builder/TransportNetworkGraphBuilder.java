@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.osm.OsmGraphBuilderExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadEdgeExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadNodeExtended;
 import cz.agents.basestructures.Graph;
@@ -12,12 +13,10 @@ import cz.agents.gtdgraphimporter.osm.OsmGraphBuilder;
 import cz.agents.gtdgraphimporter.structurebuilders.TmpGraphBuilder;
 import cz.agents.gtdgraphimporter.structurebuilders.edge.EdgeBuilder;
 import cz.agents.gtdgraphimporter.structurebuilders.edge.RoadEdgeBuilder;
-import cz.agents.gtdgraphimporter.util.RoadGraphSimplifier;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import org.apache.log4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -46,7 +45,11 @@ public class TransportNetworkGraphBuilder {
      *
      */
     private final OsmGraphBuilder.Builder osmBuilderBuilder;
-    //private final OsmGraphBuilder.Builder osmBuilderBuilderExtended;
+
+    /**
+     * Builder and parser OSM for RoadExtended
+     */
+    private final OsmGraphBuilderExtended.Builder osmBuilderBuilderExtended;
 
     /**
      * Set of all modes that can be loaded from OSM without any additional information required.
@@ -68,25 +71,37 @@ public class TransportNetworkGraphBuilder {
     public TransportNetworkGraphBuilder(Transformer projection, File osmFile, Set<ModeOfTransport> allowedOsmModes) {
         this.projection = projection;
         this.allowedOsmModes = allowedOsmModes;
+        //TODO: reduce builders
         this.osmBuilderBuilder = new OsmGraphBuilder.Builder(osmFile, projection, allowedOsmModes);
+        this.osmBuilderBuilderExtended = new OsmGraphBuilderExtended.Builder(osmFile, projection, allowedOsmModes);
     }
 
-    public Graph<RoadNodeExtended, RoadEdgeExtended> buildRoadExtendedGraph() {
-        //TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = buildOsmGraph();
-        //RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet());
-        //return osmGraph.createGraph();
-        throw new NotImplementedException();
-    }
-
+    /**
+     * Build Graph<RoadNode,RoadEdge>
+     *
+     * @return
+     */
     public Graph<RoadNode, RoadEdge> buildRoadGraph() {
         TmpGraphBuilder<RoadNode, RoadEdge> osmGraph = buildOsmGraph();
-        RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet());
+        //TODO: Simplifier: Make switch for visio graph(visio and curves) // computation graph
+        //RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet());
         return osmGraph.createGraph();
     }
 
     private TmpGraphBuilder<RoadNode, RoadEdge> buildOsmGraph() {
         TmpGraphBuilder<RoadNode, RoadEdge> osmGraph = osmBuilderBuilder.build().readOsmAndGetGraphBuilder();
         removeMinorComponents(osmGraph);
+        return osmGraph;
+    }
+
+    public Graph<RoadNodeExtended, RoadEdgeExtended> buildRoadExtendedGraph() {
+        TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = buildOsmGraphExtended();
+        //TODO: Simplifier: Make switch for visio graph(visio and curves) // computation graph
+        return osmGraph.createGraph();
+    }
+
+    private TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> buildOsmGraphExtended() {
+        TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = osmBuilderBuilderExtended.build().readOsmAndGetGraphBuilder();
         return osmGraph;
     }
 

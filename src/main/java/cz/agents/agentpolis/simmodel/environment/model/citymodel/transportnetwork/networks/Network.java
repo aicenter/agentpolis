@@ -1,7 +1,7 @@
-package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks;
 
-import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 
 

@@ -6,8 +6,9 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.environment.model.*;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.*;
+import cz.agents.agentpolis.simmodel.environment.model.AgentStorage;
+import cz.agents.agentpolis.simmodel.environment.model.Graphs;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.agentpolis.simulator.creator.initializator.MapInitFactory;
@@ -40,8 +41,10 @@ import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@code SimulationCreator} initializes the simulation model according to added initializers including the

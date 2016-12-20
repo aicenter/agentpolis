@@ -1,14 +1,6 @@
 package cz.agents.agentpolis.simulator.visualization.googleearth.factories;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.inject.Injector;
-
 import cz.agents.agentpolis.apgooglearth.data.EntityGE;
 import cz.agents.agentpolis.apgooglearth.data.StyleGE;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
@@ -18,7 +10,7 @@ import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.VehicleStorage;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
@@ -28,6 +20,8 @@ import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 import cz.agents.alite.googleearth.updates.UpdateKmlView;
 import cz.agents.basestructures.Node;
+
+import java.util.*;
 
 /**
  * The factory for the initialization of vehicle visualization for GE

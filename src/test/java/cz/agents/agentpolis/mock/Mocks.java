@@ -1,19 +1,6 @@
 package cz.agents.agentpolis.mock;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-
+import com.google.inject.*;
 import cz.agents.agentpolis.mock.graph.GraphMock;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.agent.Agent;
@@ -24,16 +11,7 @@ import cz.agents.agentpolis.simmodel.agent.activity.movement.RideOnPTActivity;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.WalkActivity;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.agents.agentpolis.simmodel.environment.model.AgentStorage;
-import cz.agents.agentpolis.simmodel.environment.model.BeforePlanNotifyModel;
-import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
-import cz.agents.agentpolis.simmodel.environment.model.UsingPassengerTransportModel;
-import cz.agents.agentpolis.simmodel.environment.model.VehicleGroupModel;
-import cz.agents.agentpolis.simmodel.environment.model.VehiclePlanNotificationModel;
-import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
-import cz.agents.agentpolis.simmodel.environment.model.VehicleStorage;
-import cz.agents.agentpolis.simmodel.environment.model.VehicleTimeModel;
+import cz.agents.agentpolis.simmodel.environment.model.*;
 import cz.agents.agentpolis.simmodel.environment.model.action.AgentPositionAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.PassengerAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.PassengerTripAction;
@@ -49,11 +27,11 @@ import cz.agents.agentpolis.simmodel.environment.model.action.vehicle.VehiclePla
 import cz.agents.agentpolis.simmodel.environment.model.action.vehicle.VehicleTimeAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.vehicle.WaitingVehicleAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.walking.WalkingAction;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.DelayModel;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.DelayingSegment;
 import cz.agents.agentpolis.simmodel.environment.model.delaymodel.action.DelayAction;
@@ -75,9 +53,17 @@ import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.simmodel.environment.model.speed.SpeedInfluenceModels;
 import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
-import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class Mocks extends AbstractModule {
 

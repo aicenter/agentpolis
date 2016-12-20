@@ -1,17 +1,15 @@
 package cz.agents.agentpolis.simmodel.environment.model.query;
 
-import java.util.Map;
-
-import javax.inject.Singleton;
-
 import com.google.inject.Inject;
-
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.Graph;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
+
+import javax.inject.Singleton;
+import java.util.Map;
 
 /**
  * The information provider relating with position

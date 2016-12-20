@@ -1,7 +1,5 @@
-package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork;
 
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 
 import java.util.HashSet;

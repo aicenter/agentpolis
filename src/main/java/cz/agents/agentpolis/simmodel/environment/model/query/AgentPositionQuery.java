@@ -1,11 +1,10 @@
 package cz.agents.agentpolis.simmodel.environment.model.query;
 
-import javax.inject.Singleton;
-
 import com.google.inject.Inject;
-
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+
+import javax.inject.Singleton;
 
 /**
  * 

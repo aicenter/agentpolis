@@ -11,18 +11,19 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+
+import javax.vecmath.Point2d;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import javax.vecmath.Point2d;
 
 
 /**

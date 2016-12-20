@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,7 +15,7 @@ public class RoadEdgeExtended extends RoadEdge {
     /**
      * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
      */
-    private int oppositeWayId = -2;
+    private final int oppositeWayId;
 
     /**
      * TODO: lanes
@@ -22,17 +23,54 @@ public class RoadEdgeExtended extends RoadEdge {
      * Lanes continues to edges:    lanesContinuesToEdge = {{1,2},{2,3}}
      * Lanes count                  lanesCount = 2
      */
-    private String lanes;
+    private final int lanesCount;
+    private List<Lane> lanes;
 
     /**
-     * @param fromId
-     * @param toId
-     * @param wayID
-     * @param permittedModes
-     * @param allowedMaxSpeedInMpS
-     * @param lengthInMetres
+     *
+     * @param fromId sourceId
+     * @param toId destinationId
+     * @param osmWayID osm id of this edge
+     * @param permittedModes int representation of permited modes
+     * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
+     * @param lengthInMetres -
+     * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
+     *                      Input should be correct, it is not validated!
+     * @param lanesCount total number of lanes for ModeOfTransport-car
      */
-    public RoadEdgeExtended(int fromId, int toId, long wayID, Set<ModeOfTransport> permittedModes, float allowedMaxSpeedInMpS, int lengthInMetres) {
-        super(fromId, toId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
+    public RoadEdgeExtended(int fromId, int toId, long osmWayID, Set<ModeOfTransport> permittedModes,
+                            float allowedMaxSpeedInMpS, int lengthInMetres, int oppositeWayId, int lanesCount) {
+        super(fromId, toId, osmWayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
+
+        if (lanesCount >= 1) {
+            this.lanesCount = lanesCount;
+        } else {
+            this.lanesCount = 1; //minimum
+        }
+
+        if (oppositeWayId >= -1) {
+            this.oppositeWayId = oppositeWayId;
+        } else {
+            this.oppositeWayId = -2;
+        }
+
+    }
+
+    /**
+     * Information about opposite direction on the road.
+     *
+     * @return -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
+     */
+    public int getOppositeWayId() {
+        return oppositeWayId;
+    }
+
+    /**
+     * Information about number of lanes for cars.
+     *
+     * @return total number of lanes (minimum is 1)
+     */
+    public int getLanesCount() {
+        return lanesCount;
     }
 }

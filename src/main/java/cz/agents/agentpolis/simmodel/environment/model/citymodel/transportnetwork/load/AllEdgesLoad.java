@@ -8,9 +8,9 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.Graph;
 
 import java.util.HashMap;

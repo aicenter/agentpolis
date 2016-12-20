@@ -1,4 +1,4 @@
-package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork;
+package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks;
 
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;

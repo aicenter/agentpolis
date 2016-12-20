@@ -15,11 +15,12 @@ import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.MoveVehicleAction;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.AllNetworkNodes;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.HighwayNetwork;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.basestructures.Node;
+
 import javax.vecmath.Point2d;
 
 /**

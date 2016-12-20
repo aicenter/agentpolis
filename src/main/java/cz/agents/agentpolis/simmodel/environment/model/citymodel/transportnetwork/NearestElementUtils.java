@@ -9,14 +9,16 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.vividsolutions.jts.geom.Coordinate;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.utils.nearestelement.NearestElementUtil;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Node;
 import cz.agents.geotools.Transformer;
+import org.javatuples.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.javatuples.Pair;
 
 /**
  *
