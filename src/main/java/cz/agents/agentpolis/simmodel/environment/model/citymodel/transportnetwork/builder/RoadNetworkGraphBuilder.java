@@ -28,8 +28,6 @@ import java.util.function.Predicate;
 public class RoadNetworkGraphBuilder {
     private static final Logger LOGGER = Logger.getLogger(RoadNetworkGraphBuilder.class);
 
-    private final Transformer projection;
-
     /**
      * Modes to be loaded from OSM.
      */
@@ -58,7 +56,6 @@ public class RoadNetworkGraphBuilder {
      * @param allowedOsmModes based on {@link RoadNetworkGraphBuilder#OSM_MODES}
      */
     public RoadNetworkGraphBuilder(Transformer projection, File osmFile, Set<ModeOfTransport> allowedOsmModes) {
-        this.projection = projection;
         this.allowedOsmModes = allowedOsmModes;
         this.osmBuilderBuilderExtended = new OsmGraphBuilderExtended.Builder(osmFile, projection, allowedOsmModes);
     }
@@ -141,5 +138,13 @@ public class RoadNetworkGraphBuilder {
             outgoing.add(toId);
         }
         return StronglyConnectedComponentsFinder.getStronglyConnectedComponentsSortedBySize(nodeIds, edgeIds).get(0);
+    }
+
+    @Override
+    public String toString() {
+        return "RoadNetworkGraphBuilder{" +
+                "allowedOsmModes=" + allowedOsmModes +
+                ", osmBuilderBuilderExtended=" + osmBuilderBuilderExtended +
+                '}';
     }
 }

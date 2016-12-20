@@ -1,6 +1,8 @@
 package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder;
 
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadEdgeExtended;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadNodeExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Graph;
@@ -21,27 +23,27 @@ import java.util.Set;
  * @author Zdenek Bousa
  */
 
-public class SimulationNetworkGraphBuilder {
-    private static final Logger LOGGER = Logger.getLogger(SimulationNetworkGraphBuilder.class);
+public class RoadSimulationGraphBuilder {
+    private static final Logger LOGGER = Logger.getLogger(RoadSimulationGraphBuilder.class);
 
-    public SimulationNetworkGraphBuilder() {
+    public RoadSimulationGraphBuilder() {
     }
 
     /**
      * Method that will construct from RoadNode/RoadEdge and few extra tags SimulationNode/SimulationEdge
      *
-     * @param highwayGraphFromOSM for retriewinf extra tags that are not in RoadEdge/RoadNode
-     * @return
+     * @param roadNetworkGraphFromOSM for retrieve extra tags that are not in RoadEdge/RoadNode
+     * @return Highway graph
      */
-    public Graph<SimulationNode, SimulationEdge> buildSimulationGraph(Graph<? extends RoadNode, ? extends RoadEdge> highwayGraphFromOSM) {
+    public Graph<SimulationNode, SimulationEdge> build(Graph<? extends RoadNodeExtended, ? extends RoadEdgeExtended> roadNetworkGraphFromOSM) {
 
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = GraphBuilder.createGraphBuilder();
-        for (RoadNode roadNode : highwayGraphFromOSM.getAllNodes()) {
+        for (RoadNode roadNode : roadNetworkGraphFromOSM.getAllNodes()) {
             SimulationNode simulationNode = new SimulationNode(roadNode);
             graphBuilder.addNode(simulationNode);
         }
 
-        for (RoadEdge roadEdge : highwayGraphFromOSM.getAllEdges()) {
+        for (RoadEdge roadEdge : roadNetworkGraphFromOSM.getAllEdges()) {
             SimulationEdge.SimulationEdgeBuilder edgeBuilder = new SimulationEdge.SimulationEdgeBuilder(roadEdge);
             SimulationEdge simulationEdge = edgeBuilder.build(roadEdge.fromId, roadEdge.toId);
             graphBuilder.addEdge(simulationEdge);
@@ -66,7 +68,6 @@ public class SimulationNetworkGraphBuilder {
 
         return createGraphBasedOnTheLargestComponent(graph, strongestComponents);
     }
-
     private DirectedGraph<Integer, ShortestPathPlanner.PlannerEdge> prepareGraphForFindComponents(Graph<SimulationNode,
             SimulationEdge> graph) {
 

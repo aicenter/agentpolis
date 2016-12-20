@@ -118,11 +118,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
         return builder;
     }
 
-    /**
-     * Inner methods
-     */
-
-    protected void parseOSM() {
+    private void parseOSM() {
         LOGGER.info("Parsing of OSM started...");
 
         long t1 = System.currentTimeMillis();
@@ -163,10 +159,6 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
     public void accept(OsmRelation relation) {
     }
 
-
-    /**
-     * Transport modes
-     */
     private Set<ModeOfTransport> getModeOfTransports(OsmWay way) {
         Set<ModeOfTransport> ModeOfTransports = EnumSet.noneOf(ModeOfTransport.class);
 
@@ -179,10 +171,6 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
         return ModeOfTransports;
     }
 
-    /**
-     * -----------------------------------------------------------------------------------------------------------------
-     * Create OsmWay to Edge-way
-     */
     private void createEdges(OsmWay way, Set<ModeOfTransport> modeOfTransports) {
         List<Long> nodes = way.getNodes();
 
@@ -214,9 +202,9 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
     protected void createAndAddNode(long nodeId) {
         if (!builder.containsNode(nodeId)) {
             OsmNode osmNode = osmNodes.get(nodeId);
-            RoadNodeExtendedBuilder roadNodeBuilder = new RoadNodeExtendedBuilder(builder.getNodeCount(), nodeId,
+            RoadNodeExtendedBuilder roadNodeExtendedBuilder = new RoadNodeExtendedBuilder(builder.getNodeCount(), nodeId,
                     getProjectedGPS(osmNode));
-            builder.addNode(roadNodeBuilder);
+            builder.addNode(roadNodeExtendedBuilder);
         }
     }
 
@@ -225,6 +213,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
      *
      * @param way
      * @param ModeOfTransports
+     *
      * @return
      */
     private Set<ModeOfTransport> getBidirectionalModes(OsmWay way, Set<ModeOfTransport> ModeOfTransports) {
@@ -244,7 +233,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
             mergedEdges++;
             resolveConflictEdges(tmpFromId, tmpToId, modeOfTransports, way, edgeType);
         } else {
-            RoadEdgeExtendedBuilder roadEdge = createRoadEdgeBuilder(tmpFromId, tmpToId, modeOfTransports, way, edgeType);
+            RoadEdgeExtendedBuilder roadEdge = createRoadEdgeExtendedBuilder(tmpFromId, tmpToId, modeOfTransports, way, edgeType);
             builder.addEdge(roadEdge);
         }
     }
@@ -255,26 +244,17 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
         edgeBuilder.addModeOfTransports(newModeOfTransports);
     }
 
-    protected RoadEdgeExtendedBuilder createRoadEdgeBuilder(int fromId, int toId, Set<ModeOfTransport> ModeOfTransports,
-                                                            OsmWay way, EdgeType edgeType) {
+    protected RoadEdgeExtendedBuilder createRoadEdgeExtendedBuilder(int fromId, int toId, Set<ModeOfTransport> ModeOfTransports,
+                                                                    OsmWay way, EdgeType edgeType) {
         return new RoadEdgeExtendedBuilder(fromId, toId, (int) calculateLength(fromId, toId), extractSpeed(way, edgeType), way
                 .getId(),
                 ModeOfTransports);
     }
 
     protected float extractSpeed(OsmWay way, EdgeType edgeType) {
-        System.out.println(way.getTags().toString());
         return edgeType.apply(speedExtractor, way.getTags()).floatValue();
     }
 
-    private boolean isParkAndRide(OsmNode osmNode) {
-        return parkAndRideEvaluator.test(osmNode.getTags());
-    }
-
-
-    /**
-     * Node & Edge Properties (length, projection)
-     */
     protected double calculateLength(int fromId, int toId) {
         NodeBuilder<? extends RoadNodeExtended> n1 = builder.getNode(fromId);
         NodeBuilder<? extends RoadNodeExtended> n2 = builder.getNode(toId);
@@ -289,10 +269,10 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
         return getProjectedGPS(osmNode.lat, osmNode.lon, elevationExtractor.apply(osmNode.getTags()));
     }
 
+    private boolean isParkAndRide(OsmNode osmNode) {
+        return parkAndRideEvaluator.test(osmNode.getTags());
+    }
 
-    /**
-     * Statistics
-     */
     public String getStatistic() {
         return "Merged edges=" + mergedEdges;
     }
@@ -303,50 +283,6 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
                 "nodes=" + osmNodes.size() + '}';
     }
 
-
-    /**
-     * EdgeType - BACKWARDS//FORWARDS
-     */
-    protected enum EdgeType {
-        FORWARD {
-            @Override
-            protected <T> TagExtractor<T> getExtractor(WayTagExtractor<T> extractor) {
-                return extractor::getForwardValue;
-            }
-        },
-        BACKWARD {
-            @Override
-            protected <T> TagExtractor<T> getExtractor(WayTagExtractor<T> extractor) {
-                return extractor::getBackwardValue;
-            }
-        };
-
-        /**
-         * Get corresponding tag extractor function.
-         *
-         * @param extractor
-         * @param <T>
-         * @return
-         */
-        protected abstract <T> TagExtractor<T> getExtractor(WayTagExtractor<T> extractor);
-
-        /**
-         * Applies corresponding method of the {@code extractor} on the {@code tags}.
-         *
-         * @param extractor
-         * @param tags
-         * @param <T>
-         * @return
-         */
-        public <T> T apply(WayTagExtractor<T> extractor, Map<String, String> tags) {
-            return getExtractor(extractor).apply(tags);
-        }
-    }
-
-
-    /**
-     * Builder ---------------------------------------------------------------------------------------------------------
-     */
     public static class Builder {
 
         protected static final ObjectMapper MAPPER = new ObjectMapper();
@@ -371,9 +307,10 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
         /**
          * @param osmUrl
          * @param projection
-         * @param allowedModes modes that are required to be in the output graph. For each modes there have to be set appropriate mode
-         *                     evaluator. If it isn't set the builder tries to use a default one, but it's possible that it is not
-         *                     defined.
+         * @param allowedModes
+         * 		modes that are required to be in the output graph. For each modes there have to be set appropriate mode
+         * 		evaluator. If it isn't set the builder tries to use a default one, but it's possible that it is not
+         * 		defined.
          */
         public Builder(URL osmUrl, Transformer projection, Set<ModeOfTransport> allowedModes) {
             if (allowedModes.isEmpty()) throw new IllegalArgumentException("Allowed modes can't be empty.");
@@ -479,7 +416,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
             //default evaluator for all modes.
             TagEvaluator defaultEval = TagEvaluator.ALWAYS_FALSE;
             for (ModeOfTransport mode : missingModes) {
-                InputStream stream = this.getClass().getResourceAsStream("oneway/" + mode.name().toLowerCase() +
+                InputStream stream = OsmGraphBuilder.class.getResourceAsStream("oneway/" + mode.name().toLowerCase() +
                         ".json");
                 if (stream == null) {
                     oneWayEvaluators.put(mode, defaultEval);
