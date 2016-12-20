@@ -4,26 +4,20 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.osm.OsmGraphBuilderExtended;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.structurebuilders.edge.RoadEdgeExtendedBuilder;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadEdgeExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadNodeExtended;
 import cz.agents.basestructures.Graph;
 import cz.agents.geotools.StronglyConnectedComponentsFinder;
 import cz.agents.geotools.Transformer;
-import cz.agents.gtdgraphimporter.osm.OsmGraphBuilder;
 import cz.agents.gtdgraphimporter.structurebuilders.TmpGraphBuilder;
 import cz.agents.gtdgraphimporter.structurebuilders.edge.EdgeBuilder;
-import cz.agents.gtdgraphimporter.structurebuilders.edge.RoadEdgeBuilder;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
-import cz.agents.multimodalstructures.edges.RoadEdge;
-import cz.agents.multimodalstructures.nodes.RoadNode;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
-
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Instead of {@link cz.agents.gtdgraphimporter.GTDGraphBuilder}
@@ -31,8 +25,8 @@ import static java.util.stream.Collectors.toSet;
  *
  * @author Zdenek Bousa
  */
-public class TransportNetworkGraphBuilder {
-    private static final Logger LOGGER = Logger.getLogger(TransportNetworkGraphBuilder.class);
+public class RoadNetworkGraphBuilder {
+    private static final Logger LOGGER = Logger.getLogger(RoadNetworkGraphBuilder.class);
 
     private final Transformer projection;
 
@@ -40,11 +34,6 @@ public class TransportNetworkGraphBuilder {
      * Modes to be loaded from OSM.
      */
     private final Set<ModeOfTransport> allowedOsmModes;
-
-    /**
-     *
-     */
-    private final OsmGraphBuilder.Builder osmBuilderBuilder;
 
     /**
      * Builder and parser OSM for RoadExtended
@@ -64,53 +53,45 @@ public class TransportNetworkGraphBuilder {
     /**
      * Constructor
      *
-     * @param projection      -
-     * @param osmFile         -
-     * @param allowedOsmModes -
+     * @param projection      SRID
+     * @param osmFile         file with OSM map
+     * @param allowedOsmModes based on {@link RoadNetworkGraphBuilder#OSM_MODES}
      */
-    public TransportNetworkGraphBuilder(Transformer projection, File osmFile, Set<ModeOfTransport> allowedOsmModes) {
+    public RoadNetworkGraphBuilder(Transformer projection, File osmFile, Set<ModeOfTransport> allowedOsmModes) {
         this.projection = projection;
         this.allowedOsmModes = allowedOsmModes;
-        //TODO: reduce builders
-        this.osmBuilderBuilder = new OsmGraphBuilder.Builder(osmFile, projection, allowedOsmModes);
         this.osmBuilderBuilderExtended = new OsmGraphBuilderExtended.Builder(osmFile, projection, allowedOsmModes);
     }
 
     /**
-     * Build Graph<RoadNode,RoadEdge>
+     * Construct road graph
      *
-     * @return
+     * @return Graph that has one main strong component and might have been simplified (impact on visio - more sharp curves)
      */
-    public Graph<RoadNode, RoadEdge> buildRoadGraph() {
-        TmpGraphBuilder<RoadNode, RoadEdge> osmGraph = buildOsmGraph();
-        //TODO: Simplifier: Make switch for visio graph(visio and curves) // computation graph
-        //RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet());
-        return osmGraph.createGraph();
-    }
-
-    private TmpGraphBuilder<RoadNode, RoadEdge> buildOsmGraph() {
-        TmpGraphBuilder<RoadNode, RoadEdge> osmGraph = osmBuilderBuilder.build().readOsmAndGetGraphBuilder();
-        removeMinorComponents(osmGraph);
-        return osmGraph;
-    }
-
-    public Graph<RoadNodeExtended, RoadEdgeExtended> buildRoadExtendedGraph() {
+    public Graph<RoadNodeExtended, RoadEdgeExtended> build() {
         TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = buildOsmGraphExtended();
         //TODO: Simplifier: Make switch for visio graph(visio and curves) // computation graph
+        //RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet()); //not working for RoadExtended
         return osmGraph.createGraph();
     }
 
+    /**
+     * Build temporary graph and apply minor components reduction.
+     *
+     * @return Full road graph with only one strong component.
+     */
     private TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> buildOsmGraphExtended() {
         TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = osmBuilderBuilderExtended.build().readOsmAndGetGraphBuilder();
+        removeMinorComponents(osmGraph);
         return osmGraph;
     }
 
     /**
      * Removes from the {@code osmGraph} all nodes and edges that are not in the main component for any mode.
      *
-     * @param osmGraph
+     * @param osmGraph osm graph with multiple strong components
      */
-    private void removeMinorComponents(TmpGraphBuilder<RoadNode, RoadEdge> osmGraph) {
+    private void removeMinorComponents(TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph) {
         LOGGER.debug("Calculating main components for all modes...");
         SetMultimap<Integer, ModeOfTransport> modesOnNodes = HashMultimap.create();
         for (ModeOfTransport mode : allowedOsmModes) {
@@ -118,11 +99,11 @@ public class TransportNetworkGraphBuilder {
             mainComponent.forEach(i -> modesOnNodes.put(i, mode));
         }
 
-        Predicate<EdgeBuilder<? extends RoadEdge>> filter = edge -> {
-            RoadEdgeBuilder roadEdgeBuilder = (RoadEdgeBuilder) edge;
-            roadEdgeBuilder.intersectModeOfTransports(modesOnNodes.get(roadEdgeBuilder.getTmpFromId()));
-            roadEdgeBuilder.intersectModeOfTransports(modesOnNodes.get(roadEdgeBuilder.getTmpToId()));
-            return roadEdgeBuilder.getModeOfTransports().isEmpty();
+        Predicate<EdgeBuilder<? extends RoadEdgeExtended>> filter = edge -> {
+            RoadEdgeExtendedBuilder roadEdgeExtendedBuilder = (RoadEdgeExtendedBuilder) edge;
+            roadEdgeExtendedBuilder.intersectModeOfTransports(modesOnNodes.get(roadEdgeExtendedBuilder.getTmpFromId()));
+            roadEdgeExtendedBuilder.intersectModeOfTransports(modesOnNodes.get(roadEdgeExtendedBuilder.getTmpToId()));
+            return roadEdgeExtendedBuilder.getModeOfTransports().isEmpty();
         };
         int removedEdges = osmGraph.removeEdges(filter);
         LOGGER.debug("Removed " + removedEdges + " edges.");
@@ -134,21 +115,22 @@ public class TransportNetworkGraphBuilder {
     }
 
     /**
-     * @param graph
-     * @param mode
-     * @return
+     * Main strong component
      */
-    private Set<Integer> getMainComponent(TmpGraphBuilder<RoadNode, RoadEdge> graph, ModeOfTransport mode) {
-        List<EdgeBuilder<? extends RoadEdge>> feasibleEdges = graph.getFeasibleEdges(mode);
+    private Set<Integer> getMainComponent(TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> graph, ModeOfTransport mode) {
+        List<EdgeBuilder<? extends RoadEdgeExtended>> feasibleEdges = graph.getFeasibleEdges(mode);
         return getMainComponent(feasibleEdges);
     }
 
-    private Set<Integer> getMainComponent(Collection<EdgeBuilder<? extends RoadEdge>> edges) {
+    /**
+     * Find strong component by size
+     */
+    private Set<Integer> getMainComponent(Collection<EdgeBuilder<? extends RoadEdgeExtended>> edges) {
         Set<Integer> nodeIds = new HashSet<>();
         Map<Integer, Set<Integer>> edgeIds = new HashMap<>();
-        for (EdgeBuilder<? extends RoadEdge> edgeBuilder : edges) {
-            int fromId = edgeBuilder.getTmpFromId();
-            int toId = edgeBuilder.getTmpToId();
+        for (EdgeBuilder<? extends RoadEdgeExtended> edgeExtendedBuilder : edges) {
+            int fromId = edgeExtendedBuilder.getTmpFromId();
+            int toId = edgeExtendedBuilder.getTmpToId();
             nodeIds.add(fromId);
             nodeIds.add(toId);
             Set<Integer> outgoing = edgeIds.get(fromId);
@@ -160,15 +142,4 @@ public class TransportNetworkGraphBuilder {
         }
         return StronglyConnectedComponentsFinder.getStronglyConnectedComponentsSortedBySize(nodeIds, edgeIds).get(0);
     }
-
-    private LocalDate createLocalDate(java.sql.Date oldDate) {
-        return oldDate.toLocalDate();
-    }
-
-    private boolean checkOneComponent(TmpGraphBuilder<RoadNode, RoadEdge> osmGraph) {
-        Set<Integer> mainComponent = getMainComponent(osmGraph.getAllEdges());
-        Set<Integer> graphNodeIds = osmGraph.getAllNodes().stream().map(n -> n.tmpId).collect(toSet());
-        return mainComponent.equals(graphNodeIds);
-    }
-
 }
