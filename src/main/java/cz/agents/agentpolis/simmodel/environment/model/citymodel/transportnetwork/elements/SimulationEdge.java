@@ -2,6 +2,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.ModeOfTransportToGraphTypeConverter;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
@@ -23,7 +24,10 @@ public class SimulationEdge extends RoadEdge {
      */
     private final SetMultimap<GraphType, GraphType> graphTypes;
     private Map<GraphType, Integer> laneCounts;
+
     private final String uniqueID;
+
+    private int uniqueWayId; //unknown should be -1
 
     private SimulationEdge(int fromNodeId,
                            int toNodeId,
@@ -32,11 +36,13 @@ public class SimulationEdge extends RoadEdge {
                            float allowedMaxSpeedInMpS,
                            int lengthInMetres,
                            Map<GraphType, Integer> laneCounts,
-                           SetMultimap<GraphType, GraphType> graphTypes, String uniqueID) {
+                           SetMultimap<GraphType, GraphType> graphTypes, String uniqueID, int uniqueWayId) {
         super(fromNodeId, toNodeId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
         this.graphTypes = graphTypes;
         this.laneCounts = laneCounts;
         this.uniqueID = uniqueID;
+        this.uniqueWayId = uniqueWayId;
+
     }
 
     public SetMultimap<GraphType, GraphType> getGraphTypes() {
@@ -56,6 +62,18 @@ public class SimulationEdge extends RoadEdge {
         return uniqueID;
     }
 
+    /**
+     * unique ID and same as uniqueWayId in RoadEdgExtended
+     *
+     * @return
+     */
+    public int getUniqueWayId() {
+        return uniqueWayId;
+    }
+
+    /**
+     * Builder
+     */
     public static class SimulationEdgeBuilder {
 
         private static final float DEFAULT_MAX_SPEED_IN_MPS = 50 / 3.6f;
@@ -65,19 +83,31 @@ public class SimulationEdge extends RoadEdge {
         private int lengthInMetres;
         SetMultimap<GraphType, GraphType> graphTypes = HashMultimap.create();
         private Map<GraphType, Integer> laneCounts = new HashMap<>();
+        private int uniqueWayId;
 
         public SimulationEdgeBuilder(int length, float allowedMaxSpeedInMpS, long wayID,
-                                     Set<ModeOfTransport> permittedModes) {
+                                     Set<ModeOfTransport> permittedModes, int uniqueWayId) {
             this.lengthInMetres = length;
             this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
             this.wayID = wayID;
             this.permittedModes = permittedModes;
+            this.uniqueWayId = uniqueWayId;
             initLaneCounts(permittedModes);
             initGraphTypes(permittedModes);
         }
 
         public SimulationEdgeBuilder(RoadEdge roadEdge) {
-            this(roadEdge.length, roadEdge.allowedMaxSpeedInMpS, roadEdge.wayID, roadEdge.getPermittedModes());
+            this(roadEdge.length, roadEdge.allowedMaxSpeedInMpS, roadEdge.wayID, roadEdge.getPermittedModes(), -1);
+        }
+
+        /**
+         * Also loading lane count
+         *
+         * @param roadEdgeExtended - for highway graph
+         */
+        public SimulationEdgeBuilder(RoadEdgeExtended roadEdgeExtended) {
+            this(roadEdgeExtended.length, roadEdgeExtended.allowedMaxSpeedInMpS, roadEdgeExtended.wayID, roadEdgeExtended.getPermittedModes(), roadEdgeExtended.getUniqueWayId());
+            this.addLaneCount(EGraphType.HIGHWAY, roadEdgeExtended.getLanesCount());
         }
 
         public SimulationEdgeBuilder(int laneCount, int length, GraphType graphType) {
@@ -107,7 +137,8 @@ public class SimulationEdge extends RoadEdge {
                     allowedMaxSpeedInMpS,
                     lengthInMetres,
                     laneCounts,
-                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toString(toNodeId));
+                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toString(toNodeId),
+                    uniqueWayId);
         }
 
         public SimulationEdgeBuilder addType(GraphType type) {
