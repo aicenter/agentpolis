@@ -79,8 +79,7 @@ public class RoadNetworkGraphBuilder {
      */
     private TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> buildOsmGraphExtended() {
         TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = osmBuilderBuilderExtended.build().readOsmAndGetGraphBuilder();
-        removeMinorComponents(osmGraph);
-        return osmGraph;
+        return removeMinorComponents(osmGraph);
     }
 
     /**
@@ -88,7 +87,7 @@ public class RoadNetworkGraphBuilder {
      *
      * @param osmGraph osm graph with multiple strong components
      */
-    private void removeMinorComponents(TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph) {
+    private TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> removeMinorComponents(TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph) {
         LOGGER.debug("Calculating main components for all modes...");
         SetMultimap<Integer, ModeOfTransport> modesOnNodes = HashMultimap.create();
         for (ModeOfTransport mode : allowedOsmModes) {
@@ -109,6 +108,7 @@ public class RoadNetworkGraphBuilder {
         LOGGER.debug("Removed " + removedNodes + " nodes.");
         LOGGER.debug("Nodes by degree: ");
         osmGraph.getNodesByDegree().forEach((k, v) -> LOGGER.debug(k + "->" + v.size()));
+        return osmGraph;
     }
 
     /**

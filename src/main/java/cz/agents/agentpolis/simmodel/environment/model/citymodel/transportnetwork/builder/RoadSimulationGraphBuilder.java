@@ -7,8 +7,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.GraphBuilder;
-import cz.agents.multimodalstructures.edges.RoadEdge;
-import cz.agents.multimodalstructures.nodes.RoadNode;
 import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
@@ -38,12 +36,14 @@ public class RoadSimulationGraphBuilder {
     public Graph<SimulationNode, SimulationEdge> build(Graph<? extends RoadNodeExtended, ? extends RoadEdgeExtended> roadNetworkGraphFromOSM) {
 
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = GraphBuilder.createGraphBuilder();
-        for (RoadNode roadNode : roadNetworkGraphFromOSM.getAllNodes()) {
+        for (RoadNodeExtended roadNode : roadNetworkGraphFromOSM.getAllNodes()) {
             SimulationNode simulationNode = new SimulationNode(roadNode);
             graphBuilder.addNode(simulationNode);
         }
 
-        for (RoadEdge roadEdge : roadNetworkGraphFromOSM.getAllEdges()) {
+        for (RoadEdgeExtended roadEdge : roadNetworkGraphFromOSM.getAllEdges()) {
+            //Debug
+            //System.out.println(roadEdge.getUniqueWayId() +" <-------------> " + roadEdge.getOppositeWayId() +"    lanes: "+roadEdge.getLanesCount());
             SimulationEdge.SimulationEdgeBuilder edgeBuilder = new SimulationEdge.SimulationEdgeBuilder(roadEdge);
             SimulationEdge simulationEdge = edgeBuilder.build(roadEdge.fromId, roadEdge.toId);
             graphBuilder.addEdge(simulationEdge);

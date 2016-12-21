@@ -8,14 +8,19 @@ import java.util.Set;
 
 /**
  * Extended RoadEdge, contains road situation (lanes,two way pairs,...)
- *
+ * Also provides extended identification of the edge.
  * @author Zdenek Bousa
  */
 public class RoadEdgeExtended extends RoadEdge {
     /**
+     * unique ID for each edge, also recognize directions
+     */
+    private final int uniqueWayId;
+
+    /**
      * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
      */
-    private final int oppositeWayId;
+    private final int oppositeWayId; // unique edge id that is in opposite direction, otherwise -1 (one-way)
 
     /**
      * TODO: lanes
@@ -24,7 +29,7 @@ public class RoadEdgeExtended extends RoadEdge {
      * Lanes count                  lanesCount = 2
      */
     private final int lanesCount;
-    private List<Lane> lanes;
+    private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
 
     /**
      *
@@ -38,15 +43,18 @@ public class RoadEdgeExtended extends RoadEdge {
      *                      Input should be correct, it is not validated!
      * @param lanesCount total number of lanes for ModeOfTransport-car
      */
-    public RoadEdgeExtended(int fromId, int toId, long osmWayID, Set<ModeOfTransport> permittedModes,
-                            float allowedMaxSpeedInMpS, int lengthInMetres, int oppositeWayId, int lanesCount) {
+    public RoadEdgeExtended(int fromId,
+                            int toId,
+                            long osmWayID,
+                            int uniqueWayId,
+                            int oppositeWayId,
+                            int lengthInMetres,
+                            Set<ModeOfTransport> permittedModes,
+                            float allowedMaxSpeedInMpS,
+                            int lanesCount) {
         super(fromId, toId, osmWayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
 
-        if (lanesCount >= 1) {
-            this.lanesCount = lanesCount;
-        } else {
-            this.lanesCount = 1; //minimum
-        }
+        this.uniqueWayId = uniqueWayId;
 
         if (oppositeWayId >= -1) {
             this.oppositeWayId = oppositeWayId;
@@ -54,6 +62,21 @@ public class RoadEdgeExtended extends RoadEdge {
             this.oppositeWayId = -2;
         }
 
+        if (lanesCount >= 1) {
+            this.lanesCount = lanesCount;
+        } else {
+            this.lanesCount = 1; //minimum
+        }
+
+    }
+
+    /**
+     * ID
+     *
+     * @return unique id of the edge
+     */
+    public int getUniqueWayId() {
+        return uniqueWayId;
     }
 
     /**
