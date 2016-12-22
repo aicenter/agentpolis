@@ -119,8 +119,6 @@ public class RoadEdgeExtendedBuilder extends EdgeBuilder<RoadEdgeExtended> {
 
     public boolean equalAttributes(RoadEdgeExtendedBuilder that) {
         return wayID == that.wayID
-                && uniqueWayID == that.uniqueWayID
-                && oppositeWayUniqueId == that.oppositeWayUniqueId
                 && lanesCount == that.lanesCount
                 && (modeOfTransports != null ? modeOfTransports.equals(that.modeOfTransports)
                 && Float.compare(that.allowedMaxSpeedInMpS, allowedMaxSpeedInMpS) == 0 :

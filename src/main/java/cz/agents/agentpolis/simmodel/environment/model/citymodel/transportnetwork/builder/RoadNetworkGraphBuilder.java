@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.osm.OsmGraphBuilderExtended;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.structurebuilders.RoadNetworkGraphSimplifier;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder.structurebuilders.edge.RoadEdgeExtendedBuilder;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadEdgeExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadNodeExtended;
@@ -67,8 +68,10 @@ public class RoadNetworkGraphBuilder {
      */
     public Graph<RoadNodeExtended, RoadEdgeExtended> build() {
         TmpGraphBuilder<RoadNodeExtended, RoadEdgeExtended> osmGraph = buildOsmGraphExtended();
-        //TODO: Simplifier: Make switch for visio graph(visio and curves) // computation graph
-        //RoadGraphSimplifier.simplify(osmGraph, Collections.emptySet()); //not working for RoadExtended
+        //TODO: Simplifier - make switch for Visio and for Simulation.
+        //TODO: Properly handle RoadEdgeExtended - find opposite way and uniqueWayId
+        LOGGER.debug("Graph [#nodes=" + osmGraph.getNodeCount() + ", #edges=" + osmGraph.getEdgeCount() + "] simplification");
+        RoadNetworkGraphSimplifier.simplify(osmGraph, Collections.emptySet()); //not working for RoadExtended
         return osmGraph.createGraph();
     }
 
@@ -130,11 +133,7 @@ public class RoadNetworkGraphBuilder {
             int toId = edgeExtendedBuilder.getTmpToId();
             nodeIds.add(fromId);
             nodeIds.add(toId);
-            Set<Integer> outgoing = edgeIds.get(fromId);
-            if (outgoing == null) {
-                outgoing = new HashSet<>();
-                edgeIds.put(fromId, outgoing);
-            }
+            Set<Integer> outgoing = edgeIds.computeIfAbsent(fromId, k -> new HashSet<>());
             outgoing.add(toId);
         }
         return StronglyConnectedComponentsFinder.getStronglyConnectedComponentsSortedBySize(nodeIds, edgeIds).get(0);

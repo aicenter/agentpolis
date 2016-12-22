@@ -87,7 +87,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
     /**
      * Function extracting lanes count tag.
      */
-    private final LanesCountExtractorAP lanesCountExtractor;
+    private final WayTagExtractor<Integer> lanesCountExtractor;
 
     /**
      * Predicate that says if nodes of a way are in opposite order than they really are. Important only for one-way
@@ -111,7 +111,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
                                       TagEvaluator parkAndRideEvaluator,
                                       Map<ModeOfTransport, TagEvaluator> modeEvaluators,
                                       Map<ModeOfTransport, TagEvaluator> oneWayEvaluators,
-                                      TagEvaluator oppositeDirectionEvaluator, LanesCountExtractorAP lanesCountExtractor) {
+                                      TagEvaluator oppositeDirectionEvaluator, WayTagExtractor<Integer> lanesCountExtractor) {
 
         this.osmUrl = osmUrl;
         this.projection = transformer;
@@ -418,7 +418,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
 
         protected TagExtractor<Double> elevationExtractor = new DoubleExtractor("height", 0);
         protected WayTagExtractor<Double> speedExtractor;
-        protected LanesCountExtractorAP lanesCountExtractor = new LanesCountExtractorAP();
+        protected WayTagExtractor<Integer> lanesCountExtractor;
 
         protected Map<ModeOfTransport, TagEvaluator> modeEvaluators = new EnumMap<>(ModeOfTransport.class);
         protected Map<ModeOfTransport, TagEvaluator> oneWayEvaluators = new EnumMap<>(ModeOfTransport.class);
@@ -501,6 +501,12 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
             return this;
         }
 
+        public Builder setLanesCountExtractor(WayTagExtractor<Integer> lanesCountExtractor) {
+            this.lanesCountExtractor = lanesCountExtractor;
+            return this;
+        }
+
+
         /**
          * Check for setting
          */
@@ -508,7 +514,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
             loadSpeedExtractorIfNeeded();
             loadModeEvaluatorsIfNeeded();
             loadOneWayEvaluatorsIfNeeded();
-            //loadLaneCountExtractorIfNeeded();
+            loadLaneCountExtractorIfNeeded();
         }
 
         /**
@@ -528,7 +534,7 @@ public class OsmGraphBuilderExtended implements OsmElementConsumer {
 
         private void loadLaneCountExtractorIfNeeded() {
             if (lanesCountExtractor == null) {
-                //lanesCountExtractor = MAPPER.readValue(null,LanesCountExtractorAP.class);
+                lanesCountExtractor = new LanesCountExtractor();
             } else {
                 throw new IllegalStateException("Default lanes count extractor can't be created.");
             }
