@@ -208,7 +208,6 @@ public class SimulationCreator {
     private void initSimulation() {
         LOGGER.info("Setting up Alite simulation modul");
         simulation = new Simulation(params.simulationDurationInMillis);
-        simulation.setSleepTimeIfWaitToOtherEvent(50);
         simulation.setPrintouts(10000000);
 		simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
