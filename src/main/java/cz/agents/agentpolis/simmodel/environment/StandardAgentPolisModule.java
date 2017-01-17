@@ -9,6 +9,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import cz.agents.agentpolis.AgentPolisConfiguration;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
@@ -52,6 +53,7 @@ import cz.agents.alite.simulation.Simulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+import java.time.ZonedDateTime;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +69,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
 
-	private SimulationParameters parameters;
+	private AgentPolisConfiguration configuration;
 
     private List<Object> loggers;
     
@@ -86,7 +88,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Override
 	protected void configure() {
         
-        bindConstant().annotatedWith(Names.named("mapSrid")).to(parameters.srid);
+        bindConstant().annotatedWith(Names.named("mapSrid")).to(configuration.srid);
 		
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
@@ -112,7 +114,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         bind(new TypeLiteral<Map<String, PassengerActivityCallback<?>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {}).toInstance(new HashMap<>());
         
-        bind(SimulationParameters.class).toInstance(parameters);
+        bind(AgentPolisConfiguration.class).toInstance(configuration);
         
         install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
             .build(ShortestPathPlannerFactory.class));
@@ -206,13 +208,13 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     @Singleton
     LogItemViewer provideLogItemViewer(Provider<TimeProvider> timeProvider) {
         return new LogItemViewer(allowedLogItemClassesLogItemViewer, timeProvider, 
-                parameters.simulationDurationInMillis);
+                configuration.simulationDurationInMillis);
     }
 
 	@Provides
 	@Singleton
 	TimeProvider provideTimeProvider(EventProcessor eventProcessor) {
-		return new TimeProvider(eventProcessor, parameters.initDate);
+		return new TimeProvider(eventProcessor, ZonedDateTime.now());
 	}
     
     
@@ -263,9 +265,9 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	}
 
     @Override
-    public void initializeParametrs(SimulationParameters parameters, List<Object> loggers, 
+    public void initializeParametrs(AgentPolisConfiguration configuration, List<Object> loggers, 
             Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer) {
-		this.parameters = parameters;
+		this.configuration = configuration;
         this.loggers = loggers;
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
     }

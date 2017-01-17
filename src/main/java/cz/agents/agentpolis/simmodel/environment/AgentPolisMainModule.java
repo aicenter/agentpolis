@@ -5,9 +5,8 @@
  */
 package cz.agents.agentpolis.simmodel.environment;
 
+import cz.agents.agentpolis.AgentPolisConfiguration;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
-import cz.agents.agentpolis.simulator.creator.SimulationParameters;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +15,6 @@ import java.util.Set;
  * @author fido
  */
 public interface AgentPolisMainModule {
-    public void initializeParametrs(SimulationParameters parameters, 
+    public void initializeParametrs(AgentPolisConfiguration configuration, 
         List<Object> loggers, final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer);
 }

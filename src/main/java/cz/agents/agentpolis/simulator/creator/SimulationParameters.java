@@ -13,18 +13,17 @@ public class SimulationParameters {
 
     /**
      * Names of various files needed by the simulation.
-     *
-     * @{
      */
-    public static final String VEHICLE_DATA_MODEL_FILE_NAME = "vehicledatamodel.xml";
+    
+    /**
+     * Default map filename
+     */
     public static final String CITY_DATA_MODEL_FILE_NAME = "citydatamodel.osm";
     public static final String PUBLIC_TRANSPORT_DATA_MODEL_FILE_NAME = "publictransportdatamodel.zip";
     public static final String POPULATION_DATA_MODEL_FILE_NAME = "populationdatamodel.xml";
     public static final String GTFS_ARCHIVE_FILE_NAME = "gtfs.zip";
     public static final String GTFS_UNPACKED_FOLDER_NAME = "GTFS/";
-    /**
-     * @}
-     */
+
 
     private static Logger LOGGER = Logger.getLogger(SimulationParameters.class);
 

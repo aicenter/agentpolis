@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simulator.creator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.AgentPolisConfiguration;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.simmodel.agent.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
@@ -84,7 +85,7 @@ public class SimulationCreator {
     private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
     private final Map<EntityType, VisEntity> entityStyles = new HashMap<>();
 
-    private final SimulationParameters params;
+    private final AgentPolisConfiguration configuration;
     
     private final LogItemViewer logItemViewer;
     
@@ -123,11 +124,11 @@ public class SimulationCreator {
 	
 	
 	@Inject
-    public SimulationCreator(final SimulationParameters params, LogItemViewer logItemViewer, 
+    public SimulationCreator(final AgentPolisConfiguration configuration, LogItemViewer logItemViewer, 
             ProjectionProvider projectionProvider, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
             Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel) {
-        this.params = params;
+        this.configuration = configuration;
         this.logItemViewer = logItemViewer;
         this.projectionProvider = projectionProvider;
         this.simulationProvider = simulationProvider;
@@ -146,7 +147,7 @@ public class SimulationCreator {
         initSimulation();
 
         LOGGER.info(">>> MAPS CREATION");
-        MapData osmDTO = mapInitFactory.initMap(params.osmFile, params.simulationDurationInMillis);
+        MapData osmDTO = mapInitFactory.initMap(configuration.osmFile, configuration.simulationDurationInMillis);
         boundsOfMap = osmDTO.bounds;
 
         initEnvironment(osmDTO, seed);
@@ -169,7 +170,7 @@ public class SimulationCreator {
 
         initVisioAndGE(projection);
 
-        if (params.skipSimulation) {
+        if (configuration.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
             LOGGER.info(String.format("Simulation - init time: %s ms", (System.currentTimeMillis() - simTimeInit)));
@@ -183,7 +184,7 @@ public class SimulationCreator {
             LOGGER.info(String.format("Simulation - runtime: %s ms", (System.currentTimeMillis() -
                     simulationStartTime)));
 
-            if (params.turnOnGeneratingGELinks) {
+            if (configuration.turnOnGeneratingGELinks) {
                 try {
                     synthetiser.stop();
                     LOGGER.info("Google Earth - Synthesizer was stopped ");
@@ -192,10 +193,10 @@ public class SimulationCreator {
                 }
             }
 
-            if (params.pathToScriptsAndTheirInputParameters != null) {
+            if (configuration.pathToScriptsAndTheirInputParameters != null) {
                 LOGGER.info("Executing post groovy scripts:");
-                (new CSVPostprocessingGroovyExecutor(params.pathToScriptsAndTheirInputParameters, params.pathToCSVEventLogFile,
-                        params.dirForResults.getPath())).execute();
+                (new CSVPostprocessingGroovyExecutor(configuration.pathToScriptsAndTheirInputParameters, configuration.pathToCSVEventLogFile,
+                        configuration.dirForResults.getPath())).execute();
             }
         }
         simulationFinishedListeners.forEach(SimulationFinishedListener::simulationFinished);
@@ -207,7 +208,7 @@ public class SimulationCreator {
 
     private void initSimulation() {
         LOGGER.info("Setting up Alite simulation modul");
-        simulation = new Simulation(params.simulationDurationInMillis);
+        simulation = new Simulation(configuration.simulationDurationInMillis);
         simulation.setPrintouts(10000000);
 		simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
@@ -223,9 +224,9 @@ public class SimulationCreator {
     private void initLogger() {
         LOGGER.info("Loading log4j properties");
 
-        if (new File(params.LOG4J_XML_DIR).exists()) {
+        if (new File(configuration.LOG4J_XML_DIR).exists()) {
             try {
-                DOMConfigurator.configure(params.LOG4J_XML_DIR);
+                DOMConfigurator.configure(configuration.LOG4J_XML_DIR);
                 LOGGER.info("Loaded log4j properties");
                 return;
             } catch (Exception ignored) {
@@ -259,9 +260,9 @@ public class SimulationCreator {
     }
 	
 	public void addAgent(Agent agent){
-		addEntityMaxSpeedToStorage(agent.getId(), params.agentMoveSpeedInMps);
+		addEntityMaxSpeedToStorage(agent.getId(), configuration.agentMoveSpeedInMps);
 		agentStorage.addEntity(agent);
-		if(params.showVisio && VisEntityLayer.isActive()){
+		if(configuration.showVisio && VisEntityLayer.isActive()){
 			VisEntityLayer.addEntity(agent);
 		}
 		agent.born();
@@ -270,7 +271,7 @@ public class SimulationCreator {
 	public void removeAgent(Agent agent){
 		agent.die();
 		
-		if(params.showVisio  && VisEntityLayer.isActive()){
+		if(configuration.showVisio  && VisEntityLayer.isActive()){
 			VisEntityLayer.removeEntity(agent);
 		}
         
@@ -282,13 +283,13 @@ public class SimulationCreator {
     
 
     private void initVisioAndGE(Projection projection) {
-        if (params.turnOnGeneratingGELinks) {
+        if (configuration.turnOnGeneratingGELinks) {
             LOGGER.info("Initializing Google Earth");
-            createGoogleEarthUpdaters(params.pathToKMLFile);
+            createGoogleEarthUpdaters(configuration.pathToKMLFile);
             LOGGER.info("Initialized Google Earth");
         }
 
-        if (params.showVisio) {
+        if (configuration.showVisio) {
             LOGGER.info("Initializing Visio");
 			visioInitializerProvider.get().initialize(simulation, projection);
             simulation.setSimulationSpeed(1);
@@ -298,7 +299,7 @@ public class SimulationCreator {
             simulation.setSimulationSpeed(0);
         }
 
-        if (params.showEventViewer) {
+        if (configuration.showEventViewer) {
             LOGGER.info("Initializing event viewer");
             logItemViewer.runView();
             LOGGER.info("Initialized event viewer");
@@ -426,7 +427,7 @@ public class SimulationCreator {
     // ----------------- estimation --------------------------------
 
     private void setUpTimeAndCompletenessEstimation() {
-        long stepTimeForCompletenessEvent = (params.simulationDurationInMillis / 100);
+        long stepTimeForCompletenessEvent = (configuration.simulationDurationInMillis / 100);
 
         for (int percentValue = 1; percentValue < 100; percentValue++) {
             simulation.addEvent(new SimulationCompletenessHandler(), stepTimeForCompletenessEvent * percentValue);
@@ -442,7 +443,7 @@ public class SimulationCreator {
 
     public long getTimeTillSimulationFinish() {
         if (simulationCompletenessInPercentages == 0) {
-            return params.simulationDurationInMillis;
+            return configuration.simulationDurationInMillis;
         }
 
         double durationPerPercentge = simulationDuration / (double) simulationCompletenessInPercentages;
@@ -459,7 +460,7 @@ public class SimulationCreator {
         @Override
         public void handleEvent(Event event) {
             simulationCompletenessInPercentages++;
-            simulationDuration = System.currentTimeMillis() - params.simTimeInit;
+            simulationDuration = System.currentTimeMillis();
         }
 
         @Override

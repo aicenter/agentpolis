@@ -38,7 +38,7 @@ public class AgentPolisInitializer {
     
     private final List<Object> loggers = new ArrayList<>();
     
-    private final SimulationParameters parameters;
+    private final AgentPolisConfiguration configuration;
     
     private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer = new HashSet<>();
     
@@ -50,14 +50,14 @@ public class AgentPolisInitializer {
     
     
     
-    public AgentPolisInitializer(SimulationParameters parameters, StandardAgentPolisModule mainModule) {
+    public AgentPolisInitializer(AgentPolisConfiguration configuration, StandardAgentPolisModule mainModule) {
         this.mainModule = mainModule;
-        this.parameters = parameters;
-        mainModule.initializeParametrs(parameters, loggers, allowedLogItemClassesLogItemViewer);
+        this.configuration = configuration;
+        mainModule.initializeParametrs(configuration, loggers, allowedLogItemClassesLogItemViewer);
     }
     
-    public AgentPolisInitializer(SimulationParameters parameters) {
-        this(parameters, new StandardAgentPolisModule());
+    public AgentPolisInitializer(AgentPolisConfiguration configuration) {
+        this(configuration, new StandardAgentPolisModule());
     }
     
     
@@ -118,12 +118,12 @@ public class AgentPolisInitializer {
     private void initLoggers(Injector injector) {
         LOGGER.info("Initialization of logger - event bus");
         
-        if (parameters.showEventViewer) {
+        if (configuration.showEventViewer) {
             logItemViewer = injector.getInstance(LogItemViewer.class);
             addLogger(logItemViewer);
         }
         
-        initCSV(parameters.pathToCSVEventLogFile, injector);
+        initCSV(configuration.pathToCSVEventLogFile, injector);
     }
     
     private void initCSV(String pathToCSVEventLogFile, Injector injector) {
