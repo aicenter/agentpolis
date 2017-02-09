@@ -12,7 +12,6 @@ import cz.agents.agentpolis.simmodel.environment.model.Graphs;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.agentpolis.simulator.SimulationProvider;
-import cz.agents.agentpolis.simulator.creator.initializator.MapInitFactory;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
@@ -140,14 +139,13 @@ public class SimulationCreator {
 		instance = this;
     }
     
-    public void prepareSimulation(final MapInitFactory mapInitFactory, final long seed){
+    public void prepareSimulation(final MapData osmDTO, final long seed){
         LOGGER.debug("SEED = " + seed);
         
         initLogger();
         initSimulation();
 
         LOGGER.info(">>> MAPS CREATION");
-        MapData osmDTO = mapInitFactory.initMap(configuration.osmFile, configuration.simulationDurationInMillis);
         boundsOfMap = osmDTO.bounds;
 
         initEnvironment(osmDTO, seed);
@@ -161,8 +159,8 @@ public class SimulationCreator {
         }
     }
 
-    public void prepareSimulation(final MapInitFactory mapInitFactory) {
-        prepareSimulation(mapInitFactory, 0L);
+    public void prepareSimulation(final MapData osmDTO) {
+        prepareSimulation(osmDTO, 0L);
     }
 
     public void startSimulation() {
