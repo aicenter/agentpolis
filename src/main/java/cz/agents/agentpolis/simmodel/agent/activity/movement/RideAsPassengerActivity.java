@@ -240,10 +240,13 @@ public class RideAsPassengerActivity<TTrip extends GraphTrip<TripItem>> implemen
 
         if (trip.isEqualWithFirstTripItem(fromtripItem) == false
                 || trip.numOfCurrentTripItems() < 2) {
-            LOGGER.warn("The agent with id" + passengerId
-                    + " is terminted. It is not allowed state for"
-                    + fromtripItem.tripPositionByNodeId + "and " + trip);
+            LOGGER.warn("The agent with id " + passengerId
+                    + " is terminted. It is not allowed state for "
+                    + fromtripItem.tripPositionByNodeId + " and " + trip);
             return;
+            // can trigger when vehicle drives through passanger location without taking him onboard. 
+            //Although not optimal, ridesharing, this can happen!
+            
             // throw new RuntimeException("It is not possible");
         }
 

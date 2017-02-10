@@ -41,6 +41,10 @@ public class PositionUtil {
     }
     
     
+    public Node getNode(int nodeId){
+        return nodesFromAllGraphs.get(nodeId);
+    }
+    
     public Point2d getPosition(GPSLocation position){
         Point3d projectedPoint = projection.project(position);
         return new Point2d(projectedPoint.x, projectedPoint.y);

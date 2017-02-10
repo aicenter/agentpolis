@@ -58,14 +58,18 @@ public class EntityPositionUtil {
 	}
 	
 	public Point2d getEntityPosition(AgentPolisEntity entity){
+        Node entityPositionNode = getEntityNodePosition(entity);
+        
+		return positionUtil.getPosition(entityPositionNode);
+	}
+    
+    public Node getEntityNodePosition(AgentPolisEntity entity){
         if(entityPositionModel.getEntityPositionByNodeId(entity.getId()) == null){
             return null;
         }
         
-        Node entityPositionNode = nodesFromAllGraphs.get(
+        return nodesFromAllGraphs.get(
 					entityPositionModel.getEntityPositionByNodeId(entity.getId()));
-        
-		return positionUtil.getPosition(entityPositionNode);
 	}
 	
 	public Point2d getEntityCanvasPosition(AgentPolisEntity entity){
