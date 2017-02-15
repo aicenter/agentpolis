@@ -7,12 +7,23 @@ package cz.agents.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.simmodel.Agent;
+import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
 import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.GPSLocation;
+import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+import java.util.LinkedList;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -30,14 +41,21 @@ public class PositionUtil {
 	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
     
     private final BoundingBox mapBounds;
+    
+    private final Graph<SimulationNode,SimulationEdge> network;
+    
+    private final TimeProvider timeProvider;
 
     
     
     @Inject
-    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator) {
+    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
+            HighwayNetwork highwayNetwork, TimeProvider timeProvider) {
         this.projection = projection;
 		this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();
+        network = highwayNetwork.getNetwork();
+        this.timeProvider = timeProvider;
     }
     
     
@@ -76,4 +94,54 @@ public class PositionUtil {
         
         return (int) (minMin.y - maxMin.y);
     }
+     
+    private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
+        return network.getEdge(entityPositionNodeId, targetNodeId).getLength();
+    }
+     
+         
+    public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip){
+        int lenght = 0;
+        
+        LinkedList<TripItem> locations = graphTrip.getLocations();
+        
+        int stratNodeId = locations.get(0).tripPositionByNodeId;
+        for (int i =1; i < locations.size(); i++) {
+            int targetNodeId = locations.get(i).tripPositionByNodeId;
+            lenght += getEdgeLength(stratNodeId, targetNodeId);
+            stratNodeId = targetNodeId;
+        }
+        
+        return lenght;
+    }
+    
+    public <A extends Agent & TransportAgent> Point2d getCanvasPositionInterpolated(A agent){
+        
+        Node startNode = agent.getPosition();
+        
+        Node targetNode = agent.getTargetNode();
+        
+        // vehicle waits 
+        if(targetNode == null){
+            return getCanvasPosition(startNode);
+        }
+        
+        DelayData delayData = agent.getDelayData();
+        
+        // vehicle has no delay yet
+//        if(delayData == null){
+//            return positionUtil.getCanvasPosition(entityPositionNode);
+//        }
+        
+        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime()) 
+                / delayData.getDelay();
+        
+        Point2d startPosition = getCanvasPosition(startNode);
+        Point2d targetPosition = getCanvasPosition(targetNode);
+        
+        double xIncrement = (targetPosition.x - startPosition.x) * portionCompleted;
+        double yIncrement = (targetPosition.y - startPosition.y) * portionCompleted;
+        
+        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
+	}
 }

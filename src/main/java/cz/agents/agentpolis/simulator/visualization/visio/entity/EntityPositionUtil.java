@@ -82,30 +82,7 @@ public class EntityPositionUtil {
         
 		return positionUtil.getCanvasPosition(entityPositionNode);
 	}
-    
-    
 
-    private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
-        return network.getEdge(entityPositionNodeId, targetNodeId).getLength();
-    }
-    
-    public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip){
-        int lenght = 0;
-        
-        LinkedList<TripItem> locations = graphTrip.getLocations();
-        
-        int stratNodeId = locations.get(0).tripPositionByNodeId;
-        for (int i =1; i < locations.size(); i++) {
-            int targetNodeId = locations.get(i).tripPositionByNodeId;
-            lenght += getEdgeLength(stratNodeId, targetNodeId);
-            stratNodeId = targetNodeId;
-        }
-        
-        return lenght;
-    }
-    
-    
-    
 	
 	public class EntityPositionIterator{
 		

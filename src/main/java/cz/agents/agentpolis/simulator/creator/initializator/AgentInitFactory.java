@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.inject.Injector;
 
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 
 /**
  * 

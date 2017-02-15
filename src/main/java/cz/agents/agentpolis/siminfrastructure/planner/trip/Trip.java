@@ -65,6 +65,14 @@ public class Trip<L> {
 		
 		return str;
 	}
+    
+    public L getAndRemoveFirstLocation(){
+        return locations.poll();
+    }
+
+    public boolean isEmpty(){
+        return locations.isEmpty();
+    }
 
 	private void checkLocations(LinkedList<L> locations) throws TripException {
 		for (L location : locations) {

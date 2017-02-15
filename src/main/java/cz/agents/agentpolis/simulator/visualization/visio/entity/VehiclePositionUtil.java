@@ -8,7 +8,7 @@ package cz.agents.agentpolis.simulator.visualization.visio.entity;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;

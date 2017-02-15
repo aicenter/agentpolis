@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;

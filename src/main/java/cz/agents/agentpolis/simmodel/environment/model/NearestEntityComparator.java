@@ -1,7 +1,7 @@
 package cz.agents.agentpolis.simmodel.environment.model;
 
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.agents.agentpolis.simulator.visualization.visio.entity.EntityPositionUtil;
+import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import java.util.Comparator;
 import javax.vecmath.Point2d;
 
@@ -9,27 +9,26 @@ import javax.vecmath.Point2d;
  *
  * @author F.I.D.O.
  * @param <E> entity type
- * @param <EP> entityPositionUtil type
  */
-public class NearestEntityComparator<E extends AgentPolisEntity, EP extends EntityPositionUtil> 
+public class NearestEntityComparator<E extends AgentPolisEntity> 
         implements Comparator<E>{
 	
 	protected final Point2d from;
 	
-	protected final EP entityPositionUtil;
+	protected final PositionUtil positionUtil;
 
 	
-	public NearestEntityComparator(EP entityPositionUtil, Point2d from) {
+	public NearestEntityComparator(PositionUtil positionUtil, Point2d from) {
 		this.from = from;
-		this.entityPositionUtil = entityPositionUtil;
+		this.positionUtil = positionUtil;
 	}
 	
 	
 
 	@Override
 	public int compare(AgentPolisEntity e1, AgentPolisEntity e2) {
-		return Double.compare(entityPositionUtil.getEntityPosition(e1).distance(from), 
-				entityPositionUtil.getEntityPosition(e2).distance(from));
+		return Double.compare(positionUtil.getPosition(e1.getPosition()).distance(from), 
+				positionUtil.getPosition(e2.getPosition()).distance(from));
 	}
 	
 }

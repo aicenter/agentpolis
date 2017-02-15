@@ -5,7 +5,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.AgentPolisConfiguration;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.model.AgentStorage;
 import cz.agents.agentpolis.simmodel.environment.model.Graphs;

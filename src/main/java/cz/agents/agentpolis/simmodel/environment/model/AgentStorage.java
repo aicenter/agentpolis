@@ -4,7 +4,7 @@ package cz.agents.agentpolis.simmodel.environment.model;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 
 /**
  * 

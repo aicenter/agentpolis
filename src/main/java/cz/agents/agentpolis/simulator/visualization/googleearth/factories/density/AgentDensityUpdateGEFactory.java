@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.inject.Injector;
 
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.AgentStorage;

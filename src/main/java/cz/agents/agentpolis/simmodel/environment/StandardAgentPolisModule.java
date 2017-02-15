@@ -15,7 +15,7 @@ import cz.agents.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;

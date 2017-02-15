@@ -3,7 +3,7 @@ package cz.agents.agentpolis.mock;
 import com.google.inject.*;
 import cz.agents.agentpolis.mock.graph.GraphMock;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.agent.Agent;
+import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.activity.TimeSpendingActivity;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.DriveVehicleActivity;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.RideInVehicleActivity;
