@@ -69,7 +69,7 @@ public class Trip<L> {
     public L getAndRemoveFirstLocation(){
         return locations.poll();
     }
-
+ 
     public boolean isEmpty(){
         return locations.isEmpty();
     }

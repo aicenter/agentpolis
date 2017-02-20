@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Zbynek Moler
  * 
  */
-public class VehicleTrip extends GraphTrip<TripItem> {
+public class VehicleTrip<T extends TripItem> extends GraphTrip<T> {
 
     /**
      * 
@@ -23,7 +23,7 @@ public class VehicleTrip extends GraphTrip<TripItem> {
     
     private final String vehicleId;
 
-    public VehicleTrip(LinkedList<TripItem> trip, GraphType graphType, String vehicleId){
+    public VehicleTrip(LinkedList<T> trip, GraphType graphType, String vehicleId){
         super(trip, graphType);
         this.vehicleId = checkNotNull(vehicleId);
     }

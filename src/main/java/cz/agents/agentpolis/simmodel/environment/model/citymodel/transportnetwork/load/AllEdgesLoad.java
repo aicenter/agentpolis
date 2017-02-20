@@ -7,31 +7,45 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
-import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
+import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.Graph;
+import cz.agents.basestructures.Node;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  *
  * @author fido
+ * @param <E>
+ * @param <ES>
  */
-public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
+public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extends EntityStorage<E>> 
+        implements Iterable<Entry<String,Integer>>{
+    
+    private final ES entityStorage;
     
     private final HashMap<String,Integer> loadPerEdge;
     
-    private final Map<String,Integer> positions;
-    
-    private final Map<String,Integer> targetPositions;
-    
     private final Graph<SimulationNode,SimulationEdge> network;
 
+    
+    public Iterable<Integer> loadsIterable = new Iterable<Integer>() {
+        @Override
+        public Iterator<Integer> iterator() {
+            return loadPerEdge.values().iterator();
+        }
+    };
+    
+//    public ArrayList<Integer> test;
+    
     
     
     
@@ -44,10 +58,9 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
     
 
     @Inject
-    public AllEdgesLoad(AgentPositionModel entityPositionModel, HighwayNetwork highwayNetwork) {
+    public AllEdgesLoad(ES entityStorage, HighwayNetwork highwayNetwork) {
+        this.entityStorage = entityStorage;
         loadPerEdge = new HashMap<>();
-        positions = entityPositionModel.getCurrentPositions();
-        targetPositions = entityPositionModel.getCurrentTargetPositions();
         network = highwayNetwork.getNetwork();
     }
     
@@ -56,13 +69,13 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
     
     @Inject
     public void compute(){
-        for (Map.Entry<String, Integer> positionEntry : positions.entrySet()) {
-            String entityId = positionEntry.getKey();
-            Integer currentNodeId = positionEntry.getValue();
-            Integer targetNodeId = targetPositions.get(entityId);
-            if(targetNodeId != null && !targetNodeId.equals(currentNodeId)){
-                String edgeId = network.getEdge(currentNodeId, targetNodeId).getUniqueID();
-                countLoadForPosition(entityId, currentNodeId, targetNodeId, edgeId);
+        for (E entity : entityStorage) {
+            String entityId = entity.getId();
+            Node currentNode = entity.getPosition();
+            Node targetNode = entity.getTargetNode();
+            if(targetNode != null && !targetNode.equals(currentNode)){
+                String edgeId = network.getEdge(currentNode.id, targetNode.id).getUniqueID();
+                countLoadForPosition(entityId, edgeId);
             }
         }
     }
@@ -84,14 +97,9 @@ public class AllEdgesLoad implements Iterable<Entry<String,Integer>>{
         return loadPerEdge.entrySet().iterator();
     }
     
-    public Iterable<Integer> loadsIterator = new Iterable<Integer>() {
-        @Override
-        public Iterator<Integer> iterator() {
-            return loadPerEdge.values().iterator();
-        }
-    };
+    
 
-    protected void countLoadForPosition(String entityId, int currentNodeId, int targetNodeId, String edgeId) {
+    protected void countLoadForPosition(String entityId, String edgeId) {
         CollectionUtil.incrementMapValue(loadPerEdge, edgeId, 1);
     }
     
