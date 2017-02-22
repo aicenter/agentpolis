@@ -15,7 +15,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
-import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,8 +65,7 @@ public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extend
     
     
     
-    
-    @Inject
+
     public void compute(){
         for (E entity : entityStorage) {
             String entityId = entity.getId();
