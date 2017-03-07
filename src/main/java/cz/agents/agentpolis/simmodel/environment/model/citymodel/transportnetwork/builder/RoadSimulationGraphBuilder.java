@@ -1,7 +1,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.builder;
 
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadEdgeExtended;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.RoadNodeExtended;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -33,7 +33,7 @@ public class RoadSimulationGraphBuilder {
      * @param roadNetworkGraphFromOSM for retrieve extra tags that are not in RoadEdge/RoadNode
      * @return Highway graph
      */
-    public Graph<SimulationNode, SimulationEdge> build(Graph<? extends RoadNodeExtended, ? extends RoadEdgeExtended> roadNetworkGraphFromOSM) {
+    public Graph<SimulationNode, SimulationEdge> build(Graph<? extends RoadNodeExtended, ? extends SimulationEdge> roadNetworkGraphFromOSM) {
 
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = GraphBuilder.createGraphBuilder();
         for (RoadNodeExtended roadNode : roadNetworkGraphFromOSM.getAllNodes()) {
@@ -41,7 +41,7 @@ public class RoadSimulationGraphBuilder {
             graphBuilder.addNode(simulationNode);
         }
 
-        for (RoadEdgeExtended roadEdge : roadNetworkGraphFromOSM.getAllEdges()) {
+        for (SimulationEdge roadEdge : roadNetworkGraphFromOSM.getAllEdges()) {
             //Debug
             //System.out.println(roadEdge.getUniqueWayId() +" <-------------> " + roadEdge.getOppositeWayId() +"    lanes: "+roadEdge.getLanesCount());
             SimulationEdge.SimulationEdgeBuilder edgeBuilder = new SimulationEdge.SimulationEdgeBuilder(roadEdge);

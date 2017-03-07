@@ -1,177 +1,99 @@
 package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.ModeOfTransportToGraphTypeConverter;
 import cz.agents.multimodalstructures.additional.ModeOfTransport;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Extended RoadEdge, contains road situation (lanes,two way pairs,...)
+ * Also provides extended identification of the edge.
+ * @author Zdenek Bousa
+ */
 public class SimulationEdge extends RoadEdge {
-
-    private static final long serialVersionUID = -8040470592422680160L;
+    /**
+     * unique ID for each edge, also recognize directions
+     */
+    private final int uniqueWayId;
 
     /**
-     * It holds graph types for which the edge is defined. It contains information about modes sharing the same space
-     * (e.g. tramways with cars).
+     * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
      */
-    private final SetMultimap<GraphType, GraphType> graphTypes;
-    private Map<GraphType, Integer> laneCounts;
+    private final int oppositeWayId; // unique edge id that is in opposite direction, otherwise -1 (one-way)
 
-    private final String uniqueID;
+    /**
+     * TODO: lanes
+     * Lanes turn                   lanesTurn{left,through|through,right}
+     * Lanes continues to edges:    lanesContinuesToEdge = {{1,2},{2,3}}
+     * Lanes count                  lanesCount = 2
+     */
+    private final int lanesCount;
+    private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
 
-    private int uniqueWayId; //unknown should be -1
+    /**
+     *
+     * @param fromId sourceId
+     * @param toId destinationId
+     * @param osmWayID osm id of this edge
+     * @param permittedModes int representation of permited modes
+     * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
+     * @param lengthInMetres -
+     * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
+     *                      Input should be correct, it is not validated!
+     * @param lanesCount total number of lanes for ModeOfTransport-car
+     */
+    public SimulationEdge(int fromId,
+                            int toId,
+                            long osmWayID,
+                            int uniqueWayId,
+                            int oppositeWayId,
+                            int lengthInMetres,
+                            Set<ModeOfTransport> permittedModes,
+                            float allowedMaxSpeedInMpS,
+                            int lanesCount) {
+        super(fromId, toId, osmWayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
 
-    private SimulationEdge(int fromNodeId,
-                           int toNodeId,
-                           long wayID,
-                           Set<ModeOfTransport> permittedModes,
-                           float allowedMaxSpeedInMpS,
-                           int lengthInMetres,
-                           Map<GraphType, Integer> laneCounts,
-                           SetMultimap<GraphType, GraphType> graphTypes, String uniqueID, int uniqueWayId) {
-        super(fromNodeId, toNodeId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
-        this.graphTypes = graphTypes;
-        this.laneCounts = laneCounts;
-        this.uniqueID = uniqueID;
         this.uniqueWayId = uniqueWayId;
 
-    }
+        if (oppositeWayId >= -1) {
+            this.oppositeWayId = oppositeWayId;
+        } else {
+            this.oppositeWayId = -2;
+        }
 
-    public SetMultimap<GraphType, GraphType> getGraphTypes() {
-        return graphTypes;
-    }
+        if (lanesCount >= 1) {
+            this.lanesCount = lanesCount;
+        } else {
+            this.lanesCount = 1; //minimum
+        }
 
-    public int getLaneCount(GraphType type) {
-        Integer laneCount = laneCounts.get(type);
-        return laneCount == null ? 0 : laneCount;
-    }
-
-    public Map<GraphType, Integer> getLaneCounts() {
-        return laneCounts;
-    }
-
-    public String getUniqueID() {
-        return uniqueID;
     }
 
     /**
-     * unique ID and same as uniqueWayId in RoadEdgExtended
+     * ID
      *
-     * @return
+     * @return unique id of the edge
      */
     public int getUniqueWayId() {
         return uniqueWayId;
     }
 
     /**
-     * Builder
+     * Information about opposite direction on the road.
+     *
+     * @return -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
      */
-    public static class SimulationEdgeBuilder {
+    public int getOppositeWayId() {
+        return oppositeWayId;
+    }
 
-        private static final float DEFAULT_MAX_SPEED_IN_MPS = 50 / 3.6f;
-        private long wayID;
-        private Set<ModeOfTransport> permittedModes;
-        private float allowedMaxSpeedInMpS = DEFAULT_MAX_SPEED_IN_MPS;
-        private int lengthInMetres;
-        SetMultimap<GraphType, GraphType> graphTypes = HashMultimap.create();
-        private Map<GraphType, Integer> laneCounts = new HashMap<>();
-        private int uniqueWayId;
-
-        public SimulationEdgeBuilder(int length, float allowedMaxSpeedInMpS, long wayID,
-                                     Set<ModeOfTransport> permittedModes, int uniqueWayId) {
-            this.lengthInMetres = length;
-            this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
-            this.wayID = wayID;
-            this.permittedModes = permittedModes;
-            this.uniqueWayId = uniqueWayId;
-            initLaneCounts(permittedModes);
-            initGraphTypes(permittedModes);
-        }
-
-        public SimulationEdgeBuilder(RoadEdge roadEdge) {
-            this(roadEdge.length, roadEdge.allowedMaxSpeedInMpS, roadEdge.wayID, roadEdge.getPermittedModes(), -1);
-        }
-
-        /**
-         * Also loading lane count
-         *
-         * @param roadEdgeExtended - for highway graph
-         */
-        public SimulationEdgeBuilder(RoadEdgeExtended roadEdgeExtended) {
-            this(roadEdgeExtended.length, roadEdgeExtended.allowedMaxSpeedInMpS, roadEdgeExtended.wayID, roadEdgeExtended.getPermittedModes(), roadEdgeExtended.getUniqueWayId());
-            this.addLaneCount(EGraphType.HIGHWAY, roadEdgeExtended.getLanesCount());
-        }
-
-        public SimulationEdgeBuilder(int laneCount, int length, GraphType graphType) {
-            this.lengthInMetres = length;
-            permittedModes = ModeOfTransportToGraphTypeConverter.convert(graphType);
-            addType(graphType);
-            addLaneCount(graphType, laneCount);
-        }
-
-        private void initGraphTypes(Set<ModeOfTransport> permittedModes) {
-            permittedModes.forEach(
-                    modeOfTransport -> addType(ModeOfTransportToGraphTypeConverter.convert(modeOfTransport)));
-        }
-
-        private void initLaneCounts(Set<ModeOfTransport> permittedModes) {
-            permittedModes.forEach(
-                    modeOfTransport -> addLaneCount(ModeOfTransportToGraphTypeConverter.convert(modeOfTransport), 1));
-
-        }
-
-        public SimulationEdge build(int fromNodeId, int toNodeId) {
-            return new SimulationEdge(
-                    fromNodeId,
-                    toNodeId,
-                    wayID,
-                    permittedModes,
-                    allowedMaxSpeedInMpS,
-                    lengthInMetres,
-                    laneCounts,
-                    graphTypes, Integer.toString(fromNodeId) + "-" + Integer.toString(toNodeId),
-                    uniqueWayId);
-        }
-
-        public SimulationEdgeBuilder addType(GraphType type) {
-            graphTypes.put(type, type);
-            return this;
-        }
-
-        public SimulationEdgeBuilder addLaneCount(GraphType type, int laneCount) {
-            laneCounts.put(type, laneCount);
-            return this;
-        }
-
-        public SimulationEdgeBuilder addSharedType(GraphType newType, GraphType sharedType) {
-            graphTypes.put(newType, newType);
-            Set<GraphType> alreadyShared = new HashSet<>(graphTypes.get(sharedType)); //avoid concurrent modification exception
-            for (GraphType type : alreadyShared) {
-                graphTypes.put(newType, type);
-                graphTypes.put(type, newType);
-            }
-            return this;
-        }
-
-        public SimulationEdgeBuilder removeType(GraphType type) {
-            laneCounts.remove(type);
-            Set<GraphType> toRemove = graphTypes.removeAll(type);
-            for (GraphType toRem : toRemove) {
-                graphTypes.remove(toRem, type);
-            }
-            return this;
-        }
-
-        public boolean containsGraphType(GraphType type) {
-            return graphTypes.containsKey(type);
-        }
+    /**
+     * Information about number of lanes for cars.
+     *
+     * @return total number of lanes (minimum is 1)
+     */
+    public int getLanesCount() {
+        return lanesCount;
     }
 }
