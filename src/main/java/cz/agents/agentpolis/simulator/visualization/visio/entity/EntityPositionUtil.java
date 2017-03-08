@@ -6,8 +6,6 @@
 package cz.agents.agentpolis.simulator.visualization.visio.entity;
 
 import com.google.inject.Inject;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
@@ -22,7 +20,6 @@ import cz.agents.basestructures.Node;
 
 import javax.vecmath.Point2d;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 

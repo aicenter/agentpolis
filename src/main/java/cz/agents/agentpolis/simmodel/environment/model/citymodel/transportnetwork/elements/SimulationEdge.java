@@ -15,7 +15,7 @@ public class SimulationEdge extends RoadEdge {
     /**
      * unique ID for each edge, also recognize directions
      */
-    private final int uniqueWayId;
+    private final int uniqueId;
 
     /**
      * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
@@ -36,6 +36,7 @@ public class SimulationEdge extends RoadEdge {
      * @param fromId sourceId
      * @param toId destinationId
      * @param osmWayID osm id of this edge
+     * @param uniqueWayId
      * @param permittedModes int representation of permited modes
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
      * @param lengthInMetres -
@@ -54,7 +55,7 @@ public class SimulationEdge extends RoadEdge {
                             int lanesCount) {
         super(fromId, toId, osmWayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
 
-        this.uniqueWayId = uniqueWayId;
+        this.uniqueId = uniqueWayId;
 
         if (oppositeWayId >= -1) {
             this.oppositeWayId = oppositeWayId;
@@ -75,8 +76,8 @@ public class SimulationEdge extends RoadEdge {
      *
      * @return unique id of the edge
      */
-    public int getUniqueWayId() {
-        return uniqueWayId;
+    public int getUniqueId() {
+        return uniqueId;
     }
 
     /**

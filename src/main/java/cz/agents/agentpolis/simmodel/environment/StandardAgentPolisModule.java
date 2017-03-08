@@ -41,7 +41,6 @@ import cz.agents.agentpolis.simmodel.environment.model.sensor.PassengerBeforePla
 import cz.agents.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.agents.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
 import cz.agents.agentpolis.simulator.SimulationProvider;
-import cz.agents.agentpolis.simulator.creator.SimulationParameters;
 import cz.agents.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;

@@ -3,21 +3,18 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 
+/**
+ * For RoadEdgeExtended. Allows full control for AgentPolis needs. Same as RoadNode
+ *
+ * @author Zdenek Bousa
+ */
 public class SimulationNode extends RoadNode {
 
-    private static final long serialVersionUID = 6338634297573324955L;
-
-    public SimulationNode(int id, long sourceId, GPSLocation loc, boolean isParkAndRide, boolean isBikeSharingStation) {
-        super(id, sourceId, loc.latE6, loc.lonE6, loc.latProjected, loc.lonProjected, loc.elevation, isParkAndRide, isBikeSharingStation);
+    public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation, boolean isParkAndRide, boolean isBikeSharingStation) {
+        super(id, osmId, latE6, lonE6, projectedLat, projectedLon, elevation, isParkAndRide, isBikeSharingStation);
     }
 
-    public SimulationNode(int id, long sourceId, GPSLocation loc) {
-        this(id, sourceId, loc, false, false);
+    public SimulationNode(int id, long sourceId, GPSLocation location, boolean isParkAndRide, boolean isBikeSharingStation) {
+        super(id, sourceId, location, isParkAndRide, isBikeSharingStation);
     }
-
-    public SimulationNode(RoadNode node) {
-        super(node.id, node.sourceId, node.latE6, node.lonE6, node.latProjected, node.lonProjected, node.elevation, node.isParkAndRide, node.isBikeSharingStation);
-    }
-
-
 }

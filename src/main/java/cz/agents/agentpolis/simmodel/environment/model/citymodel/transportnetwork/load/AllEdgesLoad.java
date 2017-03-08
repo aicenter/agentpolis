@@ -27,11 +27,11 @@ import java.util.Map.Entry;
  * @param <ES>
  */
 public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extends EntityStorage<E>> 
-        implements Iterable<Entry<String,Integer>>{
+        implements Iterable<Entry<Integer,Integer>>{
     
     private final ES entityStorage;
     
-    private final HashMap<String,Integer> loadPerEdge;
+    private final HashMap<Integer,Integer> loadPerEdge;
     
     private final Graph<SimulationNode,SimulationEdge> network;
 
@@ -48,7 +48,7 @@ public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extend
     
     
     
-    public HashMap<String, Integer> getLoadPerEdge() {
+    public HashMap<Integer, Integer> getLoadPerEdge() {
         return loadPerEdge;
     }
     
@@ -72,13 +72,13 @@ public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extend
             Node currentNode = entity.getPosition();
             Node targetNode = entity.getTargetNode();
             if(targetNode != null && !targetNode.equals(currentNode)){
-                String edgeId = network.getEdge(currentNode.id, targetNode.id).getUniqueID();
+                int edgeId = network.getEdge(currentNode.id, targetNode.id).getUniqueId();
                 countLoadForPosition(entityId, edgeId);
             }
         }
     }
 
-    public int getLoadPerEdge(String uniqueID) {
+    public int getLoadPerEdge(Integer uniqueID) {
         if (loadPerEdge.containsKey(uniqueID)) {
             return loadPerEdge.get(uniqueID);
         }
@@ -91,13 +91,13 @@ public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extend
     
 
     @Override
-    public Iterator<Entry<String, Integer>> iterator() {
+    public Iterator<Entry<Integer, Integer>> iterator() {
         return loadPerEdge.entrySet().iterator();
     }
     
     
 
-    protected void countLoadForPosition(String entityId, String edgeId) {
+    protected void countLoadForPosition(String entityId, int edgeId) {
         CollectionUtil.incrementMapValue(loadPerEdge, edgeId, 1);
     }
     
