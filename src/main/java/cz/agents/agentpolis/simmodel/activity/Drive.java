@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.activity;
 
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.activityFactory.MoveActivityFactory;
@@ -14,6 +15,14 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.basestructures.Node;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.eventType.DriveEvent;
+import cz.agents.agentpolis.simmodel.eventType.Transit;
+import cz.agents.alite.common.event.EventProcessor;
+import cz.agents.basestructures.Edge;
+import cz.agents.basestructures.Graph;
 
 /**
  *
@@ -26,9 +35,13 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     
     private final Trip<Node> trip;
     
-    private final TransportNetworks transportNetworks;
-    
     private final MoveActivityFactory moveActivityFactory;
+    
+    private final Graph<SimulationNode, SimulationEdge> graph;
+    
+    private final EventProcessor eventProcessor;
+    
+    private final TimeProvider timeProvider;
     
     
     private Node from;
@@ -36,12 +49,14 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     private Node to;
 
     public Drive(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
-            A agent, Vehicle vehicle, Trip<Node> trip) {
+            EventProcessor eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip) {
         super(agent);
         this.vehicle = vehicle;
         this.trip = trip;
-        this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;
+        this.eventProcessor = eventProcessor;
+        this.timeProvider = timeProvider;
+        graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
     }
 
 
@@ -72,6 +87,13 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     private void move() {
         to = trip.getAndRemoveFirstLocation();
         runChildActivity(moveActivityFactory.create(agent, from, to));
+        triggerVehicleEnteredEdgeEvent();
+    }
+
+    private void triggerVehicleEnteredEdgeEvent() {
+        SimulationEdge edge = graph.getEdge(from.id, to.id);
+        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID);
+        eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
     }
     
     

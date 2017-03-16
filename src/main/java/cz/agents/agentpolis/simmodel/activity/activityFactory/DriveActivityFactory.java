@@ -8,11 +8,13 @@ package cz.agents.agentpolis.simmodel.activity.activityFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Drive;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.basestructures.Node;
 
 /**
@@ -23,18 +25,26 @@ import cz.agents.basestructures.Node;
 public class DriveActivityFactory {
 
     private final TransportNetworks transportNetworks;
+    
     private final MoveActivityFactory moveActivityFactory;
+    
+    private final EventProcessor eventProcessor;
+    
+    private final TimeProvider timeProvider;
 
 
     @Inject
-    public DriveActivityFactory(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory) {
+    public DriveActivityFactory(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
+            EventProcessor eventProcessor, TimeProvider timeProvider) {
         this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;
+        this.eventProcessor = eventProcessor;
+        this.timeProvider = timeProvider;
     }
 
 
 
     public <AG extends Agent & TransportAgent> Drive<AG> create(AG agent, Vehicle vehicle, Trip<Node> trip){
-        return new Drive<>(transportNetworks, moveActivityFactory, agent, vehicle, trip);
+        return new Drive<>(transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip);
     }
 }
