@@ -20,8 +20,8 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.eventType.DriveEvent;
 import cz.agents.agentpolis.simmodel.eventType.Transit;
+import cz.agents.agentpolis.simmodel.eventType.TripIdGenerator;
 import cz.agents.alite.common.event.EventProcessor;
-import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 
 /**
@@ -43,19 +43,23 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     
     private final TimeProvider timeProvider;
     
+    private final int tripId;
+    
     
     private Node from;
     
     private Node to;
 
     public Drive(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
-            EventProcessor eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip) {
+            EventProcessor eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip, 
+            int tripId) {
         super(agent);
         this.vehicle = vehicle;
         this.trip = trip;
         this.moveActivityFactory = moveActivityFactory;
         this.eventProcessor = eventProcessor;
         this.timeProvider = timeProvider;
+        this.tripId = tripId;
         graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
     }
 
@@ -92,7 +96,7 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
 
     private void triggerVehicleEnteredEdgeEvent() {
         SimulationEdge edge = graph.getEdge(from.id, to.id);
-        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID);
+        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
         eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
     }
     

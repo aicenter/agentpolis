@@ -65,7 +65,7 @@ public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extend
     
     
     
-
+    @Inject // this annotation is necessary because this method has to be called after child constructor finishes
     public void compute(){
         for (E entity : entityStorage) {
             String entityId = entity.getId();

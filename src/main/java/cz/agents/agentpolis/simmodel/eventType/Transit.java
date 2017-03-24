@@ -13,6 +13,8 @@ public class Transit {
     private final long time;
     
     private final long osmId;
+    
+    private final int tripId;
 
     public long getTime() {
         return time;
@@ -22,13 +24,19 @@ public class Transit {
         return osmId;
     }
 
-    
-    
-    
-    public Transit(long time, long osmId) {
-        this.time = time;
-        this.osmId = osmId;
+    public int getTripId() {
+        return tripId;
     }
     
     
+
+    
+    
+    public Transit(long time, long osmId, int tripId) {
+        this.time = time;
+        this.osmId = osmId;
+        this.tripId = tripId;
+    }
+
+
 }
