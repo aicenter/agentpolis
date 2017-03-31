@@ -9,6 +9,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.simmodel.environment.StandardAgentPolisModule;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
@@ -34,7 +36,7 @@ public class AgentPolisInitializer {
     
     
     
-    private final StandardAgentPolisModule mainModule;
+    private Module mainModule;
     
     private final List<Object> loggers = new ArrayList<>();
     
@@ -61,7 +63,9 @@ public class AgentPolisInitializer {
     }
     
     
-    
+    public void overrideModule(Module module){
+        mainModule = Modules.override(mainModule).with(module);
+    }
     
     public Injector initialize(){
         Injector injector = Guice.createInjector(mainModule);

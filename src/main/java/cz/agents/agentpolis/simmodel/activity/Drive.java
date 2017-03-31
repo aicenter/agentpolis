@@ -20,7 +20,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.eventType.DriveEvent;
 import cz.agents.agentpolis.simmodel.eventType.Transit;
-import cz.agents.agentpolis.simmodel.eventType.TripIdGenerator;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.basestructures.Graph;
 

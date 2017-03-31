@@ -29,11 +29,11 @@ import java.util.Map.Entry;
 public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extends EntityStorage<E>> 
         implements Iterable<Entry<Integer,Integer>>{
     
-    private final ES entityStorage;
+    protected final ES entityStorage;
     
     private final HashMap<Integer,Integer> loadPerEdge;
     
-    private final Graph<SimulationNode,SimulationEdge> network;
+    protected final Graph<SimulationNode,SimulationEdge> network;
 
     
     public Iterable<Integer> loadsIterable = new Iterable<Integer>() {
