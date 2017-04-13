@@ -36,18 +36,20 @@ public class Log {
         
         // do not send log messages to other logs
 		logger.setUseParentHandlers(false);
+        
+        LogFormater logFormater = new LogFormater();
 		
 		// conslole log settings
 		ConsoleHandler consoleHandler = new ConsoleHandler();
-		consoleHandler.setLevel(Level.WARNING);
-		consoleHandler.setFormatter(new LogFormater());
+		consoleHandler.setLevel(Level.INFO);
+		consoleHandler.setFormatter(logFormater);
 		logger.addHandler(consoleHandler);
 		
 		try {  
 			// file log settings
 			FileHandler fileHandler = new FileHandler(logFilePath);
 			fileHandler.setLevel(logLevel);
-			fileHandler.setFormatter(new LogFormater());
+			fileHandler.setFormatter(logFormater);
 			logger.addHandler(fileHandler);
 		} catch (IOException ex) {
 			Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);

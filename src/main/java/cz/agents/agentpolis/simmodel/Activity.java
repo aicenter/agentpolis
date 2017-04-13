@@ -83,7 +83,7 @@ public abstract class Activity<A extends Agent> {
 	 * @param activity Child activity.
 	 */
 	protected void onChildActivityFinish(Activity activity) {
-        Log.log(this, Level.FINE, "{0}: Child action finished: {1}", this.getClass(), childActivity);
+        Log.log(this, Level.FINEST, "{0}: Child action finished: {1}", this.getClass(), childActivity);
 //        performAction(); not needet, because frame rate is high enough
     }
 	
@@ -102,8 +102,8 @@ public abstract class Activity<A extends Agent> {
 	 * Main activity method. This method is called automaticaly by framework.
 	 */   
     public final void run(){
-        Log.log(this, Level.FINE, "{0}: run() START", this.getClass());
+        Log.log(this, Level.FINEST, "{0}: run() START", this.getClass());
         performAction();
-        Log.log(this, Level.FINE, "{0}: run() END", this.getClass());
+        Log.log(this, Level.FINEST, "{0}: run() END", this.getClass());
     }
 }
