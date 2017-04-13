@@ -14,7 +14,7 @@ import cz.agents.agentpolis.simmodel.activity.Drive;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
-import cz.agents.agentpolis.simmodel.eventType.TripIdGenerator;
+import cz.agents.agentpolis.simmodel.IdGenerator;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.basestructures.Node;
 
@@ -33,12 +33,12 @@ public class DriveActivityFactory {
     
     private final TimeProvider timeProvider;
     
-    private final TripIdGenerator tripIdGenerator;
+    private final IdGenerator tripIdGenerator;
 
 
     @Inject
     public DriveActivityFactory(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
-            EventProcessor eventProcessor, TimeProvider timeProvider, TripIdGenerator tripIdGenerator) {
+            EventProcessor eventProcessor, TimeProvider timeProvider, IdGenerator tripIdGenerator) {
         this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;
         this.eventProcessor = eventProcessor;

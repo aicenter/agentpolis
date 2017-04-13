@@ -3,25 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.eventType;
+package cz.agents.agentpolis.simmodel;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  *
  * @author fido
  */
-
-@Singleton
-public class TripIdGenerator {
+public class IdGenerator {
     
     private int currentId;
 
     
     
     @Inject
-    public TripIdGenerator() {
+    public IdGenerator() {
         this.currentId = 0;
     }
         
