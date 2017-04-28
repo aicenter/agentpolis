@@ -12,6 +12,9 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.agents.agentpolis.simmodel.entity.MovingEntity;
+import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -77,6 +80,10 @@ public class PositionUtil {
         return getCanvasPosition(nodesFromAllGraphs.get(nodeId));
     }
     
+    public Point2d getCanvasPosition(AgentPolisEntity entity){
+        return getCanvasPosition(entity.getPosition());
+    }
+    
     public Point2d getCanvasPosition(Point2d position){
         return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
     }
@@ -106,7 +113,7 @@ public class PositionUtil {
         LinkedList<TripItem> locations = graphTrip.getLocations();
         
         int stratNodeId = locations.get(0).tripPositionByNodeId;
-        for (int i =1; i < locations.size(); i++) {
+        for (int i = 1; i < locations.size(); i++) {
             int targetNodeId = locations.get(i).tripPositionByNodeId;
             lenght += getEdgeLength(stratNodeId, targetNodeId);
             stratNodeId = targetNodeId;
@@ -115,18 +122,29 @@ public class PositionUtil {
         return lenght;
     }
     
-    public <A extends Agent & TransportAgent> Point2d getCanvasPositionInterpolated(A agent){
+    public <A extends Agent & TransportAgent, E extends AgentPolisEntity & TransportableEntity>Point2d 
+            getCanvasPositionInterpolatedForTransportable(E entity){
+        A transportAgent = entity.getTransportingAgent();
+        if(transportAgent == null){
+            return getCanvasPosition(entity);
+        }
+        else{
+            return getCanvasPositionInterpolated(transportAgent);
+        }
+    }
+    
+    public <E extends AgentPolisEntity & MovingEntity> Point2d getCanvasPositionInterpolated(E entity){
         
-        Node startNode = agent.getPosition();
+        Node startNode = entity.getPosition();
         
-        Node targetNode = agent.getTargetNode();
+        Node targetNode = entity.getTargetNode();
         
         // vehicle waits 
         if(targetNode == null){
             return getCanvasPosition(startNode);
         }
         
-        DelayData delayData = agent.getDelayData();
+        DelayData delayData = entity.getDelayData();
         
         // vehicle has no delay yet
 //        if(delayData == null){

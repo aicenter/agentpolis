@@ -75,7 +75,7 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
 
     @Override
     protected void onChildActivityFinish(Activity activity) {
-        for (AgentPolisEntity entiy : agent.getCargo()) {
+        for (AgentPolisEntity entiy : agent.getTransportedEntities()) {
             entiy.setPosition(agent.getPosition());
         }
         if(trip.isEmpty()){
