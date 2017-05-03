@@ -122,7 +122,7 @@ public class TripsUtil {
         return finalTrip;
     }
     
-     public Trip createTrip(int startNodeId, int targetNodeId){
+     public Trip<Node> createTrip(int startNodeId, int targetNodeId){
         if(startNodeId == targetNodeId){
             try {
                 throw new Exception("Start node cannot be the same as end node");

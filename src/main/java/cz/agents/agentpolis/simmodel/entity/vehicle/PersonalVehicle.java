@@ -1,0 +1,43 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cz.agents.agentpolis.simmodel.entity.vehicle;
+
+import cz.agents.agentpolis.simmodel.agent.TransportEntity;
+import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ *
+ * @author fido
+ */
+public abstract class PersonalVehicle extends Vehicle implements TransportEntity{
+    
+    protected final List<TransportableEntity> transportedPersons;
+    
+    public void pickUp(TransportableEntity person){
+        transportedPersons.add(person);
+        person.setTransportingEntity(this);
+    }
+    
+    public void dropOff(TransportableEntity person){
+        transportedPersons.remove(person);
+        person.setTransportingEntity(null);
+    }
+    
+    public PersonalVehicle(String id) {
+        super(id);
+        transportedPersons = new LinkedList<>();
+    }
+    
+    
+    @Override
+    public List<TransportableEntity> getTransportedEntities() {
+        return transportedPersons;
+    }
+    
+    
+}

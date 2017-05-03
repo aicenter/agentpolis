@@ -8,12 +8,12 @@ package cz.agents.agentpolis.simmodel.activity;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
+import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.activityFactory.MoveActivityFactory;
-import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.basestructures.Node;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
@@ -29,7 +29,7 @@ import cz.agents.basestructures.Graph;
  * @author fido
  * @param <A>
  */
-public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
+public class Drive<A extends Agent & Driver> extends Activity<A>{
     
     private final Vehicle vehicle;
     
@@ -50,10 +50,11 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     
     private Node to;
 
-    public Drive(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
-            TypedSimulation eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip, 
+    public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks, 
+            MoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider, 
+            A agent, Vehicle vehicle, Trip<Node> trip, 
             int tripId) {
-        super(agent);
+        super(activityInitializer, agent);
         this.vehicle = vehicle;
         this.trip = trip;
         this.moveActivityFactory = moveActivityFactory;
@@ -68,6 +69,7 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
 
     @Override
     protected void performAction() {
+        agent.startDriving(vehicle);
 //        double moveTime = computeMoveTime();
         from = trip.getAndRemoveFirstLocation();
         move();
@@ -76,10 +78,8 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
 
     @Override
     protected void onChildActivityFinish(Activity activity) {
-        for (AgentPolisEntity entiy : agent.getTransportedEntities()) {
-            entiy.setPosition(agent.getPosition());
-        }
         if(trip.isEmpty()){
+            agent.endDriving();
             finish();
         }
         else{

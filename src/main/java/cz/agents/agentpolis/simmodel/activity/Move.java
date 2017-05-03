@@ -8,7 +8,10 @@ package cz.agents.agentpolis.simmodel.activity;
 
 import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.simmodel.Activity;
+import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
+import cz.agents.agentpolis.simmodel.agent.Driver;
+import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
@@ -19,16 +22,19 @@ import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 import java.util.logging.Level;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.agents.agentpolis.simmodel.agent.TransportEntity;
+import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
+import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import java.util.List;
 
 /**
  *
  * @author fido
  * @param <A>
  */
-public class Move<A extends Agent & TransportAgent> extends Activity<A>{
+public class Move<A extends Agent & MovingAgent> extends Activity<A>{
 //    
 //    private final TransportNetworks transportNetworks;
     
@@ -40,8 +46,9 @@ public class Move<A extends Agent & TransportAgent> extends Activity<A>{
     
     private final Graph<?, ? extends Edge> graph;
 
-    public Move(TransportNetworks transportNetworks, TypedSimulation eventProcessor, A agent, Node from, Node to) {
-        super(agent);
+    public Move(ActivityInitializer activityInitializer, TransportNetworks transportNetworks, 
+            TypedSimulation eventProcessor, A agent, Node from, Node to) {
+        super(activityInitializer, agent);
         this.from = from;
         this.to = to;
 //        this.transportNetworks = transportNetworks;
@@ -98,7 +105,23 @@ public class Move<A extends Agent & TransportAgent> extends Activity<A>{
     private void finishMove(){
         agent.setTargetNode(null);
         agent.setPosition(to);
+        if(agent instanceof Driver && ((Driver) agent).getVehicle() != null){
+            moveVehicle(((Driver) agent).getVehicle());
+        }
         finish();
+    }
+
+    private void moveVehicle(Vehicle vehicle) {
+        vehicle.setPosition(to);
+        if(vehicle instanceof TransportEntity && !((TransportEntity) vehicle).getTransportedEntities().isEmpty()){
+            moveTransportedEntities(((TransportEntity) vehicle).getTransportedEntities());
+        }
+    }
+
+    private void moveTransportedEntities(List<TransportableEntity> transportedEntities) {
+        for (TransportableEntity transportedEntity : transportedEntities) {
+            transportedEntity.setPosition(to);
+        }
     }
     
     

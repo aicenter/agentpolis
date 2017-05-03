@@ -5,10 +5,31 @@
  */
 package cz.agents.agentpolis.simmodel.entity.vehicle;
 
+import cz.agents.agentpolis.simmodel.agent.Driver;
+import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.agents.agentpolis.simmodel.entity.MovingEntity;
+
 /**
  *
  * @author fido
  */
-public interface Vehicle {
+public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
+    
+    private Driver driver;
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+    
+    
+
+    public Vehicle(String id) {
+        super(id);
+    }
+
     
 }

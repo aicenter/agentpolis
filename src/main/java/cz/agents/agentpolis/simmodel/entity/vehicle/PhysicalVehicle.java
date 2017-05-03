@@ -1,7 +1,6 @@
 package cz.agents.agentpolis.simmodel.entity.vehicle;
 
 import cz.agents.agentpolis.siminfrastructure.description.DescriptionImpl;
-import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 
@@ -11,7 +10,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
  * 
  * @author Zbynek Moler
  * */
-public class PhysicalVehicle extends AgentPolisEntity implements Vehicle{
+public class PhysicalVehicle extends Vehicle{
 
     private final double lengthInMeters; 
     private final int vehiclePassengerCapacity; // number of passenger, included driver

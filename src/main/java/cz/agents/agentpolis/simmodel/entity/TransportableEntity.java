@@ -5,13 +5,17 @@
  */
 package cz.agents.agentpolis.simmodel.entity;
 
-import cz.agents.agentpolis.simmodel.Agent;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.agent.TransportEntity;
+import cz.agents.basestructures.Node;
 
 /**
  *
  * @author fido
  */
 public interface TransportableEntity {
-    public <A extends Agent & TransportAgent> A getTransportingAgent();
+    public <T extends TransportEntity> T getTransportingEntity();
+    
+    public <T extends TransportEntity> void setTransportingEntity(T transportingEntity);
+    
+    public void setPosition(Node position);
 }

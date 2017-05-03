@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.AgentPolisConfiguration;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
+import cz.agents.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.model.AgentStorage;
@@ -103,6 +104,8 @@ public class SimulationCreator {
     
     private final EntityVelocityModel entityVelocityModel;
     
+    private final TimeEventGenerator timeEventGenerator;
+    
     
     public BoundingBox boundsOfMap = null;
     
@@ -127,7 +130,8 @@ public class SimulationCreator {
     public SimulationCreator(final AgentPolisConfiguration configuration, LogItemViewer logItemViewer, 
             ProjectionProvider projectionProvider, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
-            Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel) {
+            Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel,
+            TimeEventGenerator timeEventGenerator) {
         this.configuration = configuration;
         this.logItemViewer = logItemViewer;
         this.projectionProvider = projectionProvider;
@@ -137,6 +141,7 @@ public class SimulationCreator {
         this.agentStorage = agentStorage;
         this.visioInitializerProvider = visioInitializerProvider;
         this.entityVelocityModel = entityVelocityModel;
+        this.timeEventGenerator = timeEventGenerator;
 		instance = this;
     }
     
@@ -177,6 +182,8 @@ public class SimulationCreator {
             long simulationStartTime = System.currentTimeMillis();
 
             setUpTimeAndCompletenessEstimation();
+            
+            timeEventGenerator.start();
 
             simulation.run();
 

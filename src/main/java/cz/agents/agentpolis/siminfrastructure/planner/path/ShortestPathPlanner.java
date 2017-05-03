@@ -7,6 +7,7 @@ import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -31,6 +32,8 @@ import java.util.Set;
 public class ShortestPathPlanner {
 
 	private final DirectedWeightedMultigraph<Integer, PlannerEdge> plannerGraph;
+    
+    private Graph<SimulationNode, SimulationEdge> highwayGraph;
 
     
     
@@ -45,6 +48,9 @@ public class ShortestPathPlanner {
         DirectedWeightedMultigraph<Integer, PlannerEdge> plannerGraph 
                 = new DirectedWeightedMultigraph<>(PlannerEdge.class);
 		Set<Integer> addedNodes = new HashSet<>();
+        
+        // temporary solution
+        highwayGraph = transportNetworks.getGraph(EGraphType.HIGHWAY);
 
 		for (GraphType graphType : allowedGraphTypes) {
 			Graph<SimulationNode, SimulationEdge> graph = transportNetworks.getGraph(graphType);
@@ -88,7 +94,7 @@ public class ShortestPathPlanner {
 
 	}
     
-    public Trip findTrip(int startNodeById, int destinationNodeById) throws TripPlannerException {
+    public Trip<Node> findTrip(int startNodeById, int destinationNodeById) throws TripPlannerException {
 
 		assert startNodeById != destinationNodeById : "Start finding position should not be the same as end finding "
 				+ "position";
@@ -138,20 +144,20 @@ public class ShortestPathPlanner {
 		return new VehicleTrip(path, graphType, vehicleId);
 	}
     
-    private Trip createTrips(List<PlannerEdge> plannerEdges) {
+    private Trip<Node> createTrips(List<PlannerEdge> plannerEdges) {
         PlannerEdge plannerEdge = plannerEdges.get(0);
         GraphType graphType = plannerEdge.graphType;
-        LinkedList<TripItem> path = new LinkedList<>();
+        LinkedList<Node> path = new LinkedList<>();
         
 		if (plannerEdges.size() > 0) {
-			path.add(new TripItem(plannerEdge.fromPositionByNodeId));
+			path.add(highwayGraph.getNode(plannerEdge.fromPositionByNodeId));
 
 			for (PlannerEdge plannerEdgeInner : plannerEdges) {
 				if (graphType != plannerEdgeInner.graphType) {
 
-					path.add(new TripItem(plannerEdgeInner.fromPositionByNodeId));
+					path.add(highwayGraph.getNode(plannerEdgeInner.fromPositionByNodeId));
 				}
-				path.add(new TripItem(plannerEdgeInner.toPositionByNodeId));
+				path.add(highwayGraph.getNode(plannerEdgeInner.toPositionByNodeId));
 			}
 		}
 

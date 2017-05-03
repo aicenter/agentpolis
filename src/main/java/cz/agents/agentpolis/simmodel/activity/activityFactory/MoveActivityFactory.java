@@ -7,9 +7,10 @@ package cz.agents.agentpolis.simmodel.activity.activityFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Move;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
@@ -19,7 +20,7 @@ import cz.agents.basestructures.Node;
  * @author fido
  */
 @Singleton
-public class MoveActivityFactory {
+public class MoveActivityFactory extends ActivityFactory{
     private final TransportNetworks transportNetworks;
     private final TypedSimulation eventProcessor;
 
@@ -31,7 +32,7 @@ public class MoveActivityFactory {
 
 
 
-    public <AG extends Agent & TransportAgent> Move<AG> create(AG agent, Node from, Node to){
-        return new Move<>(transportNetworks, eventProcessor, agent, from, to);
+    public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, Node from, Node to){
+        return new Move<>(activityInitializer, transportNetworks, eventProcessor, agent, from, to);
     }
 }

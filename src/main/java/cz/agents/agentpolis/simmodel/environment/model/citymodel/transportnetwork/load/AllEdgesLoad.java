@@ -7,7 +7,7 @@ package cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwo
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
@@ -26,7 +26,7 @@ import java.util.Map.Entry;
  * @param <E>
  * @param <ES>
  */
-public class AllEdgesLoad<E extends AgentPolisEntity & TransportAgent, ES extends EntityStorage<E>> 
+public class AllEdgesLoad<E extends AgentPolisEntity & MovingAgent, ES extends EntityStorage<E>> 
         implements Iterable<Entry<Integer,Integer>>{
     
     protected final ES entityStorage;

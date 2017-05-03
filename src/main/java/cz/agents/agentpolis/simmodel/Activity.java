@@ -44,18 +44,13 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 
 	/**
 	 * Standard constructor
+     * @param activityInitializer
 	 * @param agent Agent who performs this activity.
 	 */
-	public Activity(A agent) {
+	public Activity(ActivityInitializer activityInitializer, A agent) {
 		this.agent = agent;
+        init(activityInitializer.getSimulation());
 	}
-
-    
-    @Inject
-    @Override
-    public void init(TypedSimulation eventProcessor) {
-        super.init(eventProcessor); 
-    }
 
 
     

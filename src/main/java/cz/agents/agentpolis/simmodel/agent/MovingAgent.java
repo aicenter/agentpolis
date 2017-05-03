@@ -5,21 +5,24 @@
  */
 package cz.agents.agentpolis.simmodel.agent;
 
-import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.MovingEntity;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.basestructures.Node;
-import java.util.List;
 
 /**
  *
  * @author fido
  */
-public interface TransportAgent extends MovingEntity{
-    
-    public List<? extends AgentPolisEntity> getTransportedEntities();
-    
+public interface MovingAgent extends MovingEntity{
     public void setTargetNode(Node targetNode);
     
     public void setDelayData(DelayData targetNode);
+    
+    public Node getTargetNode();
+    
+    public DelayData getDelayData();
+    
+    public double getVelocity();
+    
+    public Node getPosition();
 }

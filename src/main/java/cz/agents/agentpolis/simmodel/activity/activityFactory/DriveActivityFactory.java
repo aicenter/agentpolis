@@ -10,13 +10,13 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Drive;
-import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simmodel.IdGenerator;
+import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
 
@@ -25,7 +25,7 @@ import cz.agents.basestructures.Node;
  * @author fido
  */
 @Singleton
-public class DriveActivityFactory {
+public class DriveActivityFactory extends ActivityFactory{
 
     private final TransportNetworks transportNetworks;
     
@@ -54,14 +54,14 @@ public class DriveActivityFactory {
 
 
 
-    public <AG extends Agent & TransportAgent> Drive<AG> create(AG agent, Vehicle vehicle, Trip<Node> trip){
-        return new Drive<>(transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<Node> trip){
+        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
     }
     
-    public <AG extends Agent & TransportAgent> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition){
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition){
         Trip<Node> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
-        return new Drive<>(transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
+        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
     }
 }
