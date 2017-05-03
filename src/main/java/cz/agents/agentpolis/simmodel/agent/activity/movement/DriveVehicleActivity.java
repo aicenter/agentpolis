@@ -11,7 +11,7 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.DrivingFinishedActivityCallback;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.MovementActivityCallback;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.util.MoveTimeNormalizer;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DriveMovingAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DriveWithDepartureMovingAction;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.MoveVehicleAction;
@@ -44,7 +44,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
     private final MovementActivityDepartureTripItem departureMovementActivity;
     private final MovementActivityTripItem movementActivity;
 
-    private Vehicle vehicle;
+    private PhysicalVehicle vehicle;
     private DrivingFinishedActivityCallback drivingActivityCallback;
 
     @Inject
@@ -74,7 +74,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
      * departure time if arrived early
      * 
      */
-    public void driveBaseOnDepartureTime(String agentId, Vehicle vehicle,
+    public void driveBaseOnDepartureTime(String agentId, PhysicalVehicle vehicle,
             GraphTrip<DepartureTripItem> trip, DrivingFinishedActivityCallback drivingActivityCallback) {
 
         drive(agentId,
@@ -93,7 +93,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
      * 
      * @param trip
      */
-    public void drive(String agentId, Vehicle vehicle, GraphTrip<TripItem> trip,
+    public void drive(String agentId, PhysicalVehicle vehicle, GraphTrip<TripItem> trip,
             DrivingFinishedActivityCallback drivingActivityCallback) {
 
         drive(agentId, vehicle, trip, new DriveMovingAction(driveAction, vehiclePlanNotifyAction,
@@ -106,7 +106,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
      * 
      * @return
      */
-    private long computeMoveTime(Vehicle vehicle) {
+    private long computeMoveTime(PhysicalVehicle vehicle) {
         double vehicleVelocityInMeterPerMillis = vehicleSensor.getCurrrentVehicleVelocity(vehicle
                 .getId()) / 1000;
         long moveTime = (long) (vehicle.getLength() / vehicleVelocityInMeterPerMillis);
@@ -114,7 +114,7 @@ public class DriveVehicleActivity implements MovementActivityCallback, Descripti
         return MoveTimeNormalizer.normalizeMoveTimeForQueue(moveTime);
     }
 
-    private <TTripItem extends TripItem> void drive(String driverId, Vehicle vehicle,
+    private <TTripItem extends TripItem> void drive(String driverId, PhysicalVehicle vehicle,
             GraphTrip<TTripItem> trip, MovingAction<TTripItem> movingAction,
             DrivingFinishedActivityCallback drivingActivityCallback,
             MovementActivity<TTripItem> movementActivity) {

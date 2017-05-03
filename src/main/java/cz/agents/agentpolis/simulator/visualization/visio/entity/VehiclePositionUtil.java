@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
@@ -51,7 +51,7 @@ public class VehiclePositionUtil extends EntityPositionUtil{
     
     
     
-    public Point2d getVehicleCanvasPositionInterpolated(Vehicle vehicle, Agent driver){
+    public Point2d getVehicleCanvasPositionInterpolated(PhysicalVehicle vehicle, Agent driver){
         if(entityPositionModel.getEntityPositionByNodeId(vehicle.getId()) == null){
             return null;
         }

@@ -47,18 +47,18 @@ public class VehicleFactory {
 		this.random = random;
 	}
 
-	public Vehicle createAndAddCarToModels(int id, int initialPosition) {
+	public PhysicalVehicle createAndAddCarToModels(int id, int initialPosition) {
 		return createAndAddVehicleToModels(id, VehicleType.CAR, EGraphType.HIGHWAY, initialPosition);
 	}
 
-	public Vehicle createAndAddBikeToModels(int id, int initialPosition) {
+	public PhysicalVehicle createAndAddBikeToModels(int id, int initialPosition) {
 		return createAndAddVehicleToModels(id, VehicleType.BICYCLE, EGraphType.BIKEWAY, initialPosition);
 	}
 
-	public Vehicle createAndAddVehicleToModels(int id, VehicleType vehicleType, GraphType graphType,
+	public PhysicalVehicle createAndAddVehicleToModels(int id, VehicleType vehicleType, GraphType graphType,
 											   int initialPosition) {
 		VehicleTemplate vehicleTemplate = selectVehicleTemplate(vehicleType);
-		Vehicle vehicle = new Vehicle(vehicleType.getDescriptionEntityType() + id, vehicleType, vehicleTemplate
+		PhysicalVehicle vehicle = new PhysicalVehicle(vehicleType.getDescriptionEntityType() + id, vehicleType, vehicleTemplate
 				.lengthInMeter, vehicleTemplate.passengerCapacity, graphType);
 
 		checkInitialPosition(vehicle.getId(), vehicleType, graphType, initialPosition);

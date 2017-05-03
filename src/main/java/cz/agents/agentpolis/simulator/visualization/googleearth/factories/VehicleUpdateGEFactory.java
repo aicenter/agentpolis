@@ -7,7 +7,7 @@ import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.updates.VehicleUpdateGE;
 import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.VehicleStorage;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
@@ -45,11 +45,11 @@ public class VehicleUpdateGEFactory extends UpdateGEFactory {
 
 		Map<String, EntityGE<StyleGE>> entityData = new HashMap<>();
 		Set<String> allowedVehiclesIds = new HashSet<>();
-		List<Vehicle> vehicles = new ArrayList<>();
+		List<PhysicalVehicle> vehicles = new ArrayList<>();
 
 		VehicleStorage vehicleStorage = injector.getInstance(VehicleStorage.class);
 		for (String entityName : vehicleStorage.getEntityIds()) {
-			Vehicle vehicle = vehicleStorage.getEntityById(entityName);
+			PhysicalVehicle vehicle = vehicleStorage.getEntityById(entityName);
 			if (allowedVehicleEntityType.contains(vehicle.getType())) {
 				allowedVehiclesIds.add(vehicle.getId());
 				vehicles.add(vehicle);

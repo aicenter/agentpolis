@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
 import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
+import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
@@ -86,6 +87,15 @@ public class ShortestPathPlanner {
 		return createTrips(plannerEdges, vehicleId);
 
 	}
+    
+    public Trip findTrip(int startNodeById, int destinationNodeById) throws TripPlannerException {
+
+		assert startNodeById != destinationNodeById : "Start finding position should not be the same as end finding "
+				+ "position";
+
+		List<PlannerEdge> plannerEdges = findShortestPath(startNodeById, destinationNodeById);
+		return createTrips(plannerEdges);
+	}
 
 	private List<PlannerEdge> findShortestPath(int fromPositionByNodeId,
 											   int toPositionByNodeId) throws TripPlannerException {
@@ -126,6 +136,26 @@ public class ShortestPathPlanner {
 		}
 
 		return new VehicleTrip(path, graphType, vehicleId);
+	}
+    
+    private Trip createTrips(List<PlannerEdge> plannerEdges) {
+        PlannerEdge plannerEdge = plannerEdges.get(0);
+        GraphType graphType = plannerEdge.graphType;
+        LinkedList<TripItem> path = new LinkedList<>();
+        
+		if (plannerEdges.size() > 0) {
+			path.add(new TripItem(plannerEdge.fromPositionByNodeId));
+
+			for (PlannerEdge plannerEdgeInner : plannerEdges) {
+				if (graphType != plannerEdgeInner.graphType) {
+
+					path.add(new TripItem(plannerEdgeInner.fromPositionByNodeId));
+				}
+				path.add(new TripItem(plannerEdgeInner.toPositionByNodeId));
+			}
+		}
+
+		return new Trip(path);
 	}
 
 	public static ShortestPathPlanner createShortestPathPlanner(Injector injector, Set<GraphType> allowedGraphTypes) {

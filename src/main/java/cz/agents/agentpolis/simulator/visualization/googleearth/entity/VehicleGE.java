@@ -7,7 +7,7 @@ import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.agents.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
@@ -26,7 +26,7 @@ public class VehicleGE implements IVehicleGE {
     private final EntityPositionModel vehiclePositionStorage;
     private final LinkedEntityModel linkedEntityStorage;
 
-    private final List<Vehicle> vehicles;
+    private final List<PhysicalVehicle> vehicles;
 
     private static final String END_LINE_HTML = "<br>";
     private static final String PASSENGER_ON_BOARD = "On-board passangers / capacity: ";
@@ -37,7 +37,7 @@ public class VehicleGE implements IVehicleGE {
 
     private final Set<String> allowedVehiclesIds;
 
-    public VehicleGE(List<Vehicle> vehicles, EntityPositionModel storage,
+    public VehicleGE(List<PhysicalVehicle> vehicles, EntityPositionModel storage,
             final Map<Integer, ? extends Node> nodesFromAllGraphs,
             LinkedEntityModel linkedEntityStorage, EntityMovementGE entityMovement,
             Set<String> allowedVehiclesIds) {
@@ -54,7 +54,7 @@ public class VehicleGE implements IVehicleGE {
 
         Map<String, String> vehicleDescription = new HashMap<>();
 
-        for (Vehicle vehicle : vehicles) {
+        for (PhysicalVehicle vehicle : vehicles) {
             StringBuilder html = new StringBuilder(
                     DescriptionGEUtil.transformDescriptionToHTML(vehicle.getDescription()));
 

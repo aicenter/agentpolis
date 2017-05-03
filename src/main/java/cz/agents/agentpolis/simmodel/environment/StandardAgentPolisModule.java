@@ -19,7 +19,7 @@ import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.Graphs;
 import cz.agents.agentpolis.simmodel.environment.model.action.callback.VehicleArrivedCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
@@ -48,6 +48,7 @@ import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
@@ -91,7 +92,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<String, Vehicle>>(){}).toInstance(new HashMap<>());
+		bind(new TypeLiteral<Map<String, PhysicalVehicle>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, AgentPolisEntity>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<EntityType, Set<String>>>(){}).toInstance(new HashMap<>());
 		
@@ -136,6 +137,12 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Provides 
 	@Singleton
 	public EventProcessor getEventProcessor(SimulationProvider simulationProvider){
+		return simulationProvider.getSimulation();
+	}
+    
+    @Provides 
+	@Singleton
+	public TypedSimulation getTypedSimulation(SimulationProvider simulationProvider){
 		return simulationProvider.getSimulation();
 	}
     

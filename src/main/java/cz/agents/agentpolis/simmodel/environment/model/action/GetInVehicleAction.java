@@ -3,7 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.action;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.VehicleStorage;
 import cz.agents.agentpolis.simmodel.environment.model.action.callback.VehicleArrivedCallback;
 import cz.agents.agentpolis.simmodel.environment.model.action.passenger.PassengerVehiclePlanAction;
@@ -55,7 +55,7 @@ public class GetInVehicleAction {
      * @return
      */
     private boolean hasNotVehicleCapacityFree(String vehicleId) {
-        Vehicle vehicle = vehicleStorage.getEntityById(vehicleId);
+        PhysicalVehicle vehicle = vehicleStorage.getEntityById(vehicleId);
         int currentCapacityOfVehicle = linkedEntityStorage.numOfLinkedEntites(vehicleId);
         if ((currentCapacityOfVehicle + 1) > vehicle.getCapacity()) {
             return true;

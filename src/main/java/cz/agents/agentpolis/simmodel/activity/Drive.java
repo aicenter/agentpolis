@@ -11,16 +11,17 @@ import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.activityFactory.MoveActivityFactory;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.basestructures.Node;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
+import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.eventType.DriveEvent;
 import cz.agents.agentpolis.simmodel.eventType.Transit;
 import cz.agents.alite.common.event.EventProcessor;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Graph;
 
 /**
@@ -50,7 +51,7 @@ public class Drive<A extends Agent & TransportAgent> extends Activity<A>{
     private Node to;
 
     public Drive(TransportNetworks transportNetworks, MoveActivityFactory moveActivityFactory, 
-            EventProcessor eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip, 
+            TypedSimulation eventProcessor, TimeProvider timeProvider, A agent, Vehicle vehicle, Trip<Node> trip, 
             int tripId) {
         super(agent);
         this.vehicle = vehicle;

@@ -3,7 +3,10 @@
  */
 package cz.agents.agentpolis.simmodel;
 
+import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.Log;
+import cz.agents.alite.common.event.typed.AliteEntity;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import java.util.logging.Level;
 
 /**
@@ -11,7 +14,7 @@ import java.util.logging.Level;
  * @author F.I.D.O.
  * @param <A> Agent type
  */
-public abstract class Activity<A extends Agent> {
+public abstract class Activity<A extends Agent> extends AliteEntity{
 	
 	/**
 	 * Agent who performs this activity.
@@ -47,7 +50,17 @@ public abstract class Activity<A extends Agent> {
 		this.agent = agent;
 	}
 
+    
+    @Inject
+    @Override
+    public void init(TypedSimulation eventProcessor) {
+        super.init(eventProcessor); 
+    }
 
+
+    
+    
+    
 	
 	
 	/**

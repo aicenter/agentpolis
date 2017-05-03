@@ -27,6 +27,7 @@ import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandler;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.EventProcessorEventType;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.basestructures.BoundingBox;
@@ -69,7 +70,7 @@ public class SimulationCreator {
 	
 
 
-    private Simulation simulation;
+    private TypedSimulation simulation;
 
     private Synthetiser synthetiser;
     
@@ -206,7 +207,7 @@ public class SimulationCreator {
 
     private void initSimulation() {
         LOGGER.info("Setting up Alite simulation modul");
-        simulation = new Simulation(configuration.simulationDurationInMillis);
+        simulation = new TypedSimulation(configuration.simulationDurationInMillis);
         simulation.setPrintouts(10000000);
 		simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");

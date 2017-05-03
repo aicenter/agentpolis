@@ -21,6 +21,7 @@ import cz.agents.basestructures.Node;
 import java.util.logging.Level;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 
 /**
  *
@@ -39,7 +40,7 @@ public class Move<A extends Agent & TransportAgent> extends Activity<A>{
     
     private final Graph<?, ? extends Edge> graph;
 
-    public Move(TransportNetworks transportNetworks, EventProcessor eventProcessor, A agent, Node from, Node to) {
+    public Move(TransportNetworks transportNetworks, TypedSimulation eventProcessor, A agent, Node from, Node to) {
         super(agent);
         this.from = from;
         this.to = to;

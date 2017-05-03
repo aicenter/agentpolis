@@ -9,7 +9,7 @@ import java.util.Map;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
@@ -186,7 +186,7 @@ public class VisEntityLayer extends CommonLayer {
 				positionModel = agentPositionModel;
 			}
 
-			if (entity instanceof Vehicle) {
+			if (entity instanceof PhysicalVehicle) {
 				positionModel = vehiclePositionModel;
 			}
 

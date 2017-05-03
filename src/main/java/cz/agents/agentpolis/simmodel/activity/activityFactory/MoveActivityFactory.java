@@ -11,7 +11,7 @@ import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Move;
 import cz.agents.agentpolis.simmodel.agent.TransportAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
-import cz.agents.alite.common.event.EventProcessor;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
 
 /**
@@ -21,10 +21,10 @@ import cz.agents.basestructures.Node;
 @Singleton
 public class MoveActivityFactory {
     private final TransportNetworks transportNetworks;
-    private final EventProcessor eventProcessor;
+    private final TypedSimulation eventProcessor;
 
     @Inject
-    public MoveActivityFactory(TransportNetworks transportNetworks, EventProcessor eventProcessor) {
+    public MoveActivityFactory(TransportNetworks transportNetworks, TypedSimulation eventProcessor) {
         this.transportNetworks = transportNetworks;
         this.eventProcessor = eventProcessor;
     }

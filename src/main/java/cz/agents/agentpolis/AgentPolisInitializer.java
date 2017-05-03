@@ -14,7 +14,6 @@ import com.google.inject.util.Modules;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.simmodel.environment.StandardAgentPolisModule;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
-import cz.agents.agentpolis.simulator.creator.SimulationParameters;
 import cz.agents.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import java.io.File;

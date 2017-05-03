@@ -1,7 +1,10 @@
 package cz.agents.agentpolis.simmodel.entity;
 
+import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.description.Description;
 import cz.agents.alite.common.entity.Entity;
+import cz.agents.alite.common.event.typed.AliteEntity;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
 
 /**
@@ -9,7 +12,7 @@ import cz.agents.basestructures.Node;
  * 
  * @author Zbynek Moler
  * */
-public abstract class AgentPolisEntity extends Entity implements Description {
+public abstract class AgentPolisEntity extends AliteEntity implements Description {
     
     private final String id;
     
@@ -27,11 +30,18 @@ public abstract class AgentPolisEntity extends Entity implements Description {
     
     
     public AgentPolisEntity(String id) {
-        super(id);
-        
         this.id = id;        
-
     }
+
+    @Inject
+    @Override
+    public void init(TypedSimulation eventProcessor) {
+        super.init(eventProcessor); 
+    }
+    
+    
+    
+    
 
     public abstract EntityType getType();
     

@@ -4,7 +4,7 @@ package cz.agents.agentpolis.simmodel.environment.model;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 
 /**
  * 
@@ -14,7 +14,7 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
  * 
  */
 @Singleton
-public class VehicleStorage extends EntityStorage<Vehicle> {
+public class VehicleStorage extends EntityStorage<PhysicalVehicle> {
 
     @Inject
     public VehicleStorage() {

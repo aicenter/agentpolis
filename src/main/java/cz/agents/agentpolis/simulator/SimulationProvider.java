@@ -7,7 +7,7 @@ package cz.agents.agentpolis.simulator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.alite.simulation.Simulation;
+import cz.agents.alite.common.event.typed.TypedSimulation;
 
 /**
  *
@@ -16,16 +16,16 @@ import cz.agents.alite.simulation.Simulation;
 @Singleton
 public class SimulationProvider{
 	
-	private Simulation simulation;
+	private TypedSimulation simulation;
 
 	
 	
 	
-	public Simulation getSimulation() {
+	public TypedSimulation getSimulation() {
 		return simulation;
 	}
 	
-	public void setSimulation(Simulation simulation) {
+	public void setSimulation(TypedSimulation simulation) {
 		this.simulation = simulation;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Set;
 import com.google.inject.Injector;
 
 import cz.agents.agentpolis.simmodel.entity.EntityType;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.agentpolis.simmodel.environment.model.VehiclePositionModel;
@@ -33,7 +33,7 @@ public abstract class VehicleDensityUpdateGEFactory extends DensityUpdateGEFacto
     }
 
     @Override
-    protected EntityStorage<Vehicle> getEntityStorage(Injector injector) {
+    protected EntityStorage<PhysicalVehicle> getEntityStorage(Injector injector) {
         return injector.getInstance(VehicleStorage.class);
     }
 
