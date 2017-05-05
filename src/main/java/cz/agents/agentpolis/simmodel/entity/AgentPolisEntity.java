@@ -29,8 +29,9 @@ public abstract class AgentPolisEntity extends AliteEntity implements Descriptio
     
     
     
-    public AgentPolisEntity(String id) {
+    public AgentPolisEntity(String id, Node position) {
         this.id = id;        
+        this.position = position;
     }
 
     @Inject

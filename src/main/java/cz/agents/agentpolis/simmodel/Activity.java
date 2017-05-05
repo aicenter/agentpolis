@@ -3,10 +3,9 @@
  */
 package cz.agents.agentpolis.simmodel;
 
-import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.Log;
+import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.typed.AliteEntity;
-import cz.agents.alite.common.event.typed.TypedSimulation;
 import java.util.logging.Level;
 
 /**
@@ -38,7 +37,6 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	public final A getAgent() {
 		return agent;
 	}
-
 	
 
 
@@ -55,7 +53,12 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 
     
     
-    
+    @Override
+    public void handleEvent(Event event) {
+        if(parrentActivity != null){
+            parrentActivity.handleEvent(event); 
+        }
+    }
 	
 	
 	/**
@@ -111,6 +114,7 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 */   
     public final void run(){
         Log.log(this, Level.FINEST, "{0}: run() START", this.getClass());
+        agent.currentActivity = this;
         performAction();
         Log.log(this, Level.FINEST, "{0}: run() END", this.getClass());
     }

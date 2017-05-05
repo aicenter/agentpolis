@@ -47,32 +47,33 @@ public class VehicleFactory {
 		this.random = random;
 	}
 
-	public PhysicalVehicle createAndAddCarToModels(int id, int initialPosition) {
-		return createAndAddVehicleToModels(id, VehicleType.CAR, EGraphType.HIGHWAY, initialPosition);
-	}
+//    need to refactor the cod ebelow befor usage !
+//	public PhysicalVehicle createAndAddCarToModels(int id, int initialPosition) {
+//		return createAndAddVehicleToModels(id, VehicleType.CAR, EGraphType.HIGHWAY, initialPosition);
+//	}
+//
+//	public PhysicalVehicle createAndAddBikeToModels(int id, int initialPosition) {
+//		return createAndAddVehicleToModels(id, VehicleType.BICYCLE, EGraphType.BIKEWAY, initialPosition);
+//	}
 
-	public PhysicalVehicle createAndAddBikeToModels(int id, int initialPosition) {
-		return createAndAddVehicleToModels(id, VehicleType.BICYCLE, EGraphType.BIKEWAY, initialPosition);
-	}
-
-	public PhysicalVehicle createAndAddVehicleToModels(int id, VehicleType vehicleType, GraphType graphType,
-											   int initialPosition) {
-		VehicleTemplate vehicleTemplate = selectVehicleTemplate(vehicleType);
-		PhysicalVehicle vehicle = new PhysicalVehicle(vehicleType.getDescriptionEntityType() + id, vehicleType, vehicleTemplate
-				.lengthInMeter, vehicleTemplate.passengerCapacity, graphType);
-
-		checkInitialPosition(vehicle.getId(), vehicleType, graphType, initialPosition);
-
-		vehicleDataModel.assignVehicleTemplate(vehicle.getId(), vehicleTemplate.vehicleTemplateId);
-
-		vehicleStorage.addEntity(vehicle);
-
-		velocityModel.addEntityMaxVelocity(vehicle.getId(), VelocityConverter.kmph2mps(vehicleTemplate
-				.averageVehicleSpeedInKmPerHour));
-
-		vehiclePositionModel.setNewEntityPosition(vehicle.getId(), initialPosition);
-		return vehicle;
-	}
+//	public PhysicalVehicle createAndAddVehicleToModels(int id, VehicleType vehicleType, GraphType graphType,
+//											   int initialPosition) {
+//		VehicleTemplate vehicleTemplate = selectVehicleTemplate(vehicleType);
+//		PhysicalVehicle vehicle = new PhysicalVehicle(vehicleType.getDescriptionEntityType() + id, vehicleType, vehicleTemplate
+//				.lengthInMeter, vehicleTemplate.passengerCapacity, graphType, initialPosition);
+//
+//		checkInitialPosition(vehicle.getId(), vehicleType, graphType, initialPosition);
+//
+//		vehicleDataModel.assignVehicleTemplate(vehicle.getId(), vehicleTemplate.vehicleTemplateId);
+//
+//		vehicleStorage.addEntity(vehicle);
+//
+//		velocityModel.addEntityMaxVelocity(vehicle.getId(), VelocityConverter.kmph2mps(vehicleTemplate
+//				.averageVehicleSpeedInKmPerHour));
+//
+//		vehiclePositionModel.setNewEntityPosition(vehicle.getId(), initialPosition);
+//		return vehicle;
+//	}
 
 	private void checkInitialPosition(String id, VehicleType vehicleType, GraphType graphType, int initialPosition) {
 		if (!graphs.getGraph(graphType).containsNode(initialPosition)) {

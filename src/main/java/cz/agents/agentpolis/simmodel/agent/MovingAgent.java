@@ -22,7 +22,5 @@ public interface MovingAgent extends MovingEntity{
     
     public DelayData getDelayData();
     
-    public double getVelocity();
-    
     public Node getPosition();
 }

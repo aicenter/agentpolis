@@ -56,7 +56,8 @@ public class Move<A extends Agent & MovingAgent> extends Activity<A>{
         // todo - add option to choose graph type here
         graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
     }
-
+    
+    
     @Override
     protected void performAction() {
         Edge edge = graph.getEdge(from.id, to.id);

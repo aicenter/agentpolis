@@ -4,6 +4,8 @@ import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
+import cz.agents.alite.common.event.Event;
+import cz.agents.basestructures.Node;
 import java.util.logging.Level;
 
 /**
@@ -16,7 +18,7 @@ import java.util.logging.Level;
  */
 public abstract class Agent extends AgentPolisEntity {
 
-    private final EntityType type;
+
     
     /**
 	 * Current chosen activity.
@@ -24,9 +26,8 @@ public abstract class Agent extends AgentPolisEntity {
     Activity currentActivity;
     
 
-    public Agent(final String agentId, final EntityType agentType) {
-        super(agentId);
-        this.type = agentType;
+    public Agent(final String agentId, Node position) {
+        super(agentId, position);
     }
 
     public void born(){
@@ -37,15 +38,20 @@ public abstract class Agent extends AgentPolisEntity {
 		
 	};
 
-    public EntityType getType() {
-        return type;
-    }
+    public abstract EntityType getType();
 
     @Override
     public String toString() {
         return "Agent " + getType().toString() + " " + getId();
     }
+
+    @Override
+    public void handleEvent(Event event) {
+        currentActivity.handleEvent(event);
+    }
 	
+    
+    
 	protected void exit(){
 		SimulationCreator.removeAgentStatic(this);
 	}
@@ -66,5 +72,5 @@ public abstract class Agent extends AgentPolisEntity {
 	protected void onActionFailed(Activity activity, String reason) {
         Log.log(this, Level.SEVERE, "Activity {0} failed: {1}", currentActivity, reason);
     }
-
+    
 }

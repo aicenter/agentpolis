@@ -8,6 +8,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.MovingEntity;
+import cz.agents.basestructures.Node;
 
 /**
  *
@@ -27,8 +28,8 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
     
     
 
-    public Vehicle(String id) {
-        super(id);
+    public Vehicle(String id, Node position) {
+        super(id, position);
     }
 
     

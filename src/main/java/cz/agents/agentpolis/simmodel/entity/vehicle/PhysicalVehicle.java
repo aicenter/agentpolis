@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 import cz.agents.agentpolis.siminfrastructure.description.DescriptionImpl;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.agents.basestructures.Node;
 
 /**
  * 
@@ -21,8 +22,8 @@ public class PhysicalVehicle extends Vehicle{
             EntityType type, 
             double lengthInMeters,
             int vehiclePassengerCapacity, 
-            GraphType usingGraphTypeForMoving) {
-        super(vehicleId);
+            GraphType usingGraphTypeForMoving, Node position) {
+        super(vehicleId, position);
         this.lengthInMeters = lengthInMeters;
         this.vehiclePassengerCapacity = vehiclePassengerCapacity;
         this.vehicleType = type;
@@ -33,7 +34,7 @@ public class PhysicalVehicle extends Vehicle{
     public EntityType getType() {
         return vehicleType;
     }
-
+ 
     public int getCapacity() {
         return vehiclePassengerCapacity;
     }
@@ -49,6 +50,11 @@ public class PhysicalVehicle extends Vehicle{
     @Override
     public DescriptionImpl getDescription() {
         return new DescriptionImpl();
+    }
+
+    @Override
+    public double getVelocity() {
+        return 0;
     }
 
 }

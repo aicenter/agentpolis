@@ -7,6 +7,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 
 import cz.agents.agentpolis.simmodel.agent.TransportEntity;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
+import cz.agents.basestructures.Node;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public abstract class PersonalVehicle extends Vehicle implements TransportEntity
         person.setTransportingEntity(null);
     }
     
-    public PersonalVehicle(String id) {
-        super(id);
+    public PersonalVehicle(String id, Node position) {
+        super(id, position);
         transportedPersons = new LinkedList<>();
     }
     
@@ -39,5 +40,10 @@ public abstract class PersonalVehicle extends Vehicle implements TransportEntity
         return transportedPersons;
     }
     
+    public void dropOffAll() {
+        for (TransportableEntity transportedPerson : transportedPersons) {
+            dropOff(transportedPerson);
+        }
+    }
     
 }

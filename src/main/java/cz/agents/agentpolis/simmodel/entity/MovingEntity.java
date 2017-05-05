@@ -11,5 +11,5 @@ package cz.agents.agentpolis.simmodel.entity;
  * @author fido
  */
 public interface MovingEntity {
-    
+    public double getVelocity();
 }
