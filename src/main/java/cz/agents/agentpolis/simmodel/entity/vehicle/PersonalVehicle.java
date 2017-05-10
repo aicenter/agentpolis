@@ -8,6 +8,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 import cz.agents.agentpolis.simmodel.agent.TransportEntity;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.basestructures.Node;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,8 +42,11 @@ public abstract class PersonalVehicle extends Vehicle implements TransportEntity
     }
     
     public void dropOffAll() {
-        for (TransportableEntity transportedPerson : transportedPersons) {
-            dropOff(transportedPerson);
+        Iterator<TransportableEntity> transportedPersonsIterator = transportedPersons.iterator();
+        while(transportedPersonsIterator.hasNext()){
+            TransportableEntity person = transportedPersonsIterator.next();
+            transportedPersonsIterator.remove();
+            person.setTransportingEntity(null);
         }
     }
     
