@@ -17,7 +17,7 @@ import java.util.List;
  * @author fido
  * @param <T>
  */
-public abstract class PersonalVehicle<T extends TransportableEntity> extends Vehicle implements TransportEntity{
+public abstract class PersonalVehicle<T extends TransportableEntity> extends Vehicle implements TransportEntity<T>{
     
     protected final List<T> transportedPersons;
     

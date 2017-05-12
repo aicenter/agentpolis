@@ -146,6 +146,9 @@ public class PositionUtil {
     }
             
     public Point2d getCanvasPositionInterpolatedForVehicle(Vehicle vehicle){
+        if(vehicle instanceof TransportableEntity && ((TransportableEntity) vehicle).getTransportingEntity() != null){
+            return getCanvasPositionInterpolatedForTransportable((TransportableEntity) vehicle);
+        }
         Driver driver = vehicle.getDriver();
         if(driver == null){
             return getCanvasPosition(vehicle);
