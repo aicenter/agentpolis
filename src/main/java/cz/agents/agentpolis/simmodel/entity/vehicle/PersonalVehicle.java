@@ -15,17 +15,18 @@ import java.util.List;
 /**
  *
  * @author fido
+ * @param <T>
  */
-public abstract class PersonalVehicle extends Vehicle implements TransportEntity{
+public abstract class PersonalVehicle<T extends TransportableEntity> extends Vehicle implements TransportEntity{
     
-    protected final List<TransportableEntity> transportedPersons;
+    protected final List<T> transportedPersons;
     
-    public void pickUp(TransportableEntity person){
+    public void pickUp(T person){
         transportedPersons.add(person);
         person.setTransportingEntity(this);
     }
     
-    public void dropOff(TransportableEntity person){
+    public void dropOff(T person){
         transportedPersons.remove(person);
         person.setTransportingEntity(null);
     }
@@ -37,12 +38,12 @@ public abstract class PersonalVehicle extends Vehicle implements TransportEntity
     
     
     @Override
-    public List<TransportableEntity> getTransportedEntities() {
+    public List<T> getTransportedEntities() {
         return transportedPersons;
     }
     
     public void dropOffAll() {
-        Iterator<TransportableEntity> transportedPersonsIterator = transportedPersons.iterator();
+        Iterator<T> transportedPersonsIterator = transportedPersons.iterator();
         while(transportedPersonsIterator.hasNext()){
             TransportableEntity person = transportedPersonsIterator.next();
             transportedPersonsIterator.remove();

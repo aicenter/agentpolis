@@ -73,10 +73,12 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 */
 	protected final void finish(){
         if(parrentActivity != null){
+            agent.currentActivity = parrentActivity;
             parrentActivity.onChildActivityFinish(this);
 			parrentActivity.childActivity = null;
         }
         else{
+            agent.currentActivity = null;
             agent.onActivityFinish(this);
         }
     }

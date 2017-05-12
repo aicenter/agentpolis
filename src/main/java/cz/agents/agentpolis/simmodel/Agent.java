@@ -24,6 +24,12 @@ public abstract class Agent extends AgentPolisEntity {
 	 * Current chosen activity.
 	 */
     Activity currentActivity;
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
+    }
+    
+    
     
 
     public Agent(final String agentId, Node position) {

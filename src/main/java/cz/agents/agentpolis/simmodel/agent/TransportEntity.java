@@ -12,10 +12,11 @@ import java.util.List;
 /**
  *
  * @author fido
+ * @param <T>
  */
-public interface TransportEntity extends MovingEntity{
+public interface TransportEntity<T extends TransportableEntity> extends MovingEntity{
     
-    public List<TransportableEntity> getTransportedEntities();
+    public List<T> getTransportedEntities();
     
     
 }
