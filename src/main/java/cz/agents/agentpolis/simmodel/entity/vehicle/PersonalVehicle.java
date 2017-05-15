@@ -26,6 +26,13 @@ public abstract class PersonalVehicle<T extends TransportableEntity> extends Veh
         person.setTransportingEntity(this);
     }
     
+    public void pickUp(List<T> persons){
+        for (T person : persons) {
+            transportedPersons.add(person);
+            person.setTransportingEntity(this);
+        }
+    }
+    
     public void dropOff(T person){
         transportedPersons.remove(person);
         person.setTransportingEntity(null);

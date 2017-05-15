@@ -18,5 +18,7 @@ public interface TransportEntity<T extends TransportableEntity> extends MovingEn
     
     public List<T> getTransportedEntities();
     
+    public int getCapacity();
+    
     
 }
