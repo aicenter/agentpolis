@@ -10,11 +10,12 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 /**
  *
  * @author fido
+ * @param <V>
  */
-public interface Driver extends MovingAgent{
+public interface Driver<V extends Vehicle> extends MovingAgent{
     public Vehicle getVehicle();
     
-    public void startDriving(Vehicle vehicle);
+    public void startDriving(V vehicle);
     
     public void endDriving();
 }
