@@ -10,9 +10,8 @@ import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
-import cz.agents.agentpolis.simmodel.activity.activityFactory.VehicleMoveActivityFactory;
-import cz.agents.agentpolis.simmodel.agent.Driver;
-import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.activity.activityFactory.PedestrianMoveActivityFactory;
+import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -26,15 +25,13 @@ import cz.agents.basestructures.Node;
 
 /**
  * @param <A>
- * @author fido
+ * @author schaemar
  */
-public class Drive<A extends Agent & Driver> extends Activity<A> {
-
-    private final Vehicle vehicle;
+public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
     private final Trip<Node> trip;
 
-    private final VehicleMoveActivityFactory moveActivityFactory;
+    private final PedestrianMoveActivityFactory moveActivityFactory;
 
     private final Graph<SimulationNode, SimulationEdge> graph;
 
@@ -49,12 +46,11 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private Node to;
 
-    public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
-                 A agent, Vehicle vehicle, Trip<Node> trip,
-                 int tripId) {
+    public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
+                PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
+                A agent, Trip<Node> trip,
+                int tripId) {
         super(activityInitializer, agent);
-        this.vehicle = vehicle;
         this.trip = trip;
         this.moveActivityFactory = moveActivityFactory;
         this.eventProcessor = eventProcessor;
@@ -66,8 +62,6 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     @Override
     protected void performAction() {
-        agent.startDriving(vehicle);
-//        double moveTime = computeMoveTime();
         from = trip.getAndRemoveFirstLocation();
         move();
 
@@ -76,7 +70,6 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     @Override
     protected void onChildActivityFinish(Activity activity) {
         if (trip.isEmpty()) {
-            agent.endDriving();
             finish();
         } else {
             from = to;
@@ -95,21 +88,6 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     private void triggerVehicleEnteredEdgeEvent() {
         SimulationEdge edge = graph.getEdge(from.id, to.id);
         Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
-        eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
+        eventProcessor.addEvent(DriveEvent.PEDESTRIAN_ENTERED_EDGE, null, null, transit);
     }
-
-
-    /**
-     * Computes time based on vehicle length and velocity
-     *
-     * @return
-     */
-//    private long computeMoveTime() {
-//        double vehicleVelocityInMeterPerMillis = agent.getVelocity() / 1000;
-//        long moveTime = (long) (vehicle.getLength() / vehicleVelocityInMeterPerMillis);
-//
-//        return MoveTimeNormalizer.normalizeMoveTimeForQueue(moveTime);
-//    }
-
-
 }

@@ -12,5 +12,5 @@ import cz.agents.alite.common.event.EventType;
  * @author fido
  */
 public enum DriveEvent implements EventType{
-    VEHICLE_ENTERED_EDGE
+    VEHICLE_ENTERED_EDGE, PEDESTRIAN_ENTERED_EDGE
 }

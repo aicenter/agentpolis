@@ -10,29 +10,27 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Move;
-import cz.agents.agentpolis.simmodel.agent.MovingAgent;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+import cz.agents.agentpolis.simmodel.activity.VehicleMove;
+import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Node;
 
 /**
- *
  * @author fido
  */
 @Singleton
-public class MoveActivityFactory extends ActivityFactory{
-    private final TransportNetworks transportNetworks;
+public class VehicleMoveActivityFactory extends ActivityFactory {
     private final TypedSimulation eventProcessor;
 
     @Inject
-    public MoveActivityFactory(TransportNetworks transportNetworks, TypedSimulation eventProcessor) {
-        this.transportNetworks = transportNetworks;
+    public VehicleMoveActivityFactory(TypedSimulation eventProcessor) {
         this.eventProcessor = eventProcessor;
     }
 
 
-
-    public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, Node from, Node to){
-        return new Move<>(activityInitializer, transportNetworks, eventProcessor, agent, from, to);
+    public <AG extends Agent & Driver> Move<AG> create(AG agent, Edge edge, Node from, Node to) {
+        return new VehicleMove<>(activityInitializer,
+                eventProcessor, agent, edge, from, to);
     }
 }
