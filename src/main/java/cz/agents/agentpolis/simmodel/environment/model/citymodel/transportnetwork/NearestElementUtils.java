@@ -9,10 +9,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.vividsolutions.jts.geom.Coordinate;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.utils.nearestelement.NearestElementUtil;
 import cz.agents.basestructures.GPSLocation;
-import cz.agents.basestructures.Node;
 import cz.agents.geotools.Transformer;
 import org.javatuples.Pair;
 
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Singleton
 public class NearestElementUtils {
-    private final HashMap<GraphType, NearestElementUtil> nearestElementUtilsMappedByGraphType;
+    private final HashMap<GraphType, NearestElementUtil<SimulationNode>> nearestElementUtilsMappedByGraphType;
     
     private final TransportNetworks transportNetworks;
     
@@ -42,44 +42,44 @@ public class NearestElementUtils {
         this.nearestElementUtilsMappedByGraphType = new HashMap<>();
     }
     
-    public <E> E getNearestElement(GPSLocation location, GraphType graphType){
+    public SimulationNode getNearestElement(GPSLocation location, GraphType graphType){
         if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
             createNearestElementUtil(graphType);
         }
         
-        NearestElementUtil<E> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
+        NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
         
         return nearestElementUtil.getNearestElement(location);
     }
     
-    public <E> E[] getNearestElements(GPSLocation location, GraphType graphType, int numberOfNearestElements){
+    public SimulationNode[] getNearestElements(GPSLocation location, GraphType graphType, int numberOfNearestElements){
         if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
             createNearestElementUtil(graphType);
         }
         
-        NearestElementUtil<E> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
+        NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
         
-        return (E[]) nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
+        return (SimulationNode[]) nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
     }
 
     private void createNearestElementUtil(GraphType graphType) {
-        List<Pair<Coordinate,Node>> pairs = new ArrayList<>();
+        List<Pair<Coordinate,SimulationNode>> pairs = new ArrayList<>();
 		
-		for (Node node : transportNetworks.getGraph(graphType).getAllNodes()) {
+		for (SimulationNode node : transportNetworks.getGraph(graphType).getAllNodes()) {
 			pairs.add(new Pair<>(new Coordinate(node.getLongitude(), node.getLatitude()), node));
 		}
 		
-		NearestElementUtil<Node> nearestElementUtil = new NearestElementUtil<>(pairs, transformer, 
+		NearestElementUtil<SimulationNode> nearestElementUtil = new NearestElementUtil<>(pairs, transformer, 
 				new NodeArrayConstructor());
         
         nearestElementUtilsMappedByGraphType.put(graphType, nearestElementUtil);
     }
     
-    private static class NodeArrayConstructor implements NearestElementUtil.SerializableIntFunction<Node[]>{
+    private static class NodeArrayConstructor implements NearestElementUtil.SerializableIntFunction<SimulationNode[]>{
 
         @Override
-        public Node[] apply(int value) {
-            return new Node[value];
+        public SimulationNode[] apply(int value) {
+            return new SimulationNode[value];
         }
 
     }

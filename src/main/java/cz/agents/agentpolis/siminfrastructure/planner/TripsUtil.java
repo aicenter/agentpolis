@@ -3,7 +3,6 @@ package cz.agents.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanners;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
@@ -12,6 +11,8 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.NearestElementUtils;
+import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Node;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,13 +43,16 @@ public class TripsUtil {
     
     
     protected ShortestPathPlanner pathPlanner;
+    
+    private final NearestElementUtils nearestElementUtils;
 
     
     
     
     @Inject
-    public TripsUtil(ShortestPathPlanners pathPlanners) {
+    public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils) {
         this.pathPlanners = pathPlanners;
+        this.nearestElementUtils = nearestElementUtils;
     }
 
     
@@ -122,7 +126,21 @@ public class TripsUtil {
         return finalTrip;
     }
     
-     public Trip<Node> createTrip(int startNodeId, int targetNodeId){
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId){
+        return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
+    }
+    
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId, GraphType graphType){
+        return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
+    }
+    
+    public Trip<Node> createTrip(GPSLocation startLocation, GPSLocation  targetLocation, GraphType graphType){
+        int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
+        int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
+        return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
+    }
+    
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes){
         if(startNodeId == targetNodeId){
             try {
                 throw new Exception("Start node cannot be the same as end node");
@@ -131,7 +149,7 @@ public class TripsUtil {
             }
         }
         if(pathPlanner == null){
-            pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
+            pathPlanner = pathPlanners.getPathPlanner(graphTypes);
         }
         
         Trip finalTrip = null;

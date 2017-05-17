@@ -9,7 +9,7 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
  * @author Zdenek Bousa
  */
 public class SimulationNode extends RoadNode {
-
+    
     public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation, boolean isParkAndRide, boolean isBikeSharingStation) {
         super(id, osmId, latE6, lonE6, projectedLat, projectedLon, elevation, isParkAndRide, isBikeSharingStation);
     }
