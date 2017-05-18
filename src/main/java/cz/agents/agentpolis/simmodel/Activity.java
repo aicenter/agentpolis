@@ -123,4 +123,10 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
     void runActityLogic() {
         performAction();
     }
+    
+	public void processMessage(Message message){
+		if(parrentActivity != null){
+            parrentActivity.processMessage(message);
+        }
+	}
 }

@@ -13,6 +13,7 @@ import java.util.logging.Level;
  * The agents in a simulation model are extended by this an abstract
  * representation.
  * 
+ * Rewritten based on agent from ninja.fido.agentSCAI
  * 
  * @author Zbynek Moler
  */
@@ -24,6 +25,8 @@ public abstract class Agent extends AgentPolisEntity {
 	 * Current chosen activity.
 	 */
     Activity currentActivity;
+        
+    
 
     public Activity getCurrentActivity() {
         return currentActivity;
@@ -79,4 +82,7 @@ public abstract class Agent extends AgentPolisEntity {
         Log.log(this, Level.SEVERE, "Activity {0} failed: {1}", currentActivity, reason);
     }
     
+	public void processMessage(Message message){
+		currentActivity.processMessage(message);
+	}
 }
