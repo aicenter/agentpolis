@@ -163,8 +163,8 @@ public class DefaultVisioInitializer implements VisioInitializer{
     }
 
     private void initWindow() {
-        final int windowHight = 400;
-        final int windowWidth = 400;
+        final int windowHight = 0;
+        final int windowWidth = 0;
 
         VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
         VisManager.init();

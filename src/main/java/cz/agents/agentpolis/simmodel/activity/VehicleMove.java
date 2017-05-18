@@ -31,11 +31,11 @@ public class VehicleMove<A extends Agent & Driver> extends Move<A> {
     }
 
     @Override
-    protected void finishMove() {
+    protected void performAction() {
         if (agent instanceof Driver && agent.getVehicle() != null) {
             moveVehicle(agent.getVehicle());
         }
-        super.finishMove();
+        super.performAction();
     }
 
     private void moveVehicle(Vehicle vehicle) {

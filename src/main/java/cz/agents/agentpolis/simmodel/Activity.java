@@ -97,7 +97,6 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 */
 	protected void onChildActivityFinish(Activity activity) {
         Log.log(this, Level.FINEST, "{0}: Child action finished: {1}", this.getClass(), childActivity);
-//        performAction(); not needet, because frame rate is high enough
     }
 	
 	/**
@@ -117,7 +116,11 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
     public final void run(){
         Log.log(this, Level.FINEST, "{0}: run() START", this.getClass());
         agent.currentActivity = this;
-        performAction();
+        runActityLogic();
         Log.log(this, Level.FINEST, "{0}: run() END", this.getClass());
+    }
+
+    void runActityLogic() {
+        performAction();
     }
 }
