@@ -56,7 +56,7 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
         this.eventProcessor = eventProcessor;
         this.timeProvider = timeProvider;
         this.tripId = tripId;
-        graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
+        graph = transportNetworks.getGraph(EGraphType.PEDESTRIAN);
     }
 
 

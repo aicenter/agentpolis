@@ -14,11 +14,8 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.NearestElementUtils;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Node;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,157 +26,141 @@ import java.util.logging.Logger;
  */
 
 /**
- *
  * @author fido
  */
 @Singleton
 public class TripsUtil {
-    
+
     protected static final Set<GraphType> GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
-    
-    
-    
+
+
     protected final ShortestPathPlanners pathPlanners;
-    
-    
-    protected ShortestPathPlanner pathPlanner;
-    
+
     private final NearestElementUtils nearestElementUtils;
 
-    
-    
-    
+
     @Inject
     public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils) {
         this.pathPlanners = pathPlanners;
         this.nearestElementUtils = nearestElementUtils;
     }
 
-    
-    
-    
-    public VehicleTrip locationsToVehicleTrip(List<Node> locations, boolean precomputedPaths, PhysicalVehicle vehicle){
-        if(!precomputedPaths && pathPlanner == null){
-            pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-        }
-        
+
+    public VehicleTrip locationsToVehicleTrip(List<Node> locations, boolean precomputedPaths, PhysicalVehicle vehicle) {
+        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
+
         VehicleTrip finalTrip = null;
         LinkedList<TripItem> tripItems = new LinkedList<>();
-        
+
         int startNodeId = locations.get(0).getId();
-        
-        if(precomputedPaths){
+
+        if (precomputedPaths) {
             tripItems.add(new TripItem(startNodeId));
         }
-		
-		for (int i = 1; i < locations.size(); i++) {
-			int targetNodeId = locations.get(i).getId();
-            if(startNodeId == targetNodeId){
+
+        for (int i = 1; i < locations.size(); i++) {
+            int targetNodeId = locations.get(i).getId();
+            if (startNodeId == targetNodeId) {
                 try {
                     throw new Exception("There can't be two identical locations in a row");
                 } catch (Exception ex) {
                     Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
-			if(precomputedPaths){
+
+            if (precomputedPaths) {
                 tripItems.add(new TripItem(targetNodeId));
-			}
-			else{
-				try {
-					VehicleTrip partialTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
+            } else {
+                try {
+                    VehicleTrip partialTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
                     while (partialTrip.hasNextTripItem()) {
                         tripItems.add(partialTrip.getAndRemoveFirstTripItem());
                     }
-					
-				} catch (TripPlannerException ex) {
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-			startNodeId = targetNodeId;
-		}
-        
-		finalTrip = new VehicleTrip(tripItems, EGraphType.HIGHWAY, vehicle.getId());
-    
+
+                } catch (TripPlannerException ex) {
+                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            startNodeId = targetNodeId;
+        }
+
+        finalTrip = new VehicleTrip(tripItems, EGraphType.HIGHWAY, vehicle.getId());
+
         return finalTrip;
     }
-    
-    public VehicleTrip createTrip(int startNodeId, int targetNodeId, PhysicalVehicle vehicle){
-        if(startNodeId == targetNodeId){
+
+    public VehicleTrip createTrip(int startNodeId, int targetNodeId, PhysicalVehicle vehicle) {
+        if (startNodeId == targetNodeId) {
             try {
                 throw new Exception("Start node cannot be the same as end node");
             } catch (Exception ex) {
                 Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if(pathPlanner == null){
-            pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-        }
-        
+        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
+
         VehicleTrip finalTrip = null;
         try {
             finalTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
         } catch (TripPlannerException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-    
+
         return finalTrip;
     }
-    
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId){
+
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId) {
         return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
     }
-    
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId, GraphType graphType){
+
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
         return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
     }
-    
-    public Trip<Node> createTrip(GPSLocation startLocation, GPSLocation  targetLocation, GraphType graphType){
+
+    public Trip<Node> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
         int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
         int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
         return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
     }
-    
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes){
-        if(startNodeId == targetNodeId){
+
+    public Trip<Node> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
+        if (startNodeId == targetNodeId) {
             try {
                 throw new Exception("Start node cannot be the same as end node");
             } catch (Exception ex) {
                 Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if(pathPlanner == null){
-            pathPlanner = pathPlanners.getPathPlanner(graphTypes);
-        }
-        
+        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(graphTypes);
+
         Trip finalTrip = null;
         try {
             finalTrip = pathPlanner.findTrip(startNodeId, targetNodeId);
         } catch (TripPlannerException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-    
+
         return finalTrip;
     }
-	
-	public static VehicleTrip mergeTrips(VehicleTrip<TripItem>... trips){
-		int i = 0;
-		VehicleTrip firstTrip = null;
-		do{
-			firstTrip = trips[i];
-			i++;
-		}while(firstTrip == null);
-		
-		VehicleTrip<TripItem> newTrip = new VehicleTrip<>(new LinkedList<>(), firstTrip.getGraphType(), firstTrip.getVehicleId());
-		
-		for(int j = 0; j < trips.length; j++){
-			VehicleTrip<TripItem> trip = trips[j];
-			if(trip != null){
-				for (TripItem location : trip.getLocations()) {
-					newTrip.extendTrip(location);
-				}
-			}
-		}
-		return newTrip;
-	}
+
+    public static VehicleTrip mergeTrips(VehicleTrip<TripItem>... trips) {
+        int i = 0;
+        VehicleTrip firstTrip = null;
+        do {
+            firstTrip = trips[i];
+            i++;
+        } while (firstTrip == null);
+
+        VehicleTrip<TripItem> newTrip = new VehicleTrip<>(new LinkedList<>(), firstTrip.getGraphType(), firstTrip.getVehicleId());
+
+        for (int j = 0; j < trips.length; j++) {
+            VehicleTrip<TripItem> trip = trips[j];
+            if (trip != null) {
+                for (TripItem location : trip.getLocations()) {
+                    newTrip.extendTrip(location);
+                }
+            }
+        }
+        return newTrip;
+    }
 }
