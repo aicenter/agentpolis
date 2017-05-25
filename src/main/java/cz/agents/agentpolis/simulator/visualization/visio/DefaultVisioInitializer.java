@@ -100,7 +100,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
         initInfoLayers();
 	}
 	
-	private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
+	protected <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
 
         List<Node> nodes = new ArrayList<>(graph.getAllNodes());
         Map<Integer, Node> nodesWithIds = new HashMap<>();
