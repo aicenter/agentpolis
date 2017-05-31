@@ -23,6 +23,7 @@ import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 
+import javax.vecmath.Point2d;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,6 +168,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
         final int windowWidth = 0;
 
         VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
+        VisManager.setInvertYAxis(true);
         VisManager.init();
 
         final double zoomFactor = windowWidth / projection.sceneWidth;
@@ -176,11 +178,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
             @Override
             public double getDefaultZoomFactor() {
                 return zoomFactor;
-            }
-
-            @Override
-            public Rectangle getWorldBounds() {
-                return new Rectangle(projection.sceneWidth, projection.sceneHeight);
             }
 
         });
