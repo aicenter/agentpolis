@@ -10,6 +10,7 @@ import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import cz.agents.agentpolis.AgentPolisConfiguration;
+import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
@@ -59,6 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import ninja.fido.config.Configuration;
 
 /**
  *
@@ -67,6 +69,8 @@ import java.util.Set;
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
     
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
+    
+    private final Config config;
     
 
 	private AgentPolisConfiguration configuration;
@@ -80,6 +84,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	
 	public StandardAgentPolisModule() {
         this.delayingSegmentCapacityDeterminer = new DefaultDelayingSegmentCapacityDeterminer();
+        config = Configuration.load(new Config());
 	}
 
 	
@@ -89,6 +94,8 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	protected void configure() {
         
         bindConstant().annotatedWith(Names.named("mapSrid")).to(configuration.srid);
+        
+        bind(Config.class).toInstance(config);
 		
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
