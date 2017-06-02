@@ -48,11 +48,12 @@ public class CongestionModel {
         buildLinks(graph.getAllEdges());
     }
     
-    private void drive(PhysicalVehicle vehicle){
-        Trip<SimulationNode> trip = vehicle.getDriver().getCurrentTrip();
+    public void drive(PhysicalVehicle vehicle){
+        VehicleTripData vehicleData = new VehicleTripData(vehicle, vehicle.getDriver().getCurrentTrip());
+        Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode startLocation = trip.getAndRemoveFirstLocation();
         Crossroad startCrossroad = crossroadsMappedByNodes.get(startLocation);
-        startCrossroad.startDriving(vehicle);        
+        startCrossroad.startDriving(vehicleData);        
     }
 
     private void buildCrossroads(Collection<SimulationNode> allNodes) {

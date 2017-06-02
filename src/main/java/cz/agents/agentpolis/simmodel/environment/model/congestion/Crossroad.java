@@ -10,8 +10,6 @@ import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.SimulationProvider;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.EventHandlerAdapter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,10 +56,10 @@ public class Crossroad  extends Connection{
         initInputLanesRandomTable();
     }
     
-    void startDriving(PhysicalVehicle vehicle){
-        Trip<SimulationNode> trip = vehicle.getDriver().getCurrentTrip();
+    void startDriving(VehicleTripData vehicleData){
+        Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        linksMappedByNextNodes.get(nextLocation).startDriving(vehicle);
+        linksMappedByNextNodes.get(nextLocation).startDriving(vehicleData);
     }
     
     private double computeMaxFlow(Config config){
@@ -85,9 +83,25 @@ public class Crossroad  extends Connection{
     @Override
     protected void handleTick() {
         Lane chosenLane = null;
-        do{
-            chosenLane = chooseLane();
-        }while(chosenLane.isEmpty());
+        
+        List<Lane> nonEmptyLanes = new LinkedList();
+        for (Lane inputLane : inputLanes) {
+            if(inputLane.hasWaitingVehicles()){
+                nonEmptyLanes.add(inputLane);
+            }
+        }
+        
+        if(nonEmptyLanes.isEmpty()){
+            return;
+        }
+        else if(nonEmptyLanes.size() == 1){
+            chosenLane = nonEmptyLanes.get(0);
+        }
+        else{
+            do{
+                chosenLane = chooseLane();
+            }while(!chosenLane.hasWaitingVehicles());
+        }
         
         tryToServeLane(chosenLane);
     }

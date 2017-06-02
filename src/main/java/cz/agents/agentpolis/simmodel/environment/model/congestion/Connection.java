@@ -36,15 +36,15 @@ public class Connection extends PeriodicTicker{
     }
     
 
-    protected void transferVehicle(PhysicalVehicle vehicle, Lane chosenLane, Lane nextLane) {
-        nextLane.addToQue(vehicle);
+    protected void transferVehicle(VehicleTripData vehicleData, Lane chosenLane, Lane nextLane) {
+        nextLane.addToQue(vehicleData);
         chosenLane.removeFromTop();
     }
 
     protected boolean tryTransferVehicle(Lane lane) {
         VehicleTripData vehicleTripData = lane.getFirstWaitingVehicle();
         Lane nextLane = getNextLane(vehicleTripData.getTrip());
-        if(nextLane.queueHasSpaceForVehicle(vehicleTripData)){
+        if(nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
             transferVehicle(vehicleTripData, lane, nextLane);
             return true;
         }
@@ -53,7 +53,8 @@ public class Connection extends PeriodicTicker{
 
     private Lane getNextLane(Trip<SimulationNode> trip) {
         Link nextLink = getNextLink();
-        NextNextLocation = 
+        SimulationNode NextNextLocation = trip.getAndRemoveFirstLocation();
+        return nextLink.getLaneByNextNode(NextNextLocation);
     }
 
     protected Link getNextLink() {
