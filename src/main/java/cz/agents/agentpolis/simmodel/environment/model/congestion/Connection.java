@@ -50,6 +50,12 @@ public class Connection extends PeriodicTicker{
         }
         return false;
     }
+	
+	void startDriving(VehicleTripData vehicleData){
+        Trip<SimulationNode> trip = vehicleData.getTrip();
+        SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
+        getNextLink().startDriving(vehicleData);
+    }
 
     private Lane getNextLane(Trip<SimulationNode> trip) {
         Link nextLink = getNextLink();
@@ -57,7 +63,7 @@ public class Connection extends PeriodicTicker{
         return nextLink.getLaneByNextNode(NextNextLocation);
     }
 
-    protected Link getNextLink() {
+    protected Link getNextLink(Lane inputLane) {
         return outLink;
     }
     

@@ -6,8 +6,6 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.agentpolis.config.Config;
-import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import java.util.HashMap;
@@ -33,12 +31,15 @@ public class Crossroad  extends Connection{
     private final Map<Double,Lane> inputLanesRandomTable;
     
     private final List<Lane> inputLanes;
+	
+	private final Map<Lane,Link> outputLinksMappedByInputLanes;
 
     public Crossroad(Config config, SimulationProvider simulationProvider) {
         super(simulationProvider, config);
         this.linksMappedByNextNodes = new HashMap<>();
         inputLanes = new LinkedList<>();
         inputLanesRandomTable = new HashMap<>();
+		outputLinksMappedByInputLanes = new HashMap<>();
         batchSize = config.batchSize;
         laneCount = getLaneCount();
         maxFlow = computeMaxFlow(config);
@@ -56,11 +57,7 @@ public class Crossroad  extends Connection{
         initInputLanesRandomTable();
     }
     
-    void startDriving(VehicleTripData vehicleData){
-        Trip<SimulationNode> trip = vehicleData.getTrip();
-        SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        linksMappedByNextNodes.get(nextLocation).startDriving(vehicleData);
-    }
+    
     
     private double computeMaxFlow(Config config){
         return config.maxFowPerLane * 2;
@@ -130,6 +127,13 @@ public class Crossroad  extends Connection{
             carCounter++;
         }
     }
+
+	@Override
+	protected Link getNextLink(Lane inputLane) {
+		return outputLinksMappedByInputLanes.get(inputLane);
+	}
+	
+	
 
 
 }

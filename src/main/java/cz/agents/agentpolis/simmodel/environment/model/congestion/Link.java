@@ -8,6 +8,7 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +22,17 @@ public class Link {
     private final Map<SimulationNode,Lane> lanesMappedByNodes;
     
     private final SimulationEdge edge;
+
+	public SimulationEdge getEdge() {
+		return edge;
+	}
     
     
  
 
-    public Link(SimulationEdge edge, Map<SimulationNode, Lane> lanesMappedByNodes) {
+    public Link(SimulationEdge edge) {
         this.edge = edge;
-        this.lanesMappedByNodes = lanesMappedByNodes;
+        this.lanesMappedByNodes = new HashMap<>();
     }
     
     
