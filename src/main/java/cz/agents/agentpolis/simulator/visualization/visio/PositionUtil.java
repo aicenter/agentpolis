@@ -24,7 +24,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
-import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
@@ -44,7 +43,7 @@ public class PositionUtil {
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
-    private final BoundingBox mapBounds;
+    private final Bounds mapBounds;
 
     private final Graph<SimulationNode, SimulationEdge> network;
 

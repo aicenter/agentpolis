@@ -28,6 +28,12 @@ public class Message {
         this.content = content;
         this.type = type;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "type=" + type +
+                ", content=" + content +
+                '}';
+    }
 }
