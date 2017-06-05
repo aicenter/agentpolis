@@ -41,7 +41,7 @@ public class Log {
 
         // console log settings
         ConsoleHandler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(Level.INFO);
+        consoleHandler.setLevel(logLevel);
         consoleHandler.setFormatter(logFormater);
         logger.addHandler(consoleHandler);
 
