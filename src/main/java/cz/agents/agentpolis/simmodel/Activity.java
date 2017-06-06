@@ -62,7 +62,7 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	
 	
 	/**
-	 * Action logic. This method is called every frame.
+	 * Action logic.
 	 */
 	protected abstract void performAction();
 
