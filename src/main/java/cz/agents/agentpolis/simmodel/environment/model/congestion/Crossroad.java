@@ -132,8 +132,11 @@ public class Crossroad  extends Connection{
 	protected Link getNextLink(Lane inputLane) {
 		return outputLinksMappedByInputLanes.get(inputLane);
 	}
-	
-	
 
+    void addNextLink(Link link, Lane inputLane) {
+        outputLinksMappedByInputLanes.put(inputLane, link);
+    }
+	
+	
 
 }

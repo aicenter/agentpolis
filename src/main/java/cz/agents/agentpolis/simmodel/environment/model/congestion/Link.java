@@ -55,4 +55,8 @@ public class Link {
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
         lanesMappedByNodes.get(nextLocation).startDriving(vehicleData);
     }
+
+    void addLane(Lane lane, SimulationNode nextNode) {
+        lanesMappedByNodes.put(nextNode, lane);
+    }
 }

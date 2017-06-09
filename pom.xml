@@ -23,7 +23,7 @@
 	</parent>
     
     <properties>
-        <config.path>./src/main/resources/default-config.cfg</config.path>
+        <config.path>./cz/agents/agentpolis/agentpolis/config/default-config.cfg</config.path>
     </properties>
     
     <build>

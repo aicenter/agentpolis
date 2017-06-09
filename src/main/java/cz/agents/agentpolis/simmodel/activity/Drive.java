@@ -32,7 +32,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private final Vehicle vehicle;
 
-    private final Trip<Node> trip;
+    private final Trip<? extends Node> trip;
 
     private final VehicleMoveActivityFactory moveActivityFactory;
 
@@ -51,7 +51,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
                  VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
-                 A agent, Vehicle vehicle, Trip<Node> trip,
+                 A agent, Vehicle vehicle, Trip<? extends Node> trip,
                  int tripId) {
         super(activityInitializer, agent);
         this.vehicle = vehicle;

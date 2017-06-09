@@ -11,7 +11,7 @@ import cz.agents.basestructures.Node;
  * 
  * @author Zbynek Moler
  * */
-public abstract class PhysicalVehicle extends Vehicle{
+public class PhysicalVehicle extends Vehicle{
 
     private final double lengthInMeters; 
     private final int vehiclePassengerCapacity; // number of passenger, including driver

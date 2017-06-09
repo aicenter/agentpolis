@@ -20,6 +20,5 @@ public interface Driver<V extends Vehicle> extends MovingAgent{
     public void startDriving(V vehicle);
     
     public void endDriving();
-    
-    public Trip<SimulationNode> getCurrentTrip();
+
 }

@@ -8,6 +8,8 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion;
 import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.time.PeriodicTicker;
+import cz.agents.agentpolis.simmodel.Agent;
+import cz.agents.agentpolis.simmodel.Message;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.SimulationProvider;
@@ -37,13 +39,17 @@ public class Connection extends PeriodicTicker{
     
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane chosenLane, Lane nextLane) {
-        nextLane.addToQue(vehicleData);
         chosenLane.removeFromTop();
+        nextLane.addToQue(vehicleData);
+        
     }
 
     protected boolean tryTransferVehicle(Lane lane) {
         VehicleTripData vehicleTripData = lane.getFirstWaitingVehicle();
         Lane nextLane = getNextLane(vehicleTripData.getTrip());
+        if(vehicleTripData.getTrip().isEmpty()){
+            endDriving(vehicleTripData);
+        }
         if(nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
             transferVehicle(vehicleTripData, lane, nextLane);
             return true;
@@ -54,17 +60,24 @@ public class Connection extends PeriodicTicker{
 	void startDriving(VehicleTripData vehicleData){
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        getNextLink().startDriving(vehicleData);
+        getNextLink(inLane).startDriving(vehicleData);
     }
 
     private Lane getNextLane(Trip<SimulationNode> trip) {
-        Link nextLink = getNextLink();
+        Link nextLink = getNextLink(inLane);
         SimulationNode NextNextLocation = trip.getAndRemoveFirstLocation();
         return nextLink.getLaneByNextNode(NextNextLocation);
     }
 
     protected Link getNextLink(Lane inputLane) {
         return outLink;
+    }
+
+    private void endDriving(VehicleTripData vehicleTripData) {
+        
+        // todo - remove typing
+        ((Agent) vehicleTripData.getVehicle().getDriver()).processMessage(new Message(
+                CongestionMessage.DRIVING_FINISHED, null));
     }
     
     
