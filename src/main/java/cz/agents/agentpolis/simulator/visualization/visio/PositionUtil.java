@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
@@ -47,12 +47,12 @@ public class PositionUtil {
 
     private final Graph<SimulationNode, SimulationEdge> network;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
 
     @Inject
     public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
-                        HighwayNetwork highwayNetwork, TimeProvider timeProvider) {
+                        HighwayNetwork highwayNetwork, StandardTimeProvider timeProvider) {
         this.projection = projection;
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();

@@ -33,13 +33,16 @@ public class Crossroad  extends Connection{
     private final List<Lane> inputLanes;
 	
 	private final Map<Lane,Link> outputLinksMappedByInputLanes;
+    
+    private final Map<Connection,Link> outputLinksMappedByNextConnections;
 
-    public Crossroad(Config config, SimulationProvider simulationProvider) {
-        super(simulationProvider, config);
+    public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel) {
+        super(simulationProvider, config, congestionModel);
         this.linksMappedByNextNodes = new HashMap<>();
         inputLanes = new LinkedList<>();
         inputLanesRandomTable = new HashMap<>();
 		outputLinksMappedByInputLanes = new HashMap<>();
+        outputLinksMappedByNextConnections = new HashMap<>();
         batchSize = config.batchSize;
         laneCount = getLaneCount();
         maxFlow = computeMaxFlow(config);
@@ -133,8 +136,16 @@ public class Crossroad  extends Connection{
 		return outputLinksMappedByInputLanes.get(inputLane);
 	}
 
-    void addNextLink(Link link, Lane inputLane) {
+    @Override
+    protected Link getNextLink(Connection nextConnection) {
+        return outputLinksMappedByNextConnections.get(nextConnection);
+    }
+    
+    
+
+    void addNextLink(Link link, Lane inputLane, Connection targetConnection) {
         outputLinksMappedByInputLanes.put(inputLane, link);
+        outputLinksMappedByNextConnections.put(targetConnection, link);
     }
 	
 	

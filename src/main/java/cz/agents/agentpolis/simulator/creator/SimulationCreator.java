@@ -3,7 +3,7 @@ package cz.agents.agentpolis.simulator.creator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import cz.agents.agentpolis.AgentPolisConfiguration;
+import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.agents.agentpolis.simmodel.Agent;
@@ -32,7 +32,6 @@ import cz.agents.alite.common.event.EventProcessorEventType;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
-import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
@@ -64,10 +63,6 @@ public class SimulationCreator {
 	
 	public static SimulationCreator instance;
 	
-	public static void removeAgentStatic(Agent agent){
-		instance.removeAgent(agent);
-	}
-	
 	
 	
 
@@ -81,13 +76,13 @@ public class SimulationCreator {
      * write info about day to console
      */
     private boolean reportDays = false;
+    
+    private final Config config;
 
     private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
     
     private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
     private final Map<EntityType, VisEntity> entityStyles = new HashMap<>();
-
-    private final AgentPolisConfiguration configuration;
     
     private final LogItemViewer logItemViewer;
     
@@ -128,12 +123,12 @@ public class SimulationCreator {
 	
 	
 	@Inject
-    public SimulationCreator(final AgentPolisConfiguration configuration, LogItemViewer logItemViewer, 
+    public SimulationCreator(final Config config, LogItemViewer logItemViewer, 
             ProjectionProvider projectionProvider, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
             Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel,
             TimeEventGenerator timeEventGenerator) {
-        this.configuration = configuration;
+        this.config = config;
         this.logItemViewer = logItemViewer;
         this.projectionProvider = projectionProvider;
         this.simulationProvider = simulationProvider;
@@ -175,7 +170,7 @@ public class SimulationCreator {
 
         initVisioAndGE(projection);
 
-        if (configuration.skipSimulation) {
+        if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
             LOGGER.info(String.format("Simulation - init time: %s ms", (System.currentTimeMillis() - simTimeInit)));
@@ -191,7 +186,7 @@ public class SimulationCreator {
             LOGGER.info(String.format("Simulation - runtime: %s ms", (System.currentTimeMillis() -
                     simulationStartTime)));
 
-            if (configuration.turnOnGeneratingGELinks) {
+            if (config.turnOnGeneratingGeLinks) {
                 try {
                     synthetiser.stop();
                     LOGGER.info("Google Earth - Synthesizer was stopped ");
@@ -200,10 +195,12 @@ public class SimulationCreator {
                 }
             }
 
-            if (configuration.pathToScriptsAndTheirInputParameters != null) {
+            if (!config.pathToScriptsAndTheirInputParameters.equals("")) {
                 LOGGER.info("Executing post groovy scripts:");
-                (new CSVPostprocessingGroovyExecutor(configuration.pathToScriptsAndTheirInputParameters, configuration.pathToCSVEventLogFile,
-                        configuration.dirForResults.getPath())).execute();
+                
+                // legacy code - remove
+//                (new CSVPostprocessingGroovyExecutor(config.pathToScriptsAndTheirInputParameters, 
+//                        config.pathToCsvEventLogFile, config.dirForResults)).execute();
             }
         }
         simulationFinishedListeners.forEach(SimulationFinishedListener::simulationFinished);
@@ -215,7 +212,7 @@ public class SimulationCreator {
 
     private void initSimulation() {
         LOGGER.info("Setting up Alite simulation modul");
-        simulation = new TypedSimulation(configuration.simulationDurationInMillis);
+        simulation = new TypedSimulation(config.simulationDurationInMillis);
         simulation.setPrintouts(10000000);
 		simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
@@ -231,9 +228,9 @@ public class SimulationCreator {
     private void initLogger() {
         LOGGER.info("Loading log4j properties");
 
-        if (new File(configuration.LOG4J_XML_DIR).exists()) {
+        if (new File(config.log4jXmlDir).exists()) {
             try {
-                DOMConfigurator.configure(configuration.LOG4J_XML_DIR);
+                DOMConfigurator.configure(config.log4jXmlDir);
                 LOGGER.info("Loaded log4j properties");
                 return;
             } catch (Exception ignored) {
@@ -264,39 +261,17 @@ public class SimulationCreator {
         }
 
         LOGGER.info("Failed to load log4j properties");
-    }
-	
-	public void addAgent(Agent agent){
-		addEntityMaxSpeedToStorage(agent.getId(), configuration.agentMoveSpeedInMps);
-		agentStorage.addEntity(agent);
-		if(configuration.showVisio && VisEntityLayer.isActive()){
-			VisEntityLayer.addEntity(agent);
-		}
-		agent.born();
-	}
-	
-	public void removeAgent(Agent agent){
-		agent.die();
-		
-		if(configuration.showVisio  && VisEntityLayer.isActive()){
-			VisEntityLayer.removeEntity(agent);
-		}
-        
-		agentStorage.removeEntity(agent);
-//		injector.getInstance(EntityVelocityModel.class).removeEntityMaxVelocity(agent.getId());
-//        injector.getInstance(EntityPositionModel.class).removeEntity(agent.getId());
-	}
-    
+    } 
     
 
     private void initVisioAndGE(Projection projection) {
-        if (configuration.turnOnGeneratingGELinks) {
+        if (config.turnOnGeneratingGeLinks) {
             LOGGER.info("Initializing Google Earth");
-            createGoogleEarthUpdaters(configuration.pathToKMLFile);
+            createGoogleEarthUpdaters(config.pathToKmlFile);
             LOGGER.info("Initialized Google Earth");
         }
 
-        if (configuration.showVisio) {
+        if (config.showVisio) {
             LOGGER.info("Initializing Visio");
 			visioInitializerProvider.get().initialize(simulation, projection);
             simulation.setSimulationSpeed(1);
@@ -306,7 +281,7 @@ public class SimulationCreator {
             simulation.setSimulationSpeed(0);
         }
 
-        if (configuration.showEventViewer) {
+        if (config.showEventViewer) {
             LOGGER.info("Initializing event viewer");
             logItemViewer.runView();
             LOGGER.info("Initialized event viewer");
@@ -434,7 +409,7 @@ public class SimulationCreator {
     // ----------------- estimation --------------------------------
 
     private void setUpTimeAndCompletenessEstimation() {
-        long stepTimeForCompletenessEvent = (configuration.simulationDurationInMillis / 100);
+        long stepTimeForCompletenessEvent = (config.simulationDurationInMillis / 100);
 
         for (int percentValue = 1; percentValue < 100; percentValue++) {
             simulation.addEvent(new SimulationCompletenessHandler(), stepTimeForCompletenessEvent * percentValue);
@@ -450,7 +425,7 @@ public class SimulationCreator {
 
     public long getTimeTillSimulationFinish() {
         if (simulationCompletenessInPercentages == 0) {
-            return configuration.simulationDurationInMillis;
+            return config.simulationDurationInMillis;
         }
 
         double durationPerPercentge = simulationDuration / (double) simulationCompletenessInPercentages;

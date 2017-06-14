@@ -7,7 +7,7 @@ package cz.agents.agentpolis.simulator.visualization.visio.entity;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.AgentPositionModel;
@@ -32,7 +32,7 @@ public class VehiclePositionUtil extends EntityPositionUtil{
     
     private final MoveVehicleAction moveVehicleAction;
     
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
     
     private final AgentPositionModel agentPositionModel;
     
@@ -40,7 +40,7 @@ public class VehiclePositionUtil extends EntityPositionUtil{
     @Inject
     public VehiclePositionUtil(PositionUtil positionUtil, VehiclePositionModel entityPositionModel, 
             AllNetworkNodes allNetworkNodes, Projection projection, EntityStorage entityStorage, 
-            HighwayNetwork highwayNetwork, MoveVehicleAction moveVehicleAction, TimeProvider timeProvider, 
+            HighwayNetwork highwayNetwork, MoveVehicleAction moveVehicleAction, StandardTimeProvider timeProvider, 
             AgentPositionModel agentPositionModel) {
         super(positionUtil, entityPositionModel, allNetworkNodes, projection, entityStorage, highwayNetwork);
         this.moveVehicleAction = moveVehicleAction;

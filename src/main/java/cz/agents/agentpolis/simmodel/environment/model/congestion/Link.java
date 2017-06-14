@@ -17,8 +17,11 @@ import java.util.Map;
  * @author fido
  */
 public class Link {
-    private List<Lane> lanes;
+//    private List<Lane> lanes;
     
+    /**
+     * Lanes mapped by next nodes
+     */
     private final Map<SimulationNode,Lane> lanesMappedByNodes;
     
     private final SimulationEdge edge;
@@ -39,7 +42,7 @@ public class Link {
     
     
     public int getLaneCount(){
-        return lanes.size();
+        return lanesMappedByNodes.size();
     }
     
     public int getLength(){

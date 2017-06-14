@@ -2,7 +2,7 @@ package cz.agents.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
@@ -55,13 +55,13 @@ public class SimulationControlLayer extends AbstractLayer {
     
 	private final Simulation simulation;
     
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     
     
 
     @Inject
-	private SimulationControlLayer(Simulation simulation, TimeProvider timeProvider) {
+	private SimulationControlLayer(Simulation simulation, StandardTimeProvider timeProvider) {
 		this.simulation = simulation;
         this.timeProvider = timeProvider;
         
@@ -194,7 +194,7 @@ public class SimulationControlLayer extends AbstractLayer {
 	private static final Format formatter = new SimpleDateFormat("HH:mm:ss");
 	private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd");
 
-	private String converSimTimeForVis(TimeProvider timeProvider) {
+	private String converSimTimeForVis(StandardTimeProvider timeProvider) {
 
 		long timeFromSimulationStart = timeProvider.getCurrentSimTime();
 

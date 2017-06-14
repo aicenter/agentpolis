@@ -6,7 +6,7 @@
 package cz.agents.agentpolis.simmodel.activity;
 
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
@@ -40,7 +40,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private final EventProcessor eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final int tripId;
 
@@ -50,7 +50,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     private Node to;
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
+                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
                  A agent, Vehicle vehicle, Trip<? extends Node> trip,
                  int tripId) {
         super(activityInitializer, agent);

@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.IdGenerator;
@@ -34,7 +34,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
     private final TypedSimulation eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final IdGenerator tripIdGenerator;
 
@@ -43,7 +43,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
     @Inject
     public DriveActivityFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
-                                TypedSimulation eventProcessor, TimeProvider timeProvider, IdGenerator tripIdGenerator,
+                                TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
                                 TripsUtil tripsUtil) {
         this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;

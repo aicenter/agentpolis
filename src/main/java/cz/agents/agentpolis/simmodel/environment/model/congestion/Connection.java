@@ -20,12 +20,15 @@ import cz.agents.agentpolis.simulator.SimulationProvider;
  */
 public class Connection extends PeriodicTicker{
     
+    private final CongestionModel congestionModel;
+    
     private Lane inLane;
     
     private Link outLink;
 
-    public Connection(SimulationProvider simulationProvider, Config config) {
+    public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel) {
         super(simulationProvider, config.connectionTickLength, ConnectionEvent.TICK);
+        this.congestionModel = congestionModel;
     }
 
     @Override
@@ -60,7 +63,8 @@ public class Connection extends PeriodicTicker{
 	void startDriving(VehicleTripData vehicleData){
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        getNextLink(inLane).startDriving(vehicleData);
+        Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
+        getNextLink(nextConnection).startDriving(vehicleData);
     }
 
     private Lane getNextLane(Trip<SimulationNode> trip) {
@@ -78,6 +82,10 @@ public class Connection extends PeriodicTicker{
         // todo - remove typing
         ((Agent) vehicleTripData.getVehicle().getDriver()).processMessage(new Message(
                 CongestionMessage.DRIVING_FINISHED, null));
+    }
+
+    protected Link getNextLink(Connection nextConnection) {
+        return outLink;
     }
     
     

@@ -11,6 +11,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
+import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.simmodel.environment.StandardAgentPolisModule;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
@@ -39,7 +40,7 @@ public class AgentPolisInitializer {
     
     private final List<Object> loggers = new ArrayList<>();
     
-    private final AgentPolisConfiguration configuration;
+    private final Config configuration;
     
     private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer = new HashSet<>();
     
@@ -51,14 +52,14 @@ public class AgentPolisInitializer {
     
     
     
-    public AgentPolisInitializer(AgentPolisConfiguration configuration, StandardAgentPolisModule mainModule) {
+    public AgentPolisInitializer(StandardAgentPolisModule mainModule) {
         this.mainModule = mainModule;
-        this.configuration = configuration;
-        mainModule.initializeParametrs(configuration, loggers, allowedLogItemClassesLogItemViewer);
+        configuration = mainModule.getConfig();
+        mainModule.initializeParametrs(loggers, allowedLogItemClassesLogItemViewer);
     }
     
-    public AgentPolisInitializer(AgentPolisConfiguration configuration) {
-        this(configuration, new StandardAgentPolisModule());
+    public AgentPolisInitializer() {
+        this(new StandardAgentPolisModule());
     }
     
     
@@ -126,7 +127,7 @@ public class AgentPolisInitializer {
             addLogger(logItemViewer);
         }
         
-        initCSV(configuration.pathToCSVEventLogFile, injector);
+        initCSV(configuration.pathToCsvEventLogFile, injector);
     }
     
     private void initCSV(String pathToCSVEventLogFile, Injector injector) {

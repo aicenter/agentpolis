@@ -57,11 +57,6 @@ public abstract class Agent extends AgentPolisEntity {
         currentActivity.handleEvent(event);
     }
 
-
-    protected void exit() {
-        SimulationCreator.removeAgentStatic(this);
-    }
-
     /**
      * Called when current activity finises.
      *

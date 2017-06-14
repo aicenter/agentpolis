@@ -11,18 +11,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cz.agents.agentpolis.siminfrastructure.time.EDayInWeek;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.alite.common.event.EventProcessor;
 
 public class TimeEndUtilTest {
 
 	private EventProcessor eventProcessor;
-	private TimeProvider timeEnvUtil;
+	private StandardTimeProvider timeEnvUtil;
 
 	@Before
 	public void setUp() {
 		eventProcessor = mock(EventProcessor.class);
-		timeEnvUtil = new TimeProvider(eventProcessor);
+		timeEnvUtil = new StandardTimeProvider(eventProcessor);
 	}
 
 	@Test
@@ -242,7 +242,7 @@ public class TimeEndUtilTest {
 
 	@Test
 	public void timeEnvUtilTest16() {
-		timeEnvUtil = new TimeProvider(eventProcessor, parse("2014-09-10"));
+		timeEnvUtil = new StandardTimeProvider(eventProcessor, parse("2014-09-10"));
 
 		when(eventProcessor.getCurrentTime()).thenReturn(Duration.ofHours(20).toMillis());
 		assertEquals(EDayInWeek.WEDNESDAY, timeEnvUtil.getCurrentDayInWeek());
@@ -256,7 +256,7 @@ public class TimeEndUtilTest {
 	@Test
 	public void timeEnvUtilTest17() {
 
-		timeEnvUtil = new TimeProvider(eventProcessor, parse("2014-09-10"));
+		timeEnvUtil = new StandardTimeProvider(eventProcessor, parse("2014-09-10"));
 		when(eventProcessor.getCurrentTime()).thenReturn(
 				Duration.ofDays(7).toMillis() + Duration.ofHours(12).toMillis());
 
@@ -273,7 +273,7 @@ public class TimeEndUtilTest {
 	@Test
 	public void timeEnvUtilTest18() {
 
-		timeEnvUtil = new TimeProvider(eventProcessor, parse("2014-09-10"));
+		timeEnvUtil = new StandardTimeProvider(eventProcessor, parse("2014-09-10"));
 		when(eventProcessor.getCurrentTime()).thenReturn(
 				Duration.ofDays(7).toMillis() + Duration.ofHours(10).toMillis());
 
@@ -285,7 +285,7 @@ public class TimeEndUtilTest {
 	@Test
 	public void timeEnvUtilTest19() {
 
-		timeEnvUtil = new TimeProvider(eventProcessor, parse("2014-09-10T10:00:00"));
+		timeEnvUtil = new StandardTimeProvider(eventProcessor, parse("2014-09-10T10:00:00"));
 		when(eventProcessor.getCurrentTime()).thenReturn(
 				Duration.ofDays(7).toMillis() + Duration.ofHours(10).toMillis());
 
@@ -297,7 +297,7 @@ public class TimeEndUtilTest {
 	@Test
 	public void timeEnvUtilTest20() {
 
-		timeEnvUtil = new TimeProvider(eventProcessor, parse("2014-09-08"));
+		timeEnvUtil = new StandardTimeProvider(eventProcessor, parse("2014-09-08"));
 		when(eventProcessor.getCurrentTime()).thenReturn(
 				Duration.ofDays(7).toMillis() + Duration.ofHours(10).toMillis());
 

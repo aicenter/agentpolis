@@ -10,7 +10,6 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
@@ -18,7 +17,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,11 +31,11 @@ import java.util.Map;
 public class CongestionModel {
     private final Graph<SimulationNode, SimulationEdge> graph;
     
-    private final Map<SimulationNode,Connection> connectionsMappedByNodes;
+    protected final Map<SimulationNode,Connection> connectionsMappedByNodes;
 	
 	private final List<Link> links;
     
-    private final Map<SimulationEdge,Link> linksMappedByEdges;
+    protected final Map<SimulationEdge,Link> linksMappedByEdges;
     
     private final Config config;
     
@@ -74,11 +72,11 @@ public class CongestionModel {
     private void buildConnections(Collection<SimulationNode> allNodes) {
         for (SimulationNode node : allNodes) {
 			if(graph.getInEdges(node).size() > 2){
-				Crossroad crossroad = new Crossroad(config, simulationProvider);
+				Crossroad crossroad = new Crossroad(config, simulationProvider, this);
 				connectionsMappedByNodes.put(node, crossroad);
 			}
 			else{
-				Connection connection = new Connection(simulationProvider, config);
+				Connection connection = new Connection(simulationProvider, config, this);
 				connectionsMappedByNodes.put(node, connection);
 			}
         }
@@ -103,7 +101,7 @@ public class CongestionModel {
                 link.addLane(newLane, nextNode);
                 Link outLink = linksMappedByEdges.get(outEdge);
                 if(targetConnection instanceof Crossroad){
-                    ((Crossroad) targetConnection).addNextLink(outLink, newLane);
+                    ((Crossroad) targetConnection).addNextLink(outLink, newLane, connectionsMappedByNodes.get(nextNode));
                 }
             }
 		}
