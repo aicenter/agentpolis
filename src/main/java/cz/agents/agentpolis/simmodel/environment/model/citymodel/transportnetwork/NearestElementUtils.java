@@ -34,10 +34,11 @@ public class NearestElementUtils {
     
 //    private final Map<GraphType,Network> networksMappedByGraphType;
 
+     //TODO clear constructor usage Tranformer injection or not?
     @Inject
-    public NearestElementUtils(TransportNetworks transportNetworks, @Named("mapSrid") int srid) {
+    public NearestElementUtils(TransportNetworks transportNetworks, @Named("mapSrid") int srid, Transformer transformer) {
         this.transportNetworks = transportNetworks;
-        this.transformer = new Transformer(srid);
+        this.transformer = transformer;
 //        this.networksMappedByGraphType = new HashMap<>();
         this.nearestElementUtilsMappedByGraphType = new HashMap<>();
     }
