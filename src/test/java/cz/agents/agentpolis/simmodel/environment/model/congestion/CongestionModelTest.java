@@ -14,6 +14,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.Graph;
+import java.security.ProviderException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class CongestionModelTest {
     
-    public void run(Graph<SimulationNode, SimulationEdge> graph){
+    public void run(Graph<SimulationNode, SimulationEdge> graph) throws Throwable{
         
         Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
         graphs.put(EGraphType.HIGHWAY, graph);
@@ -39,11 +40,16 @@ public class CongestionModelTest {
         //map init
         injector.getInstance(Graphs.class).setGraphs(graphs);
         
-        TestCongestionModel congestionModel = injector.getInstance(TestCongestionModel.class);
-        Graph<SimulationNode,SimulationEdge> roadGraph = injector.getInstance(HighwayNetwork.class).getNetwork();
-        
-        nodeTest(congestionModel, roadGraph);
-        edgeTest(congestionModel, roadGraph);
+        try{
+            TestCongestionModel congestionModel = injector.getInstance(TestCongestionModel.class);
+            Graph<SimulationNode,SimulationEdge> roadGraph = injector.getInstance(HighwayNetwork.class).getNetwork();
+
+            nodeTest(congestionModel, roadGraph);
+            edgeTest(congestionModel, roadGraph);
+        }
+        catch(ProviderException e){
+            throw e.getCause();
+        }
     }
 
     private void nodeTest(TestCongestionModel congestionModel, Graph<SimulationNode, SimulationEdge> roadGraph) {

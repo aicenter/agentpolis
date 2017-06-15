@@ -20,8 +20,8 @@ import org.junit.Test;
  */
 public class TestTwoNodes {
     
-    @Test
-    public void run(){
+    @Test(expected = ModelConstructionFailedException.class)  
+    public void run() throws Throwable{
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0, false, false);

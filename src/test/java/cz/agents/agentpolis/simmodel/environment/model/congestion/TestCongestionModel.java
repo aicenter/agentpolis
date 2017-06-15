@@ -13,6 +13,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simulator.SimulationProvider;
+import java.security.ProviderException;
 
 /**
  *
@@ -23,7 +24,8 @@ public class TestCongestionModel extends CongestionModel{
     
     @Inject
     public TestCongestionModel(TransportNetworks transportNetworks, Config config, 
-            SimulationProvider simulationProvider, TimeProvider timeProvider) {
+            SimulationProvider simulationProvider, TimeProvider timeProvider) throws ModelConstructionFailedException,
+            ProviderException {
         super(transportNetworks, config, simulationProvider, timeProvider);
     }
     

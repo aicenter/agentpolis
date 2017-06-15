@@ -17,6 +17,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.basestructures.Graph;
+import java.security.ProviderException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,7 +46,8 @@ public class CongestionModel {
 
     @Inject
     public CongestionModel(TransportNetworks transportNetworks, Config config, 
-            SimulationProvider simulationProvider, TimeProvider timeProvider) {
+            SimulationProvider simulationProvider, TimeProvider timeProvider) throws ModelConstructionFailedException, 
+            ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
         this.simulationProvider = simulationProvider;
@@ -56,7 +58,7 @@ public class CongestionModel {
         buildCongestionGraph();
     }
 
-    private void buildCongestionGraph() {
+    private void buildCongestionGraph() throws ModelConstructionFailedException {
         buildConnections(graph.getAllNodes());
         buildLinks(graph.getAllEdges());
 		buildLanes();
@@ -90,10 +92,13 @@ public class CongestionModel {
 		}
     }
 
-	private void buildLanes() {
+	private void buildLanes() throws ModelConstructionFailedException {
 		for (Link link : links) {
 			SimulationNode targetNode = graph.getNode(link.getEdge().toId);
 			List<SimulationEdge> outEdges = graph.getOutEdges(targetNode);
+            if(outEdges.isEmpty()){
+                throw new ModelConstructionFailedException("Dead end detected - this is prohibited in road graph");
+            }
             Connection targetConnection = connectionsMappedByNodes.get(targetNode);
             for (SimulationEdge outEdge : outEdges) {
                 SimulationNode nextNode = graph.getNode(outEdge.toId);
