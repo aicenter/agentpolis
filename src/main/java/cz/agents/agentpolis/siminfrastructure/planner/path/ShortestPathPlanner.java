@@ -92,6 +92,9 @@ public class ShortestPathPlanner {
         assert startNodeById != destinationNodeById : "Start finding position should not be the same as end finding "
                 + "position";
 
+        if (startNodeById == destinationNodeById) {
+            throw new TripPlannerException(startNodeById, destinationNodeById);
+        }
         List<PlannerEdge> plannerEdges = findShortestPath(startNodeById, destinationNodeById);
         return createTrips(plannerEdges);
     }
