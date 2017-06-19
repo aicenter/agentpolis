@@ -12,7 +12,11 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.NearestElementUtils;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.GPSLocation;
+import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
 
 import java.util.*;
@@ -37,12 +41,14 @@ public class TripsUtil {
     protected final ShortestPathPlanners pathPlanners;
 
     private final NearestElementUtils nearestElementUtils;
+    private final Graph<SimulationNode, SimulationEdge> network;
 
 
     @Inject
-    public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils) {
+    public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
         this.pathPlanners = pathPlanners;
         this.nearestElementUtils = nearestElementUtils;
+        this.network = network.getNetwork();
     }
 
 
@@ -163,4 +169,26 @@ public class TripsUtil {
         }
         return newTrip;
     }
+
+    private int getEdgeLength(int startNodeId, int targetNodeId) {
+        return network.getEdge(startNodeId, targetNodeId).getLength();
+    }
+
+
+    public int getTripLengthInMeters(Trip<Node> trip) {
+        int length = 0;
+
+        LinkedList<Node> locations = trip.getLocations();
+        if (locations.size() >= 2) {
+            int startNodeId = locations.getFirst().id;
+            for (int i = 1; i < locations.size(); i++) {
+                int targetNodeId = locations.get(i).id;
+                length += getEdgeLength(startNodeId, targetNodeId);
+                startNodeId = targetNodeId;
+            }
+        }
+
+        return length;
+    }
+
 }

@@ -98,6 +98,10 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
         eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
     }
 
+    public Trip<Node> getTrip() {
+        return trip;
+    }
+
 
     /**
      * Computes time based on vehicle length and velocity
