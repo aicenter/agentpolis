@@ -17,6 +17,7 @@ import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Node;
+import cz.agents.multimodalstructures.edges.RoadEdge;
 
 import java.util.logging.Level;
 
@@ -52,8 +53,9 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
     /**
      * The method ensure that the agent movement is feasible for execution. If
      * the movement is not feasible then agent will freeze.
+     *
      * @param edge
-     * @return 
+     * @return
      */
     protected boolean checkFeasibility(Edge edge) {
         return edge != null;
@@ -66,8 +68,12 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
         if (checkFeasibility(edge)) {
 
             agent.setTargetNode(to);
+            double agentMaxVelocity = agent.getVelocity();
+            {
+                MoveUtil.computedDesiredVelocity(agent.getVelocity(), ((RoadEdge) edge).allowedMaxSpeedInMpS);
+            }
 
-            duration = MoveUtil.computeDuration(agent.getVelocity(), edge.length);
+            duration = MoveUtil.computeDuration(agentMaxVelocity, edge.length);
 
             agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime()));
         } else {
