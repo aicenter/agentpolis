@@ -390,7 +390,6 @@ public class SimulationCreator {
 
 		@Override
         public void handleEvent(Event event) {
-            // System.exit(0);
             setTimer();
         }
 

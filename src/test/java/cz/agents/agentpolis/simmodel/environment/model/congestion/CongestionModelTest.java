@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 import cz.agents.agentpolis.AgentPolisInitializer;
 import cz.agents.agentpolis.simmodel.environment.model.Graphs;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
@@ -14,7 +15,6 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.basestructures.Graph;
-import java.security.ProviderException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class CongestionModelTest {
             nodeTest(congestionModel, roadGraph);
             edgeTest(congestionModel, roadGraph);
         }
-        catch(ProviderException e){
+        catch(ProvisionException e){
             throw e.getCause();
         }
     }
@@ -58,6 +58,13 @@ public class CongestionModelTest {
             
             //each node have a connection test
             assertNotNull(connection);
+            
+            if(connection instanceof Crossroad){
+                
+            }
+            else{
+                checkConnection(connection);
+            }
         }
     }
     
@@ -86,5 +93,9 @@ public class CongestionModelTest {
             
             assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
         }
+    }
+
+    private void checkConnection(Connection connection) {
+        assertNotNull(connection.getNextLink((Connection) null));
     }
 }

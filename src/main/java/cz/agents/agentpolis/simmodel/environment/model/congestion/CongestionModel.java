@@ -67,8 +67,8 @@ public class CongestionModel {
     public void drive(PhysicalVehicle vehicle, Trip<SimulationNode> trip){
         VehicleTripData vehicleData = new VehicleTripData(vehicle, trip);
         SimulationNode startLocation = trip.getAndRemoveFirstLocation();
-        Connection startCrossroad = connectionsMappedByNodes.get(startLocation);
-        startCrossroad.startDriving(vehicleData);        
+        Connection startConnection = connectionsMappedByNodes.get(startLocation);
+        startConnection.startDriving(vehicleData);        
     }
 
     private void buildConnections(Collection<SimulationNode> allNodes) {
@@ -107,6 +107,9 @@ public class CongestionModel {
                 Link outLink = linksMappedByEdges.get(outEdge);
                 if(targetConnection instanceof Crossroad){
                     ((Crossroad) targetConnection).addNextLink(outLink, newLane, connectionsMappedByNodes.get(nextNode));
+                }
+                else{
+                    targetConnection.setOutLink(outLink);
                 }
             }
 		}

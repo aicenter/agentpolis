@@ -64,7 +64,6 @@ public class DriveActivityFactory extends ActivityFactory {
         if (vehicle instanceof TransportableEntity) {
             if (((TransportableEntity) vehicle).getTransportingEntity() != null) {
                 Log.warn(this, "Trying to drive vehicle that is being transported by other vehicle!");
-                System.exit(-1);
             }
         }
     }

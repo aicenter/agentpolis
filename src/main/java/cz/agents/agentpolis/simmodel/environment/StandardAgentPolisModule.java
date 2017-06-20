@@ -10,6 +10,7 @@ import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import cz.agents.agentpolis.agentpolis.config.Config;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
@@ -60,6 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import ninja.fido.config.Configuration;
 
 /**
@@ -87,6 +89,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	public StandardAgentPolisModule() {
         this.delayingSegmentCapacityDeterminer = new DefaultDelayingSegmentCapacityDeterminer();
         this.config = Configuration.load(new Config());
+        Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
 
 	

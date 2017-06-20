@@ -20,19 +20,19 @@ public class Bounds {
         return maxNode;
     }
 
-    public double getMaxLatE6() {
+    public int getMaxLatE6() {
         return maxNode.getLatE6();
     }
 
-    public double getMinLatE6() {
+    public int getMinLatE6() {
         return minNode.getLatE6();
     }
 
-    public double getMinLonE6() {
+    public int getMinLonE6() {
         return minNode.getLonE6();
     }
 
-    public double getMaxLonE6() {
+    public int getMaxLonE6() {
         return maxNode.getLonE6();
     }
 }

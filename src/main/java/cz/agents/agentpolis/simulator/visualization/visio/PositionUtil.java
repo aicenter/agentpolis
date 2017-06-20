@@ -7,6 +7,7 @@ package cz.agents.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
@@ -27,6 +28,8 @@ import cz.agents.alite.vis.Vis;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+import cz.agents.geotools.GPSLocationTools;
+import cz.agents.geotools.Transformer;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -40,6 +43,8 @@ import java.util.Map;
 public class PositionUtil {
 
     private final Projection projection;
+    
+    private final Config config;
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
@@ -48,16 +53,20 @@ public class PositionUtil {
     private final Graph<SimulationNode, SimulationEdge> network;
 
     private final StandardTimeProvider timeProvider;
+    
+    private final Transformer transformer;
 
 
     @Inject
     public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
-                        HighwayNetwork highwayNetwork, StandardTimeProvider timeProvider) {
+                        HighwayNetwork highwayNetwork, StandardTimeProvider timeProvider, Config config) {
         this.projection = projection;
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();
         network = highwayNetwork.getNetwork();
         this.timeProvider = timeProvider;
+        this.config = config;
+        transformer = new Transformer(config.srid);
     }
 
 
@@ -88,17 +97,26 @@ public class PositionUtil {
     }
 
     public int getWorldWidth() {
-        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
+        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
+        Point2d minMax = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+                mapBounds.getMaxNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
+//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinNode(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
 
         return (int) (minMax.x - minMin.x);
     }
 
     public int getWorldHeight() {
-        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
+        Point2d maxMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMaxNode().getLatitude(), 
+                mapBounds.getMinNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
+//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
 
-        return (int) (minMin.y - maxMin.y);
+        return (int) (maxMin.y  - minMin.y);
     }
 
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {

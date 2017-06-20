@@ -26,6 +26,13 @@ public class Connection extends PeriodicTicker{
     
     private Link outLink;
 
+    
+    void setOutLink(Link outLink) {
+        this.outLink = outLink;
+    }
+    
+    
+
     public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel) {
         super(simulationProvider, config.connectionTickLength, ConnectionEvent.TICK);
         this.congestionModel = congestionModel;
