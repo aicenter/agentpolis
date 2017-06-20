@@ -68,12 +68,8 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
         if (checkFeasibility(edge)) {
 
             agent.setTargetNode(to);
-            double agentMaxVelocity = agent.getVelocity();
-            {
-                MoveUtil.computedDesiredVelocity(agent.getVelocity(), ((RoadEdge) edge).allowedMaxSpeedInMpS);
-            }
-
-            duration = MoveUtil.computeDuration(agentMaxVelocity, edge.length);
+            double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), ((RoadEdge) edge).allowedMaxSpeedInMpS);
+            duration = MoveUtil.computeDuration(velocity, edge.length);
 
             agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime()));
         } else {
