@@ -21,8 +21,16 @@ public class Utils {
         Set<ModeOfTransport> permittedMode = new HashSet<>();
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
+        int radius = 1000;
+        
         for (int i = 0; i < nodeCount; i++) {
-            SimulationNode node = new SimulationNode(i, 0, 0, 0, 0, 0, 0, false, false);
+            double angle  = 2 * Math.PI / nodeCount * i;
+            
+            int x = (int) Math.round(radius * Math.cos(angle));
+            int y = (int) Math.round(radius * Math.sin(angle));
+            
+            
+            SimulationNode node = new SimulationNode(i, 0, x, y, x, y, 0, false, false);
         
             graphBuilder.addNode(node);
             

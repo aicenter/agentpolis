@@ -25,6 +25,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
+import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
@@ -48,7 +49,7 @@ public class PositionUtil {
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
-    private final Bounds mapBounds;
+    private final BoundingBox mapBounds;
 
     private final Graph<SimulationNode, SimulationEdge> network;
 
@@ -97,26 +98,26 @@ public class PositionUtil {
     }
 
     public int getWorldWidth() {
-        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
-        Point2d minMax = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-                mapBounds.getMaxNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
+//        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+//                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
+//        Point2d minMax = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+//                mapBounds.getMaxNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
 //        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinNode(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
+        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
 
         return (int) (minMax.x - minMin.x);
     }
 
     public int getWorldHeight() {
-        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
-        Point2d maxMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMaxNode().getLatitude(), 
-                mapBounds.getMinNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
-//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
+//                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
+//        Point2d maxMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMaxNode().getLatitude(), 
+//                mapBounds.getMinNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
+        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
 
-        return (int) (maxMin.y  - minMin.y);
+        return (int) (minMin.y - maxMin.y);
     }
 
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
@@ -196,6 +197,10 @@ public class PositionUtil {
 
         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
                 / delayData.getDelay();
+        
+        if(portionCompleted > 1){
+            portionCompleted = 1;
+        }
 
         Point2d startPosition = getCanvasPosition(startNode);
         Point2d targetPosition = getCanvasPosition(targetNode);

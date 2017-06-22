@@ -15,7 +15,6 @@ import cz.agents.agentpolis.simmodel.environment.model.entityvelocitymodel.Entit
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.agents.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
-import cz.agents.agentpolis.simulator.visualization.visio.Bounds;
 import cz.agents.agentpolis.simulator.visualization.visio.Projection;
 import cz.agents.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.VisioInitializer;
@@ -32,6 +31,7 @@ import cz.agents.alite.common.event.EventProcessorEventType;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
+import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
@@ -103,7 +103,7 @@ public class SimulationCreator {
     private final TimeEventGenerator timeEventGenerator;
     
     
-    public Bounds boundsOfMap = null;
+    public BoundingBox boundsOfMap = null;
     
     private Projection projection;
 	
@@ -114,7 +114,7 @@ public class SimulationCreator {
 		return entityStyles;
 	}
 
-    public Bounds getBoundsOfMap() {
+    public BoundingBox getBoundsOfMap() {
         return boundsOfMap;
     }
     

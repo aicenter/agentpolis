@@ -70,6 +70,15 @@ public class Trip<L> {
     public L getAndRemoveFirstLocation() {
         return locations.poll();
     }
+    
+    public L getFirstLocation() {
+        return locations.peek();
+    }
+    
+    public L removeFirstLocation() {
+        return locations.removeFirst();
+    }
+    
 
     public boolean isEmpty() {
         return locations.isEmpty();

@@ -7,7 +7,6 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
 import java.util.LinkedList;
 
 /**
@@ -20,7 +19,7 @@ public class Lane {
     
     private final LinkedList<VehicleQueueData> queue;
     
-    private final Link link;
+    final Link link;
     
     private final TimeProvider timeProvider;
     
@@ -65,17 +64,25 @@ public class Lane {
         return timeProvider.getCurrentSimTime() >= queue.peek().getMinPollTime();
     }
     
-    void startDriving(VehicleTripData vehicleTripData){
-        if(queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
-            addToQue(vehicleTripData);
-        }
-        else{
-            addToStartHereQueue(vehicleTripData);
-        }
+    void startDriving(VehicleTripData vehicleTripData, long delay){
+//        if(queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
+            addToQue(vehicleTripData, delay);
+//        }
+//        else{
+//            addToStartHereQueue(vehicleTripData);
+//        }
     }
 
-    void addToQue(VehicleTripData vehicleTripData) {
-        long minExitTime = computeMinExitTime(vehicleTripData.getVehicle());
+    void addToQue(VehicleTripData vehicleTripData, long delay) {
+        
+        long minExitTime = timeProvider.getCurrentSimTime() + delay;
+        
+//        // for visio
+//        Driver driver =  vehicleTripData.getVehicle().getDriver();
+//        driver.setTargetNode(link.toNode);
+//        vehicleTripData.getVehicle().setPosition(link.fromNode);
+//        driver.setDelayData(new DelayData(delay, timeProvider.getCurrentSimTime()));
+        
         queue.add(new VehicleQueueData(vehicleTripData, minExitTime));
     }
 
@@ -88,9 +95,5 @@ public class Lane {
             startHereQueue = new LinkedList<>();
         }
         startHereQueue.add(vehicleTripData);
-    }
-
-    private long computeMinExitTime(PhysicalVehicle vehicle) {
-        return MoveUtil.computeDuration(vehicle.getVelocity(), link.getLength());
     }
 }

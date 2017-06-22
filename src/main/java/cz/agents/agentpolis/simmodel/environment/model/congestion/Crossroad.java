@@ -28,7 +28,7 @@ public class Crossroad  extends Connection{
     
     private final int batchSize;
     
-    private final Map<Double,Lane> inputLanesRandomTable;
+    private final List<ChoosingTableData> inputLanesChoosingTable;
     
     private final List<Lane> inputLanes;
 	
@@ -36,14 +36,15 @@ public class Crossroad  extends Connection{
     
     private final Map<Connection,Link> outputLinksMappedByNextConnections;
 
-    public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel) {
-        super(simulationProvider, config, congestionModel);
+    public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
+            SimulationNode node) {
+        super(simulationProvider, config, congestionModel, node);
         this.linksMappedByNextNodes = new HashMap<>();
         inputLanes = new LinkedList<>();
-        inputLanesRandomTable = new HashMap<>();
+        inputLanesChoosingTable = new LinkedList<>();
 		outputLinksMappedByInputLanes = new HashMap<>();
         outputLinksMappedByNextConnections = new HashMap<>();
-        batchSize = config.batchSize;
+        batchSize = config.congestionModel.batchSize;
         laneCount = getLaneCount();
         maxFlow = computeMaxFlow(config);
         tickLength = computeTickLength();
@@ -51,38 +52,25 @@ public class Crossroad  extends Connection{
     
     
     
+    public int getNumberOfInputLanes(){
+        return inputLanes.size();
+    }
 
-    void addInputLane(Lane lane){
+    private void addInputLane(Lane lane){
         inputLanes.add(lane);
     }
     
     void init(){
         initInputLanesRandomTable();
     }
-    
-    
-    
-    private double computeMaxFlow(Config config){
-        return config.maxFowPerLane * 2;
-    }
-
-    private int getLaneCount() {
-        int count = 0;
-        for (Map.Entry<SimulationNode, Link> entry : linksMappedByNextNodes.entrySet()) {
-            SimulationNode key = entry.getKey();
-            Link link = entry.getValue();
-            count += link.getLaneCount();
-        }
-        return count;
-    }
-
-    private int computeTickLength() {
-        return (int) Math.round(batchSize / maxFlow * 1000);
-    }
 
     @Override
-    protected void handleTick() {
+    protected void serveLanes() {
         Lane chosenLane = null;
+        
+        if(node.id == 280){
+            int a = 1;
+        }
         
         List<Lane> nonEmptyLanes = new LinkedList();
         for (Lane inputLane : inputLanes) {
@@ -104,21 +92,53 @@ public class Crossroad  extends Connection{
         }
         
         tryToServeLane(chosenLane);
+        
+        // wake up after some time
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, 
+                congestionModel.config.congestionModel.connectionTickLength);
+    }
+    
+    
+    
+    
+    private double computeMaxFlow(Config config){
+        return config.congestionModel.maxFlowPerLane * 2;
+    }
+
+    private int getLaneCount() {
+        int count = 0;
+        for (Map.Entry<SimulationNode, Link> entry : linksMappedByNextNodes.entrySet()) {
+            SimulationNode key = entry.getKey();
+            Link link = entry.getValue();
+            count += link.getLaneCount();
+        }
+        return count;
+    }
+
+    private int computeTickLength() {
+        return (int) Math.round(batchSize / maxFlow * 1000);
     }
 
     private void initInputLanesRandomTable() {
-        final double step = 1 / inputLanes.size();
+        final double step = (double) 1 / inputLanes.size();
         double key = step;
         
         for (Lane inputLane : inputLanes) {
-            inputLanesRandomTable.put(key, inputLane);
+            inputLanesChoosingTable.add(new ChoosingTableData(key, inputLane));
             key += step;
         }
     }
 
     private Lane chooseLane() {
         double random = Math.random();
-        return inputLanesRandomTable.get(random);
+        Lane chosenLane = null;
+        for (ChoosingTableData choosingTableData : inputLanesChoosingTable) {
+            if(random <= choosingTableData.threshold){
+                chosenLane = choosingTableData.inputLane;
+                break;
+            }
+        }
+        return chosenLane;
     }
 
     private void tryToServeLane(Lane chosenLane) {
@@ -146,8 +166,20 @@ public class Crossroad  extends Connection{
     void addNextLink(Link link, Lane inputLane, Connection targetConnection) {
         outputLinksMappedByInputLanes.put(inputLane, link);
         outputLinksMappedByNextConnections.put(targetConnection, link);
+        addInputLane(inputLane);
     }
 	
-	
+	private final class ChoosingTableData{
+        final double threshold;
+        
+        final Lane inputLane;
+
+        public ChoosingTableData(double threshold, Lane inputLane) {
+            this.threshold = threshold;
+            this.inputLane = inputLane;
+        }
+        
+        
+    }   
 
 }

@@ -27,9 +27,19 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
     }
     
     
+    
+    
 
     public Vehicle(String id, Node position) {
         super(id, position);
+    }
+
+    @Override
+    public void setPosition(Node position) {
+        super.setPosition(position);
+        if(driver != null){
+            driver.setPosition(position);
+        }
     }
 
     

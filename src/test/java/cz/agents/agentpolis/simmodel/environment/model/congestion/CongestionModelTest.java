@@ -60,7 +60,7 @@ public class CongestionModelTest {
             assertNotNull(connection);
             
             if(connection instanceof Crossroad){
-                
+                checkCrossroad((Crossroad) connection);
             }
             else{
                 checkConnection(connection);
@@ -97,5 +97,9 @@ public class CongestionModelTest {
 
     private void checkConnection(Connection connection) {
         assertNotNull(connection.getNextLink((Connection) null));
+    }
+
+    private void checkCrossroad(Crossroad crossroad) {
+        assertTrue(crossroad.getNumberOfInputLanes() > 0);
     }
 }

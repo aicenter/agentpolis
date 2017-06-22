@@ -17,7 +17,7 @@ import org.junit.Test;
  *
  * @author fido
  */
-public class TestTenNodesCompleteGrph {
+public class TestTenNodesCompleteGraph {
     
     @Test 
     public void run() throws Throwable{

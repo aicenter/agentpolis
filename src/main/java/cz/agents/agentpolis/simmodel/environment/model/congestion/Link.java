@@ -5,12 +5,16 @@
  */
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
+import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -19,12 +23,18 @@ import java.util.Map;
 public class Link {
 //    private List<Lane> lanes;
     
+    private final CongestionModel congestionModel;
+    
     /**
      * Lanes mapped by next nodes
      */
     private final Map<SimulationNode,Lane> lanesMappedByNodes;
     
     private final SimulationEdge edge;
+    
+    final SimulationNode toNode;
+    
+    final SimulationNode fromNode;
 
 	public SimulationEdge getEdge() {
 		return edge;
@@ -33,8 +43,12 @@ public class Link {
     
  
 
-    public Link(SimulationEdge edge) {
+    public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode, 
+            SimulationNode targetNode) {
+        this.congestionModel = congestionModel;
         this.edge = edge;
+        this.toNode = targetNode;
+        this.fromNode = fromNode;
         this.lanesMappedByNodes = new HashMap<>();
     }
     
@@ -53,13 +67,23 @@ public class Link {
         return lanesMappedByNodes.get(node);
     }
     
-    void startDriving(VehicleTripData vehicleData){
+    void startDriving(VehicleTripData vehicleData, long delay){
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        lanesMappedByNodes.get(nextLocation).startDriving(vehicleData);
+        lanesMappedByNodes.get(nextLocation).startDriving(vehicleData, delay);
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {
         lanesMappedByNodes.put(nextNode, lane);
+    }
+
+    Lane getLaneForTripEnd() {
+        Entry<SimulationNode,Lane> randomEntry 
+                = CollectionUtil.getRandomEntryFromMap(lanesMappedByNodes, congestionModel.getRandom());
+        return randomEntry.getValue();
+    }
+    
+    long computeDelay(PhysicalVehicle vehicle) {
+        return MoveUtil.computeDuration(vehicle.getVelocity(), getLength());
     }
 }

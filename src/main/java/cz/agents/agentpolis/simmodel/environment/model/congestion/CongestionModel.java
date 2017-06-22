@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 
 /**
  *
@@ -38,11 +40,30 @@ public class CongestionModel {
     
     protected final Map<SimulationEdge,Link> linksMappedByEdges;
     
-    private final Config config;
+    final Config config;
     
     private final SimulationProvider simulationProvider;
     
-    private final TimeProvider timeProvider;
+    final TimeProvider timeProvider;
+    
+    private final Random random;
+    
+    
+    private boolean queueHandlingStarted;
+
+    Random getRandom() {
+        return random;
+    }
+
+    TimeProvider getTimeProvider() {
+        return timeProvider;
+    }
+    
+    
+    
+    
+    
+    
 
     @Inject
     public CongestionModel(TransportNetworks transportNetworks, Config config, 
@@ -55,30 +76,47 @@ public class CongestionModel {
         connectionsMappedByNodes = new HashMap<>();
         linksMappedByEdges = new HashMap<>();
 		links = new LinkedList<>();
-        buildCongestionGraph();
+        queueHandlingStarted = false;
+//        buildCongestionGraph();
+        random = new Random(config.congestionModel.randomSeed);
     }
 
-    private void buildCongestionGraph() throws ModelConstructionFailedException {
+    @Inject
+    public void buildCongestionGraph() throws ModelConstructionFailedException {
         buildConnections(graph.getAllNodes());
         buildLinks(graph.getAllEdges());
 		buildLanes();
+        initCrossroads();
     }
     
     public void drive(PhysicalVehicle vehicle, Trip<SimulationNode> trip){
+//        if(!queueHandlingStarted){
+//            startQueeHandling();
+//        }
         VehicleTripData vehicleData = new VehicleTripData(vehicle, trip);
         SimulationNode startLocation = trip.getAndRemoveFirstLocation();
         Connection startConnection = connectionsMappedByNodes.get(startLocation);
         startConnection.startDriving(vehicleData);        
     }
+    
+//    private void startQueeHandling(){
+//        for (Entry<SimulationNode,Connection> entry : connectionsMappedByNodes.entrySet()) {
+//            if(entry.getKey().id == 280){
+//                int a = 1;
+//            }
+//            entry.getValue().start();
+//        }
+//        queueHandlingStarted = true;
+//    }
 
     private void buildConnections(Collection<SimulationNode> allNodes) {
         for (SimulationNode node : allNodes) {
-			if(graph.getInEdges(node).size() > 2){
-				Crossroad crossroad = new Crossroad(config, simulationProvider, this);
+			if(graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1){
+				Crossroad crossroad = new Crossroad(config, simulationProvider, this, node);
 				connectionsMappedByNodes.put(node, crossroad);
 			}
 			else{
-				Connection connection = new Connection(simulationProvider, config, this);
+				Connection connection = new Connection(simulationProvider, config, this, node);
 				connectionsMappedByNodes.put(node, connection);
 			}
         }
@@ -86,7 +124,7 @@ public class CongestionModel {
 
     private void buildLinks(Collection<SimulationEdge> allEdges) {
         for (SimulationEdge edge : allEdges) {
-			Link link = new Link(edge);
+			Link link = new Link(this, edge, graph.getNode(edge.fromId), graph.getNode(edge.toId));
 			links.add(link);
             linksMappedByEdges.put(edge, link);
 		}
@@ -94,26 +132,42 @@ public class CongestionModel {
 
 	private void buildLanes() throws ModelConstructionFailedException {
 		for (Link link : links) {
-			SimulationNode targetNode = graph.getNode(link.getEdge().toId);
-			List<SimulationEdge> outEdges = graph.getOutEdges(targetNode);
-            if(outEdges.isEmpty()){
+//			SimulationNode fromNode = graph.getNode(link.getEdge().fromId);
+            SimulationNode toNode=  graph.getNode(link.getEdge().toId);
+			List<SimulationEdge> nextEdges = graph.getOutEdges(toNode);
+            
+            //dead end test
+            if(nextEdges.isEmpty()){
                 throw new ModelConstructionFailedException("Dead end detected - this is prohibited in road graph");
             }
-            Connection targetConnection = connectionsMappedByNodes.get(targetNode);
-            for (SimulationEdge outEdge : outEdges) {
+            
+//            Connection fromConnection = connectionsMappedByNodes.get(fromNode);
+            Connection toConnection = connectionsMappedByNodes.get(toNode);
+            for (SimulationEdge outEdge : nextEdges) {
                 SimulationNode nextNode = graph.getNode(outEdge.toId);
                 Lane newLane = new Lane(link, link.getLength(), timeProvider);
                 link.addLane(newLane, nextNode);
                 Link outLink = linksMappedByEdges.get(outEdge);
-                if(targetConnection instanceof Crossroad){
-                    ((Crossroad) targetConnection).addNextLink(outLink, newLane, connectionsMappedByNodes.get(nextNode));
+                if(toConnection instanceof Crossroad){
+                    ((Crossroad) toConnection).addNextLink(outLink, newLane, connectionsMappedByNodes.get(nextNode));
                 }
                 else{
-                    targetConnection.setOutLink(outLink);
+                    toConnection.setOutLink(outLink, newLane);
                 }
             }
 		}
 	}
+
+    private void initCrossroads() {
+        for (Entry<SimulationNode, Connection> entry : connectionsMappedByNodes.entrySet()) {
+            SimulationNode key = entry.getKey();
+            Connection connection = entry.getValue();
+            if(connection instanceof Crossroad){
+                ((Crossroad) connection).init();
+            }
+        }
+    }
+    
     
     
 }

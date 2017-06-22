@@ -17,8 +17,9 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionTestType;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
-import cz.agents.agentpolis.simulator.visualization.visio.Bounds;
+//import cz.agents.agentpolis.simulator.visualization.visio.Bound;
 import cz.agents.agentpolis.utils.config.ConfigReaderException;
+import cz.agents.basestructures.BoundingBox;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
@@ -80,13 +81,17 @@ public class DriveTest {
         CongestedDriveFactory congestedDriveFactory = injector.getInstance(CongestedDriveFactory.class);
         
         PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle", CongestionTestType.TEST_VEHICLE, 5, 2, 
-                EGraphType.HIGHWAY, graph.getNode(0));
+                EGraphType.HIGHWAY, graph.getNode(0), 15);
         
         DriveAgent driveAgent = new DriveAgent("Test driver", graph.getNode(0));
         
-        creator.startSimulation();
+        injector.getInstance(DriveAgentStorage.class).addEntity(driveAgent);
         
         congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
+        
+        creator.startSimulation();
+        
+        
 
 //        List<TimeTrip<Long>> osmNodesList;
 //        try {
@@ -114,7 +119,7 @@ public class DriveTest {
         graphs.put(EGraphType.HIGHWAY, graph);
         
         Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
-        Bounds bounds = computeBounds(nodes.values());
+        BoundingBox bounds = computeBounds(nodes.values());
 
         return new MapData(bounds, graphs, nodes);
     }
@@ -137,47 +142,22 @@ public class DriveTest {
         return nodesFromAllGraphs;
     }
     
-    private Bounds computeBounds(Collection<SimulationNode> nodes) {
-
+    private BoundingBox computeBounds(Collection<SimulationNode> nodes) {
         double latMin = Double.POSITIVE_INFINITY;
-        int latMinProjected = 0;
-
         double latMax = Double.NEGATIVE_INFINITY;
-        int latMaxProjected = 0;
 
         double lonMin = Double.POSITIVE_INFINITY;
-        int lonMinProjected = 0;
-
         double lonMax = Double.NEGATIVE_INFINITY;
-        int lonMaxProjected = 0;
-
-        Node latMinNode = null;
-        Node latMaxNode = null;
-        Node lonMinNode = null;
-        Node lonMaxNode = null;
 
         for (Node node : nodes) {
             double lat = node.getLatitude();
             double lon = node.getLongitude();
 
-            if (lat < latMin) {
-                latMin = lat;
-                latMinNode = node;
-            } else if (lat > latMax) {
-                latMax = lat;
-                latMaxNode = node;
-            }
-            if (lon < lonMin) {
-                lonMin = lon;
-                lonMinNode = node;
-            } else if (lon > lonMax) {
-                lonMax = lon;
-                lonMaxNode = node;
-            }
-
+            if (lat < latMin) latMin = lat;
+            else if (lat > latMax) latMax = lat;
+            if (lon < lonMin) lonMin = lon;
+            else if (lon > lonMax) lonMax = lon;
         }
-        GPSLocation minNode = new GPSLocation(latMinNode.getLatitude(), lonMinNode.getLongitude(), latMinNode.getLatProjected(), lonMinNode.getLonProjected());
-        GPSLocation maxNode = new GPSLocation(latMaxNode.getLatitude(), lonMaxNode.getLongitude(), latMaxNode.getLatProjected(), lonMaxNode.getLonProjected());
-        return new Bounds(minNode, maxNode);
+        return new BoundingBox((int) (lonMin * 1E6), (int) (latMin * 1E6), (int) (lonMax * 1E6), (int) (latMax * 1E6));
     }
 }

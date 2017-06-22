@@ -17,17 +17,17 @@ public class PhysicalVehicle extends Vehicle{
     private final int vehiclePassengerCapacity; // number of passenger, including driver
     private final EntityType vehicleType;
     private final GraphType usingGraphTypeForMoving;
+    
+    private final double maxVelocity;
 
-    public PhysicalVehicle(String vehicleId,            
-            EntityType type, 
-            double lengthInMeters,
-            int vehiclePassengerCapacity, 
-            GraphType usingGraphTypeForMoving, Node position) {
+    public PhysicalVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity, 
+            GraphType usingGraphTypeForMoving, Node position, double maxVelocity) {
         super(vehicleId, position);
         this.lengthInMeters = lengthInMeters;
         this.vehiclePassengerCapacity = vehiclePassengerCapacity;
         this.vehicleType = type;
         this.usingGraphTypeForMoving = usingGraphTypeForMoving;
+        this.maxVelocity = maxVelocity;
     }
     
     @Override
@@ -54,7 +54,7 @@ public class PhysicalVehicle extends Vehicle{
 
     @Override
     public double getVelocity() {
-        return 0;
+        return maxVelocity;
     }
 
 }

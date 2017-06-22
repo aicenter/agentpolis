@@ -8,6 +8,7 @@ package cz.agents.agentpolis.simmodel.agent;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.agents.basestructures.Node;
 
 /**
  *
@@ -20,5 +21,7 @@ public interface Driver<V extends Vehicle> extends MovingAgent{
     public void startDriving(V vehicle);
     
     public void endDriving();
+    
+    public void setPosition(Node position);
 
 }
