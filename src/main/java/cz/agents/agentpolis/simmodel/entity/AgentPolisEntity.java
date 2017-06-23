@@ -2,6 +2,7 @@ package cz.agents.agentpolis.simmodel.entity;
 
 import com.google.inject.Inject;
 import cz.agents.agentpolis.siminfrastructure.description.Description;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.entity.Entity;
 import cz.agents.alite.common.event.typed.AliteEntity;
 import cz.agents.alite.common.event.typed.TypedSimulation;
@@ -16,20 +17,20 @@ public abstract class AgentPolisEntity extends AliteEntity implements Descriptio
     
     private final String id;
     
-    private Node position;
+    private SimulationNode position;
 
-    public Node getPosition() {
+    public SimulationNode getPosition() {
         return position;
     }
 
-    public void setPosition(Node position) {
+    public void setPosition(SimulationNode position) {
         this.position = position;
     }
     
     
     
     
-    public AgentPolisEntity(String id, Node position) {
+    public AgentPolisEntity(String id, SimulationNode position) {
         this.id = id;        
         this.position = position;
     }

@@ -12,6 +12,7 @@ import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.agent.TransportEntity;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Node;
@@ -25,7 +26,7 @@ import java.util.List;
 public class VehicleMove<A extends Agent & Driver> extends Move<A> {
 
     public VehicleMove(ActivityInitializer activityInitializer,
-                       TypedSimulation eventProcessor, A agent, Edge edge, Node from, Node to) {
+                       TypedSimulation eventProcessor, A agent, Edge edge, SimulationNode from, SimulationNode to) {
         super(activityInitializer, eventProcessor, agent, edge, from, to);
 
     }

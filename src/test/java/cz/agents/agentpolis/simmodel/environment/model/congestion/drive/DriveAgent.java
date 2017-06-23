@@ -12,6 +12,7 @@ import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionTestType;
 import cz.agents.basestructures.Node;
 
@@ -25,9 +26,9 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
     
     private PhysicalVehicle drivenCar;
     
-    private Node targetNode;
+    private SimulationNode targetNode;
 
-    public DriveAgent(String agentId, Node position) {
+    public DriveAgent(String agentId, SimulationNode position) {
         super(agentId, position);
     }
 
@@ -61,12 +62,12 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
     
 
     @Override
-    public void setTargetNode(Node targetNode) {
+    public void setTargetNode(SimulationNode targetNode) {
         this.targetNode = targetNode;
     }
 
     @Override
-    public Node getTargetNode() {
+    public SimulationNode getTargetNode() {
         return targetNode;
     }
 

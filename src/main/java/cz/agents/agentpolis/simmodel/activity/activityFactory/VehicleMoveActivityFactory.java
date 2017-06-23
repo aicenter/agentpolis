@@ -12,6 +12,7 @@ import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Move;
 import cz.agents.agentpolis.simmodel.activity.VehicleMove;
 import cz.agents.agentpolis.simmodel.agent.Driver;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Node;
@@ -29,7 +30,7 @@ public class VehicleMoveActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & Driver> Move<AG> create(AG agent, Edge edge, Node from, Node to) {
+    public <AG extends Agent & Driver> Move<AG> create(AG agent, Edge edge, SimulationNode from, SimulationNode to) {
         return new VehicleMove<>(activityInitializer,
                 eventProcessor, agent, edge, from, to);
     }

@@ -21,7 +21,7 @@ import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionMode
  * @author fido
  * @param <A>
  */
-public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends Activity<A>{
+public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends Activity<A> implements PhysicalVehicleDrive{
     
     private final CongestionModel congestionModel;
     

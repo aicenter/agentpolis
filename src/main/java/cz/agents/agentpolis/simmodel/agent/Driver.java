@@ -22,6 +22,6 @@ public interface Driver<V extends Vehicle> extends MovingAgent{
     
     public void endDriving();
     
-    public void setPosition(Node position);
+    public void setPosition(SimulationNode position);
 
 }

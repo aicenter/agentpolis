@@ -115,21 +115,21 @@ public class TripsUtil {
         return finalTrip;
     }
 
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId) {
+    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId) {
         return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
     }
 
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
+    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
         return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
     }
 
-    public Trip<Node> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
+    public Trip<SimulationNode> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
         int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
         int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
         return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
     }
 
-    public Trip<Node> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
+    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
         if (startNodeId == targetNodeId) {
             try {
                 throw new Exception("Start node cannot be the same as end node");
@@ -175,10 +175,10 @@ public class TripsUtil {
     }
 
 
-    public int getTripLengthInMeters(Trip<Node> trip) {
+    public int getTripLengthInMeters(Trip<? extends Node> trip) {
         int length = 0;
 
-        LinkedList<Node> locations = trip.getLocations();
+        LinkedList<? extends Node> locations = trip.getLocations();
         if (locations.size() >= 2) {
             int startNodeId = locations.getFirst().id;
             for (int i = 1; i < locations.size(); i++) {

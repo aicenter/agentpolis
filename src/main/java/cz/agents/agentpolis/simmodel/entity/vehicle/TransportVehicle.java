@@ -7,6 +7,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 
 import cz.agents.agentpolis.simmodel.agent.TransportEntity;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Node;
 
 import java.util.Iterator;
@@ -38,7 +39,7 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
         entityToDropOff.setTransportingEntity(null);
     }
 
-    public TransportVehicle(String id, Node position) {
+    public TransportVehicle(String id, SimulationNode position) {
         super(id, position);
         transportedEntities = new LinkedList<>();
     }
