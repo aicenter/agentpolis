@@ -15,6 +15,9 @@ import java.util.LinkedList;
  */
 public class Lane {
     
+    private static final int MIN_LINK_CAPACITY_IN_METERS = 5;
+    
+    
     private final double linkCapacityInMeters;
     
     private final LinkedList<VehicleQueueData> queue;
@@ -39,7 +42,8 @@ public class Lane {
     
     public Lane(Link link, double linkCapacityInMeters, TimeProvider timeProvider) {
         this.link = link;
-        this.linkCapacityInMeters = linkCapacityInMeters;
+        this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS 
+                ? linkCapacityInMeters : MIN_LINK_CAPACITY_IN_METERS;
         this.timeProvider = timeProvider;
         this.queue = new LinkedList<>();
     }

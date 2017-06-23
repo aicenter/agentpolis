@@ -16,7 +16,7 @@ import cz.agents.basestructures.Node;
  * @param <V>
  */
 public interface Driver<V extends Vehicle> extends MovingAgent{
-    public Vehicle getVehicle();
+    public V getVehicle();
     
     public void startDriving(V vehicle);
     

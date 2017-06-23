@@ -63,7 +63,7 @@ public abstract class Agent extends AgentPolisEntity {
      * @param activity Activity that just finished.
      */
     protected void onActivityFinish(Activity activity) {
-        Log.log(this, Level.FINE, "Activity finished: {0}", currentActivity);
+        Log.log(this, Level.FINER, "Activity finished: {0}", currentActivity);
     }
 
     /**

@@ -70,7 +70,15 @@ public class Link {
     void startDriving(VehicleTripData vehicleData, long delay){
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        lanesMappedByNodes.get(nextLocation).startDriving(vehicleData, delay);
+        Lane nextLane = null;
+        if(trip.isEmpty()){
+            nextLane = getLaneForTripEnd();
+            vehicleData.setTripFinished(true);
+        }
+        else{
+            nextLane = getLaneByNextNode(nextLocation);
+        }
+        nextLane.startDriving(vehicleData, delay);
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {
