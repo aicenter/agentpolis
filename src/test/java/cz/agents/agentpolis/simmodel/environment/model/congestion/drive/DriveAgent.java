@@ -43,7 +43,7 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
     }
 
     @Override
-    public Vehicle getVehicle() {
+    public PhysicalVehicle getVehicle() {
         return drivenCar;
     }
 

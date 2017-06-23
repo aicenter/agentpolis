@@ -68,10 +68,6 @@ public class Crossroad  extends Connection{
     protected void serveLanes() {
         Lane chosenLane = null;
         
-        if(node.id == 280){
-            int a = 1;
-        }
-        
         List<Lane> nonEmptyLanes = new LinkedList();
         for (Lane inputLane : inputLanes) {
             if(inputLane.hasWaitingVehicles()){
