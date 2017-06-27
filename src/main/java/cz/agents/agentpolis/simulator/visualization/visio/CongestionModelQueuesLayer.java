@@ -57,16 +57,16 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
             }
             Point2d from = positionUtil.getCanvasPosition(graph.getNode(edge.fromId));
             Point2d to = positionUtil.getCanvasPosition(graph.getNode(edge.toId));
-            System.out.println(length);
             Vector2d vector = new Vector2d(to.x - from.x, to.y - from.y);
-
             vector.scale(length / edgeLength);
-            System.out.println(vector);
 
             Line2D line2d = new Line2D.Double(to.x - vector.x, to.y - vector.y, to.x, to.y);
             if (line2d.intersects(drawingRectangle)) {
                 canvas.draw(line2d);
             }
+            canvas.setColor(Color.BLACK);
+            canvas.drawString(length + "m", (float) (to.x - vector.x), (float) (to.y - vector.y));
+            canvas.setColor(Color.LIGHT_GRAY);
         }
 
     }
