@@ -11,8 +11,9 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -93,5 +94,9 @@ public class Link {
     
     long computeDelay(PhysicalVehicle vehicle) {
         return MoveUtil.computeDuration(vehicle.getVelocity(), getLength());
+    }
+
+    public Collection<Lane> getLanes() {
+        return lanesMappedByNodes.values();
     }
 }

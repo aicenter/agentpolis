@@ -167,7 +167,9 @@ public class CongestionModel {
             }
         }
     }
-    
-    
-    
+
+
+    public List<Link> getLinks() {
+        return links;
+    }
 }
