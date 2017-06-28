@@ -47,7 +47,8 @@ public class Crossroad  extends Connection{
         batchSize = config.congestionModel.batchSize;
         laneCount = getLaneCount();
         maxFlow = computeMaxFlow(config);
-        tickLength = computeTickLength();
+//        tickLength = computeTickLength();
+        tickLength =congestionModel.config.congestionModel.connectionTickLength;
     }
     
     
@@ -91,7 +92,7 @@ public class Crossroad  extends Connection{
         
         // wake up after some time
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, 
-                congestionModel.config.congestionModel.connectionTickLength);
+                tickLength);
     }
     
     
