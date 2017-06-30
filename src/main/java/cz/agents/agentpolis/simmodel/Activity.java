@@ -30,6 +30,17 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 */
     private Activity childActivity;
     
+    private boolean failed;
+    
+    
+    
+
+    public boolean failed() {
+        return failed;
+    }
+    
+    
+    
 	/**
 	 * Agent getter.
 	 * @return Returns agent who performs this activity.
@@ -48,6 +59,7 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	public Activity(ActivityInitializer activityInitializer, A agent) {
 		this.agent = agent;
         init(activityInitializer.getSimulation());
+        failed = false;
 	}
 
 
@@ -87,7 +99,8 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 * If something gets wrong in your activity that cannot be fixed, it should call this method.
 	 * @param reason Reason of the failure
 	 */
-	protected final void fail(String reason){
+    protected final void fail(String reason){
+        failed = true;
         agent.onActionFailed(this, reason);
     }
 	
