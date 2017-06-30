@@ -20,7 +20,8 @@ public class Lane {
 
     private final double linkCapacityInMeters;
 
-    private final LinkedList<VehicleQueueData> queue;
+    private final LinkedList<VehicleQueueData> drivingLaneQueue;
+    private final LinkedList<VehicleQueueData> waitingQueue;
 
     final Link link;
 
@@ -32,6 +33,7 @@ public class Lane {
     private Link nextLink;
 
     private double currentlyUsedCapacityInMeters;
+    private double waitingQueueInMeters;
 
 
     public Link getNextLink() {
@@ -44,28 +46,41 @@ public class Lane {
         this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS
                 ? linkCapacityInMeters : MIN_LINK_CAPACITY_IN_METERS;
         this.timeProvider = timeProvider;
-        this.queue = new LinkedList<>();
+        this.drivingLaneQueue = new LinkedList<>();
+        this.waitingQueue = new LinkedList<>();
     }
 
 
     void removeFromTop(VehicleTripData vehicleData) {
         currentlyUsedCapacityInMeters -= vehicleData.getVehicle().getLength();
-        queue.remove();
+        waitingQueueInMeters -= vehicleData.getVehicle().getLength();
+        waitingQueue.remove();
     }
 
     VehicleTripData getFirstWaitingVehicle() {
-        return queue.getFirst().getVehicleTripData();
+        return waitingQueue.getFirst().getVehicleTripData();
     }
 
     private boolean isEmpty() {
-        return queue.isEmpty();
+        return drivingLaneQueue.isEmpty() && waitingQueue.isEmpty();
     }
 
     boolean hasWaitingVehicles() {
-        if (isEmpty()) {
-            return false;
+
+        updateWaitingQueue();
+        return !waitingQueue.isEmpty();
+
+    }
+
+    private void updateWaitingQueue() {
+        long currentTime = timeProvider.getCurrentSimTime();
+        while (!drivingLaneQueue.isEmpty() && currentTime >= drivingLaneQueue.peek().getMinPollTime()) {
+            VehicleQueueData vehicleQueueData = drivingLaneQueue.pollFirst();
+            VehicleTripData vehicleTripData = vehicleQueueData.getVehicleTripData();
+            waitingQueue.addLast(vehicleQueueData);
+            waitingQueueInMeters += vehicleTripData.getVehicle().getLength();
+
         }
-        return timeProvider.getCurrentSimTime() >= queue.peek().getMinPollTime();
     }
 
     void startDriving(VehicleTripData vehicleTripData, long delay) {
@@ -87,7 +102,7 @@ public class Lane {
 //        vehicleTripData.getVehicle().setPosition(link.fromNode);
 //        driver.setDelayData(new DelayData(delay, timeProvider.getCurrentSimTime()));
         currentlyUsedCapacityInMeters += vehicleTripData.getVehicle().getLength();
-        queue.add(new VehicleQueueData(vehicleTripData, minExitTime));
+        drivingLaneQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
     }
 
     boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
@@ -102,6 +117,10 @@ public class Lane {
     }
 
     public double getQueueLength() {
+        return waitingQueueInMeters;
+    }
+
+    public double getUsedLaneCapacityInMeters() {
         return currentlyUsedCapacityInMeters;
     }
 }
