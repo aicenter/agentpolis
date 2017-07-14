@@ -38,6 +38,6 @@ public final class MoveUtil {
     }
 
     public static double computeAgentOnEdgeVelocity(double driverMaximalVelocity, float allowedMaxSpeedOnRoad) {
-        return Double.min(driverMaximalVelocity,allowedMaxSpeedOnRoad);
+        return Double.min(driverMaximalVelocity, allowedMaxSpeedOnRoad);
     }
 }

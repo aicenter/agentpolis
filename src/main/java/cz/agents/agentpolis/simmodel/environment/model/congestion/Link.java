@@ -87,11 +87,32 @@ public class Link {
     }
 
     long computeDelay(PhysicalVehicle vehicle) {
-        double velocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), edge.getAllowedMaxSpeedInMpS());
-        return MoveUtil.computeDuration(velocity, getLength());
+        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), edge.getAllowedMaxSpeedInMpS());
+        double usedCapacity = getUsedCapacityInMeters();
+        double capacity = edge.getLanesCount() * edge.length;
+        double level = usedCapacity / capacity;
+
+        double speed = freeFlowVelocity * interpolateSquared(1, 0, 1 - level);
+        double duration = edge.length / speed;
+        long durationInMs = (long) (1000 * duration);
+        return durationInMs;
     }
 
     public Collection<Lane> getLanes() {
         return lanesMappedByNodes.values();
+    }
+
+    public double getUsedCapacityInMeters() {
+        double usedCapacity = 0;
+        for (Lane lane : getLanes()) {
+            usedCapacity += lane.getUsedLaneCapacityInMeters();
+        }
+        return usedCapacity;
+    }
+
+    private double interpolateSquared(double from, double to, double x) {
+        double v = x * x;
+        double y = (from * v) + (to * (1 - v));
+        return y;
     }
 }
