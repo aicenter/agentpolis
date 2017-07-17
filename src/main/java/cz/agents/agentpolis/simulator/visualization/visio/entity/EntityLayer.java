@@ -110,7 +110,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         }
     }
     
-    private void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
+    protected void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor();
         canvas.setColor(color);
         int radius = getEntityDrawRadius();
