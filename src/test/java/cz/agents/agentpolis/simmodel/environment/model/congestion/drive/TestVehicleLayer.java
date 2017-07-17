@@ -8,17 +8,15 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.EntityLayer;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+
 import javax.vecmath.Point2d;
+import java.awt.*;
 
 /**
- *
  * @author fido
  */
 @Singleton
-public class TestVehicleLayer extends EntityLayer<DriveAgent>{
+public class TestVehicleLayer extends EntityLayer<DriveAgent> {
 
     @Inject
     public TestVehicleLayer(DriveAgentStorage driveAgentStorage) {
@@ -31,7 +29,7 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
     }
 
     @Override
-    protected Color getEntityDrawColor() {
+    protected Color getEntityDrawColor(DriveAgent driveAgent) {
         return Color.CYAN;
     }
 
@@ -45,7 +43,6 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 //        super.drawEntity(entity, agentPosition, canvas, dim); 
 //        canvas.fillOval(0, 0, 10, 10);
 //    }
-    
-    
-    
+
+
 }

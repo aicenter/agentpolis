@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.agentpolis.config.Config;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.Message;
@@ -33,6 +34,8 @@ public class Connection extends EventHandlerAdapter {
 
     private long timeOfLastWakeUp;
 
+    protected boolean awake = false;
+
 
     public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel,
                       SimulationNode node) {
@@ -51,10 +54,14 @@ public class Connection extends EventHandlerAdapter {
                 - congestionModel.timeProvider.getCurrentSimTime();
 
         if (remainingTimeToSleep > 0) {
-            simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
-                    remainingTimeToSleep);
+            if (!awake) {
+                simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
+                        remainingTimeToSleep);
+                awake = true;
+            }
             return;
         }
+
 
         serveLanes();
 
@@ -82,7 +89,7 @@ public class Connection extends EventHandlerAdapter {
 
         // wake up next connection
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLane.link.toNode);
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
+        wakeUpConnection(nextConnection, delay);
     }
 
 
@@ -117,9 +124,17 @@ public class Connection extends EventHandlerAdapter {
         Link nextLink = getNextLink(nextConnection);
 
         long delay = computeDelayAndSetVehicleData(vehicleData, nextLink);
-
+        System.out.println(delay);
+        if (delay <= 0) {
+            Log.error(this,"Delay "+delay+" <= 0 !!!, vehicleData:" + vehicleData + ", nextLink: "+nextLink);
+        }
         nextLink.startDriving(vehicleData, delay);
+        wakeUpConnection(nextConnection, delay);
 
+
+    }
+
+    private void wakeUpConnection(Connection nextConnection, long delay) {
         // wake up next connection
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
     }

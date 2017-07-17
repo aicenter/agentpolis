@@ -74,6 +74,7 @@ public class Crossroad extends Connection {
 
             if (nonEmptyLanes.isEmpty()) {
                 // not sending tick event - performance reasons, the crossroad is woken up when a vehicle arrives
+                awake = false;
                 return;
             }
             if (nonEmptyLanes.size() == 1) {

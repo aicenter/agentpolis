@@ -93,7 +93,7 @@ public class Link {
         double capacity = edge.getLanesCount() * edge.length;
         double level = usedCapacity / capacity;
 
-        double speed = freeFlowVelocity * interpolateSquared(1, 0, 1 - level);
+        double speed = freeFlowVelocity * interpolateSquared(1, 0.01, 1 - level);
         double duration = edge.length / speed;
         long durationInMs = Math.max(1, (long) (1000 * duration));
         return durationInMs;
