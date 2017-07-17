@@ -66,7 +66,6 @@ public class Lane {
     }
 
     boolean hasWaitingVehicles() {
-
         updateWaitingQueue();
         return !waitingQueue.isEmpty();
 

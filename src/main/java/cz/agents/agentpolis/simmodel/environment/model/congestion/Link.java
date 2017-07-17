@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
@@ -94,7 +95,7 @@ public class Link {
 
         double speed = freeFlowVelocity * interpolateSquared(1, 0, 1 - level);
         double duration = edge.length / speed;
-        long durationInMs = (long) (1000 * duration);
+        long durationInMs = Math.max(1, (long) (1000 * duration));
         return durationInMs;
     }
 
@@ -113,6 +114,8 @@ public class Link {
     private double interpolateSquared(double from, double to, double x) {
         double v = x * x;
         double y = (from * v) + (to * (1 - v));
+        if (y < Math.min(from, to) || y > Math.max(from, to))
+            Log.error(this, y + ": value out of range (" + from + "," + to + ")!");
         return y;
     }
 }
