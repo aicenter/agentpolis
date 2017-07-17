@@ -29,7 +29,7 @@ import cz.agents.basestructures.Node;
  */
 public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
-    private final Trip<Node> trip;
+    private final Trip<SimulationNode> trip;
 
     private final PedestrianMoveActivityFactory moveActivityFactory;
 
@@ -42,13 +42,13 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
     private final int tripId;
 
 
-    private Node from;
+    private SimulationNode from;
 
-    private Node to;
+    private SimulationNode to;
 
     public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
                 PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
-                A agent, Trip<Node> trip,
+                A agent, Trip<SimulationNode> trip,
                 int tripId) {
         super(activityInitializer, agent);
         this.trip = trip;

@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.entity;
 
 import cz.agents.agentpolis.simmodel.agent.TransportEntity;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Node;
 
 /**
@@ -17,5 +18,5 @@ public interface TransportableEntity {
     
     public <T extends TransportEntity> void setTransportingEntity(T transportingEntity);
     
-    public void setPosition(Node position);
+    public void setPosition(SimulationNode position);
 }

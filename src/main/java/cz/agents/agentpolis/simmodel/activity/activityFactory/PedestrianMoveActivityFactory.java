@@ -11,10 +11,10 @@ import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.activity.Move;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
-import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Node;
 
 /**
  * @author fido
@@ -29,7 +29,7 @@ public class PedestrianMoveActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, Edge edge, Node from, Node to) {
+    public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
         return new Move<>(activityInitializer, eventProcessor, agent, edge, from, to);
     }
 }

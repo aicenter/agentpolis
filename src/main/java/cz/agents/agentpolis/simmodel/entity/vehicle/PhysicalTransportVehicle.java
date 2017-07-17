@@ -9,6 +9,7 @@ import cz.agents.agentpolis.simmodel.agent.TransportEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Node;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
     protected final List<T> transportedEntities;
     
     public PhysicalTransportVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity, 
-            GraphType usingGraphTypeForMoving, Node position, double maxVelocity) {
+            GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
         super(vehicleId, type, lengthInMeters, vehiclePassengerCapacity, usingGraphTypeForMoving, position, maxVelocity);
         transportedEntities = new LinkedList<>();
     }
@@ -44,7 +45,7 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
     }
 
     @Override
-    public void setPosition(Node position) {
+    public void setPosition(SimulationNode position) {
         super.setPosition(position); 
         for (T transportedEntity : transportedEntities) {
             transportedEntity.setPosition(position);

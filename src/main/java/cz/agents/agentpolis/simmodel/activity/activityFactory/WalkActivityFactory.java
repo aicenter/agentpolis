@@ -16,6 +16,7 @@ import cz.agents.agentpolis.simmodel.IdGenerator;
 import cz.agents.agentpolis.simmodel.activity.Walk;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
@@ -52,13 +53,13 @@ public class WalkActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<Node> trip) {
+    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<SimulationNode> trip) {
         return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
                 tripIdGenerator.getId());
     }
 
     public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Node targetPosition) {
-        Trip<Node> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
+        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
         return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
                 tripIdGenerator.getId());
     }

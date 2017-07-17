@@ -18,6 +18,7 @@ import cz.agents.agentpolis.simmodel.activity.Drive;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
@@ -54,7 +55,7 @@ public class DriveActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<Node> trip) {
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<SimulationNode> trip) {
         vehicleCheck(vehicle);
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
@@ -68,9 +69,9 @@ public class DriveActivityFactory extends ActivityFactory {
         }
     }
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
         vehicleCheck(vehicle);
-        Trip<Node> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
     }

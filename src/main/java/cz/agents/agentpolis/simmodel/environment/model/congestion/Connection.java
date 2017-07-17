@@ -70,7 +70,7 @@ public class Connection extends EventHandlerAdapter{
     
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
-        currentLane.removeFromTop();
+        currentLane.removeFromTop(vehicleData);
         
 //        long delay = nextLane.computeMinExitTime(vehicleData.getVehicle());
 //        
@@ -150,7 +150,7 @@ public class Connection extends EventHandlerAdapter{
     }
 
     private void endDriving(VehicleTripData vehicleTripData, Lane lane) {
-        lane.removeFromTop();
+        lane.removeFromTop(vehicleTripData);
         
         vehicleTripData.getVehicle().setPosition(node);
         

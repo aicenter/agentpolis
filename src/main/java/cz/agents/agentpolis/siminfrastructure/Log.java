@@ -94,4 +94,8 @@ public class Log {
     public static void debug(Object caller, String msg) {
         log(caller, Level.FINE, msg);
     }
+
+    public static void error(Object caller, String msg) {
+        log(caller, Level.SEVERE, msg);
+    }
 }

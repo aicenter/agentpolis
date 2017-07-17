@@ -32,7 +32,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private final Vehicle vehicle;
 
-    private final Trip<? extends Node> trip;
+    private final Trip<SimulationNode> trip;
 
     private final VehicleMoveActivityFactory moveActivityFactory;
 
@@ -45,13 +45,13 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     private final int tripId;
 
 
-    private Node from;
+    private SimulationNode from;
 
-    private Node to;
+    private SimulationNode to;
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
                  VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
-                 A agent, Vehicle vehicle, Trip<? extends Node> trip,
+                 A agent, Vehicle vehicle, Trip<SimulationNode> trip,
                  int tripId) {
         super(activityInitializer, agent);
         this.vehicle = vehicle;
@@ -96,6 +96,10 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
         SimulationEdge edge = graph.getEdge(from.id, to.id);
         Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
         eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
+    }
+
+    public Trip<SimulationNode> getTrip() {
+        return trip;
     }
 
 

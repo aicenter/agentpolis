@@ -1,6 +1,8 @@
 package cz.agents.agentpolis.siminfrastructure.planner.trip;
 
 import cz.agents.agentpolis.siminfrastructure.Log;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+
 import java.util.Arrays;
 
 import java.util.LinkedList;

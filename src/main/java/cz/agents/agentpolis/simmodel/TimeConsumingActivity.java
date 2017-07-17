@@ -23,20 +23,21 @@ public abstract class TimeConsumingActivity<A extends Agent> extends Activity<A>
     @Override
     void runActityLogic() {
         long delay = performPreDelayActions();
-        getEventProcessor().addEvent(new EventHandler() {
+        if(!failed()){
+            getEventProcessor().addEvent(new EventHandler() {
 
-                @Override
-                public void handleEvent(Event event) {
-                    performPostDelayActions();
-                }
+                    @Override
+                    public void handleEvent(Event event) {
+                        performPostDelayActions();
+                    }
 
-                @Override
-                public EventProcessor getEventProcessor() {
-                    return null;
-                }
+                    @Override
+                    public EventProcessor getEventProcessor() {
+                        return null;
+                    }
 
-        }, delay);
-         
+            }, delay);
+        }
     }
 
     protected abstract long performPreDelayActions();

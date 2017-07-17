@@ -11,9 +11,9 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
-import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+import cz.agents.multimodalstructures.edges.RoadEdge;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -57,7 +57,7 @@ public class ShortestPathPlanner {
                     plannerGraph.addVertex(fromPositionByNodeId);
                 }
 
-                for (Edge edge : graph.getOutEdges(node.id)) {
+                for (RoadEdge edge : graph.getOutEdges(node.id)) {
                     Integer toPositionByNodeId = edge.toId;
                     if (!addedNodes.contains(toPositionByNodeId)) {
                         addedNodes.add(toPositionByNodeId);
@@ -66,7 +66,7 @@ public class ShortestPathPlanner {
 
                     PlannerEdge plannerEdge = new PlannerEdge(graphType, fromPositionByNodeId, toPositionByNodeId);
                     plannerGraph.addEdge(fromPositionByNodeId, toPositionByNodeId, plannerEdge);
-                    plannerGraph.setEdgeWeight(plannerEdge, edge.length);
+                    plannerGraph.setEdgeWeight(plannerEdge, edge.length / edge.allowedMaxSpeedInMpS);
                 }
 
             }
@@ -92,6 +92,9 @@ public class ShortestPathPlanner {
         assert startNodeById != destinationNodeById : "Start finding position should not be the same as end finding "
                 + "position";
 
+        if (startNodeById == destinationNodeById) {
+            throw new TripPlannerException(startNodeById, destinationNodeById);
+        }
         List<PlannerEdge> plannerEdges = findShortestPath(startNodeById, destinationNodeById);
         return createTrips(plannerEdges);
     }

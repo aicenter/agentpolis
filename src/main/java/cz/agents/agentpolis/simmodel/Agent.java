@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel;
 import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.common.event.Event;
 import cz.agents.basestructures.Node;
@@ -31,7 +32,7 @@ public abstract class Agent extends AgentPolisEntity {
     }
 
 
-    public Agent(final String agentId, Node position) {
+    public Agent(final String agentId, SimulationNode position) {
         super(agentId, position);
     }
 
