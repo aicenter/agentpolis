@@ -28,24 +28,26 @@ import javax.vecmath.Point2d;
  */
 public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLayer{
     
+    private static final Double DEFAULT_TEXT_MARGIN_BOTTOM = 5.0;
+    
+    private static final Color DEFAULT_TEXT_BACKGROUND_COLOR = Color.WHITE;
+
+    
+    
+    
     private final EntityStorage<E> entityStorage;
     
     private final boolean showStackedEntitiesCount;
     
-    protected PositionUtil positionUtil;
     
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
     
+    protected PositionUtil positionUtil;
     
-    private static final Double DEFAULT_TEXT_MARGIN_BOTTOM = 5.0;
-    
-    private static final Color DEFAULT_TEXT_BACKGROUND_COLOR = Color.WHITE;
-    
-    
-    
+    protected Dimension dim;
 
     public EntityLayer(EntityStorage<E> entityStorage) {
-        this(entityStorage, false);
+        this(entityStorage, true);
     }
     
     public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
@@ -62,15 +64,17 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     
     @Override
     public void paint(Graphics2D canvas) {
-        Dimension dim = Vis.getDrawingDimension();
-        
-        if(showStackedEntitiesCount){
-            entityPositionMap = new HashMap<>();
-        }
+        dim = Vis.getDrawingDimension();
 
         EntityStorage<E>.EntityIterator entityIterator = entityStorage.new EntityIterator();
         E entity;
+        if(showStackedEntitiesCount){
+            entityPositionMap = new HashMap<>();
+        }
         while((entity = entityIterator.getNextEntity()) != null){
+            if(skipDrawing(entity)){
+                continue;
+            }
             Point2d entityPosition = getEntityPosition(entity);
             
             if(showStackedEntitiesCount){
@@ -96,10 +100,10 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected abstract Point2d getEntityPosition(E entity);
     
     protected void drawEntity(E entity, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
-        Color color = getEntityDrawColor();
+        Color color = getEntityDrawColor(entity);
         canvas.setColor(color);
         int radius = getEntityDrawRadius();
-		int width = radius * 2;
+	int width = Vis.transW(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
@@ -110,11 +114,11 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         }
     }
     
-    private void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
-        Color color = getEntityDrawColor();
+    protected void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
+        Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
         int radius = getEntityDrawRadius();
-		int width = radius * 2;
+        int width = Vis.transW(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
@@ -130,8 +134,12 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         }
     }
 
-    protected abstract Color getEntityDrawColor();
+    protected abstract Color getEntityDrawColor(E entity);
 
     protected abstract int getEntityDrawRadius();
 
+    protected boolean skipDrawing(E entity) {
+        return false;
+    }
+    
 }
