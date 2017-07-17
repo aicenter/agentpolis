@@ -18,7 +18,6 @@ import java.util.Map;
  * @author fido
  */
 public class Crossroad extends Connection {
-    private final Map<SimulationNode, Link> linksMappedByNextNodes; //TODO remove? not used?
 
     private final int tickLength;
 
@@ -37,7 +36,6 @@ public class Crossroad extends Connection {
     public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
                      SimulationNode node) {
         super(simulationProvider, config, congestionModel, node);
-        this.linksMappedByNextNodes = new HashMap<>();
         inputLanes = new LinkedList<>();
         inputLanesChoosingTable = new LinkedList<>();
         outputLinksMappedByInputLanes = new HashMap<>();

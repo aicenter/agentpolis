@@ -6,7 +6,6 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.agentpolis.config.Config;
-import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.Message;
@@ -70,15 +69,6 @@ public class Connection extends EventHandlerAdapter {
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
         currentLane.removeFromTop(vehicleData);
-
-//        long delay = nextLane.computeMinExitTime(vehicleData.getVehicle());
-//
-//        // for visio
-//        Driver driver =  vehicleData.getVehicle().getDriver();
-//        driver.setTargetNode(nextLane.link.toNode);
-//        vehicleData.getVehicle().setPosition(nextLane.link.fromNode);
-//        driver.setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
-
         long delay = computeDelayAndSetVehicleData(vehicleData, nextLane.link);
 
         nextLane.addToQue(vehicleData, delay);
@@ -115,19 +105,11 @@ public class Connection extends EventHandlerAdapter {
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
 
-//        // for visio
-//        Driver driver = vehicleData.getVehicle().getDriver();
-//        driver.setTargetNode(nextLocation);
-//        driver.setDelayData(new DelayData(minExitTime, timeProvider.getCurrentSimTime()));
-
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
         Link nextLink = getNextLink(nextConnection);
 
         long delay = computeDelayAndSetVehicleData(vehicleData, nextLink);
-        System.out.println(delay);
-        if (delay <= 0) {
-            Log.error(this,"Delay "+delay+" <= 0 !!!, vehicleData:" + vehicleData + ", nextLink: "+nextLink);
-        }
+
         nextLink.startDriving(vehicleData, delay);
         wakeUpConnection(nextConnection, delay);
 
