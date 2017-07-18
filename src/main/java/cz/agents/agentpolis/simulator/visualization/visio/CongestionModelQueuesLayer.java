@@ -51,17 +51,21 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
             SimulationEdge edge = link.getEdge();
             double length = 0;
             double usedCapacity = 0;
+            double sumLength = 0;
+            double sumUsedCapacity = 0;
             for (Lane lane : link.getLanes()) {
-                length += lane.getQueueLength();
-                usedCapacity += lane.getUsedLaneCapacityInMeters();
+                length = Math.max(length, lane.getQueueLength());
+                sumLength += lane.getQueueLength();
+                usedCapacity = Math.max(usedCapacity, lane.getUsedLaneCapacityInMeters());
+                sumUsedCapacity += lane.getUsedLaneCapacityInMeters();
             }
-            paintBarOnEdge(canvas, drawingRectangle, edge, usedCapacity, Color.LIGHT_GRAY);
-            paintBarOnEdge(canvas, drawingRectangle, edge, length, Color.RED);
+            paintBarOnEdge(canvas, drawingRectangle, edge, usedCapacity, sumUsedCapacity, Color.LIGHT_GRAY);
+            paintBarOnEdge(canvas, drawingRectangle, edge, length, sumLength, Color.RED);
         }
 
     }
 
-    private void paintBarOnEdge(Graphics2D canvas, Rectangle2D drawingRectangle, SimulationEdge edge, double length, Color color) {
+    private void paintBarOnEdge(Graphics2D canvas, Rectangle2D drawingRectangle, SimulationEdge edge, double length, double sumLength, Color color) {
         int edgeLength = edge.getLength();
         Point2d from = positionUtil.getCanvasPosition(graph.getNode(edge.fromId));
         Point2d to = positionUtil.getCanvasPosition(graph.getNode(edge.toId));
@@ -74,7 +78,7 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
             canvas.draw(line2d);
         }
         canvas.setColor(Color.BLACK);
-        canvas.drawString(length + "m", (float) (to.x - vector.x), (float) (to.y - vector.y));
+        canvas.drawString("max: "+length + "m, sum: "+sumLength, (float) (to.x - vector.x), (float) (to.y - vector.y));
         canvas.setColor(color);
     }
 }
