@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.agentpolis.config.Config;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.Message;
@@ -96,6 +97,8 @@ public class Connection extends EventHandlerAdapter {
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             transferVehicle(vehicleTripData, lane, nextLane);
             return true;
+        } else {
+            Log.debug(this, "No space in queue !!");
         }
 
         return false;
@@ -155,7 +158,6 @@ public class Connection extends EventHandlerAdapter {
 
     private long computeDelayAndSetVehicleData(VehicleTripData vehicleData, Link nextLink) {
         long delay = nextLink.computeDelay(vehicleData.getVehicle());
-
 
         // for visio
         Driver driver = vehicleData.getVehicle().getDriver();

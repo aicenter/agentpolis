@@ -6,7 +6,9 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 
 import java.util.LinkedList;
 
@@ -83,12 +85,27 @@ public class Lane {
     }
 
     void startDriving(VehicleTripData vehicleTripData, long delay) {
-//        if(queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
-        addToQue(vehicleTripData, delay);
-//        }
-//        else{
-//            addToStartHereQueue(vehicleTripData);
-//        }
+        if (queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
+            addToQue(vehicleTripData, delay);
+        } else {
+            addToStartHereQueue(vehicleTripData);
+        }
+    }
+
+    void startFromStartHereQueue() {
+        if (startHereQueue == null) return;
+        while (!startHereQueue.isEmpty() && queueHasSpaceForVehicle(startHereQueue.peekFirst().getVehicle())) {
+            VehicleTripData vehicleData = startHereQueue.pollFirst();
+            long delay = link.computeDelay(vehicleData.getVehicle());
+
+            // for visio
+            Driver driver = vehicleData.getVehicle().getDriver();
+            driver.setTargetNode(link.toNode);
+            vehicleData.getVehicle().setPosition(link.fromNode);
+            driver.setDelayData(new DelayData(delay, timeProvider.getCurrentSimTime()));
+            addToQue(vehicleData, delay);
+        }
+
     }
 
     void addToQue(VehicleTripData vehicleTripData, long delay) {
@@ -105,7 +122,8 @@ public class Lane {
     }
 
     boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
-        return linkCapacityInMeters - currentlyUsedCapacityInMeters > vehicle.getLength();
+        double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInMeters;
+        return freeCapacity > vehicle.getLength();
     }
 
     private void addToStartHereQueue(VehicleTripData vehicleTripData) {

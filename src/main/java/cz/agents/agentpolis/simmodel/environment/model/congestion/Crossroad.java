@@ -58,6 +58,7 @@ public class Crossroad extends Connection {
 
     @Override
     protected void serveLanes() {
+        tryStartDelayedVehicles();
         Lane chosenLane = null;
 
         List<Lane> nonEmptyLanes = new LinkedList();
@@ -91,6 +92,12 @@ public class Crossroad extends Connection {
         // wake up after some time
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
                 tickLength);
+    }
+
+    private void tryStartDelayedVehicles() {
+        for (Lane inputLane : inputLanes) {
+            inputLane.startFromStartHereQueue();
+        }
     }
 
     private int computeCarsPerTick() {
