@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.support.mock;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -12,7 +12,12 @@ import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionModel;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.Connection;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.Link;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.ModelConstructionFailedException;
 import cz.agents.agentpolis.simulator.SimulationProvider;
+import cz.agents.agentpolis.simulator.visualization.visio.PositionUtil;
 import java.security.ProviderException;
 
 /**
@@ -24,9 +29,9 @@ public class TestCongestionModel extends CongestionModel{
     
     @Inject
     public TestCongestionModel(TransportNetworks transportNetworks, Config config, 
-            SimulationProvider simulationProvider, TimeProvider timeProvider) throws ModelConstructionFailedException,
+            SimulationProvider simulationProvider, TimeProvider timeProvider, PositionUtil positionUtil) throws ModelConstructionFailedException,
             ProviderException {
-        super(transportNetworks, config, simulationProvider, timeProvider);
+        super(transportNetworks, config, simulationProvider, timeProvider, positionUtil);
     }
     
     public Connection getConnectionByNode(SimulationNode node){

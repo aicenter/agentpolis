@@ -7,6 +7,10 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
+import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.basestructures.GPSLocation;
 
 import java.util.LinkedList;
 
@@ -20,7 +24,7 @@ public class Lane {
 
     private final double linkCapacityInMeters;
 
-    private final LinkedList<VehicleQueueData> drivingLaneQueue;
+    private final LinkedList<VehicleQueueData> drivingQueue;
     private final LinkedList<VehicleQueueData> waitingQueue;
 
     final Link link;
@@ -46,7 +50,7 @@ public class Lane {
         this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS
                 ? linkCapacityInMeters : MIN_LINK_CAPACITY_IN_METERS;
         this.timeProvider = timeProvider;
-        this.drivingLaneQueue = new LinkedList<>();
+        this.drivingQueue = new LinkedList<>();
         this.waitingQueue = new LinkedList<>();
     }
 
@@ -55,6 +59,8 @@ public class Lane {
         currentlyUsedCapacityInMeters -= vehicleData.getVehicle().getLength();
         waitingQueueInMeters -= vehicleData.getVehicle().getLength();
         waitingQueue.remove();
+        
+        updateVehiclesInQueue(vehicleData.getVehicle().getLength());
     }
 
     VehicleTripData getFirstWaitingVehicle() {
@@ -62,7 +68,7 @@ public class Lane {
     }
 
     private boolean isEmpty() {
-        return drivingLaneQueue.isEmpty() && waitingQueue.isEmpty();
+        return drivingQueue.isEmpty() && waitingQueue.isEmpty();
     }
 
     boolean hasWaitingVehicles() {
@@ -74,8 +80,8 @@ public class Lane {
 
     private void updateWaitingQueue() {
         long currentTime = timeProvider.getCurrentSimTime();
-        while (!drivingLaneQueue.isEmpty() && currentTime >= drivingLaneQueue.peek().getMinPollTime()) {
-            VehicleQueueData vehicleQueueData = drivingLaneQueue.pollFirst();
+        while (!drivingQueue.isEmpty() && currentTime >= drivingQueue.peek().getMinPollTime()) {
+            VehicleQueueData vehicleQueueData = drivingQueue.pollFirst();
             VehicleTripData vehicleTripData = vehicleQueueData.getVehicleTripData();
             waitingQueue.addLast(vehicleQueueData);
             waitingQueueInMeters += vehicleTripData.getVehicle().getLength();
@@ -102,7 +108,7 @@ public class Lane {
 //        vehicleTripData.getVehicle().setPosition(link.fromNode);
 //        driver.setDelayData(new DelayData(delay, timeProvider.getCurrentSimTime()));
         currentlyUsedCapacityInMeters += vehicleTripData.getVehicle().getLength();
-        drivingLaneQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
+        drivingQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
     }
 
     boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
@@ -122,5 +128,54 @@ public class Lane {
 
     public double getUsedLaneCapacityInMeters() {
         return currentlyUsedCapacityInMeters;
+    }
+    
+    long computeDelay(PhysicalVehicle vehicle) {
+        CongestionModel congestionModel = link.congestionModel;
+        SimulationEdge edge = link.edge;
+        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), 
+                edge.getAllowedMaxSpeedInMpS());
+        double capacity = edge.getLanesCount() * edge.length;
+        double level = currentlyUsedCapacityInMeters / capacity;
+
+        double speed = freeFlowVelocity * interpolateSquared(1, 0, 1 - level);
+        double distance = congestionModel.positionUtil.getDistance(
+                vehicle.getPrecisePosition(), congestionModel.graph.getNode(edge.toId))
+                - vehicle.getQueueBeforeVehicleLength();
+        double duration = distance / speed;
+        long durationInMs = (long) (1000 * duration);
+        return durationInMs;
+    }
+    
+    private double interpolateSquared(double from, double to, double x) {
+        double v = x * x;
+        double y = (from * v) + (to * (1 - v));
+        return y;
+    }
+
+    private void updateVehiclesInQueue(double transferredVehicleLength) {
+        for (VehicleQueueData vehicleQueueData : waitingQueue) {
+            updateVehicle(vehicleQueueData, transferredVehicleLength);
+        }
+        
+        for (VehicleQueueData vehicleQueueData : drivingQueue) {
+            updateVehicle(vehicleQueueData, transferredVehicleLength);
+        }
+    }
+
+    private void updateVehicle(VehicleQueueData vehicleQueueData, double transferredVehicleLength) {
+        PhysicalVehicle vehicle = vehicleQueueData.getVehicleTripData().getVehicle();
+        CongestionModel congestionModel = link.congestionModel;
+        
+        // set que before vehicle
+        vehicle.setQueueBeforeVehicleLength(vehicle.getQueueBeforeVehicleLength() - transferredVehicleLength);
+        
+        // change position to current interpolated position
+        GPSLocation currentInterpolatedLocation = link.congestionModel.getPositionInterpolatedForVehicle(vehicle);
+        vehicle.setPrecisePosition(currentInterpolatedLocation);
+        
+        // create new delay
+        long delay = computeDelay(vehicle);
+        vehicle.getDriver().setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
     }
 }

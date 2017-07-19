@@ -7,8 +7,6 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 
@@ -23,14 +21,14 @@ import java.util.Map.Entry;
 public class Link {
 //    private List<Lane> lanes;
 
-    private final CongestionModel congestionModel;
+    final CongestionModel congestionModel;
 
     /**
      * Lanes mapped by next nodes
      */
     private final Map<SimulationNode, Lane> lanesMappedByNodes;
 
-    private final SimulationEdge edge;
+    final SimulationEdge edge;
 
     final SimulationNode toNode;
 
@@ -63,7 +61,7 @@ public class Link {
         return lanesMappedByNodes.get(node);
     }
 
-    void startDriving(VehicleTripData vehicleData, long delay) {
+    long startDriving(VehicleTripData vehicleData) {
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
         Lane nextLane = null;
@@ -73,7 +71,12 @@ public class Link {
         } else {
             nextLane = getLaneByNextNode(nextLocation);
         }
+        
+        long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
+        
         nextLane.startDriving(vehicleData, delay);
+        
+        return delay;
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {
@@ -86,33 +89,19 @@ public class Link {
         return randomEntry.getValue();
     }
 
-    long computeDelay(PhysicalVehicle vehicle) {
-        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), edge.getAllowedMaxSpeedInMpS());
-        double usedCapacity = getUsedCapacityInMeters();
-        double capacity = edge.getLanesCount() * edge.length;
-        double level = usedCapacity / capacity;
-
-        double speed = freeFlowVelocity * interpolateSquared(1, 0, 1 - level);
-        double duration = edge.length / speed;
-        long durationInMs = (long) (1000 * duration);
-        return durationInMs;
-    }
+    
 
     public Collection<Lane> getLanes() {
         return lanesMappedByNodes.values();
     }
 
-    public double getUsedCapacityInMeters() {
-        double usedCapacity = 0;
-        for (Lane lane : getLanes()) {
-            usedCapacity += lane.getUsedLaneCapacityInMeters();
-        }
-        return usedCapacity;
-    }
+//    public double getUsedCapacityInMeters() {
+//        double usedCapacity = 0;
+//        for (Lane lane : getLanes()) {
+//            usedCapacity += lane.getUsedLaneCapacityInMeters();
+//        }
+//        return usedCapacity;
+//    }
 
-    private double interpolateSquared(double from, double to, double x) {
-        double v = x * x;
-        double y = (from * v) + (to * (1 - v));
-        return y;
-    }
+    
 }

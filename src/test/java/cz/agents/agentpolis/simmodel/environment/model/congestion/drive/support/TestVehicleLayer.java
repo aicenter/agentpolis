@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.simulator.visualization.visio.entity.EntityLayer;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
 import javax.vecmath.Point2d;
 
 /**
@@ -31,7 +29,7 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
     }
 
     @Override
-    protected Color getEntityDrawColor() {
+    protected Color getEntityDrawColor(DriveAgent driveAgent) {
         return Color.CYAN;
     }
 

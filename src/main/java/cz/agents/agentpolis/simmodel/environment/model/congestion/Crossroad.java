@@ -154,7 +154,7 @@ public class Crossroad  extends Connection{
 	}
 
     @Override
-    protected Link getNextLink(Connection nextConnection) {
+    public Link getNextLink(Connection nextConnection) {
         return outputLinksMappedByNextConnections.get(nextConnection);
     }
     

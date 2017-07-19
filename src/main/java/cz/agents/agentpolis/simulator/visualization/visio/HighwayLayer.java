@@ -26,7 +26,7 @@ import java.awt.geom.Rectangle2D;
 @Singleton
 public class HighwayLayer extends AbstractLayer{
     
-    private static final int EDGE_WIDTH = 2;
+    private static final int EDGE_WIDTH = 40;
     
     
     
@@ -49,7 +49,7 @@ public class HighwayLayer extends AbstractLayer{
     
     @Override
     public void paint(Graphics2D canvas) {
-        canvas.setStroke(new BasicStroke(EDGE_WIDTH));
+        canvas.setStroke(new BasicStroke(Vis.transW(EDGE_WIDTH)));
         canvas.setColor(Color.BLACK);
 
         Dimension dim = Vis.getDrawingDimension();

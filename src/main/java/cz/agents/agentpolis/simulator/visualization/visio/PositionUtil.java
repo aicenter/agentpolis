@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.TripItem;
-import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
@@ -53,14 +53,14 @@ public class PositionUtil {
 
     private final Graph<SimulationNode, SimulationEdge> network;
 
-    private final StandardTimeProvider timeProvider;
+    private final TimeProvider timeProvider;
     
     private final Transformer transformer;
 
 
     @Inject
     public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
-                        HighwayNetwork highwayNetwork, StandardTimeProvider timeProvider, Config config) {
+                        HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config) {
         this.projection = projection;
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();
@@ -160,14 +160,26 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPositionInterpolatedForVehicle(Vehicle vehicle) {
+        
+        // if the vehicle itself is being transported
         if (vehicle instanceof TransportableEntity && ((TransportableEntity) vehicle).getTransportingEntity() != null) {
             return getCanvasPositionInterpolatedForTransportable((TransportableEntity) vehicle);
         }
+        
         Driver driver = vehicle.getDriver();
         if (driver == null) {
             return getCanvasPosition(vehicle);
-        } else {
-            return getCanvasPositionInterpolated(driver);
+        } 
+        else {
+            GPSLocation startLocation = vehicle.getPrecisePosition();
+            Node targetNode = vehicle.getDriver().getTargetNode();
+//            SimulationEdge edge = network.getEdge(startNode.id, targetNode.id);
+            double length = getDistance(startLocation, targetNode);
+            
+            double portion = (length - vehicle.getQueueBeforeVehicleLength()) / length;
+            
+            GPSLocation targetPosition = getPointOnVector(startLocation, targetNode, portion);
+            return getCanvasPositionInterpolated(startLocation, targetPosition, vehicle.getDriver().getDelayData());
         }
     }
 
@@ -181,33 +193,64 @@ public class PositionUtil {
         Node startNode = entity.getPosition();
         Node targetNode = entity.getTargetNode();
 
-        // vehicle waits 
+        // entity waits 
         if (targetNode == null) {
             return getCanvasPosition(startNode);
         }
 
         DelayData delayData = entity.getDelayData();
 
-        // vehicle has no delay yet
-//        if(delayData == null){
-//            return positionUtil.getCanvasPosition(entityPositionNode);
-//        }
+        return getCanvasPositionInterpolated(startNode, targetNode, delayData);
+    }
+    
+    public Point2d getCanvasPositionInterpolated(GPSLocation startLocation, GPSLocation targetLocation, 
+            DelayData delayData) {
+         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
+                / delayData.getDelay();
+        
+        // if the travel time is longer than expected
+        if(portionCompleted > 1){
+            portionCompleted = 1;
+        }
 
-//        System.out.println(timeProvider.getCurrentSimTime());
+        Point2d startPosition = getCanvasPosition(startLocation);
+        Point2d targetPosition = getCanvasPosition(targetLocation);
 
-        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
+        double xIncrement = (targetPosition.x - startPosition.x) * portionCompleted;
+        double yIncrement = (targetPosition.y - startPosition.y) * portionCompleted;
+
+        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
+    }
+    
+    public GPSLocation getPositionInterpolated(GPSLocation startLocation, GPSLocation targetLocation, 
+            DelayData delayData) {
+         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
                 / delayData.getDelay();
         
         if(portionCompleted > 1){
             portionCompleted = 1;
         }
 
-        Point2d startPosition = getCanvasPosition(startNode);
-        Point2d targetPosition = getCanvasPosition(targetNode);
+        return getPointOnVector(startLocation, targetLocation, portionCompleted);
+    }
+    
+    public GPSLocation getPointOnEdge(SimulationEdge edge, double portion){
+        GPSLocation startPosition = network.getNode(edge.fromId);
+        GPSLocation targetPosition = network.getNode(edge.toId);
 
-        double xIncrement = (targetPosition.x - startPosition.x) * portionCompleted;
-        double yIncrement = (targetPosition.y - startPosition.y) * portionCompleted;
+        return getPointOnVector(startPosition, targetPosition, portion);
+    }
+    
+    public GPSLocation getPointOnVector(GPSLocation startLocation, GPSLocation targetLocation, double portion){
+        
+        int xIncrement = (int) Math.round((targetLocation.lonProjected - startLocation.lonProjected) * portion);
+        int yIncrement = (int) Math.round((targetLocation.latProjected - startLocation.latProjected) * portion);
 
-        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
+        return new GPSLocation(0, 0, startLocation.latProjected + yIncrement, startLocation.lonProjected + xIncrement);
+    }
+    
+    public double getDistance(GPSLocation from, GPSLocation to){
+        return Math.sqrt(Math.pow(Math.abs(from.latProjected - to.latProjected), 2) 
+                + Math.pow(Math.abs(from.lonProjected - to.lonProjected), 2));
     }
 }

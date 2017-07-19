@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.support.mock;
 
 import cz.agents.agentpolis.simmodel.entity.EntityType;
 

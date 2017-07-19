@@ -9,8 +9,6 @@ import cz.agents.agentpolis.agentpolis.config.Config;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.Message;
-import cz.agents.agentpolis.simmodel.agent.Driver;
-import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.alite.common.event.Event;
@@ -80,7 +78,7 @@ public class Connection extends EventHandlerAdapter{
 //        vehicleData.getVehicle().setPosition(nextLane.link.fromNode);
 //        driver.setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
 
-        long delay = computeDelayAndSetVehicleData(vehicleData, nextLane.link);
+        long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
         
         nextLane.addToQue(vehicleData, delay);
         
@@ -122,9 +120,7 @@ public class Connection extends EventHandlerAdapter{
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
         Link nextLink = getNextLink(nextConnection);
         
-        long delay = computeDelayAndSetVehicleData(vehicleData, nextLink);
-        
-        nextLink.startDriving(vehicleData, delay);
+        long delay = nextLink.startDriving(vehicleData);
         
         // wake up next connection
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
@@ -159,22 +155,11 @@ public class Connection extends EventHandlerAdapter{
                 CongestionMessage.DRIVING_FINISHED, null));
     }
 
-    protected Link getNextLink(Connection nextConnection) {
+    public Link getNextLink(Connection nextConnection) {
         return outLink;
     }
     
-    private long computeDelayAndSetVehicleData(VehicleTripData vehicleData,  Link nextLink){
-        long delay = nextLink.computeDelay(vehicleData.getVehicle());
-        
-        
-        // for visio
-        Driver driver =  vehicleData.getVehicle().getDriver();
-        driver.setTargetNode(nextLink.toNode);
-        vehicleData.getVehicle().setPosition(nextLink.fromNode);
-        driver.setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
-        
-        return delay;
-    }
+    
 
     protected void serveLanes() {
         while(inLane.hasWaitingVehicles()){

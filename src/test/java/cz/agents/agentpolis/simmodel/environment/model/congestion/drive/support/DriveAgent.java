@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import cz.agents.agentpolis.siminfrastructure.description.DescriptionImpl;
 import cz.agents.agentpolis.simmodel.Agent;
@@ -13,7 +13,7 @@ import cz.agents.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionTestType;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.support.mock.CongestionTestType;
 import cz.agents.basestructures.Node;
 
 /**

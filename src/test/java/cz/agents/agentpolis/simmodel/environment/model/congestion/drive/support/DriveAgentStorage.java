@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.simmodel.environment.model.EntityStorage;

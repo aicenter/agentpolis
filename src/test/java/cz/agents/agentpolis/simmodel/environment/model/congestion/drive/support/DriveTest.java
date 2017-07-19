@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
+package cz.agents.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import com.google.inject.Injector;
 import cz.agents.agentpolis.AgentPolisInitializer;
@@ -14,7 +14,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.agentpolis.simmodel.environment.model.congestion.CongestionTestType;
+import cz.agents.agentpolis.simmodel.environment.model.congestion.support.mock.CongestionTestType;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.agentpolis.simulator.creator.initializator.impl.MapData;
 //import cz.agents.agentpolis.simulator.visualization.visio.Bound;

@@ -5,6 +5,7 @@
  */
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
+import cz.agents.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Graph;
