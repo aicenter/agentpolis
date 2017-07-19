@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.agentpolis.config.Config;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.Message;
@@ -15,127 +16,120 @@ import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandlerAdapter;
 
 /**
- *
  * @author fido
  */
-public class Connection extends EventHandlerAdapter{
-    
+public class Connection extends EventHandlerAdapter {
+
     protected final CongestionModel congestionModel;
-    
+
     protected final SimulationProvider simulationProvider;
-    
+
     protected final SimulationNode node;
-    
+
     private Lane inLane;
-    
+
     private Link outLink;
-     
+
     private long timeOfLastWakeUp;
 
-    
-    void setOutLink(Link outLink, Lane inLane) {
-        this.outLink = outLink;
-        this.inLane = inLane;
-    }
-    
-    
+    protected boolean awake = false;
+
 
     public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel,
-            SimulationNode node) {
+                      SimulationNode node) {
         this.congestionModel = congestionModel;
         this.simulationProvider = simulationProvider;
         this.node = node;
         timeOfLastWakeUp = 0;
     }
 
+
     @Override
     public void handleEvent(Event event) {
-        
+
         // check wake up not quicker then crossroad frequency.
-        long remainingTimeToSleep = timeOfLastWakeUp + congestionModel.config.congestionModel.connectionTickLength 
+        long remainingTimeToSleep = timeOfLastWakeUp + congestionModel.config.congestionModel.connectionTickLength
                 - congestionModel.timeProvider.getCurrentSimTime();
-        
-        if(remainingTimeToSleep > 0){
-            simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, 
-                    remainingTimeToSleep);
+
+        if (remainingTimeToSleep > 0) {
+            if (!awake) {
+                simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
+                        remainingTimeToSleep);
+                awake = true;
+            }
             return;
         }
-        
+
+
         serveLanes();
-        
+
         timeOfLastWakeUp = congestionModel.timeProvider.getCurrentSimTime();
     }
-    
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
         currentLane.removeFromTop(vehicleData);
         
-//        long delay = nextLane.computeMinExitTime(vehicleData.getVehicle());
-//        
-//        // for visio
-//        Driver driver =  vehicleData.getVehicle().getDriver();
-//        driver.setTargetNode(nextLane.link.toNode);
-//        vehicleData.getVehicle().setPosition(nextLane.link.fromNode);
-//        driver.setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
-
         long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
         
         nextLane.addToQue(vehicleData, delay);
-        
-        if(!vehicleData.getTrip().isEmpty()){
+
+        if (!vehicleData.getTrip().isEmpty()) {
             vehicleData.getTrip().removeFirstLocation();
         }
-        
+
         // wake up next connection
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLane.link.toNode);
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
+        wakeUpConnection(nextConnection, delay);
     }
 
+
     protected boolean tryTransferVehicle(Lane lane) {
+        if (!lane.hasWaitingVehicles()) return false;
         VehicleTripData vehicleTripData = lane.getFirstWaitingVehicle();
-        if(vehicleTripData.isTripFinished()){
+        if (vehicleTripData.isTripFinished()) {
             endDriving(vehicleTripData, lane);
             return true;
         }
 
         Lane nextLane = getNextLane(lane, vehicleTripData);
-        
-        if(nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
+
+        if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             transferVehicle(vehicleTripData, lane, nextLane);
             return true;
+        } else {
+            Log.debug(Connection.class, "No space in queue !!");
         }
-        
+
         return false;
     }
-	
-	void startDriving(VehicleTripData vehicleData){
+
+    void startDriving(VehicleTripData vehicleData) {
         Trip<SimulationNode> trip = vehicleData.getTrip();
         SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-        
-//        // for visio
-//        Driver driver = vehicleData.getVehicle().getDriver();
-//        driver.setTargetNode(nextLocation);
-//        driver.setDelayData(new DelayData(minExitTime, timeProvider.getCurrentSimTime()));
-        
+
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
         Link nextLink = getNextLink(nextConnection);
-        
+
         long delay = nextLink.startDriving(vehicleData);
-        
+        wakeUpConnection(nextConnection, delay);
+
+
+    }
+
+    private void wakeUpConnection(Connection nextConnection, long delay) {
         // wake up next connection
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
     }
 
     private Lane getNextLane(Lane lane, VehicleTripData vehicleTripData) {
         Link nextLink = getNextLink(lane);
-        
+
         Trip<SimulationNode> trip = vehicleTripData.getTrip();
-        
-        if(trip.isEmpty()){
+
+        if (trip.isEmpty()) {
             vehicleTripData.setTripFinished(true);
             return nextLink.getLaneForTripEnd();
-        }
-        else{
+        } else {
             SimulationNode NextNextLocation = trip.getFirstLocation();
             return nextLink.getLaneByNextNode(NextNextLocation);
         }
@@ -147,9 +141,9 @@ public class Connection extends EventHandlerAdapter{
 
     private void endDriving(VehicleTripData vehicleTripData, Lane lane) {
         lane.removeFromTop(vehicleTripData);
-        
+
         vehicleTripData.getVehicle().setPosition(node);
-        
+
         // todo - remove typing
         ((Agent) vehicleTripData.getVehicle().getDriver()).processMessage(new Message(
                 CongestionMessage.DRIVING_FINISHED, null));
@@ -162,14 +156,19 @@ public class Connection extends EventHandlerAdapter{
     
 
     protected void serveLanes() {
-        while(inLane.hasWaitingVehicles()){
-            if(!tryTransferVehicle(inLane)){
+        while (inLane.hasWaitingVehicles()) {
+            if (!tryTransferVehicle(inLane)) {
                 // wake up after some time
-                simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, 
-                    congestionModel.config.congestionModel.connectionTickLength);
+                simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
+                        congestionModel.config.congestionModel.connectionTickLength);
                 break;
             }
         }
     }
-    
+
+    void setOutLink(Link outLink, Lane inLane) {
+        this.outLink = outLink;
+        this.inLane = inLane;
+    }
+
 }

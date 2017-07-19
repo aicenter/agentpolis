@@ -149,7 +149,30 @@ public class TripsUtil {
         return finalTrip;
     }
 
-    public static VehicleTrip mergeTrips(VehicleTrip<TripItem>... trips) {
+    public static Trip<SimulationNode> mergeTrips(Trip<SimulationNode>... trips) {
+        int i = 0;
+        Trip<SimulationNode> firstTrip = null;
+        do {
+            firstTrip = trips[i];
+            i++;
+        } while (firstTrip == null);
+
+        Trip<SimulationNode> newTrip = new Trip<SimulationNode>(firstTrip.getLocations());
+
+        for (int j = i; j < trips.length; j++) {
+            Trip<SimulationNode> trip = trips[j];
+            if (trip != null) {
+                for (SimulationNode location : trip.getLocations()) {
+                    if (!newTrip.getLocations().peekLast().equals(location)) {
+                        newTrip.extendTrip(location);
+                    }
+                }
+            }
+        }
+        return newTrip;
+    }
+    
+    public static VehicleTrip mergeTripsOld(VehicleTrip<TripItem>... trips) {
         int i = 0;
         VehicleTrip firstTrip = null;
         do {

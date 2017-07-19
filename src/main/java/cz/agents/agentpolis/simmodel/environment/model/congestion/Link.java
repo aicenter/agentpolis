@@ -6,6 +6,7 @@
 package cz.agents.agentpolis.simmodel.environment.model.congestion;
 
 import cz.agents.agentpolis.siminfrastructure.CollectionUtil;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -19,7 +20,6 @@ import java.util.Map.Entry;
  * @author fido
  */
 public class Link {
-//    private List<Lane> lanes;
 
     final CongestionModel congestionModel;
 
@@ -63,12 +63,12 @@ public class Link {
 
     long startDriving(VehicleTripData vehicleData) {
         Trip<SimulationNode> trip = vehicleData.getTrip();
-        SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
         Lane nextLane = null;
         if (trip.isEmpty()) {
             nextLane = getLaneForTripEnd();
             vehicleData.setTripFinished(true);
         } else {
+            SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
             nextLane = getLaneByNextNode(nextLocation);
         }
         
@@ -95,13 +95,4 @@ public class Link {
         return lanesMappedByNodes.values();
     }
 
-//    public double getUsedCapacityInMeters() {
-//        double usedCapacity = 0;
-//        for (Lane lane : getLanes()) {
-//            usedCapacity += lane.getUsedLaneCapacityInMeters();
-//        }
-//        return usedCapacity;
-//    }
-
-    
 }
