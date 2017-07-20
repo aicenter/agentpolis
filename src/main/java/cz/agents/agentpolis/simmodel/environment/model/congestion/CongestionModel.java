@@ -133,7 +133,9 @@ public class CongestionModel {
 
     private void buildLinks(Collection<SimulationEdge> allEdges) {
         for (SimulationEdge edge : allEdges) {
-			Link link = new Link(this, edge, graph.getNode(edge.fromId), graph.getNode(edge.toId));
+            SimulationNode fromNode = graph.getNode(edge.fromId);
+			Link link = new Link(this, edge, fromNode, graph.getNode(edge.toId),
+                    connectionsMappedByNodes.get(fromNode));
 			links.add(link);
             linksMappedByEdges.put(edge, link);
 		}

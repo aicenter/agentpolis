@@ -33,6 +33,8 @@ public class Link {
     final SimulationNode toNode;
 
     final SimulationNode fromNode;
+    
+    final Connection fromConnection;
 
     public SimulationEdge getEdge() {
         return edge;
@@ -40,11 +42,12 @@ public class Link {
 
 
     public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
-                SimulationNode targetNode) {
+                SimulationNode targetNode, Connection fromConnection) {
         this.congestionModel = congestionModel;
         this.edge = edge;
         this.toNode = targetNode;
         this.fromNode = fromNode;
+        this.fromConnection = fromConnection;
         this.lanesMappedByNodes = new HashMap<>();
     }
 

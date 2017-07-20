@@ -23,7 +23,7 @@ public class Crossroad extends Connection {
 
     private final int batchSize;
 
-    private int carsPerTick;
+    private final double transferredVehicleMetersPerTick;
 
     private final List<ChoosingTableData> inputLanesChoosingTable;
 
@@ -31,7 +31,11 @@ public class Crossroad extends Connection {
 
     private final Map<Lane, Link> outputLinksMappedByInputLanes;
     private final Map<Connection, Link> outputLinksMappedByNextConnections;
-    private double maxFlowPerLane;
+    
+    private final double maxFlowPerLane;
+    
+    private final int simultaneouslyDrivingLanes;
+    
 
     public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
                      SimulationNode node) {
@@ -43,6 +47,8 @@ public class Crossroad extends Connection {
         batchSize = config.congestionModel.batchSize;
         tickLength = config.congestionModel.connectionTickLength;
         maxFlowPerLane = config.congestionModel.maxFlowPerLane;
+        simultaneouslyDrivingLanes = config.congestionModel.defaultCrossroadDrivingLanes;
+        transferredVehicleMetersPerTick = computeFlowInMetersPerTick();
     }
 
 
@@ -53,55 +59,61 @@ public class Crossroad extends Connection {
 
     void init() {
         initInputLanesRandomTable();
-        carsPerTick = computeCarsPerTick();
+//        carsPerTick = computeFlowInMetersPerTick();
     }
 
     @Override
     protected void serveLanes() {
+        // try to put all vehicles that waiting to be able to start in one of the input lanes
         tryStartDelayedVehicles();
-        Lane chosenLane = null;
 
-        List<Lane> nonEmptyLanes = new LinkedList();
+        // getting all lanes with waiting vehicles
+        List<Lane> readyLanes = new LinkedList();
         for (Lane inputLane : inputLanes) {
             if (inputLane.hasWaitingVehicles()) {
-                nonEmptyLanes.add(inputLane);
+                readyLanes.add(inputLane);
             }
         }
-
-        int carCounter = 0;
-        while (carCounter < carsPerTick) {
-
-            if (nonEmptyLanes.isEmpty()) {
+        
+        // until the traffic flow per tick is not depleted
+        while (metersTransferedThisTick < transferredVehicleMetersPerTick) {
+            
+            // if there are no waiting vehicles
+            if (readyLanes.isEmpty()) {
                 // not sending tick event - performance reasons, the crossroad is woken up when a vehicle arrives
                 awake = false;
                 return;
             }
-            if (nonEmptyLanes.size() == 1) {
-                chosenLane = nonEmptyLanes.get(0);
+            
+            Lane chosenLane = null;
+
+            if (readyLanes.size() == 1) {
+                chosenLane = readyLanes.get(0);
             } else {
                 do {
                     chosenLane = chooseLane();
                 } while (!chosenLane.hasWaitingVehicles());
             }
-            carCounter += tryToServeLane(chosenLane);
-            if (!chosenLane.hasWaitingVehicles()) {
-                nonEmptyLanes.remove(chosenLane);
+            boolean laneDepleted = tryToServeLane(chosenLane);
+            
+            if (laneDepleted) {
+                readyLanes.remove(chosenLane);
             }
         }
 
         // wake up after some time
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null,
-                tickLength);
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, tickLength);
     }
 
     private void tryStartDelayedVehicles() {
         for (Lane inputLane : inputLanes) {
-            inputLane.startFromStartHereQueue();
+            inputLane.tryToServeStartFromHereQueue();
         }
     }
 
-    private int computeCarsPerTick() {
-        return (int) Math.max(1, Math.round(maxFlowPerLane * getOutputLaneCount() * tickLength / 1000.0));
+    private double computeFlowInMetersPerTick() {
+//        return (int) Math.max(1, Math.round(maxFlowPerLane * simultaneouslyDrivingLanes * tickLength / 1000.0));
+        return Math.round(maxFlowPerLane * simultaneouslyDrivingLanes * tickLength / 1000.0);
     }
 
     public int getNumberOfInputLanes() {
@@ -139,15 +151,14 @@ public class Crossroad extends Connection {
         return chosenLane;
     }
 
-    private int tryToServeLane(Lane chosenLane) {
-        int carCounter = 0;
-        while (carCounter < batchSize) {
+    private boolean tryToServeLane(Lane chosenLane) {
+        while (metersTransferedThisBatch < batchSize) {
             if (!tryTransferVehicle(chosenLane)) {
-                break;
+                return true;
             }
-            carCounter++;
         }
-        return carCounter;
+        metersTransferedThisBatch = 0;
+        return false;
     }
 
     @Override

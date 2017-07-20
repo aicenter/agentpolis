@@ -102,8 +102,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected void drawEntity(E entity, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entity);
         canvas.setColor(color);
-        int radius = Vis.transW(getEntityDrawRadius());
-        int width = radius * 2;
+        double radius = Vis.transW(getEntityDrawRadius(entity));
+        int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
@@ -117,8 +117,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
-        int radius = Vis.transW(getEntityDrawRadius());
-        int width = radius * 2;
+        double radius = Vis.transW(getEntityDrawRadius(entities.get(0)));
+        int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
@@ -136,7 +136,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
     protected abstract Color getEntityDrawColor(E entity);
 
-    protected abstract int getEntityDrawRadius();
+    protected abstract int getEntityDrawRadius(E entity);
 
     protected boolean skipDrawing(E entity) {
         return false;

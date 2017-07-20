@@ -14,6 +14,7 @@ import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwor
 import cz.agents.agentpolis.simulator.SimulationProvider;
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandlerAdapter;
+import java.util.logging.Level;
 
 /**
  * @author fido
@@ -33,6 +34,10 @@ public class Connection extends EventHandlerAdapter {
     private long timeOfLastWakeUp;
 
     protected boolean awake = false;
+    
+    protected int metersTransferedThisBatch;
+    
+    protected int metersTransferedThisTick;
 
 
     public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel,
@@ -60,7 +65,9 @@ public class Connection extends EventHandlerAdapter {
             return;
         }
 
-
+        metersTransferedThisBatch = 0;
+        metersTransferedThisTick = 0;
+        
         serveLanes();
 
         timeOfLastWakeUp = congestionModel.timeProvider.getCurrentSimTime();
@@ -80,12 +87,26 @@ public class Connection extends EventHandlerAdapter {
         // wake up next connection
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLane.link.toNode);
         wakeUpConnection(nextConnection, delay);
+        
+        // wake previous connection if current lane was full
+        if(currentLane.wakeConnectionAfterTransfer()){
+            Connection previousConnection = currentLane.link.fromConnection;
+            wakeUpConnection(previousConnection, 0);
+            currentLane.setWakeConnectionAfterTransfer(false);
+        }
     }
 
 
     protected boolean tryTransferVehicle(Lane lane) {
-        if (!lane.hasWaitingVehicles()) return false;
+        // no vehicles in queue
+        if (!lane.hasWaitingVehicles()){
+            return false;
+        }
+        
+        // first vehicle
         VehicleTripData vehicleTripData = lane.getFirstWaitingVehicle();
+        
+        // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
             endDriving(vehicleTripData, lane);
             return true;
@@ -93,14 +114,21 @@ public class Connection extends EventHandlerAdapter {
 
         Lane nextLane = getNextLane(lane, vehicleTripData);
 
+        // succesfull transfer
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             transferVehicle(vehicleTripData, lane, nextLane);
+            double vehicleLength = vehicleTripData.getVehicle().getLength();
+            metersTransferedThisBatch += vehicleLength;
+            metersTransferedThisTick += vehicleLength;
             return true;
-        } else {
-            Log.debug(Connection.class, "No space in queue !!");
+        } 
+        // next queue is full
+        else {
+            Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id, 
+                    nextLane.link.toNode.id);
+            nextLane.setWakeConnectionAfterTransfer(true);
+            return false;
         }
-
-        return false;
     }
 
     void startDriving(VehicleTripData vehicleData) {

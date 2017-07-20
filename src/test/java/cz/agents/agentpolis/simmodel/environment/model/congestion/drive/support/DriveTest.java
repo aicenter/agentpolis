@@ -57,7 +57,8 @@ public class DriveTest {
     private static final int START_TIME_MILIS = 25200000;
     
     
-    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> trip) throws ConfigReaderException {
+    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> trip) 
+            throws ConfigReaderException {
         
         
 //        Config config = Configuration.load(new Config());

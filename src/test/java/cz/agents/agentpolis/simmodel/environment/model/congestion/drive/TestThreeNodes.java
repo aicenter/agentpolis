@@ -7,7 +7,6 @@ package cz.agents.agentpolis.simmodel.environment.model.congestion.drive;
 
 import cz.agents.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.simmodel.environment.model.congestion.*;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Graph;
@@ -27,9 +26,9 @@ public class TestThreeNodes {
     public void run() throws Throwable{
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
-        SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0, false, false);
-        SimulationNode node2 = new SimulationNode(1, 0, 100, 0, 0, 0, 0, false, false);
-        SimulationNode node3 = new SimulationNode(2, 0, 100, 0, 0, 0, 0, false, false);
+        SimulationNode node1 = new SimulationNode(0, 100, 0, 0, 0, 0, 0, false, false);
+        SimulationNode node2 = new SimulationNode(1, 100, 100, 0, 0, 0, 0, false, false);
+        SimulationNode node3 = new SimulationNode(2, 100, 200, 0, 0, 0, 0, false, false);
         
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);

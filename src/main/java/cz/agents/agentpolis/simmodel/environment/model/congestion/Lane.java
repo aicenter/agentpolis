@@ -39,7 +39,20 @@ public class Lane {
     private Link nextLink;
 
     private double currentlyUsedCapacityInMeters;
+    
     private double waitingQueueInMeters;
+    
+    private boolean wakeConnectionAfterTransfer;
+
+    public boolean wakeConnectionAfterTransfer() {
+        return wakeConnectionAfterTransfer;
+    }
+
+    public void setWakeConnectionAfterTransfer(boolean wakeConnectionAfterTransfer) {
+        this.wakeConnectionAfterTransfer = wakeConnectionAfterTransfer;
+    }
+    
+    
 
 
     public Link getNextLink() {
@@ -98,7 +111,7 @@ public class Lane {
         }
     }
 
-    void startFromStartHereQueue() {
+    void tryToServeStartFromHereQueue() {
         if (startHereQueue == null) return;
         while (!startHereQueue.isEmpty() && queueHasSpaceForVehicle(startHereQueue.peekFirst().getVehicle())) {
             VehicleTripData vehicleData = startHereQueue.pollFirst();
@@ -111,7 +124,6 @@ public class Lane {
             driver.setDelayData(new DelayData(delay, timeProvider.getCurrentSimTime()));
             addToQue(vehicleData, delay);
         }
-
     }
 
     void addToQue(VehicleTripData vehicleTripData, long delay) {
