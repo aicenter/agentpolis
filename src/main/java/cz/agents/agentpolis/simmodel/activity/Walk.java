@@ -6,7 +6,7 @@
 package cz.agents.agentpolis.simmodel.activity;
 
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
@@ -29,7 +29,7 @@ import cz.agents.basestructures.Node;
  */
 public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
-    private final Trip<Node> trip;
+    private final Trip<SimulationNode> trip;
 
     private final PedestrianMoveActivityFactory moveActivityFactory;
 
@@ -37,18 +37,18 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
     private final EventProcessor eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final int tripId;
 
 
-    private Node from;
+    private SimulationNode from;
 
-    private Node to;
+    private SimulationNode to;
 
     public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
-                A agent, Trip<Node> trip,
+                PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
+                A agent, Trip<SimulationNode> trip,
                 int tripId) {
         super(activityInitializer, agent);
         this.trip = trip;

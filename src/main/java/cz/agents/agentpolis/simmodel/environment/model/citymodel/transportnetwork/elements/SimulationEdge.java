@@ -97,4 +97,8 @@ public class SimulationEdge extends RoadEdge {
     public int getLanesCount() {
         return lanesCount;
     }
+    
+    public String getLogInfo(){
+        return fromId + "-" + toId; 
+    }
 }

@@ -3,7 +3,7 @@ package cz.agents.agentpolis.simmodel.environment.model.action.vehicle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.environment.model.VehicleTimeModel;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
 import cz.agents.agentpolis.simmodel.environment.model.publictransport.TimetableItem;
@@ -23,11 +23,11 @@ public class WaitingVehicleAction {
 
     private final EventProcessor eventProcessor;
     private final VehicleTimeModel vehicleTimeStorage;
-    private final TimeProvider timeEnvUtil;
+    private final StandardTimeProvider timeEnvUtil;
 
     @Inject
     public WaitingVehicleAction(EventProcessor eventProcessor, VehicleTimeModel vehicleTimeStorage,
-            TimeProvider timeEnvUtil) {
+            StandardTimeProvider timeEnvUtil) {
         super();
         this.eventProcessor = eventProcessor;
         this.vehicleTimeStorage = vehicleTimeStorage;

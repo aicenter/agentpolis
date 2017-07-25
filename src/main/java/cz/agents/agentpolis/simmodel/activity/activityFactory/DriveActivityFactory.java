@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.IdGenerator;
@@ -18,6 +18,7 @@ import cz.agents.agentpolis.simmodel.activity.Drive;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.TransportableEntity;
 import cz.agents.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
@@ -34,7 +35,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
     private final TypedSimulation eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final IdGenerator tripIdGenerator;
 
@@ -43,7 +44,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
     @Inject
     public DriveActivityFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
-                                TypedSimulation eventProcessor, TimeProvider timeProvider, IdGenerator tripIdGenerator,
+                                TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
                                 TripsUtil tripsUtil) {
         this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;
@@ -54,7 +55,7 @@ public class DriveActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<Node> trip) {
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<SimulationNode> trip) {
         vehicleCheck(vehicle);
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
@@ -64,14 +65,13 @@ public class DriveActivityFactory extends ActivityFactory {
         if (vehicle instanceof TransportableEntity) {
             if (((TransportableEntity) vehicle).getTransportingEntity() != null) {
                 Log.warn(this, "Trying to drive vehicle that is being transported by other vehicle!");
-                System.exit(-1);
             }
         }
     }
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
+    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
         vehicleCheck(vehicle);
-        Trip<Node> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
     }

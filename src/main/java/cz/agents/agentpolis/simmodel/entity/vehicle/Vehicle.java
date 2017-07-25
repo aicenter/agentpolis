@@ -8,6 +8,7 @@ package cz.agents.agentpolis.simmodel.entity.vehicle;
 import cz.agents.agentpolis.simmodel.agent.Driver;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.MovingEntity;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.basestructures.Node;
 
 /**
@@ -17,6 +18,9 @@ import cz.agents.basestructures.Node;
 public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
     
     private Driver driver;
+    
+    private double queueBeforeVehicleLength; 
+    
 
     public Driver getDriver() {
         return driver;
@@ -25,11 +29,31 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
     public void setDriver(Driver driver) {
         this.driver = driver;
     }
+
+    public double getQueueBeforeVehicleLength() {
+        return queueBeforeVehicleLength;
+    }
+
+    public void setQueueBeforeVehicleLength(double queueBeforeVehicleLength) {
+        this.queueBeforeVehicleLength = queueBeforeVehicleLength;
+    }
+    
+    
+    
+    
     
     
 
-    public Vehicle(String id, Node position) {
+    public Vehicle(String id, SimulationNode position) {
         super(id, position);
+    }
+
+    @Override
+    public void setPosition(SimulationNode position) {
+        super.setPosition(position);
+        if(driver != null){
+            driver.setPosition(position);
+        }
     }
 
     

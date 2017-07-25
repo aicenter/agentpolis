@@ -9,13 +9,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.agents.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.ActivityFactory;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.IdGenerator;
 import cz.agents.agentpolis.simmodel.activity.Walk;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Node;
@@ -32,7 +33,7 @@ public class WalkActivityFactory extends ActivityFactory {
 
     private final TypedSimulation eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final IdGenerator tripIdGenerator;
 
@@ -41,7 +42,7 @@ public class WalkActivityFactory extends ActivityFactory {
 
     @Inject
     public WalkActivityFactory(TransportNetworks transportNetworks, PedestrianMoveActivityFactory moveActivityFactory,
-                               TypedSimulation eventProcessor, TimeProvider timeProvider, IdGenerator tripIdGenerator,
+                               TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
                                TripsUtil tripsUtil) {
         this.transportNetworks = transportNetworks;
         this.moveActivityFactory = moveActivityFactory;
@@ -52,13 +53,13 @@ public class WalkActivityFactory extends ActivityFactory {
     }
 
 
-    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<Node> trip) {
+    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<SimulationNode> trip) {
         return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
                 tripIdGenerator.getId());
     }
 
     public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Node targetPosition) {
-        Trip<Node> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
+        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
         return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
                 tripIdGenerator.getId());
     }

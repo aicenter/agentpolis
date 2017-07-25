@@ -9,11 +9,13 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import cz.agents.agentpolis.AgentPolisConfiguration;
+import cz.agents.agentpolis.agentpolis.config.Config;
+import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
 import cz.agents.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.agents.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.agents.agentpolis.simmodel.Agent;
 import cz.agents.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
@@ -59,6 +61,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import ninja.fido.config.Configuration;
 
 /**
  *
@@ -68,18 +72,24 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
-
-	private AgentPolisConfiguration configuration;
+    private final Config config;
+    
 
     private List<Object> loggers;
     
     private Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer;
+
+    public Config getConfig() {
+        return config;
+    }
     
     
 	
 	
 	public StandardAgentPolisModule() {
         this.delayingSegmentCapacityDeterminer = new DefaultDelayingSegmentCapacityDeterminer();
+        this.config = Configuration.load(new Config());
+        Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
 
 	
@@ -88,7 +98,9 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Override
 	protected void configure() {
         
-        bindConstant().annotatedWith(Names.named("mapSrid")).to(configuration.srid);
+        bindConstant().annotatedWith(Names.named("mapSrid")).to(config.srid);
+        
+        bind(Config.class).toInstance(config);
 		
 		// bindings for storages
 		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
@@ -114,7 +126,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         bind(new TypeLiteral<Map<String, PassengerActivityCallback<?>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {}).toInstance(new HashMap<>());
         
-        bind(AgentPolisConfiguration.class).toInstance(configuration);
+        bind(TimeProvider.class).to(StandardTimeProvider.class);
         
         install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
             .build(ShortestPathPlannerFactory.class));
@@ -212,15 +224,15 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     
     @Provides
     @Singleton
-    LogItemViewer provideLogItemViewer(Provider<TimeProvider> timeProvider) {
+    LogItemViewer provideLogItemViewer(Provider<StandardTimeProvider> timeProvider) {
         return new LogItemViewer(allowedLogItemClassesLogItemViewer, timeProvider, 
-                configuration.simulationDurationInMillis);
+                config.simulationDurationInMillis);
     }
 
 	@Provides
 	@Singleton
-	TimeProvider provideTimeProvider(EventProcessor eventProcessor) {
-		return new TimeProvider(eventProcessor, ZonedDateTime.now());
+	StandardTimeProvider provideTimeProvider(EventProcessor eventProcessor) {
+		return new StandardTimeProvider(eventProcessor, ZonedDateTime.now());
 	}
     
     
@@ -271,9 +283,8 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	}
 
     @Override
-    public void initializeParametrs(AgentPolisConfiguration configuration, List<Object> loggers, 
+    public void initializeParametrs(List<Object> loggers, 
             Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer) {
-		this.configuration = configuration;
         this.loggers = loggers;
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
     }

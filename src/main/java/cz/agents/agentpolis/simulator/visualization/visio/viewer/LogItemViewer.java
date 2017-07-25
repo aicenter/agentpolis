@@ -3,7 +3,7 @@ package cz.agents.agentpolis.simulator.visualization.visio.viewer;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provider;
 import cz.agents.agentpolis.siminfrastructure.logger.LogItem;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.historian.event.ViewLogItemImpl;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.historian.event.ViewLogItemType;
 import cz.agents.agentpolis.simulator.visualization.visio.viewer.historian.event.ViewLogItmeTypeImpl;
@@ -36,11 +36,11 @@ public class LogItemViewer {
     private NewHistorianView newHistorianView;
 
     private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer;
-    private final Provider<TimeProvider> timeProvider;
+    private final Provider<StandardTimeProvider> timeProvider;
     private final long simulationDuration;
 
     public LogItemViewer(Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer,
-                         final Provider<TimeProvider> timeProvider, final long simulationDuration) {
+                         final Provider<StandardTimeProvider> timeProvider, final long simulationDuration) {
         super();
         this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
         this.timeProvider = timeProvider;

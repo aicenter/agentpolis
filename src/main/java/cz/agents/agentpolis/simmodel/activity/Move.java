@@ -13,6 +13,8 @@ import cz.agents.agentpolis.simmodel.TimeConsumingActivity;
 import cz.agents.agentpolis.simmodel.agent.MovingAgent;
 import cz.agents.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.agents.agentpolis.simmodel.environment.model.action.moving.MoveUtil;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.basestructures.Edge;
@@ -28,13 +30,13 @@ import java.util.logging.Level;
 public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A> {
 
     protected final EventProcessor eventProcessor;
-    protected final Edge edge;
-    protected final Node from;
-    protected final Node to;
+    protected final SimulationEdge edge;
+    protected final SimulationNode from;
+    protected final SimulationNode to;
 
 
     public Move(ActivityInitializer activityInitializer,
-                TypedSimulation eventProcessor, A agent, Edge edge, Node from, Node to) {
+                TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
         super(activityInitializer, agent);
         this.eventProcessor = eventProcessor;
         this.edge = edge;
@@ -68,7 +70,7 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
         if (checkFeasibility(edge)) {
 
             agent.setTargetNode(to);
-            double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), ((RoadEdge) edge).allowedMaxSpeedInMpS);
+            double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), edge.allowedMaxSpeedInMpS);
             duration = MoveUtil.computeDuration(velocity, edge.length);
 
             agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime()));

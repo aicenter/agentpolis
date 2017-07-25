@@ -6,7 +6,7 @@
 package cz.agents.agentpolis.simmodel.activity;
 
 import cz.agents.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.agents.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.agents.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.agents.agentpolis.simmodel.Activity;
 import cz.agents.agentpolis.simmodel.ActivityInitializer;
 import cz.agents.agentpolis.simmodel.Agent;
@@ -32,7 +32,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private final Vehicle vehicle;
 
-    private final Trip<Node> trip;
+    private final Trip<SimulationNode> trip;
 
     private final VehicleMoveActivityFactory moveActivityFactory;
 
@@ -40,18 +40,18 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
 
     private final EventProcessor eventProcessor;
 
-    private final TimeProvider timeProvider;
+    private final StandardTimeProvider timeProvider;
 
     private final int tripId;
 
 
-    private Node from;
+    private SimulationNode from;
 
-    private Node to;
+    private SimulationNode to;
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, TimeProvider timeProvider,
-                 A agent, Vehicle vehicle, Trip<Node> trip,
+                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
+                 A agent, Vehicle vehicle, Trip<SimulationNode> trip,
                  int tripId) {
         super(activityInitializer, agent);
         this.vehicle = vehicle;
@@ -98,7 +98,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
         eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
     }
 
-    public Trip<Node> getTrip() {
+    public Trip<SimulationNode> getTrip() {
         return trip;
     }
 

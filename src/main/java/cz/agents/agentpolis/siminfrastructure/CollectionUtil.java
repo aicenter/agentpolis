@@ -5,7 +5,9 @@
  */
 package cz.agents.agentpolis.siminfrastructure;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  *
@@ -21,4 +23,10 @@ public class CollectionUtil {
 			map.put(key, increment);
 		}
 	}
+    
+    public static <K,V> Map.Entry<K,V> getRandomEntryFromMap(Map<K,V> map, Random randomGenerator) {
+        Object[] entries = map.entrySet().toArray();
+        Object randomEntry = entries[randomGenerator.nextInt(entries.length)];
+        return (Map.Entry<K,V>) randomEntry;
+    }
 }

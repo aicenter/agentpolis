@@ -1,6 +1,9 @@
 package cz.agents.agentpolis.siminfrastructure.planner.trip;
 
 import cz.agents.agentpolis.siminfrastructure.Log;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+
+import java.util.Arrays;
 
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -17,6 +20,9 @@ public class Trip<L> {
         return locations;
     }
 
+    public Trip(L... locations) {
+        this(new LinkedList<>(Arrays.asList(locations)));
+    }
 
     public Trip(LinkedList<L> locations) {
         try {
@@ -66,6 +72,15 @@ public class Trip<L> {
     public L getAndRemoveFirstLocation() {
         return locations.poll();
     }
+    
+    public L getFirstLocation() {
+        return locations.peek();
+    }
+    
+    public L removeFirstLocation() {
+        return locations.removeFirst();
+    }
+    
 
     public boolean isEmpty() {
         return locations.isEmpty();

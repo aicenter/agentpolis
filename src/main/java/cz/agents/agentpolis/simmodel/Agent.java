@@ -3,6 +3,7 @@ package cz.agents.agentpolis.simmodel;
 import cz.agents.agentpolis.siminfrastructure.Log;
 import cz.agents.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.agents.agentpolis.simmodel.entity.EntityType;
+import cz.agents.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.common.event.Event;
 import cz.agents.basestructures.Node;
@@ -31,7 +32,7 @@ public abstract class Agent extends AgentPolisEntity {
     }
 
 
-    public Agent(final String agentId, Node position) {
+    public Agent(final String agentId, SimulationNode position) {
         super(agentId, position);
     }
 
@@ -57,18 +58,13 @@ public abstract class Agent extends AgentPolisEntity {
         currentActivity.handleEvent(event);
     }
 
-
-    protected void exit() {
-        SimulationCreator.removeAgentStatic(this);
-    }
-
     /**
      * Called when current activity finises.
      *
      * @param activity Activity that just finished.
      */
     protected void onActivityFinish(Activity activity) {
-        Log.log(this, Level.FINE, "Activity finished: {0}", currentActivity);
+        Log.log(this, Level.FINER, "Activity finished: {0}", currentActivity);
     }
 
     /**
