@@ -18,7 +18,6 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPla
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.activity.movement.callback.PassengerActivityCallback;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
@@ -129,7 +128,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         bind(new TypeLiteral<Map<String, Set<String>>>(){}).toInstance(new HashMap<>());
         
         // bindings for UsingPassengerTransportModel
-        bind(new TypeLiteral<Map<String, PassengerActivityCallback<?>>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {}).toInstance(new HashMap<>());
         
         bind(TimeProvider.class).to(StandardTimeProvider.class);
