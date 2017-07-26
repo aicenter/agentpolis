@@ -45,14 +45,11 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     @Inject
     public TestVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
             HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
-            RailwayNetwork railwayNetwork, AgentStorage agentStorage, VehicleStorage vehicleStorage, 
-            AgentPositionModel agentPositionModel, VehiclePositionModel vehiclePositionModel, 
-            AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator, 
-            SimulationControlLayer simulationControlLayer, Projection projection, HighwayLayer highwayLayer,
+            RailwayNetwork railwayNetwork, 
+            SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
             TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer) {
         super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-                agentStorage, vehicleStorage, agentPositionModel, vehiclePositionModel, allNetworkNodes, 
-                simulationCreator, simulationControlLayer, projection);
+                simulationControlLayer);
         this.highwayLayer = highwayLayer;
         this.testVehicleLayer = testVehicleLayer;
         this.nodeIdLayer = nodeIdLayer;

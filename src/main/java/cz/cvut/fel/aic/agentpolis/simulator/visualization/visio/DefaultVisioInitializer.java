@@ -6,12 +6,8 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntityLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.graph.VisGraph;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.graph.VisGraphLayer;
-import cz.agents.alite.simulation.MultipleDrawListener;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
 import cz.agents.alite.vis.layer.common.FpsLayer;
@@ -20,12 +16,6 @@ import cz.agents.alite.vis.layer.common.VisInfoLayer;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehiclePositionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehicleStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.MetrowayNetwork;
@@ -56,46 +46,22 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	private final MetrowayNetwork metrowayNetwork;
 	
 	private final RailwayNetwork railwayNetwork;
-	
-	private final AgentStorage agentStorage;
-	
-	private final VehicleStorage vehicleStorage;
-	
-	private final AgentPositionModel agentPositionModel;
-	
-	private final VehiclePositionModel vehiclePositionModel;
-	
-	private final AllNetworkNodes allNetworkNodes;
-	
-	private final SimulationCreator simulationCreator;
     
     private final SimulationControlLayer simulationControlLayer;
-    
-    private final Projection projection;
     
     
 
 	@Inject
 	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
 			HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
-			RailwayNetwork railwayNetwork, AgentStorage agentStorage, 
-			VehicleStorage vehicleStorage, AgentPositionModel agentPositionModel, 
-			VehiclePositionModel vehiclePositionModel, AllNetworkNodes allNetworkNodes, 
-			SimulationCreator simulationCreator, SimulationControlLayer simulationControlLayer, Projection projection) {
+			RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer) {
 		this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
 		this.tramwayNetwork = tramwayNetwork;
 		this.metrowayNetwork = metrowayNetwork;
 		this.railwayNetwork = railwayNetwork;
-		this.agentStorage = agentStorage;
-		this.vehicleStorage = vehicleStorage;
-		this.agentPositionModel = agentPositionModel;
-		this.vehiclePositionModel = vehiclePositionModel;
-		this.allNetworkNodes = allNetworkNodes;
-		this.simulationCreator = simulationCreator;
         this.simulationControlLayer = simulationControlLayer;
-        this.projection = projection;
 	}
 	
 	
@@ -137,21 +103,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
     }
 
     protected void initEntityLayers(Simulation simulation, Projection projection) {
-        MultipleDrawListener drawListener = new MultipleDrawListener(simulation, 1000, 40);
-        
-        EntityStorage<AgentPolisEntity> entityStorage = new EntityStorage<>();
 
-        for (String entityId : agentStorage.getEntityIds()) {
-            entityStorage.addEntity(agentStorage.getEntityById(entityId));
-        }
-
-        for (String entityId : vehicleStorage.getEntityIds()) {
-            entityStorage.addEntity(vehicleStorage.getEntityById(entityId));
-        }
-
-        VisManager.registerLayer(VisEntityLayer.createSynchronized(entityStorage, agentPositionModel, 
-				vehiclePositionModel, allNetworkNodes.getAllNetworkNodes(), drawListener, 
-				simulationCreator.getEntityStyles(), projection));
     }
 
     protected void initLayersAfterEntityLayers() {
