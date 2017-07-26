@@ -7,8 +7,6 @@ import com.google.inject.Injector;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
@@ -29,12 +27,14 @@ public abstract class AgentDensityUpdateGEFactory extends DensityUpdateGEFactory
 
     @Override
     protected EntityPositionModel getEntityPositionStorage(Injector injector) {
-        return injector.getInstance(AgentPositionModel.class);
+//        return injector.getInstance(AgentPositionModel.class);
+        return null;
     }
 
     @Override
     protected EntityStorage<Agent> getEntityStorage(Injector injector) {
-        return injector.getInstance(AgentStorage.class);
+//        return injector.getInstance(AgentStorage.class);
+        return null;
     }
 
 }

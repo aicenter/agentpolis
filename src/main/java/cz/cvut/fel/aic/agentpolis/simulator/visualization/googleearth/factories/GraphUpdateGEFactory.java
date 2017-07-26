@@ -3,8 +3,6 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.factories
 import com.google.inject.Injector;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.updates.GraphUpdateGE;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentPositionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
@@ -59,8 +57,10 @@ public class GraphUpdateGEFactory extends UpdateGEFactory {
                     coordinatesInner);
         }
 
-        GraphGE graphGE = new GraphGE(injector.getInstance(AgentPositionModel.class),
-                injector.getInstance(VehiclePositionModel.class), edges);
+//        GraphGE graphGE = new GraphGE(injector.getInstance(AgentPositionModel.class),
+//                injector.getInstance(VehiclePositionModel.class), edges);
+        
+        GraphGE graphGE = null;
 
         return new GraphUpdateGE(coordinates, graphGE, graphColor);
     }
