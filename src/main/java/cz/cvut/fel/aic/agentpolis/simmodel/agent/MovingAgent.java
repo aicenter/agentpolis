@@ -6,7 +6,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.agent;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.action.driving.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 
 /**

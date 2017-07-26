@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.action.driving;
+package cz.cvut.fel.aic.agentpolis.simmodel.agent;
 
 /**
  *

@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.action.moving;
+package cz.cvut.fel.aic.agentpolis.simmodel;
 
 
 /**

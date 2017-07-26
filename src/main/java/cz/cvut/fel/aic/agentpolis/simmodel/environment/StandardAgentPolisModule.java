@@ -22,8 +22,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.Graphs;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.action.callback.VehicleArrivedCallback;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.action.moving.MovingActionCallback;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
@@ -119,10 +117,8 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         
         //binding sfor VehicleNotificationModel
         bind(new TypeLiteral<Map<VehicleAndPositionKey, Set<String>>>(){}).toInstance(new HashMap<>());
-        bind(new TypeLiteral<Map<String, VehicleArrivedCallback>>(){}).toInstance(new HashMap<>());
         
         // bindings for BeforePlanNotifyModel
-        bind(new TypeLiteral<Map<String, MovingActionCallback>>(){}).toInstance(new HashMap<>());
         bind(new TypeLiteral<Map<String, PassengerBeforePlanNotifySensor>>(){}).toInstance(new HashMap<>());
         bind(new TypeLiteral<Map<String, String>>(){}).toInstance(new HashMap<>());
         bind(new TypeLiteral<Map<String, Set<String>>>(){}).toInstance(new HashMap<>());
