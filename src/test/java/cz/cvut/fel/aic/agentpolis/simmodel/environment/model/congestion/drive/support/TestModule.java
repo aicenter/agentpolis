@@ -14,6 +14,15 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer
  */
 public class TestModule extends StandardAgentPolisModule{
 
+    public TestModule() {
+        super();
+        if(System.getProperty("test") == null){
+            config.showVisio = false;
+        }
+    }
+    
+    
+
     @Override
     protected void bindVisioInitializer() {
         bind(VisioInitializer.class).to(TestVisioInitializer.class);

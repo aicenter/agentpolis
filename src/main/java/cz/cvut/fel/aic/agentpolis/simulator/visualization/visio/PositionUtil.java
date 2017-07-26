@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;

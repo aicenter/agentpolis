@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
-import cz.cvut.fel.aic.agentpolis.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;

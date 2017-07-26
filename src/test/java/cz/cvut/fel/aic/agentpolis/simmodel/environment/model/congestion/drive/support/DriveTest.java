@@ -91,28 +91,6 @@ public class DriveTest {
         congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
         
         creator.startSimulation();
-        
-        
-
-//        List<TimeTrip<Long>> osmNodesList;
-//        try {
-//            osmNodesList = TripTransform.jsonToTrips(new File(config.agentpolis.preprocessedTrips), Long.class);
-//            RebalancingLoader rebalancingLoader = injector.getInstance(RebalancingLoader.class);
-//            rebalancingLoader.load(new File(config.rebalancing.policyFilePath));
-//
-//            //  injector.getInstance(EntityInitializer.class).initialize(rebalancingLoader.getOnDemandVehicleStations());
-//
-//            injector.getInstance(EventInitializer.class).initialize(osmNodesList,
-//                    rebalancingLoader.getRebalancingTrips(), config);
-//
-//            injector.getInstance(StatisticInitializer.class).initialize();
-//
-//            // start it up
-//            creator.startSimulation();
-//        
-//        } catch (IOException ex) {
-//            Logger.getLogger(OnDemandVehiclesSimulation.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
     
     private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){

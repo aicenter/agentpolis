@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.agentpolis.config;
+package cz.cvut.fel.aic.agentpolis.config;
 
 import java.lang.Boolean;
 import java.lang.Integer;

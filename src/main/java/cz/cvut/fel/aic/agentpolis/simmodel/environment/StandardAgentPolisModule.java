@@ -9,7 +9,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import cz.cvut.fel.aic.agentpolis.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.LogItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
@@ -78,7 +78,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
     
     private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
-    private final Config config;
+    protected final Config config;
     
 
     private List<Object> loggers;

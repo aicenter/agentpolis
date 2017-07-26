@@ -3,7 +3,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.creator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
