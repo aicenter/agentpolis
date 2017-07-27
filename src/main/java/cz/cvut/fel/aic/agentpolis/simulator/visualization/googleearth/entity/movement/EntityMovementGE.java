@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.basestructures.Node;
@@ -37,15 +36,14 @@ public class EntityMovementGE {
 		this.maxEntitySpeedStorage = maxEntitySpeedStorage;
 	}
 
-	public synchronized Map<String, Coordinate> getEntityPosition(Set<String> entityIds,
-																  EntityPositionModel entityPositionStorage,
-																  RegionBounds activeRegionBounds) {
+	public synchronized Map<String, Coordinate> getEntityPosition(Set<String> entityIds, RegionBounds activeRegionBounds) {
 
 		Map<String, Coordinate> entityMovement = new HashMap<>();
 
 		for (String entityId : entityIds) {
 
-			Integer currentEntityPositionById = entityPositionStorage.getEntityPositionByNodeId(entityId);
+//			Integer currentEntityPositionById = entityPositionStorage.getEntityPositionByNodeId(entityId);
+            Integer currentEntityPositionById = 0;
 
 			if (currentEntityPositionById == null) {
 				continue;

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.density.IDensityGE;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.agents.basestructures.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 
@@ -19,14 +18,12 @@ import de.micromata.opengis.kml.v_2_2_0.Coordinate;
  */
 public class DensityGE implements IDensityGE {
 
-    private final EntityPositionModel entityPositionStorage;
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
     private final Set<String> allowedEntitiesIds;
 
-    public DensityGE(EntityPositionModel entityPositionStorage, Map<Integer, ? extends Node> nodesFromAllGraphs,
+    public DensityGE(Map<Integer, ? extends Node> nodesFromAllGraphs,
             Set<String> allowedEntitiesIds) {
         super();
-        this.entityPositionStorage = entityPositionStorage;
         this.nodesFromAllGraphs = nodesFromAllGraphs;
         this.allowedEntitiesIds = allowedEntitiesIds;
     }
@@ -37,7 +34,8 @@ public class DensityGE implements IDensityGE {
 
         for (String entityId : allowedEntitiesIds) {
 
-            Integer entityPositionByNodeId = entityPositionStorage.getEntityPositionByNodeId(entityId);
+//            Integer entityPositionByNodeId = entityPositionStorage.getEntityPositionByNodeId(entityId);
+            Integer entityPositionByNodeId = 0;
             Node node = nodesFromAllGraphs.get(entityPositionByNodeId);
             double lat = node.getLatitude();
             double lon = node.getLongitude();

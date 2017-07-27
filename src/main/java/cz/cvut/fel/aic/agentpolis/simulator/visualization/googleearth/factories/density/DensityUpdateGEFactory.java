@@ -5,7 +5,6 @@ import cz.agents.agentpolis.apgooglearth.density.IDensityGE;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
@@ -53,8 +52,10 @@ public abstract class DensityUpdateGEFactory extends UpdateGEFactory {
             }
         }
 
-        IDensityGE densityGE = new DensityGE(getEntityPositionStorage(injector), injector
-                .getInstance(AllNetworkNodes.class).getAllNetworkNodes(), allowedEntitiesIds);
+//        IDensityGE densityGE = new DensityGE(getEntityPositionStorage(injector), injector
+//                .getInstance(AllNetworkNodes.class).getAllNetworkNodes(), allowedEntitiesIds);
+        
+        IDensityGE densityGE = null;
 
         return createDensityUpdateGE(densityGE, regionBounds, color);
     }
@@ -63,7 +64,5 @@ public abstract class DensityUpdateGEFactory extends UpdateGEFactory {
             RegionBounds regionBounds, Color color);
 
     protected abstract EntityStorage<?> getEntityStorage(Injector injector);
-
-    protected abstract EntityPositionModel getEntityPositionStorage(Injector injector);
 
 }

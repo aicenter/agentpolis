@@ -8,7 +8,6 @@ import java.util.Set;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.utils.DescriptionGEUtil;
@@ -23,7 +22,6 @@ import de.micromata.opengis.kml.v_2_2_0.Coordinate;
  */
 public class VehicleGE implements IVehicleGE {
 
-    private final EntityPositionModel vehiclePositionStorage;
     private final LinkedEntityModel linkedEntityStorage;
 
     private final List<PhysicalVehicle> vehicles;
@@ -37,13 +35,11 @@ public class VehicleGE implements IVehicleGE {
 
     private final Set<String> allowedVehiclesIds;
 
-    public VehicleGE(List<PhysicalVehicle> vehicles, EntityPositionModel storage,
-            final Map<Integer, ? extends Node> nodesFromAllGraphs,
+    public VehicleGE(List<PhysicalVehicle> vehicles, final Map<Integer, ? extends Node> nodesFromAllGraphs,
             LinkedEntityModel linkedEntityStorage, EntityMovementGE entityMovement,
             Set<String> allowedVehiclesIds) {
         super();
         this.vehicles = vehicles;
-        this.vehiclePositionStorage = storage;
         this.nodesFromAllGraphs = nodesFromAllGraphs;
         this.linkedEntityStorage = linkedEntityStorage;
         this.entityMovement = entityMovement;
@@ -58,8 +54,9 @@ public class VehicleGE implements IVehicleGE {
             StringBuilder html = new StringBuilder(
                     DescriptionGEUtil.transformDescriptionToHTML(vehicle.getDescription()));
 
-            Integer currentVehiclePositionById = vehiclePositionStorage
-                    .getEntityPositionByNodeId(vehicle.getId());
+//            Integer currentVehiclePositionById = vehiclePositionStorage
+//                    .getEntityPositionByNodeId(vehicle.getId());
+            Integer currentVehiclePositionById = 0;
             Node currentVehiclePosition = nodesFromAllGraphs.get(currentVehiclePositionById);
             int numberOfPassengerInVehicle = linkedEntityStorage
                     .numOfLinkedEntites(vehicle.getId());
@@ -96,8 +93,10 @@ public class VehicleGE implements IVehicleGE {
         // nodesFromAllGraphs.get(l).getLatLon().lat()) );
         // }
         // return map;
-        return entityMovement.getEntityPosition(allowedVehiclesIds, vehiclePositionStorage,
-                activeRegionBounds);
+//        return entityMovement.getEntityPosition(allowedVehiclesIds, vehiclePositionStorage,
+//                activeRegionBounds);
+
+        return entityMovement.getEntityPosition(allowedVehiclesIds, activeRegionBounds);
 
     }
 

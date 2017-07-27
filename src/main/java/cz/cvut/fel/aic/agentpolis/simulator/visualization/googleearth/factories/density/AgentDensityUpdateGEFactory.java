@@ -7,7 +7,6 @@ import com.google.inject.Injector;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityPositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 
@@ -23,12 +22,6 @@ public abstract class AgentDensityUpdateGEFactory extends DensityUpdateGEFactory
     public AgentDensityUpdateGEFactory(CameraAltVisibility cameraAltVisibility, Color color,
             Set<EntityType> allowedEntityType, String nameOfUpdateKmlView) {
         super(cameraAltVisibility, color, allowedEntityType, nameOfUpdateKmlView);
-    }
-
-    @Override
-    protected EntityPositionModel getEntityPositionStorage(Injector injector) {
-//        return injector.getInstance(AgentPositionModel.class);
-        return null;
     }
 
     @Override

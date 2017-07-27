@@ -63,8 +63,7 @@ public class VehicleUpdateGEFactory extends UpdateGEFactory {
 //		IVehicleGE vehicleGE = new VehicleGE(vehicles, injector.getInstance(VehiclePositionModel.class),
 //                nodesFromAllGraphs, injector.getInstance(LinkedEntityModel.class), entityMovement, allowedVehiclesIds);
 
-        IVehicleGE vehicleGE = new VehicleGE(vehicles, null,
-                nodesFromAllGraphs, injector.getInstance(LinkedEntityModel.class), entityMovement, allowedVehiclesIds);
+        IVehicleGE vehicleGE = null;
 
 		return new VehicleUpdateGE(entityData, vehicleGE, regionBounds);
 
