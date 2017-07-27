@@ -17,11 +17,6 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPla
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
@@ -34,9 +29,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.impl.Del
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.impl.JunctionHandlerImpl;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeAndFromToNodeKey;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeAndToNodeKey;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.key.VehicleAndPositionKey;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.sensor.PassengerBeforePlanNotifySensor;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
@@ -103,23 +95,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
         bindConstant().annotatedWith(Names.named("mapSrid")).to(config.srid);
         
         bind(Config.class).toInstance(config);
-		
-		// bindings for storages
-		bind(new TypeLiteral<Map<String, Agent>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<String, PhysicalVehicle>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<String, AgentPolisEntity>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<EntityType, Set<String>>>(){}).toInstance(new HashMap<>());
-        
-        //binding sfor VehicleNotificationModel
-        bind(new TypeLiteral<Map<VehicleAndPositionKey, Set<String>>>(){}).toInstance(new HashMap<>());
-        
-        // bindings for BeforePlanNotifyModel
-        bind(new TypeLiteral<Map<String, PassengerBeforePlanNotifySensor>>(){}).toInstance(new HashMap<>());
-        bind(new TypeLiteral<Map<String, String>>(){}).toInstance(new HashMap<>());
-        bind(new TypeLiteral<Map<String, Set<String>>>(){}).toInstance(new HashMap<>());
-        
-        // bindings for UsingPassengerTransportModel
-		bind(new TypeLiteral<Map<String, UsingPublicTransportActivityCallback>>() {}).toInstance(new HashMap<>());
         
         bind(TimeProvider.class).to(StandardTimeProvider.class);
         
