@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.model;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.*;
@@ -36,7 +36,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.Grap
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeAndToNodeKey;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.key.VehicleAndPositionKey;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.sensor.PassengerBeforePlanNotifySensor;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.sensor.PositionUpdated;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.sensor.UsingPublicTransportActivityCallback;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
@@ -44,13 +43,13 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
-import cz.agents.agentpolis.utils.key.KeyWithString;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.basestructures.Edge;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentPolisMainModule;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.MetrowayNetwork;
@@ -110,10 +109,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		bind(new TypeLiteral<Map<String, PhysicalVehicle>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<String, AgentPolisEntity>>(){}).toInstance(new HashMap<>());
 		bind(new TypeLiteral<Map<EntityType, Set<String>>>(){}).toInstance(new HashMap<>());
-		
-		// bindings for position models
-		bind(new TypeLiteral<Map<String, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
-		bind(new TypeLiteral<Map<KeyWithString, Set<PositionUpdated>>>(){}).toInstance(new HashMap<>());
         
         //binding sfor VehicleNotificationModel
         bind(new TypeLiteral<Map<VehicleAndPositionKey, Set<String>>>(){}).toInstance(new HashMap<>());

@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.StandardAgentPolisModule;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.StandardAgentPolisModule;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 
 /**

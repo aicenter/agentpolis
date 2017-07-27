@@ -8,7 +8,6 @@ import cz.agents.agentpolis.apgooglearth.updates.VehicleUpdateGE;
 import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehiclePositionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehicleStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
@@ -61,7 +60,10 @@ public class VehicleUpdateGEFactory extends UpdateGEFactory {
 		EntityMovementGE entityMovement = new EntityMovementGE(nodesFromAllGraphs, injector.getInstance(EventProcessor
                 .class), injector.getInstance(EntityVelocityModel.class));
 
-		IVehicleGE vehicleGE = new VehicleGE(vehicles, injector.getInstance(VehiclePositionModel.class),
+//		IVehicleGE vehicleGE = new VehicleGE(vehicles, injector.getInstance(VehiclePositionModel.class),
+//                nodesFromAllGraphs, injector.getInstance(LinkedEntityModel.class), entityMovement, allowedVehiclesIds);
+
+        IVehicleGE vehicleGE = new VehicleGE(vehicles, null,
                 nodesFromAllGraphs, injector.getInstance(LinkedEntityModel.class), entityMovement, allowedVehiclesIds);
 
 		return new VehicleUpdateGE(entityData, vehicleGE, regionBounds);

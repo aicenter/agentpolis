@@ -13,7 +13,7 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.LogItem;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.StandardAgentPolisModule;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.StandardAgentPolisModule;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
