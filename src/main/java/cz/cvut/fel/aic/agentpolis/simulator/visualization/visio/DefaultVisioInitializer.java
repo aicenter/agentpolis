@@ -6,8 +6,6 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.graph.VisGraph;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.graph.VisGraphLayer;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
 import cz.agents.alite.vis.layer.common.FpsLayer;
@@ -23,7 +21,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TramwayNetwork;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,31 +72,9 @@ public class DefaultVisioInitializer implements VisioInitializer{
 		initLayersAfterEntityLayers();
         initInfoLayers();
 	}
-	
-	protected <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
-
-        List<Node> nodes = new ArrayList<>(graph.getAllNodes());
-        Map<Integer, Node> nodesWithIds = new HashMap<>();
-        for (Node node : nodes) {
-            nodesWithIds.put(node.id, node);
-        }
-
-        return new VisGraph(nodesWithIds, nodes, new ArrayList<>(graph.getAllEdges()));
-    }
 
     protected void initGraphLayers(Projection projection) {
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(pedestrianNetwork.getNetwork()), Color.GRAY, 2, 
-				Color.GRAY, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(bikewayNetwork.getNetwork()), Color.DARK_GRAY, 2, 
-				Color.DARK_GRAY, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(highwayNetwork.getNetwork()), Color.BLACK, 4,
-				Color.BLACK, 2, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(tramwayNetwork.getNetwork()), Color.ORANGE, 3, 
-				Color.ORANGE, 5, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(metrowayNetwork.getNetwork()), Color.RED, 3, Color.RED, 
-				5, projection));
-        VisManager.registerLayer(VisGraphLayer.create(wrapGraph(railwayNetwork.getNetwork()), Color.MAGENTA, 3, 
-				Color.MAGENTA, 5, projection));
+        
     }
 
     protected void initEntityLayers(Simulation simulation, Projection projection) {

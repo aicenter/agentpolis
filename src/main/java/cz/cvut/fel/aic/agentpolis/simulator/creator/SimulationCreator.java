@@ -18,7 +18,6 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntity;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.graph.VisGraph;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.agentpolis.utils.io.ResourceReader;
 import cz.agents.alite.common.event.Event;
@@ -324,17 +323,6 @@ public class SimulationCreator {
 
     public void addEntityStyleVis(final EntityType entityType, Color colorOfEntityInVis, int widthOfEntityInVis) {
         entityStyles.put(entityType, new VisEntity(colorOfEntityInVis, widthOfEntityInVis));
-    }
-
-    private <TNode extends Node, TEdge extends Edge> VisGraph wrapGraph(Graph<TNode, TEdge> graph) {
-
-        List<Node> nodes = new ArrayList<>(graph.getAllNodes());
-        Map<Integer, Node> nodesWithIds = new HashMap<>();
-        for (Node node : nodes) {
-            nodesWithIds.put(node.id, node);
-        }
-
-        return new VisGraph(nodesWithIds, nodes, new ArrayList<>(graph.getAllEdges()));
     }
 
     /**
