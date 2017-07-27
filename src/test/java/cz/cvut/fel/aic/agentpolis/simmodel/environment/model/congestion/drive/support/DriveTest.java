@@ -18,30 +18,12 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
 //import cz.agents.agentpolis.simulator.visualization.visio.Bound;
-import cz.agents.agentpolis.utils.config.ConfigReaderException;
 import cz.agents.basestructures.BoundingBox;
-import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.basestructures.Node;
-import ninja.fido.config.Configuration;
-//import cz.agents.amodsim.MainModule;
-//import cz.agents.amodsim.MapInitializer;
-//import cz.agents.amodsim.OnDemandVehiclesSimulation;
-//import cz.agents.amodsim.config.Config;
-//import cz.agents.amodsim.init.EventInitializer;
-//import cz.agents.amodsim.init.StatisticInitializer;
-//import cz.agents.amodsim.io.RebalancingLoader;
-//import cz.agents.amodsim.io.TimeTrip;
-//import cz.agents.amodsim.io.TripTransform;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.Test;
 
 /**
  *
@@ -57,8 +39,7 @@ public class DriveTest {
     private static final int START_TIME_MILIS = 25200000;
     
     
-    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> trip) 
-            throws ConfigReaderException {
+    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> trip) {
         
         
 //        Config config = Configuration.load(new Config());
