@@ -4,7 +4,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 
 import java.util.Map;
 

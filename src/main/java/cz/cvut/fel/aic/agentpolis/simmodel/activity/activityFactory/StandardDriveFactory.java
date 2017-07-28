@@ -20,7 +20,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Node;
 
 /**
  * @author fido

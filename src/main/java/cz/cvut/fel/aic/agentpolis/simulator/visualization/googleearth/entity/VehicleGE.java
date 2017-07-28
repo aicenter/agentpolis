@@ -11,7 +11,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.utils.DescriptionGEUtil;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 
 /**

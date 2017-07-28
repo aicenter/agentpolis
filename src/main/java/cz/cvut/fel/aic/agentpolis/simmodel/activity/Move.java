@@ -17,9 +17,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Node;
-import cz.agents.multimodalstructures.edges.RoadEdge;
+import cz.cvut.fel.aic.geographtools.Edge;
+
 
 import java.util.logging.Level;
 

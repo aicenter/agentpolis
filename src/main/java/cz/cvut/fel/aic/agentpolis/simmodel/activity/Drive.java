@@ -21,8 +21,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.eventType.DriveEvent;
 import cz.cvut.fel.aic.agentpolis.simmodel.eventType.Transit;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Graph;
+
 
 /**
  * @param <A>

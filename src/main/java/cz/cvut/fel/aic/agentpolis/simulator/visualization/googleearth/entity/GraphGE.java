@@ -2,12 +2,10 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.graph.IGraphGE;
-import cz.agents.basestructures.Edge;
+import cz.cvut.fel.aic.geographtools.Edge;
 
 /**
  * The graph representation for GE visualization

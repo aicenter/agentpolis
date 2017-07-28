@@ -1,17 +1,14 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements;
 
-import cz.agents.multimodalstructures.additional.ModeOfTransport;
-import cz.agents.multimodalstructures.edges.RoadEdge;
-
+import cz.cvut.fel.aic.geographtools.Edge;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Extended RoadEdge, contains road situation (lanes,two way pairs,...)
  * Also provides extended identification of the edge.
  * @author Zdenek Bousa
  */
-public class SimulationEdge extends RoadEdge {
+public class SimulationEdge extends Edge {
     /**
      * unique ID for each edge, also recognize directions
      */
@@ -30,6 +27,16 @@ public class SimulationEdge extends RoadEdge {
      */
     private final int lanesCount;
     private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
+    
+    /**
+	 * maximal allowed speed in meters per second
+	 */
+	public final float allowedMaxSpeedInMpS;
+    
+    /**
+	 * osm id of this edge
+	 */
+	public final long wayID;
 
     /**
      *
@@ -37,7 +44,6 @@ public class SimulationEdge extends RoadEdge {
      * @param toId destinationId
      * @param osmWayID osm id of this edge
      * @param uniqueWayId
-     * @param permittedModes int representation of permited modes
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
      * @param lengthInMetres -
      * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
@@ -50,12 +56,13 @@ public class SimulationEdge extends RoadEdge {
                             int uniqueWayId,
                             int oppositeWayId,
                             int lengthInMetres,
-                            Set<ModeOfTransport> permittedModes,
                             float allowedMaxSpeedInMpS,
                             int lanesCount) {
-        super(fromId, toId, osmWayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres);
+        super(fromId, toId, lengthInMetres);
 
         this.uniqueId = uniqueWayId;
+        this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
+        this.wayID = osmWayID;
 
         if (oppositeWayId >= -1) {
             this.oppositeWayId = oppositeWayId;

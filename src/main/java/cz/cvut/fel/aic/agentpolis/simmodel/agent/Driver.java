@@ -5,10 +5,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.agent;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.Node;
 
 /**
  *

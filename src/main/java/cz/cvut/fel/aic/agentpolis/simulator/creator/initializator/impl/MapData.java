@@ -3,8 +3,8 @@ package cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.BoundingBox;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.BoundingBox;
+import cz.cvut.fel.aic.geographtools.Graph;
 
 import java.util.Map;
 

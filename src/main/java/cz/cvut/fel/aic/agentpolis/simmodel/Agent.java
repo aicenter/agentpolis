@@ -4,9 +4,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.common.event.Event;
-import cz.agents.basestructures.Node;
 
 import java.util.logging.Level;
 

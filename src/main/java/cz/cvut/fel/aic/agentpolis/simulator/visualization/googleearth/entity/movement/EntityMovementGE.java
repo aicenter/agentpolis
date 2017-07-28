@@ -8,7 +8,7 @@ import java.util.Set;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.alite.common.event.EventProcessor;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 
 /**

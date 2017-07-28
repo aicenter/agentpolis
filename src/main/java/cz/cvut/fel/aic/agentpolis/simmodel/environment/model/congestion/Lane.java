@@ -12,7 +12,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
-import cz.agents.basestructures.GPSLocation;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 import java.util.LinkedList;
 
@@ -163,7 +163,7 @@ public class Lane {
         CongestionModel congestionModel = link.congestionModel;
         SimulationEdge edge = link.edge;
         double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), 
-                edge.getAllowedMaxSpeedInMpS());
+                edge.allowedMaxSpeedInMpS);
         double capacity = edge.getLanesCount() * edge.length;
         double level = currentlyUsedCapacityInMeters / capacity;
 

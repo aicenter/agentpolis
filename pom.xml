@@ -59,6 +59,11 @@
 			<artifactId>alite</artifactId>
             <version>1.2-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>cz.cvut.fel.aic</groupId>
+            <artifactId>geographtools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 		<dependency>
 			<groupId>cz.agents.alite.googleearth</groupId>
 			<artifactId>kml_visio</artifactId>
@@ -71,13 +76,13 @@
 			<artifactId>apgooglearth</artifactId>
             <version>2.0.1-SNAPSHOT</version>
 		</dependency>    
-		<dependency>
-			<groupId>cz.agents.agentpolis</groupId>
-			<artifactId>utils</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-		</dependency>
 
 		<!-- External lib -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+          </dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>

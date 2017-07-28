@@ -19,7 +19,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Connection;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Link;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

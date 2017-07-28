@@ -17,10 +17,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.CongestionTestType;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
+import cz.cvut.fel.aic.geographtools.BoundingBox;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 //import cz.agents.agentpolis.simulator.visualization.visio.Bound;
-import cz.agents.basestructures.BoundingBox;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

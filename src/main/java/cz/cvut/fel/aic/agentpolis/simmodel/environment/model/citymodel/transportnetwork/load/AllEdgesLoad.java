@@ -13,8 +13,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -95,8 +95,8 @@ public class GraphsToGeoJSONExporter {
         properties.put("id", node.id);
         properties.put("source_id", node.sourceId);
         properties.put("elevation", node.elevation);
-        properties.put("isBikeSharingStation", node.isBikeSharingStation);
-        properties.put("isParkAndRide", node.isParkAndRide);
+//        properties.put("isBikeSharingStation", node.isBikeSharingStation);
+//        properties.put("isParkAndRide", node.isParkAndRide);
         return properties;
     }
 

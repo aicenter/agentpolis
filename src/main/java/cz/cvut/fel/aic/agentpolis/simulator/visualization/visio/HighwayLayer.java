@@ -12,7 +12,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 
 import javax.vecmath.Point2d;
 import java.awt.*;

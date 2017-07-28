@@ -25,12 +25,11 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
-import cz.agents.basestructures.BoundingBox;
-import cz.agents.basestructures.GPSLocation;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
-import cz.agents.geotools.GPSLocationTools;
-import cz.agents.geotools.Transformer;
+import cz.cvut.fel.aic.geographtools.BoundingBox;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;

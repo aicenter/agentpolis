@@ -11,9 +11,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
-import cz.agents.multimodalstructures.edges.RoadEdge;
+import cz.cvut.fel.aic.geographtools.Edge;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -57,7 +57,7 @@ public class ShortestPathPlanner {
                     plannerGraph.addVertex(fromPositionByNodeId);
                 }
 
-                for (RoadEdge edge : graph.getOutEdges(node.id)) {
+                for (SimulationEdge edge : graph.getOutEdges(node.id)) {
                     Integer toPositionByNodeId = edge.toId;
                     if (!addedNodes.contains(toPositionByNodeId)) {
                         addedNodes.add(toPositionByNodeId);

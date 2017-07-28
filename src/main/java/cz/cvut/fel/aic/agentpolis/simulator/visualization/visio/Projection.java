@@ -5,10 +5,9 @@ import java.util.Map;
 
 import javax.vecmath.Point3d;
 
-import cz.agents.basestructures.BoundingBox;
-import cz.agents.basestructures.GPSLocation;
-
 import cz.agents.alite.vis.Vis;
+import cz.cvut.fel.aic.geographtools.BoundingBox;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 /**
  * This class computes projection of point in latitude and longitude to point on screen. Computation based on {@link
@@ -67,8 +66,8 @@ public class Projection {
 			double bMinLat = bounds.getMinLatE6();
 			double bMaxLat = bounds.getMaxLatE6();
 
-			double x = (location.getLonE6() - bMinLon) / (bMaxLon - bMinLon) * sceneWidth;
-			double y = sceneHeight - (location.getLatE6() - bMinLat) / (bMaxLat - bMinLat) * sceneHeight;
+			double x = (location.lonE6 - bMinLon) / (bMaxLon - bMinLon) * sceneWidth;
+			double y = sceneHeight - (location.latE6 - bMinLat) / (bMaxLat - bMinLat) * sceneHeight;
 
 			// Create new point
 			point = new Point3d(x, y, 0);

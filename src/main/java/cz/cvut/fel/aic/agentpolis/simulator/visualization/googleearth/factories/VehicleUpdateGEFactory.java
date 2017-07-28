@@ -11,14 +11,12 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.VehicleStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.entityvelocitymodel.EntityVelocityModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.VehicleGE;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 import cz.agents.alite.googleearth.updates.UpdateKmlView;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.*;
 

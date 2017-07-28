@@ -15,8 +15,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Node;
 
 /**
  * @author fido

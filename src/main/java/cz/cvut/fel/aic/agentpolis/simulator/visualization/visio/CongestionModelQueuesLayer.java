@@ -10,7 +10,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Link;
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;

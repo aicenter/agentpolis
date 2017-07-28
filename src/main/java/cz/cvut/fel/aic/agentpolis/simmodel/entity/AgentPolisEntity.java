@@ -5,7 +5,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.description.Description;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.AliteEntity;
 import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.basestructures.GPSLocation;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 /**
  * Entity for AgentPolis (agent or vehicle ...)

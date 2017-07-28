@@ -1,8 +1,9 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks;
 
-import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Edge;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
+
 
 
 

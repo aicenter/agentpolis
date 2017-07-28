@@ -7,10 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.GraphBuilder;
-import cz.agents.multimodalstructures.additional.ModeOfTransport;
-import java.util.HashSet;
-import java.util.Set;
+import cz.cvut.fel.aic.geographtools.GraphBuilder;
 
 /**
  *
@@ -18,7 +15,6 @@ import java.util.Set;
  */
 public class Utils {
     public static GraphBuilder<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount) {
-        Set<ModeOfTransport> permittedMode = new HashSet<>();
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
         int radius = 1000;
@@ -30,13 +26,13 @@ public class Utils {
             int y = (int) Math.round(radius * Math.sin(angle));
             
             
-            SimulationNode node = new SimulationNode(i, 0, x, y, x, y, 0, false, false);
+            SimulationNode node = new SimulationNode(i, 0, x, y, x, y, 0);
         
             graphBuilder.addNode(node);
             
             for (int j = 0; j < i; j++) {
-                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 0, 100, permittedMode, 40, 1);
-                SimulationEdge edge2 = new SimulationEdge(j, i, 0, 0, 0, 100, permittedMode, 40, 1);
+                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 0, 100, 40, 1);
+                SimulationEdge edge2 = new SimulationEdge(j, i, 0, 0, 0, 100, 40, 1);
 
                 graphBuilder.addEdge(edge1);
                 graphBuilder.addEdge(edge2);

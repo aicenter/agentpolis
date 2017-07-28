@@ -11,10 +11,10 @@ import com.google.inject.name.Named;
 import com.vividsolutions.jts.geom.Coordinate;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
-import cz.agents.agentpolis.utils.nearestelement.NearestElementUtil;
-import cz.agents.basestructures.GPSLocation;
-import cz.agents.geotools.Transformer;
-import org.javatuples.Pair;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
+import cz.cvut.fel.aic.geographtools.util.NearestElementUtil;
+import cz.cvut.fel.aic.geographtools.util.NearestElementUtilPair;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,10 +64,10 @@ public class NearestElementUtils {
     }
 
     private void createNearestElementUtil(GraphType graphType) {
-        List<Pair<Coordinate,SimulationNode>> pairs = new ArrayList<>();
+        List<NearestElementUtilPair<Coordinate,SimulationNode>> pairs = new ArrayList<>();
 		
 		for (SimulationNode node : transportNetworks.getGraph(graphType).getAllNodes()) {
-			pairs.add(new Pair<>(new Coordinate(node.getLongitude(), node.getLatitude()), node));
+			pairs.add(new NearestElementUtilPair<>(new Coordinate(node.getLongitude(), node.getLatitude()), node));
 		}
 		
 		NearestElementUtil<SimulationNode> nearestElementUtil = new NearestElementUtil<>(pairs, transformer, 

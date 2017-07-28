@@ -38,9 +38,6 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemVi
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.simulation.Simulation;
-import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentPolisMainModule;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
@@ -49,6 +46,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
+import cz.cvut.fel.aic.geographtools.Edge;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 import java.time.ZonedDateTime;
 
 import java.util.HashMap;

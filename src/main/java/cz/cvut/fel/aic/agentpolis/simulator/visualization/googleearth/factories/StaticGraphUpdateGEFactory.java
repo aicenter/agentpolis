@@ -8,9 +8,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 import cz.agents.alite.googleearth.updates.UpdateKmlView;
-import cz.agents.basestructures.Edge;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.Edge;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 
 import java.awt.*;

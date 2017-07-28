@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transpor
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.agents.basestructures.Graph;
+import cz.cvut.fel.aic.geographtools.Graph;
 
 public class MetrowayNetwork extends Network<SimulationNode, SimulationEdge> {
 

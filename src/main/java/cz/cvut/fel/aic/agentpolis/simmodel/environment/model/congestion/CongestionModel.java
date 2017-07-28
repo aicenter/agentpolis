@@ -20,9 +20,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
-import cz.agents.basestructures.GPSLocation;
-import cz.agents.basestructures.Graph;
-import cz.agents.basestructures.Node;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
+import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.Node;
 import java.security.ProviderException;
 import java.util.Collection;
 import java.util.HashMap;
