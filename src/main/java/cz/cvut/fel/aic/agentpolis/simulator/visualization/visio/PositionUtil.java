@@ -241,15 +241,17 @@ public class PositionUtil {
     }
     
     public GPSLocation getPointOnVector(GPSLocation startLocation, GPSLocation targetLocation, double portion){
-        
-        int xIncrement = (int) Math.round((targetLocation.lonProjected - startLocation.lonProjected) * portion);
-        int yIncrement = (int) Math.round((targetLocation.latProjected - startLocation.latProjected) * portion);
+        int xIncrement = (int) Math.round((targetLocation.getLongitudeProjected1E6()
+                - startLocation.getLongitudeProjected1E6()) * portion);
+        int yIncrement = (int) Math.round((targetLocation.getLatitudeProjected1E6()
+                - startLocation.getLatitudeProjected1E6()) * portion);
 
-        return new GPSLocation(0, 0, startLocation.latProjected + yIncrement, startLocation.lonProjected + xIncrement);
+        return new GPSLocation(0, 0, startLocation.getLatitudeProjected1E6() + yIncrement, 
+                startLocation.getLongitudeProjected1E6() + xIncrement);
     }
     
     public double getDistance(GPSLocation from, GPSLocation to){
-        return Math.sqrt(Math.pow(Math.abs(from.latProjected - to.latProjected), 2) 
-                + Math.pow(Math.abs(from.lonProjected - to.lonProjected), 2));
+        return Math.sqrt(Math.pow(Math.abs(from.getLatitudeProjected()- to.getLatitudeProjected()), 2) 
+                + Math.pow(Math.abs(from.getLongitudeProjected() - to.getLongitudeProjected()), 2));
     }
 }
