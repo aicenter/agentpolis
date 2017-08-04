@@ -21,6 +21,8 @@ public class Log {
      * Java logger.
      */
     private static Logger logger;
+    
+    private static FileHandler fileHandler;
 
 
     /**
@@ -47,14 +49,18 @@ public class Log {
 
         try {
             // file log settings
-            FileHandler fileHandler = new FileHandler(logFilePath);
+            fileHandler = new FileHandler(logFilePath, true);
             fileHandler.setLevel(logLevel);
             fileHandler.setFormatter(logFormater);
             logger.addHandler(fileHandler);
-        } catch (IOException ex) {
+        } catch (IOException | SecurityException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void close(){
+        if(fileHandler != null){
+            fileHandler.close();
         }
     }
 
