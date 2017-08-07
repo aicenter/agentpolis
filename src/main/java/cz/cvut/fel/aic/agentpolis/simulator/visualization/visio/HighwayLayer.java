@@ -26,7 +26,7 @@ import java.awt.geom.Rectangle2D;
 @Singleton
 public class HighwayLayer extends AbstractLayer{
     
-    private static final int EDGE_WIDTH = 40;
+    private static final int EDGE_WIDTH = 8;
     
     
     

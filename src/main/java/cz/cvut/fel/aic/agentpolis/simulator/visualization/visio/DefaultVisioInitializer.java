@@ -7,6 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import cz.agents.alite.simulation.Simulation;
+import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.VisManager;
 import cz.agents.alite.vis.layer.common.FpsLayer;
 import cz.agents.alite.vis.layer.common.HelpLayer;
@@ -17,6 +18,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.PedestrianNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TramwayNetwork;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
+import cz.cvut.fel.aic.geographtools.GraphSpec2D;
+import cz.cvut.fel.aic.geographtools.util.Utils2D;
+import javax.vecmath.Point2d;
 
 
 /**
@@ -38,6 +43,8 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	private final RailwayNetwork railwayNetwork;
     
     private final SimulationControlLayer simulationControlLayer;
+    
+    
     
     
 
@@ -93,29 +100,45 @@ public class DefaultVisioInitializer implements VisioInitializer{
     }
 
     private void initWindow() {
-        final int windowHight = 0;
-        final int windowWidth = 0;
+        final int windowHight = 1000;
+        final int windowWidth = 1900;
+        
+        VisManager.setInvertYAxis(true);
 
         VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
-        VisManager.init();
+        
 
 //        final double zoomFactor = windowWidth / projection.sceneWidth;
         
-        final double zoomFactor = 1.2;
+//        final double zoomFactor = 1.2;
 
         VisManager.setSceneParam(new VisManager.SceneParams() {
 
             @Override
             public double getDefaultZoomFactor() {
-                return zoomFactor;
+                return (double) 1900 / Utils2D.getGraphWidth(highwayNetwork.getNetwork());
             }
+            
+            
 
 //            @Override
 //            public Rectangle getWorldBounds() {
 //                return new Rectangle(projection.sceneWidth, projection.sceneHeight);
 //            }
 
+            @Override
+            public Point2d getDefaultLookAt() {
+                GPSLocation centroid = Utils2D.getGraphCentroid(highwayNetwork.getNetwork());
+                Point2d centerPoint = new Point2d(centroid.getLongitudeProjected(), 
+                        centroid.getLatitudeProjected());
+                return centerPoint;
+            }
+
         });
+        
+        
+        
+        VisManager.init();
     }
 	
 }

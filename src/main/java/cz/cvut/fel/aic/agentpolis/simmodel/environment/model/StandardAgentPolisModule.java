@@ -48,7 +48,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.geographtools.Edge;
 import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.time.ZonedDateTime;
 
 import java.util.HashMap;
@@ -109,6 +111,12 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		
 	}
     
+    
+    @Provides 
+	@Singleton
+	public GraphSpec2D getMapSpecification(HighwayNetwork highwayNetwork){
+		return Utils2D.getGraphSpec(highwayNetwork.getNetwork());
+	}
     
 	@Provides 
 	@Singleton

@@ -28,8 +28,10 @@ import cz.agents.alite.vis.Vis;
 import cz.cvut.fel.aic.geographtools.BoundingBox;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
+import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.Node;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
+import cz.cvut.fel.aic.geographtools.util.Utils2D;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -55,11 +57,13 @@ public class PositionUtil {
     private final TimeProvider timeProvider;
     
     private final Transformer transformer;
+    
+    private final GraphSpec2D mapSpecification;
 
 
     @Inject
     public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
-                        HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config) {
+                        HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config, GraphSpec2D mapSpecification) {
         this.projection = projection;
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();
@@ -67,6 +71,7 @@ public class PositionUtil {
         this.timeProvider = timeProvider;
         this.config = config;
         transformer = new Transformer(config.srid);
+        this.mapSpecification = mapSpecification;
     }
 
 
@@ -75,13 +80,14 @@ public class PositionUtil {
     }
 
     public Point2d getPosition(GPSLocation position) {
-        Point3d projectedPoint = projection.project(position);
-        return new Point2d(projectedPoint.x, projectedPoint.y);
+//        Point3d projectedPoint = projection.project(position);
+        return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {
         Point3d projectedPoint = projection.project(position);
-        return new Point2d(Vis.transX(projectedPoint.x), Vis.transY(projectedPoint.y));
+//        return new Point2d(Vis.transX(projectedPoint.x), Vis.transY(projectedPoint.y));
+        return new Point2d(Vis.transX(position.getLongitudeProjected()), Vis.transY(position.getLatitudeProjected()));
     }
 
     public Point2d getCanvasPosition(int nodeId) {
@@ -102,10 +108,11 @@ public class PositionUtil {
 //        Point2d minMax = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
 //                mapBounds.getMaxNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
 //        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinNode(), mapBounds.getMinLonE6(), 0, 0));
-        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
-
-        return (int) (minMax.x - minMin.x);
+//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
+//
+//        return (int) (minMax.x - minMin.x);
+        return mapSpecification.getWidth();
     }
 
     public int getWorldHeight() {
@@ -113,10 +120,11 @@ public class PositionUtil {
 //                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
 //        Point2d maxMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMaxNode().getLatitude(), 
 //                mapBounds.getMinNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
-        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
-
-        return (int) (minMin.y - maxMin.y);
+//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
+//
+//        return (int) (minMin.y - maxMin.y);
+        return mapSpecification.getHeight();
     }
 
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
