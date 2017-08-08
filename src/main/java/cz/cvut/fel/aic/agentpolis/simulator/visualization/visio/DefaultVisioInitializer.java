@@ -44,6 +44,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
     
     private final SimulationControlLayer simulationControlLayer;
     
+    private final GridLayer gridLayer;
     
     
     
@@ -51,7 +52,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	@Inject
 	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
 			HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
-			RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer) {
+			RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer) {
 		this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
@@ -59,6 +60,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 		this.metrowayNetwork = metrowayNetwork;
 		this.railwayNetwork = railwayNetwork;
         this.simulationControlLayer = simulationControlLayer;
+        this.gridLayer = gridLayer;
 	}
 	
 	
@@ -74,7 +76,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	}
 
     protected void initGraphLayers() {
-        
+        VisManager.registerLayer(gridLayer);
     }
 
     protected void initEntityLayers(Simulation simulation) {

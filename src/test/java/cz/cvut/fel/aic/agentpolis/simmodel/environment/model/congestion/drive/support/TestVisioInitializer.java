@@ -20,6 +20,7 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.SimulationContro
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
 import cz.agents.alite.vis.layer.common.ColorLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.GridLayer;
 import java.awt.Color;
 
 /**
@@ -40,9 +41,9 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
             HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
             RailwayNetwork railwayNetwork, 
             SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
-            TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer) {
+            TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer) {
         super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-                simulationControlLayer);
+                simulationControlLayer, gridLayer);
         this.highwayLayer = highwayLayer;
         this.testVehicleLayer = testVehicleLayer;
         this.nodeIdLayer = nodeIdLayer;
@@ -51,6 +52,7 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     @Override
     protected void initGraphLayers() {
         VisManager.registerLayer(ColorLayer.create(Color.white));
+        super.initGraphLayers();
         VisManager.registerLayer(highwayLayer);
     }
 
