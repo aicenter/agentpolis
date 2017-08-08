@@ -25,7 +25,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.agents.alite.vis.Vis;
-import cz.cvut.fel.aic.geographtools.BoundingBox;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
@@ -46,8 +45,6 @@ public class PositionUtil {
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
-    private final BoundingBox mapBounds;
-
     private final Graph<SimulationNode, SimulationEdge> network;
 
     private final TimeProvider timeProvider;
@@ -61,7 +58,6 @@ public class PositionUtil {
     public PositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
                         HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config, GraphSpec2D mapSpecification) {
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
-        mapBounds = simulationCreator.getBoundsOfMap();
         network = highwayNetwork.getNetwork();
         this.timeProvider = timeProvider;
         this.config = config;

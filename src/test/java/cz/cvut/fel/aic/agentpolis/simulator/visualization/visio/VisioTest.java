@@ -7,18 +7,13 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Injector;
 import cz.cvut.fel.aic.agentpolis.AgentPolisInitializer;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestModule;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.MapDataGenerator;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
-import cz.cvut.fel.aic.geographtools.BoundingBox;
 import cz.cvut.fel.aic.geographtools.Graph;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *

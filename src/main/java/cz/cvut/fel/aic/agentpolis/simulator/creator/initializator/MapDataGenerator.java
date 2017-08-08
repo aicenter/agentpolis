@@ -10,10 +10,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
-import cz.cvut.fel.aic.geographtools.BoundingBox;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.Node;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,10 +38,9 @@ public class MapDataGenerator {
         graphs.put(EGraphType.HIGHWAY, graph);
 
         Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
-        BoundingBox bounds = computeBounds(nodes.values());
 
 //        LOGGER.info("Graphs imported, highway graph details: " + graphs.get(EGraphType.HIGHWAY));
-        return new MapData(bounds, graphs, nodes);
+        return new MapData(graphs, nodes);
     }
     
     /**
@@ -64,25 +60,5 @@ public class MapDataGenerator {
         }
 
         return nodesFromAllGraphs;
-
-    }
-    
-    private BoundingBox computeBounds(Collection<SimulationNode> nodes) {
-        double latMin = Double.POSITIVE_INFINITY;
-        double latMax = Double.NEGATIVE_INFINITY;
-
-        double lonMin = Double.POSITIVE_INFINITY;
-        double lonMax = Double.NEGATIVE_INFINITY;
-
-        for (Node node : nodes) {
-            double lat = node.getLatitude();
-            double lon = node.getLongitude();
-
-            if (lat < latMin) latMin = lat;
-            else if (lat > latMax) latMax = lat;
-            if (lon < lonMin) lonMin = lon;
-            else if (lon > lonMax) lonMax = lon;
-        }
-        return new BoundingBox((int) (lonMin * 1E6), (int) (latMin * 1E6), (int) (lonMax * 1E6), (int) (latMax * 1E6));
     }
 }

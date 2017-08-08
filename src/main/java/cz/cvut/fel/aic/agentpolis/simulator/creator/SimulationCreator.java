@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.Config;
-import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.AgentStorage;
@@ -25,7 +24,6 @@ import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.agents.alite.simulation.Simulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
-import cz.cvut.fel.aic.geographtools.BoundingBox;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -90,9 +88,7 @@ public class SimulationCreator {
     private final EntityVelocityModel entityVelocityModel;
     
     private final TimeEventGenerator timeEventGenerator;
-    
-    
-    public BoundingBox boundsOfMap = null;
+
 	
 	
 	
@@ -100,10 +96,6 @@ public class SimulationCreator {
 	public Map<EntityType, VisEntity> getEntityStyles() {
 		return entityStyles;
 	}
-
-    public BoundingBox getBoundsOfMap() {
-        return boundsOfMap;
-    }
     
     
 	
@@ -133,7 +125,6 @@ public class SimulationCreator {
         initSimulation();
 
         LOGGER.info(">>> MAPS CREATION");
-        boundsOfMap = osmDTO.bounds;
 
         initEnvironment(osmDTO, seed);
 
@@ -281,12 +272,12 @@ public class SimulationCreator {
         synthetiser = new Synthetiser();
         LOGGER.info("Google Earth - was started ");
 
-        double north = boundsOfMap.getMaxLatE6() / 1E6;
-        double east = boundsOfMap.getMaxLonE6() / 1E6;
-        double south = boundsOfMap.getMinLatE6() / 1E6;
-        double west = boundsOfMap.getMinLonE6() / 1E6;
+//        double north = boundsOfMap.getMaxLatE6() / 1E6;
+//        double east = boundsOfMap.getMaxLonE6() / 1E6;
+//        double south = boundsOfMap.getMinLatE6() / 1E6;
+//        double west = boundsOfMap.getMinLonE6() / 1E6;
 
-        RegionBounds regionBounds = RegionBounds.createRegionBounds(north, south, east, west);
+//        RegionBounds regionBounds = RegionBounds.createRegionBounds(north, south, east, west);
 
         for (UpdateGEFactory factoryGoogleEarth : factoryGoogleEarths) {
             
