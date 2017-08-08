@@ -64,20 +64,20 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	
 
 	@Override
-	public void initialize(Simulation simulation, Projection projection) {
+	public void initialize(Simulation simulation) {
         initWindow();
-        initGraphLayers(projection);
+        initGraphLayers();
         initLayersBeforeEntityLayers();
-        initEntityLayers(simulation, projection);
+        initEntityLayers(simulation);
 		initLayersAfterEntityLayers();
         initInfoLayers();
 	}
 
-    protected void initGraphLayers(Projection projection) {
+    protected void initGraphLayers() {
         
     }
 
-    protected void initEntityLayers(Simulation simulation, Projection projection) {
+    protected void initEntityLayers(Simulation simulation) {
 
     }
 

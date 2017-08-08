@@ -14,8 +14,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.entityvelocitymodel
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntity;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
@@ -79,8 +77,6 @@ public class SimulationCreator {
     
     private final LogItemViewer logItemViewer;
     
-    private final ProjectionProvider projectionProvider;
-    
     private final SimulationProvider simulationProvider;
     
     private final AllNetworkNodes allNetworkNodes;
@@ -97,8 +93,6 @@ public class SimulationCreator {
     
     
     public BoundingBox boundsOfMap = null;
-    
-    private Projection projection;
 	
 	
 	
@@ -116,14 +110,12 @@ public class SimulationCreator {
 	
 	
 	@Inject
-    public SimulationCreator(final Config config, LogItemViewer logItemViewer, 
-            ProjectionProvider projectionProvider, SimulationProvider simulationProvider,
+    public SimulationCreator(final Config config, LogItemViewer logItemViewer, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
             Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel,
             TimeEventGenerator timeEventGenerator) {
         this.config = config;
         this.logItemViewer = logItemViewer;
-        this.projectionProvider = projectionProvider;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
@@ -145,10 +137,6 @@ public class SimulationCreator {
 
         initEnvironment(osmDTO, seed);
 
-        // Projection
-        projection = Projection.createGPSTo3DProjector(boundsOfMap, 10000, 10000);
-        projectionProvider.setProjection(projection);
-
         if (reportDays) {
             new DayReporter(simulation);
         }
@@ -161,7 +149,7 @@ public class SimulationCreator {
     public void startSimulation() {
         long simTimeInit = System.currentTimeMillis();
 
-        initVisioAndGE(projection);
+        initVisioAndGE();
 
         if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
@@ -257,7 +245,7 @@ public class SimulationCreator {
     } 
     
 
-    private void initVisioAndGE(Projection projection) {
+    private void initVisioAndGE() {
         if (config.turnOnGeneratingGeLinks) {
             LOGGER.info("Initializing Google Earth");
             createGoogleEarthUpdaters(config.pathToKmlFile);
@@ -266,7 +254,7 @@ public class SimulationCreator {
 
         if (config.showVisio) {
             LOGGER.info("Initializing Visio");
-			visioInitializerProvider.get().initialize(simulation, projection);
+			visioInitializerProvider.get().initialize(simulation);
             simulation.setSimulationSpeed(1);
             LOGGER.info("Initialized Visio");
         } 

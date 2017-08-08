@@ -31,10 +31,8 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.Node;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
-import cz.cvut.fel.aic.geographtools.util.Utils2D;
 
 import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -43,8 +41,6 @@ import java.util.Map;
  */
 @Singleton
 public class PositionUtil {
-
-    private final Projection projection;
     
     private final Config config;
 
@@ -62,9 +58,8 @@ public class PositionUtil {
 
 
     @Inject
-    public PositionUtil(Projection projection, AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
+    public PositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
                         HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config, GraphSpec2D mapSpecification) {
-        this.projection = projection;
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         mapBounds = simulationCreator.getBoundsOfMap();
         network = highwayNetwork.getNetwork();
@@ -80,13 +75,10 @@ public class PositionUtil {
     }
 
     public Point2d getPosition(GPSLocation position) {
-//        Point3d projectedPoint = projection.project(position);
         return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {
-        Point3d projectedPoint = projection.project(position);
-//        return new Point2d(Vis.transX(projectedPoint.x), Vis.transY(projectedPoint.y));
         return new Point2d(Vis.transX(position.getLongitudeProjected()), Vis.transY(position.getLatitudeProjected()));
     }
 

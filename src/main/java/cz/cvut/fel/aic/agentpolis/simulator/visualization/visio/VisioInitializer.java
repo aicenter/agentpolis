@@ -13,5 +13,5 @@ import cz.agents.alite.simulation.Simulation;
  */
 public interface VisioInitializer {
 	
-	public void initialize(Simulation simulation, Projection projection);
+	public void initialize(Simulation simulation);
 }

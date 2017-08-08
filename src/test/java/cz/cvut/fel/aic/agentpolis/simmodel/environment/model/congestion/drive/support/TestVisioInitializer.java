@@ -16,7 +16,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.HighwayLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.NodeIdLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.SimulationControlLayer;
 import cz.agents.alite.simulation.Simulation;
 import cz.agents.alite.vis.VisManager;
@@ -50,13 +49,13 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     }
     
     @Override
-    protected void initGraphLayers(Projection projection) {
+    protected void initGraphLayers() {
         VisManager.registerLayer(ColorLayer.create(Color.white));
         VisManager.registerLayer(highwayLayer);
     }
 
     @Override
-    protected void initEntityLayers(Simulation simulation, Projection projection) {
+    protected void initEntityLayers(Simulation simulation) {
 //        super.initEntityLayers(simulation, projection); 
         VisManager.registerLayer(testVehicleLayer); 
     }

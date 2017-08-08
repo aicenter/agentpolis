@@ -13,6 +13,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transport
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
+import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 
 /**
  *
@@ -23,8 +24,8 @@ public class TestPositionUtil extends PositionUtil{
     
     @Inject
     public TestPositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator, 
-            HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config) {
-        super(null, allNetworkNodes, simulationCreator, highwayNetwork, timeProvider, config);
+            HighwayNetwork highwayNetwork, TimeProvider timeProvider, Config config, GraphSpec2D mapSpecification) {
+        super(allNetworkNodes, simulationCreator, highwayNetwork, timeProvider, config, mapSpecification);
     }
     
 }

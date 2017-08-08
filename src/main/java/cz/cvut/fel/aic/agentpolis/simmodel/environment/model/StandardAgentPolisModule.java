@@ -31,8 +31,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.Grap
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.GraphTypeAndToNodeKey;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.Projection;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.ProjectionProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.alite.common.event.EventProcessor;
@@ -134,12 +132,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Singleton
 	public TypedSimulation getTypedSimulation(SimulationProvider simulationProvider){
 		return simulationProvider.getSimulation();
-	}
-    
-    @Provides 
-	@Singleton
-	public Projection getProjection(ProjectionProvider projectionProvider){
-		return projectionProvider.getProjection();
 	}
 	
 	@Provides
