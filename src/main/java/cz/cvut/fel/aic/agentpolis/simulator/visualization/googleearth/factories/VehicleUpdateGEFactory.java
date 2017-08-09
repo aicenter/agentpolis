@@ -9,7 +9,7 @@ import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.VehicleStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.entityvelocitymodel.EntityVelocityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;

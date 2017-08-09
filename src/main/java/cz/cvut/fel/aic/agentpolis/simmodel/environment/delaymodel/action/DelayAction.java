@@ -3,7 +3,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.action;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayActor;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayModel;
 

@@ -3,5 +3,5 @@
  * (The models are not in new terminology, the environment objects are instead of the models) Structure for a representation of transport network
  * 
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 

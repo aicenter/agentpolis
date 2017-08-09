@@ -1,10 +1,10 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements.SimulationEdge;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

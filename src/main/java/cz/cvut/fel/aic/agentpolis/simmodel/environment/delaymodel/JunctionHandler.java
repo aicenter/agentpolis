@@ -1,6 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.dto.JunctionHandlingRusult;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.impl.DelayModelStorage;
 

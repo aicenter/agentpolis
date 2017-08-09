@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 import java.util.LinkedList;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 
 /**
  * 

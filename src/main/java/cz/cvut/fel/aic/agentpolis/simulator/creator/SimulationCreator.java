@@ -8,7 +8,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.entityvelocitymodel.EntityVelocityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;

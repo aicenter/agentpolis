@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 
 /**
  * 

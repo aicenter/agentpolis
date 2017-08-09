@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripPlannerException;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import java.util.HashMap;
 import java.util.Set;
 

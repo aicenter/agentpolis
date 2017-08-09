@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayActor;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayingSegment;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.JunctionHandler;

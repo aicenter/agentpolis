@@ -1,6 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.key;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 
 /**
  * Represents key based on graph type and position (composed from two position)

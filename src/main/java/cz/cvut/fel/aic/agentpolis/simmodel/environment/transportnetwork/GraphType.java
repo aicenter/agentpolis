@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 
 import java.io.Serializable;
 

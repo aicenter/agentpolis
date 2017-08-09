@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks;
 
 import cz.cvut.fel.aic.geographtools.Edge;
 import cz.cvut.fel.aic.geographtools.Graph;

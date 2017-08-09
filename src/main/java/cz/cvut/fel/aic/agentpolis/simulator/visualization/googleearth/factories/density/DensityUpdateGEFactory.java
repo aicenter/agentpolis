@@ -6,7 +6,7 @@ import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.AllNetworkNodes;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.DensityGE;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;

@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 /**
  * @author Zdenek Bousa
