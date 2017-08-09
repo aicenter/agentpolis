@@ -15,17 +15,6 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPla
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.DelayingSegment;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.factory.DelayingSegmentCapacityDeterminer;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.factory.DelayingSegmentFactory;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.impl.DelayModelImpl;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.impl.JunctionHandlerImpl;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.key.GraphTypeAndFromToNodeKey;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.delaymodel.key.GraphTypeAndToNodeKey;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
@@ -40,16 +29,11 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
-import cz.cvut.fel.aic.geographtools.Edge;
-import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
-import cz.cvut.fel.aic.geographtools.Node;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.time.ZonedDateTime;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import ninja.fido.config.Configuration;
 
@@ -58,8 +42,6 @@ import ninja.fido.config.Configuration;
  * @author F-I-D-O
  */
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
-    
-    private final DefaultDelayingSegmentCapacityDeterminer delayingSegmentCapacityDeterminer;
     
     protected final Config config;
     
@@ -75,7 +57,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	
 	
 	public StandardAgentPolisModule() {
-        this.delayingSegmentCapacityDeterminer = new DefaultDelayingSegmentCapacityDeterminer();
         this.config = Configuration.load(new Config());
         Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
@@ -169,12 +150,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	TransportNetworks provideTransportNetworks(Graphs graphs) {
 		return new TransportNetworks(graphs.getGraphs());
 	}
-    
-    @Provides
-	@Singleton
-	DelayModel provideDelayHandler(EventProcessor eventProcessor, Graphs graphs) {
-		return new DelayModelImpl(createQueueStorage(graphs.getGraphs()), eventProcessor, new JunctionHandlerImpl());
-	}
 
 	@Provides
 	@Singleton
@@ -186,55 +161,5 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 
 	protected void bindVisioInitializer() {
 		bind(VisioInitializer.class).to(DefaultVisioInitializer.class);
-	}
-	
-    
-    private Map<GraphTypeAndToNodeKey, Map<GraphTypeAndFromToNodeKey, DelayingSegment>> 
-        createQueueStorage(Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs) {
-
-		DelayingSegmentFactory queueItemsFactory = new DelayingSegmentFactory();
-
-		Map<GraphTypeAndToNodeKey, Map<GraphTypeAndFromToNodeKey, DelayingSegment>> queues = new HashMap<>();
-
-		for (GraphType graphType : graphs.keySet()) {
-			Graph<?, ?> graph = graphs.get(graphType);
-			for (Node fromNode : graph.getAllNodes()) {
-				int fromNodeById = fromNode.id;
-				for (Edge toNodeWithEdge : graph.getOutEdges(fromNodeById)) {
-					Integer toNodeById = toNodeWithEdge.toId;
-
-					GraphTypeAndToNodeKey graphTypeAndToNodeKey = new GraphTypeAndToNodeKey(graphType, toNodeById);
-
-					Map<GraphTypeAndFromToNodeKey, DelayingSegment> innerQueues = queues.get(graphTypeAndToNodeKey);
-					if (innerQueues == null) {
-						innerQueues = new HashMap<>();
-					}
-
-					GraphTypeAndFromToNodeKey graphTypeAndFromToNodeKey = new GraphTypeAndFromToNodeKey(graphType,
-							fromNodeById, toNodeById);
-					double length = toNodeWithEdge.length;
-
-					if (length <= 0) {
-						length = 1;
-					}
-
-					length = delayingSegmentCapacityDeterminer.determineDelaySegmentCapacity(length);
-
-					innerQueues.put(graphTypeAndFromToNodeKey, queueItemsFactory.createDelayingSegmentInstance
-							(length));
-					queues.put(graphTypeAndToNodeKey, innerQueues);
-				}
-			}
-		}
-		return queues;
-	}
-        
-    private static class DefaultDelayingSegmentCapacityDeterminer implements DelayingSegmentCapacityDeterminer {
-
-		@Override
-		public double determineDelaySegmentCapacity(double maxCapacity) {
-			return maxCapacity;
-		}
-
 	}
 }
