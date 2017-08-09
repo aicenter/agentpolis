@@ -10,7 +10,6 @@ import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.linkedentitymodel.LinkedEntityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.utils.DescriptionGEUtil;
 import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 
@@ -51,8 +50,7 @@ public class VehicleGE implements IVehicleGE {
         Map<String, String> vehicleDescription = new HashMap<>();
 
         for (PhysicalVehicle vehicle : vehicles) {
-            StringBuilder html = new StringBuilder(
-                    DescriptionGEUtil.transformDescriptionToHTML(vehicle.getDescription()));
+            StringBuilder html = new StringBuilder("");
 
 //            Integer currentVehiclePositionById = vehiclePositionStorage
 //                    .getEntityPositionByNodeId(vehicle.getId());

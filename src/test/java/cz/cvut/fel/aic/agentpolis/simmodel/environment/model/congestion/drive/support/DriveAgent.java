@@ -5,7 +5,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.description.DescriptionImpl;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
@@ -33,11 +32,6 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
     @Override
     public EntityType getType() {
         return CongestionTestType.TEST_DRIVER;
-    }
-
-    @Override
-    public DescriptionImpl getDescription() {
-        return null;
     }
 
     @Override

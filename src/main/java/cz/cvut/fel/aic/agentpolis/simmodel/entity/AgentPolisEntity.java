@@ -1,7 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.entity;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.description.Description;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
 import cz.agents.alite.common.event.typed.AliteEntity;
 import cz.agents.alite.common.event.typed.TypedSimulation;
@@ -12,7 +11,7 @@ import cz.cvut.fel.aic.geographtools.GPSLocation;
  * 
  * @author Zbynek Moler
  * */
-public abstract class AgentPolisEntity extends AliteEntity implements Description {
+public abstract class AgentPolisEntity extends AliteEntity{
     
     private final String id;
     

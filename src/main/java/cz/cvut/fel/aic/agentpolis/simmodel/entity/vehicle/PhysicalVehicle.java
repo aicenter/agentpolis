@@ -1,6 +1,5 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.description.DescriptionImpl;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
@@ -44,11 +43,6 @@ public class PhysicalVehicle extends Vehicle {
 
     public GraphType getGraphForMovingBaseOnType() {
         return usingGraphTypeForMoving;
-    }
-
-    @Override
-    public DescriptionImpl getDescription() {
-        return new DescriptionImpl();
     }
 
     @Override

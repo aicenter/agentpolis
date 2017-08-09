@@ -44,7 +44,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
     
     private final SimulationControlLayer simulationControlLayer;
     
-    private final GridLayer gridLayer;
+    protected final GridLayer gridLayer;
     
     
     
