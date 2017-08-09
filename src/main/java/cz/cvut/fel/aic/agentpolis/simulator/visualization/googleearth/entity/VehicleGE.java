@@ -8,7 +8,6 @@ import java.util.Set;
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
 import cz.agents.agentpolis.apgooglearth.vehicle.IVehicleGE;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.linkedentitymodel.LinkedEntityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
 import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
@@ -20,8 +19,6 @@ import de.micromata.opengis.kml.v_2_2_0.Coordinate;
  * 
  */
 public class VehicleGE implements IVehicleGE {
-
-    private final LinkedEntityModel linkedEntityStorage;
 
     private final List<PhysicalVehicle> vehicles;
 
@@ -35,12 +32,11 @@ public class VehicleGE implements IVehicleGE {
     private final Set<String> allowedVehiclesIds;
 
     public VehicleGE(List<PhysicalVehicle> vehicles, final Map<Integer, ? extends Node> nodesFromAllGraphs,
-            LinkedEntityModel linkedEntityStorage, EntityMovementGE entityMovement,
+            EntityMovementGE entityMovement,
             Set<String> allowedVehiclesIds) {
         super();
         this.vehicles = vehicles;
         this.nodesFromAllGraphs = nodesFromAllGraphs;
-        this.linkedEntityStorage = linkedEntityStorage;
         this.entityMovement = entityMovement;
         this.allowedVehiclesIds = allowedVehiclesIds;
     }
@@ -56,8 +52,9 @@ public class VehicleGE implements IVehicleGE {
 //                    .getEntityPositionByNodeId(vehicle.getId());
             Integer currentVehiclePositionById = 0;
             Node currentVehiclePosition = nodesFromAllGraphs.get(currentVehiclePositionById);
-            int numberOfPassengerInVehicle = linkedEntityStorage
-                    .numOfLinkedEntites(vehicle.getId());
+//            int numberOfPassengerInVehicle = linkedEntityStorage
+//                    .numOfLinkedEntites(vehicle.getId());
+            int numberOfPassengerInVehicle = 0;
             int capacityOfVehicle = vehicle.getCapacity();
 
             if (currentVehiclePosition != null) {
