@@ -5,15 +5,12 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeEventGenerator;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntity;
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandler;
 import cz.agents.alite.common.event.EventProcessor;
@@ -26,14 +23,11 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The {@code SimulationCreator} initializes the simulation model according to added initializers including the
@@ -69,7 +63,6 @@ public class SimulationCreator {
     private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
     
     private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
-    private final Map<EntityType, VisEntity> entityStyles = new HashMap<>();
     
     private final SimulationProvider simulationProvider;
     
@@ -77,33 +70,22 @@ public class SimulationCreator {
     
     private final Graphs graphs;
     
-    private final AgentStorage agentStorage;
-    
     private final Provider<VisioInitializer> visioInitializerProvider;
     
     private final TimeEventGenerator timeEventGenerator;
 
-	
-	
-	
-	
-	public Map<EntityType, VisEntity> getEntityStyles() {
-		return entityStyles;
-	}
-    
     
 	
 	
 	
 	@Inject
     public SimulationCreator(final Config config, SimulationProvider simulationProvider,
-            AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
+            AllNetworkNodes allNetworkNodes, Graphs graphs,
             Provider<VisioInitializer> visioInitializerProvider, TimeEventGenerator timeEventGenerator) {
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
-        this.agentStorage = agentStorage;
         this.visioInitializerProvider = visioInitializerProvider;
         this.timeEventGenerator = timeEventGenerator;
 		instance = this;
@@ -276,10 +258,6 @@ public class SimulationCreator {
             LOGGER.error(e.getLocalizedMessage(), e);
         }
 
-    }
-
-    public void addEntityStyleVis(final EntityType entityType, Color colorOfEntityInVis, int widthOfEntityInVis) {
-        entityStyles.put(entityType, new VisEntity(colorOfEntityInVis, widthOfEntityInVis));
     }
 
     /**

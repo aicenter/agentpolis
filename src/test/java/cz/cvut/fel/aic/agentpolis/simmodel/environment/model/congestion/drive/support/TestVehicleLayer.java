@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.EntityLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
 import java.awt.Color;
 import javax.vecmath.Point2d;
 
