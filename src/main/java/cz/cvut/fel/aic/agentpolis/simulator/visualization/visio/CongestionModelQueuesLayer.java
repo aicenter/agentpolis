@@ -2,12 +2,12 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationEdge;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.CongestionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Lane;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.Link;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements.SimulationEdge;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.HighwayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Lane;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.geographtools.Graph;

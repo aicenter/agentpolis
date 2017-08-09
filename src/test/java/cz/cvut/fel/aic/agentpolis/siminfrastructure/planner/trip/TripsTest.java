@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.EGraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.EGraphType;
 
 public class TripsTest {
 

@@ -4,7 +4,7 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.GraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.GraphType;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.LinkedList;
 

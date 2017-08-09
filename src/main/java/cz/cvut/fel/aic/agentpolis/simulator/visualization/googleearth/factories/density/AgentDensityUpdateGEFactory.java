@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 
 /**

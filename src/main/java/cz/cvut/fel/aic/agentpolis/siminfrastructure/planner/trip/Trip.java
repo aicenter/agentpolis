@@ -1,7 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.elements.SimulationNode;
 
 import java.util.Arrays;
 

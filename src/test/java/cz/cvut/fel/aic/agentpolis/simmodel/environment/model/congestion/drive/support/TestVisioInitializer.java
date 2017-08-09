@@ -7,12 +7,12 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.BikewayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.MetrowayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.PedestrianNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.RailwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.citymodel.transportnetwork.networks.TramwayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.BikewayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.HighwayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.MetrowayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.PedestrianNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.RailwayNetwork;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.citymodel.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.HighwayLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.NodeIdLayer;

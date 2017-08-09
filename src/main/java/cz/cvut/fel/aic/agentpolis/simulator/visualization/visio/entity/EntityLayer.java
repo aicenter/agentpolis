@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity;
 
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioUtils;
 import cz.agents.alite.vis.Vis;

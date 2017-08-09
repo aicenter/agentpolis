@@ -6,7 +6,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.EntityStorage;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 
 /**
  *
