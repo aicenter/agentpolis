@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.entityvelocitymodel.EntityVelocityModel;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
@@ -26,14 +25,11 @@ public class EntityMovementGE {
 	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
 	private final EventProcessor eventProcessor;
-	private final EntityVelocityModel maxEntitySpeedStorage;
 
-	public EntityMovementGE(Map<Integer, ? extends Node> nodesFromAllGraphs, EventProcessor eventProcessor,
-							EntityVelocityModel maxEntitySpeedStorage) {
+	public EntityMovementGE(Map<Integer, ? extends Node> nodesFromAllGraphs, EventProcessor eventProcessor) {
 		super();
 		this.nodesFromAllGraphs = nodesFromAllGraphs;
 		this.eventProcessor = eventProcessor;
-		this.maxEntitySpeedStorage = maxEntitySpeedStorage;
 	}
 
 	public synchronized Map<String, Coordinate> getEntityPosition(Set<String> entityIds, RegionBounds activeRegionBounds) {
@@ -130,7 +126,8 @@ public class EntityMovementGE {
 
 	private double computeDistanceBaseOnEntitySpeedAndSimulationTime(String entityId, long lastSimulationTime) {
 
-		double entityMaxSpeed = maxEntitySpeedStorage.getEntityVelocityInmps(entityId);
+//		double entityMaxSpeed = maxEntitySpeedStorage.getEntityVelocityInmps(entityId);
+        double entityMaxSpeed = 0;
 		double time = (eventProcessor.getCurrentTime() - lastSimulationTime) / 1000; // to
 		// second
 		return entityMaxSpeed * time;

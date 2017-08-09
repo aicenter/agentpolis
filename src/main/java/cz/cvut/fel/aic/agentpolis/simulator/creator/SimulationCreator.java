@@ -9,7 +9,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.entityvelocitymodel.EntityVelocityModel;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
@@ -82,8 +81,6 @@ public class SimulationCreator {
     
     private final Provider<VisioInitializer> visioInitializerProvider;
     
-    private final EntityVelocityModel entityVelocityModel;
-    
     private final TimeEventGenerator timeEventGenerator;
 
 	
@@ -101,15 +98,13 @@ public class SimulationCreator {
 	@Inject
     public SimulationCreator(final Config config, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
-            Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel,
-            TimeEventGenerator timeEventGenerator) {
+            Provider<VisioInitializer> visioInitializerProvider, TimeEventGenerator timeEventGenerator) {
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
         this.agentStorage = agentStorage;
         this.visioInitializerProvider = visioInitializerProvider;
-        this.entityVelocityModel = entityVelocityModel;
         this.timeEventGenerator = timeEventGenerator;
 		instance = this;
     }
@@ -252,10 +247,6 @@ public class SimulationCreator {
 
     // -------------------- Create methods
     // --------------------------------------------------
-
-    private void addEntityMaxSpeedToStorage(String entityId, double agentMoveSpeedInkmph) {
-        entityVelocityModel.addEntityMaxVelocity(entityId, agentMoveSpeedInkmph);
-    }
 
     private void createGoogleEarthUpdaters(String nameOfKMLFile) {
 
