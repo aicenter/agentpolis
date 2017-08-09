@@ -16,7 +16,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.CongestionTestType;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
+import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;
 import java.util.Map;

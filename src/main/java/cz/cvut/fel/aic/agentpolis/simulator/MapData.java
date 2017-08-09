@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl;
+package cz.cvut.fel.aic.agentpolis.simulator;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;

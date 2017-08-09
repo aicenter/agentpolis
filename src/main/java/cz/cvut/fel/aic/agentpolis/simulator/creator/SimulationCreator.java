@@ -10,7 +10,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.AgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
+import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntity;

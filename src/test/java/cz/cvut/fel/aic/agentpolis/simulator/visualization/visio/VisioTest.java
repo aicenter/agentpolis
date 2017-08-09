@@ -11,8 +11,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestModule;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.MapDataGenerator;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
+import cz.cvut.fel.aic.agentpolis.simulator.MapDataGenerator;
+import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
 
 /**
