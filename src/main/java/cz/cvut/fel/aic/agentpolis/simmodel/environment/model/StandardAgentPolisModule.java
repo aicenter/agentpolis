@@ -5,14 +5,11 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.LogItem;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.PublishSubscribeLogger;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
@@ -32,7 +29,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.delaymodel.key.Grap
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.alite.common.event.EventProcessor;
 import cz.agents.alite.common.event.typed.TypedSimulation;
 import cz.agents.alite.simulation.Simulation;
@@ -54,7 +50,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import ninja.fido.config.Configuration;
 
@@ -71,7 +66,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 
     private List<Object> loggers;
     
-    private Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer;
 
     public Config getConfig() {
         return config;
@@ -182,23 +176,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		return new DelayModelImpl(createQueueStorage(graphs.getGraphs()), eventProcessor, new JunctionHandlerImpl());
 	}
 
-    @Provides
-    @Singleton
-    PublishSubscribeLogger providePublishSubscribeLogger() {
-        EventBus eventBus = new EventBus();
-        for (Object publishSubscribeLogger : loggers) {
-            eventBus.register(publishSubscribeLogger);
-        }
-        return new PublishSubscribeLogger(eventBus);
-    }
-    
-    @Provides
-    @Singleton
-    LogItemViewer provideLogItemViewer(Provider<StandardTimeProvider> timeProvider) {
-        return new LogItemViewer(allowedLogItemClassesLogItemViewer, timeProvider, 
-                config.simulationDurationInMillis);
-    }
-
 	@Provides
 	@Singleton
 	StandardTimeProvider provideTimeProvider(EventProcessor eventProcessor) {
@@ -251,13 +228,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		}
 		return queues;
 	}
-
-    @Override
-    public void initializeParametrs(List<Object> loggers, 
-            Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer) {
-        this.loggers = loggers;
-        this.allowedLogItemClassesLogItemViewer = allowedLogItemClassesLogItemViewer;
-    }
         
     private static class DefaultDelayingSegmentCapacityDeterminer implements DelayingSegmentCapacityDeterminer {
 

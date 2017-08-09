@@ -15,7 +15,6 @@ import cz.cvut.fel.aic.agentpolis.simulator.creator.initializator.impl.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.entity.VisEntity;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandler;
 import cz.agents.alite.common.event.EventProcessor;
@@ -73,8 +72,6 @@ public class SimulationCreator {
     private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
     private final Map<EntityType, VisEntity> entityStyles = new HashMap<>();
     
-    private final LogItemViewer logItemViewer;
-    
     private final SimulationProvider simulationProvider;
     
     private final AllNetworkNodes allNetworkNodes;
@@ -102,12 +99,11 @@ public class SimulationCreator {
 	
 	
 	@Inject
-    public SimulationCreator(final Config config, LogItemViewer logItemViewer, SimulationProvider simulationProvider,
+    public SimulationCreator(final Config config, SimulationProvider simulationProvider,
             AllNetworkNodes allNetworkNodes, Graphs graphs, AgentStorage agentStorage,
             Provider<VisioInitializer> visioInitializerProvider, EntityVelocityModel entityVelocityModel,
             TimeEventGenerator timeEventGenerator) {
         this.config = config;
-        this.logItemViewer = logItemViewer;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
@@ -251,12 +247,6 @@ public class SimulationCreator {
         } 
         else {
             simulation.setSimulationSpeed(0);
-        }
-
-        if (config.showEventViewer) {
-            LOGGER.info("Initializing event viewer");
-            logItemViewer.runView();
-            LOGGER.info("Initialized event viewer");
         }
     }
 

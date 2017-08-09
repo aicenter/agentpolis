@@ -12,11 +12,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import cz.cvut.fel.aic.agentpolis.config.Config;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.logger.LogItem;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.StandardAgentPolisModule;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import cz.cvut.fel.aic.agentpolis.simulator.logger.subscriber.CSVLogSubscriber;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.viewer.LogItemViewer;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -41,13 +38,6 @@ public class AgentPolisInitializer {
     private final List<Object> loggers = new ArrayList<>();
     
     private final Config configuration;
-    
-    private final Set<Class<? extends LogItem>> allowedLogItemClassesLogItemViewer = new HashSet<>();
-    
-    private final Set<Class<? extends LogItem>> allowedLogItemClassesForCSV = new HashSet<>();
-    
-    
-    private LogItemViewer logItemViewer;
 
     
     
@@ -55,7 +45,6 @@ public class AgentPolisInitializer {
     public AgentPolisInitializer(StandardAgentPolisModule mainModule) {
         this.mainModule = mainModule;
         configuration = mainModule.getConfig();
-        mainModule.initializeParametrs(loggers, allowedLogItemClassesLogItemViewer);
     }
     
     public AgentPolisInitializer() {
@@ -69,8 +58,6 @@ public class AgentPolisInitializer {
     
     public Injector initialize(){
         Injector injector = Guice.createInjector(mainModule);
-        
-        initLoggers(injector);
         
         return injector;
     }
@@ -92,22 +79,6 @@ public class AgentPolisInitializer {
 
     }
     
-    public void addAllowEventForEventViewer(Class<? extends LogItem> allowedLogItemClass) {
-        this.allowedLogItemClassesLogItemViewer.add(allowedLogItemClass);
-    }
-
-    public void addAllowEventForEventViewer(Set<Class<? extends LogItem>> allowedLogItemClasses) {
-        this.allowedLogItemClassesLogItemViewer.addAll(allowedLogItemClasses);
-    }
-    
-    public void addAllowedLogItemForCSVLogger(Class<? extends LogItem> allowedLogItemClass) {
-        allowedLogItemClassesForCSV.add(allowedLogItemClass);
-    }
-
-    public void addAllowedLogItemForCSVLogger(Set<Class<? extends LogItem>> allowedLogItemClasses) {
-        allowedLogItemClassesForCSV.addAll(allowedLogItemClasses);
-    }
-    
     
     
     private boolean isSubscribeAnnotationIncluded(Object logger) {
@@ -117,31 +88,5 @@ public class AgentPolisInitializer {
             }
         }
         return false;
-    }
-
-    private void initLoggers(Injector injector) {
-        LOGGER.info("Initialization of logger - event bus");
-        
-        if (configuration.showEventViewer) {
-            logItemViewer = injector.getInstance(LogItemViewer.class);
-            addLogger(logItemViewer);
-        }
-        
-        initCSV(configuration.pathToCsvEventLogFile, injector);
-    }
-    
-    private void initCSV(String pathToCSVEventLogFile, Injector injector) {
-        try {
-            if (!allowedLogItemClassesForCSV.isEmpty()) {
-                CSVLogSubscriber csvLogSubscriber = CSVLogSubscriber.newInstance(ImmutableSet.copyOf
-                        (allowedLogItemClassesForCSV), new File(pathToCSVEventLogFile));
-                addLogger(csvLogSubscriber);
-                injector.getInstance(SimulationCreator.class).addSimulationFinishedListener(csvLogSubscriber);
-                return;
-            }
-        } catch (IOException e) {
-            LOGGER.warn("CSV Logger was not initialized", e);
-        }
-        LOGGER.warn("CSV Logger was not initialized");
     }
 }
