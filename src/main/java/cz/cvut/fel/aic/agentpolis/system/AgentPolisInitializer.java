@@ -5,22 +5,15 @@
  */
 package cz.cvut.fel.aic.agentpolis.system;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import cz.cvut.fel.aic.agentpolis.config.Config;
-import cz.cvut.fel.aic.agentpolis.system.StandardAgentPolisModule;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.apache.log4j.Logger;
 
 /**
