@@ -10,10 +10,14 @@ import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestModule;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.MapDataGenerator;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -38,8 +42,9 @@ public class VisioTest {
     }
 
     private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
-         MapDataGenerator mapDataGenerator = new MapDataGenerator(graph);
-         
-         return mapDataGenerator.getMap();
-     }
+        Map<GraphType,Graph<SimulationNode,SimulationEdge>> graphs = new HashMap<>();
+        graphs.put(EGraphType.HIGHWAY, graph);
+
+        return MapDataGenerator.getMap(graphs);
+    }
 }

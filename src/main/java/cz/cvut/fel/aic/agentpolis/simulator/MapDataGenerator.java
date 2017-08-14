@@ -18,23 +18,14 @@ import java.util.Map;
  * @author fido
  */
 public class MapDataGenerator {
-    private final Graph<SimulationNode,SimulationEdge> graph;
-
-    public MapDataGenerator(Graph<SimulationNode, SimulationEdge> graph) {
-        this.graph = graph;
-    }
-    
-    
-    
+   
     /**
      * init map
      *
+     * @param graphs
      * @return map data with simulation graph
      */
-    public MapData getMap() {
-        Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
-        
-        graphs.put(EGraphType.HIGHWAY, graph);
+    public static MapData getMap(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs) {
 
         Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
@@ -45,7 +36,7 @@ public class MapDataGenerator {
     /**
      * Build map data
      */
-    private Map<Integer, SimulationNode> createAllGraphNodes(
+    private static Map<Integer, SimulationNode> createAllGraphNodes(
             Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
 
         Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
