@@ -6,27 +6,30 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 /**
  *
  * @author fido
  */
-public class TestThreeNodes {
+public class TestThreeNodes2Cars {
+    
+    
     
     @Test 
     public void run() throws Throwable{
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-        SimulationNode node2 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
-        SimulationNode node3 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
+        SimulationNode node2 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0);
+        SimulationNode node3 = new SimulationNode(2, 0, 0, 0, 0, 20000, 0);
         
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
@@ -44,11 +47,20 @@ public class TestThreeNodes {
         
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
         
-        Trip<SimulationNode> trip = new Trip<>(node1, node2, node3);
+        Trip<SimulationNode>[] trips = new Trip[2];
+        
+        for(int i = 0; i < trips.length; i++){
+            Trip<SimulationNode> trip = new Trip<>(node1, node2, node3);
+            trips[i] = trip;
+        }
         
         DriveTest driveTest = new DriveTest();
-        driveTest.run(graph, trip);
+        driveTest.run(graph, trips);
         
         Log.close();
+    }
+    
+    public static void main(String[] args) {
+        new JUnitCore().run(TestThreeNodes2Cars.class);
     }
 }

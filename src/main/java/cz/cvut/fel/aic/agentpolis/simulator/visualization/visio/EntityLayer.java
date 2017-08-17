@@ -28,9 +28,9 @@ import javax.vecmath.Point2d;
  */
 public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLayer{
     
-    private static final Double DEFAULT_TEXT_MARGIN_BOTTOM = 5.0;
+    public static final Double DEFAULT_TEXT_MARGIN_BOTTOM = 5.0;
     
-    private static final Color DEFAULT_TEXT_BACKGROUND_COLOR = Color.WHITE;
+    public static final Color DEFAULT_TEXT_BACKGROUND_COLOR = Color.WHITE;
 
     
     

@@ -36,17 +36,20 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     
     private final NodeIdLayer nodeIdLayer;
     
+    private final CarLayer carLayer;
+    
     @Inject
     public TestVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
             HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
             RailwayNetwork railwayNetwork, 
             SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
-            TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer) {
+            TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer) {
         super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
                 simulationControlLayer, gridLayer);
         this.highwayLayer = highwayLayer;
         this.testVehicleLayer = testVehicleLayer;
         this.nodeIdLayer = nodeIdLayer;
+        this.carLayer = carLayer;
     }
     
     @Override
@@ -59,7 +62,7 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     @Override
     protected void initEntityLayers(Simulation simulation) {
 //        super.initEntityLayers(simulation, projection); 
-        VisManager.registerLayer(testVehicleLayer); 
+        VisManager.registerLayer(carLayer); 
     }
     
     @Override

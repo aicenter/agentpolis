@@ -6,6 +6,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author fido
@@ -23,7 +25,10 @@ public class Crossroad extends Connection {
 
     private final int batchSize;
 
-    private final double transferredVehicleMetersPerTick;
+    /**
+     * default total length off all vehicles transferred per tick if there are no leftovers from last tick
+     */
+    private final double defaultTransferredVehicleMetersPerTick;
 
     private final List<ChoosingTableData> inputLanesChoosingTable;
 
@@ -35,6 +40,31 @@ public class Crossroad extends Connection {
     private final double maxFlowPerLane;
     
     private final int simultaneouslyDrivingLanes;
+    
+    /**
+     * currently or last served lane
+     */
+    private Lane chosenLane;
+    
+    /**
+     * lanes that are ready to transfer vehicles ie non-empty with free next lane
+     */
+    private List<Lane> readyLanes;
+    
+    /**
+     * total length off all vehicles transferred this tick
+     */
+    private double metersToTransferThisTick;
+    
+    /**
+     * total length off all vehicles transferred this batch
+     */  
+    private double metersTransferedThisBatch;
+    
+    /**
+     * Determine whether traffic flow is depleted in this tick
+     */
+    private boolean trafficFlowDepleted;
     
 
     public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
@@ -48,7 +78,8 @@ public class Crossroad extends Connection {
         tickLength = config.congestionModel.connectionTickLength;
         maxFlowPerLane = config.congestionModel.maxFlowPerLane;
         simultaneouslyDrivingLanes = config.congestionModel.defaultCrossroadDrivingLanes;
-        transferredVehicleMetersPerTick = computeFlowInMetersPerTick();
+        defaultTransferredVehicleMetersPerTick = computeFlowInMetersPerTick();
+        metersToTransferThisTick = defaultTransferredVehicleMetersPerTick;
     }
 
 
@@ -64,45 +95,33 @@ public class Crossroad extends Connection {
 
     @Override
     protected void serveLanes() {
+        trafficFlowDepleted = false;
+        
         // try to put all vehicles that waiting to be able to start in one of the input lanes
         tryStartDelayedVehicles();
 
         // getting all lanes with waiting vehicles
-        List<Lane> readyLanes = new LinkedList();
-        for (Lane inputLane : inputLanes) {
-            if (inputLane.hasWaitingVehicles()) {
-                readyLanes.add(inputLane);
-            }
-        }
+        findNonEmptyLanes();
         
         // until the traffic flow per tick is not depleted
-        while (metersTransferedThisTick < transferredVehicleMetersPerTick) {
+        while (true) {
             
             // if there are no waiting vehicles
-            if (readyLanes.isEmpty()) {
-                // not sending tick event - performance reasons, the crossroad is woken up when a vehicle arrives
-                awake = false;
-                return;
+            if (readyLanes.isEmpty() || trafficFlowDepleted) {
+                break;
+            }
+
+            if(chosenLane == null){
+                chooseLane();
             }
             
-            Lane chosenLane = null;
-
-            if (readyLanes.size() == 1) {
-                chosenLane = readyLanes.get(0);
-            } else {
-                do {
-                    chosenLane = chooseLane();
-                } while (!chosenLane.hasWaitingVehicles());
-            }
             boolean laneDepleted = tryToServeLane(chosenLane);
             
             if (laneDepleted) {
                 readyLanes.remove(chosenLane);
+                chosenLane = null;
             }
         }
-
-        // wake up after some time
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, tickLength);
     }
 
     private void tryStartDelayedVehicles() {
@@ -138,8 +157,19 @@ public class Crossroad extends Connection {
             key += step;
         }
     }
+    
+    private void chooseLane(){
+        if (readyLanes.size() == 1) {
+            chosenLane = readyLanes.get(0);
+        } 
+        else {
+            do {
+                chosenLane = chooseRandomFreeLane();
+            } while (!chosenLane.hasWaitingVehicles());
+        }
+    }
 
-    private Lane chooseLane() {
+    private Lane chooseRandomFreeLane() {
         double random = Math.random();
         Lane chosenLane = null;
         for (ChoosingTableData choosingTableData : inputLanesChoosingTable) {
@@ -153,6 +183,8 @@ public class Crossroad extends Connection {
 
     private boolean tryToServeLane(Lane chosenLane) {
         while (metersTransferedThisBatch < batchSize) {
+    
+            // if next vehicle in chosen lane cannot be transfered ie lane is depleted
             if (!tryTransferVehicle(chosenLane)) {
                 return true;
             }
@@ -176,6 +208,61 @@ public class Crossroad extends Connection {
         outputLinksMappedByInputLanes.put(inputLane, link);
         outputLinksMappedByNextConnections.put(targetConnection, link);
         addInputLane(inputLane);
+    }
+
+    private void findNonEmptyLanes() {
+        readyLanes = new LinkedList();
+        for (Lane inputLane : inputLanes) {
+            if (inputLane.hasWaitingVehicles()) {
+                readyLanes.add(inputLane);
+            }
+        }
+    }
+
+    private boolean tryTransferVehicle(Lane chosenLane) {
+        /* no vehicles in queue */
+        if (!chosenLane.hasWaitingVehicles()){
+            return false;
+        }
+        
+        // first vehicle
+        VehicleTripData vehicleTripData = chosenLane.getFirstWaitingVehicle();
+        
+        // vehicle ends on this node
+        if (vehicleTripData.isTripFinished()) {
+            endDriving(vehicleTripData, chosenLane);
+            return true;
+        }
+
+        Lane nextLane = getNextLane(chosenLane, vehicleTripData);
+        double vehicleLength = vehicleTripData.getVehicle().getLength();
+        
+        /* test if traffic flow is depleted */
+        if(metersToTransferThisTick < vehicleLength){
+            metersToTransferThisTick 
+                    = defaultTransferredVehicleMetersPerTick + metersToTransferThisTick;
+            trafficFlowDepleted = true;
+            isTicking = true;
+            return false;
+        }
+        
+        // succesfull transfer
+        if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
+            transferVehicle(vehicleTripData, chosenLane, nextLane);
+            metersTransferedThisBatch += vehicleLength;
+            metersToTransferThisTick -= vehicleLength;
+            if (vehicleTripData.getTrip().isEmpty()) {
+                vehicleTripData.setTripFinished(true);
+            }
+            return true;
+        } 
+        // next queue is full
+        else {
+            Log.log(Connection.class, Level.FINE, "Crossroad {0}: No space in queue to {1}!", node.id, 
+                    nextLane.link.toNode.id);
+            nextLane.setWakeConnectionAfterTransfer(true);
+            return false;
+        }
     }
 
     private final class ChoosingTableData {

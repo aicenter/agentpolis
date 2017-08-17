@@ -167,7 +167,10 @@ public class Lane {
         double capacity = edge.getLanesCount() * edge.length;
         double level = currentlyUsedCapacityInMeters / capacity;
 
-        double speed = freeFlowVelocity * interpolateSquared(1, 0.1, 1 - level);
+        double speed = freeFlowVelocity;
+        if(congestionModel.addFundamentalDiagramDelay){        
+            speed *= interpolateSquared(1, 0.1, 1 - level);
+        }
         double distance = congestionModel.positionUtil.getDistance(
                 vehicle.getPrecisePosition(), congestionModel.graph.getNode(edge.toId))
                 - vehicle.getQueueBeforeVehicleLength();

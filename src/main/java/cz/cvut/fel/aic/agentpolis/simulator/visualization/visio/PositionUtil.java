@@ -166,14 +166,21 @@ public class PositionUtil {
             return getCanvasPosition(vehicle);
         } 
         else {
+            // precise GPS position of the vehicle
             GPSLocation startLocation = vehicle.getPrecisePosition();
+            
+            // target node - a crossroad for example
             Node targetNode = vehicle.getDriver().getTargetNode();
-//            SimulationEdge edge = network.getEdge(startNode.id, targetNode.id);
+
+            // edge length
             double length = getDistance(startLocation, targetNode);
             
+            // portion of the edge that is free for ride
             double portion = (length - vehicle.getQueueBeforeVehicleLength()) / length;
             
+            // position at the end of the queue
             GPSLocation targetPosition = getPointOnVector(startLocation, targetNode, portion);
+            
             return getCanvasPositionInterpolated(startLocation, targetPosition, vehicle.getDriver().getDelayData());
         }
     }

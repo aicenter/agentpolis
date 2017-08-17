@@ -56,6 +56,8 @@ public class CongestionModel {
     
     private final Random random;
     
+    final boolean addFundamentalDiagramDelay;
+    
     
     private boolean queueHandlingStarted;
 
@@ -88,6 +90,7 @@ public class CongestionModel {
         queueHandlingStarted = false;
 //        buildCongestionGraph();
         random = new Random(config.congestionModel.randomSeed);
+        addFundamentalDiagramDelay = false;
     }
 
     @Inject

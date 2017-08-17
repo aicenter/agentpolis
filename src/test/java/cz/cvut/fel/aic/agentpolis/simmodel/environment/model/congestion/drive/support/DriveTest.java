@@ -35,7 +35,7 @@ public class DriveTest {
     private static final int START_TIME_MILIS = 25200000;
     
     
-    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> trip) {
+    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
         
         
 //        Config config = Configuration.load(new Config());
@@ -57,15 +57,20 @@ public class DriveTest {
         creator.prepareSimulation(getMapData(graph));
         
         CongestedDriveFactory congestedDriveFactory = injector.getInstance(CongestedDriveFactory.class);
+        DriveAgentStorage driveAgentStorage = injector.getInstance(DriveAgentStorage.class);
         
-        PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle", CongestionTestType.TEST_VEHICLE, 5, 2, 
-                EGraphType.HIGHWAY, graph.getNode(0), 15);
         
-        DriveAgent driveAgent = new DriveAgent("Test driver", graph.getNode(0));
+        for (int i = 0; i < trips.length; i++) {
+            Trip<SimulationNode> trip = trips[i];
+            PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle" + i, CongestionTestType.TEST_VEHICLE, 5, 2, 
+               EGraphType.HIGHWAY, graph.getNode(0), 15);
         
-        injector.getInstance(DriveAgentStorage.class).addEntity(driveAgent);
-        
-        congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
+            DriveAgent driveAgent = new DriveAgent("Test driver" + i, graph.getNode(0));
+
+            driveAgentStorage.addEntity(driveAgent);
+
+            congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
+        }
         
         creator.startSimulation();
     }
