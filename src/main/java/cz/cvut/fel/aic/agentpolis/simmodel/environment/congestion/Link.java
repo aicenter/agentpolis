@@ -35,6 +35,8 @@ public class Link {
     final SimulationNode fromNode;
     
     final Connection fromConnection;
+    
+    final Connection toConnection;
 
     public SimulationEdge getEdge() {
         return edge;
@@ -42,12 +44,13 @@ public class Link {
 
 
     public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
-                SimulationNode targetNode, Connection fromConnection) {
+                SimulationNode targetNode, Connection fromConnection, Connection toConnection) {
         this.congestionModel = congestionModel;
         this.edge = edge;
         this.toNode = targetNode;
         this.fromNode = fromNode;
         this.fromConnection = fromConnection;
+        this.toConnection = toConnection;
         this.lanesMappedByNodes = new HashMap<>();
     }
 
@@ -64,7 +67,7 @@ public class Link {
         return lanesMappedByNodes.get(node);
     }
 
-    long startDriving(VehicleTripData vehicleData) {
+    void startDriving(VehicleTripData vehicleData) {
         Trip<SimulationNode> trip = vehicleData.getTrip();
         Lane nextLane = null;
         if (trip.isEmpty()) {
@@ -78,8 +81,6 @@ public class Link {
         long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
         
         nextLane.startDriving(vehicleData, delay);
-        
-        return delay;
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {

@@ -64,25 +64,12 @@ public class Connection extends EventHandlerAdapter {
     }
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
-        currentLane.removeFromTop(vehicleData);
+        currentLane.removeFromQueue(vehicleData);
         
-        long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
-        
-        nextLane.addToQue(vehicleData, delay);
+        nextLane.addToQue(vehicleData);
 
         if (!vehicleData.getTrip().isEmpty()) {
             vehicleData.getTrip().removeFirstLocation();
-        }
-
-        // wake up next connection
-        Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLane.link.toNode);
-        wakeUpConnection(nextConnection, delay);
-        
-        // wake previous connection if current lane was full
-        if(currentLane.wakeConnectionAfterTransfer()){
-            Connection previousConnection = currentLane.link.fromConnection;
-            wakeUpConnection(previousConnection, 0);
-            currentLane.setWakeConnectionAfterTransfer(false);
         }
     }
 
@@ -129,15 +116,10 @@ public class Connection extends EventHandlerAdapter {
         Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
         Link nextLink = getNextLink(nextConnection);
 
-        long delay = nextLink.startDriving(vehicleData);
-        wakeUpConnection(nextConnection, delay);
+        nextLink.startDriving(vehicleData);
     }
 
-    private void wakeUpConnection(Connection nextConnection, long delay) {
-        // wake up next connection
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, nextConnection, null, null, delay + 80);
-    }
-
+    
     protected Lane getNextLane(Lane lane, VehicleTripData vehicleTripData) {
         Link nextLink = getNextLink(lane);
 
@@ -156,7 +138,7 @@ public class Connection extends EventHandlerAdapter {
     }
 
     protected void endDriving(VehicleTripData vehicleTripData, Lane lane) {
-        lane.removeFromTop(vehicleTripData);
+        lane.removeFromQueue(vehicleTripData);
 
         vehicleTripData.getVehicle().setPosition(node);
 
@@ -190,11 +172,15 @@ public class Connection extends EventHandlerAdapter {
         long delay = computeTransferDelay(vehicleTripData);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleTransferData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
+        
+        /* next que capacity reservation */
+        to.prepareAddingToqueue(vehicleTripData);
+        
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
     }
 
     protected long computeTransferDelay(VehicleTripData vehicleTripData) {
-        return Math.round(vehicleTripData.getVehicle().getLength() * 1E3 / vehicleTripData.getVehicle().getVelocity());
+        return CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
     }
 
     

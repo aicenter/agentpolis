@@ -74,9 +74,6 @@ public class Crossroad extends Connection {
 
     @Override
     protected void serveLanes() {
-        
-        // try to put all vehicles that waiting to be able to start in one of the input lanes
-        tryStartDelayedVehicles();
 
         // getting all lanes with waiting vehicles
         findNonEmptyLanes();
@@ -100,12 +97,6 @@ public class Crossroad extends Connection {
     private void laneDepleted(Lane lane){
         readyLanes.remove(chosenLane);
         chosenLane = null;
-    }
-
-    private void tryStartDelayedVehicles() {
-        for (Lane inputLane : inputLanes) {
-            inputLane.tryToServeStartFromHereQueue();
-        }
     }
 
     public int getNumberOfInputLanes() {

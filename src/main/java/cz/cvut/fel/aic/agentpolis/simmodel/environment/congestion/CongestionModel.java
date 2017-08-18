@@ -137,8 +137,9 @@ public class CongestionModel {
     private void buildLinks(Collection<SimulationEdge> allEdges) {
         for (SimulationEdge edge : allEdges) {
             SimulationNode fromNode = graph.getNode(edge.fromId);
-			Link link = new Link(this, edge, fromNode, graph.getNode(edge.toId),
-                    connectionsMappedByNodes.get(fromNode));
+            SimulationNode toNode = graph.getNode(edge.toId);
+			Link link = new Link(this, edge, fromNode, toNode,
+                    connectionsMappedByNodes.get(fromNode), connectionsMappedByNodes.get(toNode));
 			links.add(link);
             linksMappedByEdges.put(edge, link);
 		}
@@ -159,7 +160,7 @@ public class CongestionModel {
             Connection toConnection = connectionsMappedByNodes.get(toNode);
             for (SimulationEdge outEdge : nextEdges) {
                 SimulationNode nextNode = graph.getNode(outEdge.toId);
-                Lane newLane = new Lane(link, link.getLength(), timeProvider);
+                Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider);
                 link.addLane(newLane, nextNode);
                 Link outLink = linksMappedByEdges.get(outEdge);
                 if(toConnection instanceof Crossroad){
@@ -194,13 +195,13 @@ public class CongestionModel {
         
         // for visio
         Driver driver =  vehicleData.getVehicle().getDriver();
-        Vehicle vehicle = vehicleData.getVehicle();
+        PhysicalVehicle vehicle = vehicleData.getVehicle();
         
         driver.setTargetNode(nextLink.toNode);
         driver.setDelayData(new DelayData(delay, getTimeProvider().getCurrentSimTime()));
         
         vehicle.setPosition(nextLink.fromNode);
-        vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters());
+        vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
         
         
         return delay;
@@ -216,5 +217,14 @@ public class CongestionModel {
         GPSLocation targetPosition = positionUtil.getPointOnEdge(edge, portion);
         return positionUtil.getPositionInterpolated(startNode, targetPosition, vehicle.getDriver().getDelayData());
         
+    }
+    
+     public void wakeUpNextConnection(Connection connection, long delay) {
+        // wake up next connection
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, connection, null, null, delay + 80);
+    }
+     
+    public static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {
+        return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
     }
 }
