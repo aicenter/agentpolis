@@ -78,11 +78,13 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
         
         if (x2 > 0 && x1 < dim.width && y2 > 0 && y1 < dim.height) {
             SimulationNode target = representative.getTargetNode();
-            SimulationNode position = representative.getPosition();
             
-            double dy = target.getLatitudeProjected1E2() - position.getLatitudeProjected1E2();
-            double dx = target.getLongitudeProjected1E2() - position.getLongitudeProjected1E2();
-            double angle = Math.atan2(dy,dx);
+            double angle = 0;
+            if(target != null){
+                SimulationNode position = representative.getPosition();
+                angle = getAngle(position, target);
+            }
+
             AffineTransform trans =
                     AffineTransform.getTranslateInstance(entityPosition.getX(),entityPosition.getY());
             trans.rotate(-angle);
@@ -115,6 +117,12 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
         p0.lineTo(-s,2f);
         p0.closePath();
         return p0;
+    }
+
+    private double getAngle(SimulationNode position, SimulationNode target) {
+        double dy = target.getLatitudeProjected1E2() - position.getLatitudeProjected1E2();
+        double dx = target.getLongitudeProjected1E2() - position.getLongitudeProjected1E2();
+        return Math.atan2(dy,dx);
     }
 
 	

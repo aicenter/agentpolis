@@ -165,12 +165,17 @@ public class PositionUtil {
         if (driver == null) {
             return getCanvasPosition(vehicle);
         } 
+        
+        // target node - a crossroad for example
+        Node targetNode = vehicle.getDriver().getTargetNode();
+        
+        /* driver is in the car but he does not drive */
+        if (targetNode == null) {
+            return getCanvasPosition(vehicle);
+        } 
         else {
             // precise GPS position of the vehicle
             GPSLocation startLocation = vehicle.getPrecisePosition();
-            
-            // target node - a crossroad for example
-            Node targetNode = vehicle.getDriver().getTargetNode();
 
             // edge length
             double length = getDistance(startLocation, targetNode);

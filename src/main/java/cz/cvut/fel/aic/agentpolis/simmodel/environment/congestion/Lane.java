@@ -252,6 +252,7 @@ public class Lane extends EventHandlerAdapter{
         VehicleTripData vehicleTripData = startHereQueue.peek();
         
         if(!queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
+            setWakeConnectionAfterTransfer(true);
             return;
         }
         
