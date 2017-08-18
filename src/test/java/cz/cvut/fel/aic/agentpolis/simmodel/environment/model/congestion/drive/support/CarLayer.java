@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 
 import cz.agents.alite.vis.Vis;
 import cz.agents.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
@@ -39,7 +40,11 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 
     @Override
     protected Point2d getEntityPosition(DriveAgent entity) {
-        return positionUtil.getCanvasPositionInterpolatedForVehicle(entity.getVehicle());
+        Vehicle vehicle = entity.getVehicle();
+        if(vehicle == null){
+            return positionUtil.getCanvasPosition(entity);
+        }
+        return positionUtil.getCanvasPositionInterpolatedForVehicle(vehicle);
     }
 
     @Override

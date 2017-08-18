@@ -22,7 +22,6 @@ public class TestModule extends StandardAgentPolisModule{
         
         config.congestionModel.batchSize = 1;
         config.congestionModel.maxFlowPerLane = 1;
-        config.congestionModel.connectionTickLength = 1000;
         config.congestionModel.defaultCrossroadDrivingLanes = 1;
     }
     

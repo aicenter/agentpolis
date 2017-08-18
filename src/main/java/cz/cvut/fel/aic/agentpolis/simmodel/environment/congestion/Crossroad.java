@@ -21,14 +21,7 @@ import java.util.logging.Level;
  */
 public class Crossroad extends Connection {
 
-    private final int tickLength;
-
     private final int batchSize;
-
-    /**
-     * default total length off all vehicles transferred per tick if there are no leftovers from last tick
-     */
-    private final double defaultTransferredVehicleMetersPerTick;
 
     private final List<ChoosingTableData> inputLanesChoosingTable;
 
@@ -37,9 +30,7 @@ public class Crossroad extends Connection {
     private final Map<Lane, Link> outputLinksMappedByInputLanes;
     private final Map<Connection, Link> outputLinksMappedByNextConnections;
     
-    private final double maxFlowPerLane;
-    
-    private final int simultaneouslyDrivingLanes;
+    private final double maxFlow;
     
     /**
      * currently or last served lane
@@ -52,19 +43,11 @@ public class Crossroad extends Connection {
     private List<Lane> readyLanes;
     
     /**
-     * total length off all vehicles transferred this tick
-     */
-    private double metersToTransferThisTick;
-    
-    /**
      * total length off all vehicles transferred this batch
      */  
     private double metersTransferedThisBatch;
+
     
-    /**
-     * Determine whether traffic flow is depleted in this tick
-     */
-    private boolean trafficFlowDepleted;
     
 
     public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
@@ -75,11 +58,7 @@ public class Crossroad extends Connection {
         outputLinksMappedByInputLanes = new HashMap<>();
         outputLinksMappedByNextConnections = new HashMap<>();
         batchSize = config.congestionModel.batchSize;
-        tickLength = config.congestionModel.connectionTickLength;
-        maxFlowPerLane = config.congestionModel.maxFlowPerLane;
-        simultaneouslyDrivingLanes = config.congestionModel.defaultCrossroadDrivingLanes;
-        defaultTransferredVehicleMetersPerTick = computeFlowInMetersPerTick();
-        metersToTransferThisTick = defaultTransferredVehicleMetersPerTick;
+        maxFlow = config.congestionModel.maxFlowPerLane * config.congestionModel.defaultCrossroadDrivingLanes;
     }
 
 
@@ -95,7 +74,6 @@ public class Crossroad extends Connection {
 
     @Override
     protected void serveLanes() {
-        trafficFlowDepleted = false;
         
         // try to put all vehicles that waiting to be able to start in one of the input lanes
         tryStartDelayedVehicles();
@@ -103,36 +81,31 @@ public class Crossroad extends Connection {
         // getting all lanes with waiting vehicles
         findNonEmptyLanes();
         
-        // until the traffic flow per tick is not depleted
-        while (true) {
+        boolean tryTransferNextVehicle = true;
+        while (tryTransferNextVehicle) {
             
             // if there are no waiting vehicles
-            if (readyLanes.isEmpty() || trafficFlowDepleted) {
+            if (readyLanes.isEmpty()) {
                 break;
             }
 
-            if(chosenLane == null){
+            if(chosenLane == null || (metersTransferedThisBatch > batchSize)){
                 chooseLane();
             }
             
-            boolean laneDepleted = tryToServeLane(chosenLane);
-            
-            if (laneDepleted) {
-                readyLanes.remove(chosenLane);
-                chosenLane = null;
-            }
+            tryTransferNextVehicle = tryTransferVehicle(chosenLane);
         }
+    }
+    
+    private void laneDepleted(Lane lane){
+        readyLanes.remove(chosenLane);
+        chosenLane = null;
     }
 
     private void tryStartDelayedVehicles() {
         for (Lane inputLane : inputLanes) {
             inputLane.tryToServeStartFromHereQueue();
         }
-    }
-
-    private double computeFlowInMetersPerTick() {
-//        return (int) Math.max(1, Math.round(maxFlowPerLane * simultaneouslyDrivingLanes * tickLength / 1000.0));
-        return Math.round(maxFlowPerLane * simultaneouslyDrivingLanes * tickLength / 1000.0);
     }
 
     public int getNumberOfInputLanes() {
@@ -167,6 +140,7 @@ public class Crossroad extends Connection {
                 chosenLane = chooseRandomFreeLane();
             } while (!chosenLane.hasWaitingVehicles());
         }
+        metersTransferedThisBatch = 0;
     }
 
     private Lane chooseRandomFreeLane() {
@@ -179,18 +153,6 @@ public class Crossroad extends Connection {
             }
         }
         return chosenLane;
-    }
-
-    private boolean tryToServeLane(Lane chosenLane) {
-        while (metersTransferedThisBatch < batchSize) {
-    
-            // if next vehicle in chosen lane cannot be transfered ie lane is depleted
-            if (!tryTransferVehicle(chosenLane)) {
-                return true;
-            }
-        }
-        metersTransferedThisBatch = 0;
-        return false;
     }
 
     @Override
@@ -220,9 +182,11 @@ public class Crossroad extends Connection {
     }
 
     private boolean tryTransferVehicle(Lane chosenLane) {
+        
         /* no vehicles in queue */
         if (!chosenLane.hasWaitingVehicles()){
-            return false;
+            laneDepleted(chosenLane);
+            return true;
         }
         
         // first vehicle
@@ -237,24 +201,17 @@ public class Crossroad extends Connection {
         Lane nextLane = getNextLane(chosenLane, vehicleTripData);
         double vehicleLength = vehicleTripData.getVehicle().getLength();
         
-        /* test if traffic flow is depleted */
-        if(metersToTransferThisTick < vehicleLength){
-            metersToTransferThisTick 
-                    = defaultTransferredVehicleMetersPerTick + metersToTransferThisTick;
-            trafficFlowDepleted = true;
-            isTicking = true;
-            return false;
-        }
-        
         // succesfull transfer
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
-            transferVehicle(vehicleTripData, chosenLane, nextLane);
+            scheduleVehicleTransfer(vehicleTripData, chosenLane, nextLane);
+            
             metersTransferedThisBatch += vehicleLength;
-            metersToTransferThisTick -= vehicleLength;
+            
             if (vehicleTripData.getTrip().isEmpty()) {
                 vehicleTripData.setTripFinished(true);
             }
-            return true;
+            
+            return false;
         } 
         // next queue is full
         else {
@@ -264,6 +221,12 @@ public class Crossroad extends Connection {
             return false;
         }
     }
+    
+    @Override
+    protected long computeTransferDelay(VehicleTripData vehicleTripData) {
+        return Math.round(vehicleTripData.getVehicle().getLength() * 1E3 / maxFlow);
+    }
+    
 
     private final class ChoosingTableData {
         final double threshold;
