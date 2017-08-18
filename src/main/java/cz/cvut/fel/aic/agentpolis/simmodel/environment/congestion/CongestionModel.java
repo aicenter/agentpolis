@@ -190,20 +190,19 @@ public class CongestionModel {
     
     long computeDelayAndSetVehicleData(VehicleTripData vehicleData,  Lane nextLane){
         Link nextLink = nextLane.link;
-        long delay = nextLane.computeDelay(vehicleData.getVehicle());
-        
-        
+
         // for visio
         Driver driver =  vehicleData.getVehicle().getDriver();
         PhysicalVehicle vehicle = vehicleData.getVehicle();
         
-        driver.setTargetNode(nextLink.toNode);
-        driver.setDelayData(new DelayData(delay, getTimeProvider().getCurrentSimTime()));
-        
         vehicle.setPosition(nextLink.fromNode);
         vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
         
+        long delay = nextLane.computeDelay(vehicleData.getVehicle());
         
+        driver.setTargetNode(nextLink.toNode);
+        driver.setDelayData(new DelayData(delay, getTimeProvider().getCurrentSimTime()));
+
         return delay;
     }
     

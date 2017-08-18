@@ -78,9 +78,7 @@ public class Link {
             nextLane = getLaneByNextNode(nextLocation);
         }
         
-        long delay = congestionModel.computeDelayAndSetVehicleData(vehicleData, nextLane);
-        
-        nextLane.startDriving(vehicleData, delay);
+        nextLane.startDriving(vehicleData);
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {

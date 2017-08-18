@@ -126,7 +126,7 @@ public class Lane extends EventHandlerAdapter{
         }
     }
 
-    void startDriving(VehicleTripData vehicleTripData, long delay) {
+    void startDriving(VehicleTripData vehicleTripData) {
         addToStartHereQueue(vehicleTripData);
         handleChange();
     }
