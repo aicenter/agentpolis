@@ -192,7 +192,7 @@ public class Crossroad extends Connection {
         Lane nextLane = getNextLane(chosenLane, vehicleTripData);
         double vehicleLength = vehicleTripData.getVehicle().getLength();
         
-        // succesfull transfer
+        // successful transfer
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             scheduleVehicleTransfer(vehicleTripData, chosenLane, nextLane);
             

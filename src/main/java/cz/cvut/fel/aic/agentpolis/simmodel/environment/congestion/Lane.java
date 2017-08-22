@@ -9,9 +9,9 @@ import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandlerAdapter;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 /**
  * @author fido
  */
-public class Lane extends EventHandlerAdapter{
+public class Lane extends EventHandlerAdapter {
 
     private static final int MIN_LINK_CAPACITY_IN_METERS = 5;
 
@@ -41,18 +41,17 @@ public class Lane extends EventHandlerAdapter{
     private Link nextLink;
 
     private double currentlyUsedCapacityInMeters;
-    
+
     private double waitingQueueInMeters;
-    
+
     private boolean wakeConnectionAfterTransfer;
-    
+
     private final SimulationProvider simulationProvider;
 
-    
+
     private boolean eventScheduled;
-    
-    
-    
+
+
     public boolean wakeConnectionAfterTransfer() {
         return wakeConnectionAfterTransfer;
     }
@@ -65,11 +64,9 @@ public class Lane extends EventHandlerAdapter{
         return nextLink;
     }
 
-    
-    
 
     public Lane(Link link, double linkCapacityInMeters, TimeProvider timeProvider,
-            SimulationProvider simulationProvider) {
+                SimulationProvider simulationProvider) {
         this.link = link;
         this.simulationProvider = simulationProvider;
         this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS
@@ -85,18 +82,18 @@ public class Lane extends EventHandlerAdapter{
         currentlyUsedCapacityInMeters -= vehicleData.getVehicle().getLength();
         waitingQueueInMeters -= vehicleData.getVehicle().getLength();
         waitingQueue.remove();
-        
+
         updateVehiclesInQueue(vehicleData.getVehicle().getLength());
 
         // wake previous connection and start que processing
-        if(wakeConnectionAfterTransfer){
+        if (wakeConnectionAfterTransfer) {
             
             /* wake up previous connection */
             wakeUpPreviousConnection(0);
             
             /* wake up start here processing */
             handleChange();
-            
+
             setWakeConnectionAfterTransfer(false);
         }
     }
@@ -130,8 +127,8 @@ public class Lane extends EventHandlerAdapter{
         addToStartHereQueue(vehicleTripData);
         handleChange();
     }
-    
-    void prepareAddingToqueue(VehicleTripData vehicleTripData){
+
+    void prepareAddingToqueue(VehicleTripData vehicleTripData) {
         currentlyUsedCapacityInMeters += vehicleTripData.getVehicle().getLength();
     }
 
@@ -139,7 +136,7 @@ public class Lane extends EventHandlerAdapter{
         long delay = link.congestionModel.computeDelayAndSetVehicleData(vehicleTripData, this);
         long minExitTime = timeProvider.getCurrentSimTime() + delay;
         drivingQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
-        
+
         // wake up next connection
         wakeUpNextConnection(delay);
     }
@@ -163,40 +160,65 @@ public class Lane extends EventHandlerAdapter{
     public double getUsedLaneCapacityInMeters() {
         return currentlyUsedCapacityInMeters;
     }
-    
+
     long computeDelay(PhysicalVehicle vehicle) {
         CongestionModel congestionModel = link.congestionModel;
         SimulationEdge edge = link.edge;
-        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), 
+        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(),
                 edge.allowedMaxSpeedInMpS);
-        double capacity = edge.getLanesCount() * edge.length;
-        double level = currentlyUsedCapacityInMeters / capacity;
 
-        double speed = freeFlowVelocity;
-        if(congestionModel.addFundamentalDiagramDelay){        
-            speed *= interpolateSquared(1, 0.1, 1 - level);
-        }
-        double distance = congestionModel.positionUtil.getDistance(
+        double congestedSpeed;
+        congestedSpeed = computeCongestedSpeed(freeFlowVelocity, edge);
+
+
+        double speed = (congestionModel.addFundamentalDiagramDelay ? congestedSpeed : freeFlowVelocity);
+
+        double edgeLength = edge.length;
+        double airDistance = congestionModel.positionUtil.getDistance(congestionModel.graph.getNode(edge.fromId), congestionModel.graph.getNode(edge.toId));
+        double airDistanceToQueue = congestionModel.positionUtil.getDistance(
                 vehicle.getPrecisePosition(), congestionModel.graph.getNode(edge.toId))
                 - vehicle.getQueueBeforeVehicleLength();
+        double distance = airDistanceToQueue * (edgeLength / airDistance);
         double duration = distance / speed;
         long durationInMs = Math.max(1, (long) (1000 * duration));
         return durationInMs;
     }
-    
-    private double interpolateSquared(double from, double to, double x) {
-        double v = x * x;
-        double y = (from * v) + (to * (1 - v));
-        if (y < Math.min(from, to) || y > Math.max(from, to))
-            Log.error(this, y + ": value out of range (" + from + "," + to + ")!");
-        return y;
+
+    private double computeCongestedSpeed(double freeFlowVelocity, SimulationEdge edge) {
+        double carsPerKilometer = getCarsCountOnLane() / (double) edge.length * 1000.0;
+
+        double congestedSpeed;
+        if (carsPerKilometer < 20) {
+            congestedSpeed = freeFlowVelocity;
+        } else if (carsPerKilometer > 70) {
+            congestedSpeed = 0.1 * freeFlowVelocity;
+        } else {
+            congestedSpeed = freeFlowVelocity * calculateSpeedCoefficient(carsPerKilometer);
+        }
+        Log.info(this, "Congested speed: " + carsPerKilometer + "cars / km -> " + congestedSpeed + "m / s");
+
+        return congestedSpeed;
     }
+
+    private int getCarsCountOnLane() {
+        return drivingQueue.size() + waitingQueue.size();
+    }
+
+    private double calculateSpeedCoefficient(double carsPerKilometer) {
+        //        WoframAlpha LinearModelFit[{{20, 100}, {30, 60}, {40, 40}, {70, 10}}, {x, x^2}, x]
+        // interpolate speed for freeFlowSpeed = 100kmph
+        //        0.0428177 x^2 - 5.61878 x + 193.757 (quadratic)
+        double x = carsPerKilometer;
+        double reducedSpeed = (0.0428177 * x * x - 5.61878 * x + 193.757);
+        return reducedSpeed / 100.0;
+    }
+
 
     private void updateVehiclesInQueue(double transferredVehicleLength) {
         for (VehicleQueueData vehicleQueueData : waitingQueue) {
             updateVehicle(vehicleQueueData, transferredVehicleLength);
         }
-        
+
         for (VehicleQueueData vehicleQueueData : drivingQueue) {
             updateVehicle(vehicleQueueData, transferredVehicleLength);
         }
@@ -205,21 +227,21 @@ public class Lane extends EventHandlerAdapter{
     private void updateVehicle(VehicleQueueData vehicleQueueData, double transferredVehicleLength) {
         PhysicalVehicle vehicle = vehicleQueueData.getVehicleTripData().getVehicle();
         CongestionModel congestionModel = link.congestionModel;
-        
+
         // set que before vehicle
         vehicle.setQueueBeforeVehicleLength(vehicle.getQueueBeforeVehicleLength() - transferredVehicleLength);
-        
+
         // change position to current interpolated position
         GPSLocation currentInterpolatedLocation = link.congestionModel.getPositionInterpolatedForVehicle(vehicle);
         vehicle.setPrecisePosition(currentInterpolatedLocation);
-        
+
         // create new delay
         long delay = computeDelay(vehicle);
         vehicle.getDriver().setDelayData(new DelayData(delay, congestionModel.getTimeProvider().getCurrentSimTime()));
     }
-    
-    private void handleChange(){
-        if(!eventScheduled){
+
+    private void handleChange() {
+        if (!eventScheduled) {
             tryScheduleStartVehicle();
         }
     }
@@ -230,40 +252,39 @@ public class Lane extends EventHandlerAdapter{
         tryScheduleStartVehicle();
         eventScheduled = false;
     }
-    
+
     public void wakeUpNextConnection(long delay) {
         link.congestionModel.wakeUpNextConnection(link.toConnection, delay);
     }
-    
+
     public void wakeUpPreviousConnection(long delay) {
         link.congestionModel.wakeUpNextConnection(link.fromConnection, delay);
     }
-    
-    private void startFirstVehicleInStartHereQueue(){
+
+    private void startFirstVehicleInStartHereQueue() {
         VehicleTripData vehicleTripData = startHereQueue.pollFirst();
         addToQue(vehicleTripData);
     }
-    
-    private void tryScheduleStartVehicle(){
-        if(startHereQueue == null || startHereQueue.isEmpty()){
+
+    private void tryScheduleStartVehicle() {
+        if (startHereQueue == null || startHereQueue.isEmpty()) {
             return;
         }
-        
+
         VehicleTripData vehicleTripData = startHereQueue.peek();
-        
-        if(!queueHasSpaceForVehicle(vehicleTripData.getVehicle())){
+
+        if (!queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             setWakeConnectionAfterTransfer(true);
             return;
         }
-        
-        
+
         /* next que capacity reservation */
         this.prepareAddingToqueue(vehicleTripData);
-        
+
         long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
-        
+
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
         eventScheduled = true;
     }
-   
+
 }
