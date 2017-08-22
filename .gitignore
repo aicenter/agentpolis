@@ -1,6 +1,7 @@
 /target/
 .idea/
 *.log
+log.txt*
 
 ### Java template
 # Compiled class file
@@ -53,6 +54,7 @@ hs_err_pid*
 ## Plugin-specific files:
 
 # IntelliJ
+*.iml
 /out/
 
 # mpeltonen/sbt-idea plugin
