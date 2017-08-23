@@ -199,7 +199,7 @@ public class Crossroad extends Connection {
 
         Lane nextLane = getNextLane(chosenLane, vehicleTripData);
 
-        // succesfull transfer
+        // successful transfer
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             scheduleVehicleTransfer(vehicleTripData, chosenLane, nextLane);
             
