@@ -7,6 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
@@ -26,7 +27,7 @@ import java.awt.geom.Rectangle2D;
 @Singleton
 public class HighwayLayer extends AbstractLayer{
     
-    private static final int EDGE_WIDTH = 8;
+    private static final int DEFAULT_EDGE_WIDTH = 8;
     
     
     
@@ -34,6 +35,17 @@ public class HighwayLayer extends AbstractLayer{
     protected final PositionUtil positionUtil;
     
     protected final Graph<SimulationNode,SimulationEdge> graph;
+    
+    
+    private int edgeWidth = DEFAULT_EDGE_WIDTH;
+    
+    
+    
+    
+    @Inject(optional=true)
+    public void setEdgeWidth(@Named("HighwayLayer edge width") int width) {
+        this.edgeWidth = width;
+    }
     
     
     
@@ -49,7 +61,7 @@ public class HighwayLayer extends AbstractLayer{
     
     @Override
     public void paint(Graphics2D canvas) {
-        canvas.setStroke(new BasicStroke(Vis.transW(EDGE_WIDTH)));
+        canvas.setStroke(new BasicStroke(Vis.transW(edgeWidth)));
         canvas.setColor(Color.BLACK);
 
         Dimension dim = Vis.getDrawingDimension();
