@@ -5,8 +5,10 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.agents.alite.common.event.EventHandler;
 import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
@@ -198,29 +200,36 @@ public class CongestionModel {
         vehicle.setPosition(nextLink.fromNode);
         vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
         
-        long delay = nextLane.computeDelay(vehicleData.getVehicle());
+        long delay = nextLane.computeDelay(vehicleData.getVehicle(), true);
         
         driver.setTargetNode(nextLink.toNode);
         driver.setDelayData(new DelayData(delay, getTimeProvider().getCurrentSimTime()));
-
+        
         return delay;
     }
     
     public GPSLocation getPositionInterpolatedForVehicle(Vehicle vehicle) {
+        GPSLocation startPosition = vehicle.getPrecisePosition();
+        GPSLocation targetPosition = getPositionAtEndOfTheQueue(vehicle);
+
+        return positionUtil.getPositionInterpolated(startPosition, targetPosition, vehicle.getDriver().getDelayData());
+    }
+    
+    private GPSLocation getPositionAtEndOfTheQueue(Vehicle vehicle){
         Node startNode = vehicle.getPosition();
         Node targetNode = vehicle.getDriver().getTargetNode();
         SimulationEdge edge = graph.getEdge(startNode.id, targetNode.id);
-
         double portion = (edge.length - vehicle.getQueueBeforeVehicleLength()) / edge.length;
-
-        GPSLocation targetPosition = positionUtil.getPointOnEdge(edge, portion);
-        return positionUtil.getPositionInterpolated(startNode, targetPosition, vehicle.getDriver().getDelayData());
-        
+        return positionUtil.getPointOnEdge(edge, portion);
     }
     
-     public void wakeUpNextConnection(Connection connection, long delay) {
-        // wake up next connection
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, connection, null, null, delay + 80);
+    
+    public void wakeUpConnection(Connection connection, long delay) {
+        makeTickEvent(connection, delay);
+    }
+    
+    public void makeTickEvent(EventHandler target, long delay){
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, target, null, null, delay + 80);
     }
      
     public static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {

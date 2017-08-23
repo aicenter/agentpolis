@@ -41,6 +41,9 @@ public class Link {
     public SimulationEdge getEdge() {
         return edge;
     }
+    
+    
+    private Lane laneForTripEnd;
 
 
     public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
@@ -82,10 +85,17 @@ public class Link {
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {
+        if(laneForTripEnd == null){
+            laneForTripEnd = lane;
+        }
         lanesMappedByNodes.put(nextNode, lane);
     }
 
     Lane getLaneForTripEnd() {
+        return laneForTripEnd;
+    }
+                
+    private Lane getRandomLane(){
         Entry<SimulationNode, Lane> randomEntry
                 = CollectionUtil.getRandomEntryFromMap(lanesMappedByNodes, congestionModel.getRandom());
         return randomEntry.getValue();

@@ -14,6 +14,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.agents.alite.common.event.Event;
 import cz.agents.alite.common.event.EventHandlerAdapter;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
 import java.util.logging.Level;
 
 /**
@@ -33,7 +36,7 @@ public class Connection extends EventHandlerAdapter {
 
     protected boolean isTicking;
     
-    private VehicleTransferData vehicleTransferData;
+    private VehicleEventData vehicleEventData;
     
 
 
@@ -50,14 +53,20 @@ public class Connection extends EventHandlerAdapter {
     public void handleEvent(Event event) {
         
         /* if event comes while connection is woken up */
-        if(vehicleTransferData != null 
-                && vehicleTransferData.transferFinishTime > congestionModel.timeProvider.getCurrentSimTime()){
+        if(vehicleEventData != null 
+                && vehicleEventData.transferFinishTime > congestionModel.timeProvider.getCurrentSimTime()){
             return;
         }
         
         /* if the vehicle should be transfere by this event */
-        if(vehicleTransferData != null){
-            transferVehicleFromLastTick();
+        if(vehicleEventData != null){
+            if(vehicleEventData instanceof VehicleTransferData) {
+                transferVehicleFromLastTick();
+            }
+            else{
+                endVehicleFromLastTick();
+            }
+            
         }
         
         serveLanes();
@@ -81,6 +90,7 @@ public class Connection extends EventHandlerAdapter {
         
         /* no one is waiting */
         if(!inLane.hasWaitingVehicles()){
+            checkDrivingQue(inLane);
             return false;
         }
         
@@ -89,8 +99,8 @@ public class Connection extends EventHandlerAdapter {
         
         // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
-            endDriving(vehicleTripData, inLane);
-            return true;
+            scheduleEndDriving(vehicleTripData, inLane);
+            return false;
         }
 
         Lane nextLane = getNextLane(inLane, vehicleTripData);
@@ -164,42 +174,47 @@ public class Connection extends EventHandlerAdapter {
     }
 
     private void transferVehicleFromLastTick() {
+        VehicleTransferData vehicleTransferData = (VehicleTransferData) vehicleEventData;
         transferVehicle(vehicleTransferData.vehicleTripData, vehicleTransferData.from, vehicleTransferData.to);
-        vehicleTransferData = null;
+        vehicleEventData = null;
     }
 
-    protected void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
+    void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
         long delay = computeTransferDelay(vehicleTripData);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
-        vehicleTransferData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
+        vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
         
         /* next que capacity reservation */
         to.prepareAddingToqueue(vehicleTripData);
         
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
+        congestionModel.makeTickEvent(this, delay);
     }
 
     protected long computeTransferDelay(VehicleTripData vehicleTripData) {
         return CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
     }
+    
+    void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane){
+//        long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
+        long delay = 100;
+        long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
+        vehicleEventData = new VehicleEndData(lane, vehicleTripData, transferFinishTime);
+        
+//        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
+        congestionModel.makeTickEvent(this, delay);
+    }
 
+    private void endVehicleFromLastTick() {
+        VehicleEndData vehicleEndData = (VehicleEndData) vehicleEventData;
+        endDriving(vehicleEndData.vehicleTripData, vehicleEndData.lane);
+        vehicleEventData = null;
+    }
     
-    
-    
-    private class VehicleTransferData{
-        private final Lane from;
-        
-        private final Lane to;
-        
-        private final VehicleTripData vehicleTripData;
-        
-        private final long transferFinishTime;
-
-        public VehicleTransferData(Lane from, Lane to, VehicleTripData vehicleTripData, long transferFinishTime) {
-            this.from = from;
-            this.to = to;
-            this.vehicleTripData = vehicleTripData;
-            this.transferFinishTime = transferFinishTime;
+    protected void checkDrivingQue(Lane lane){
+        if(!lane.drivingQueue.isEmpty()){
+            long firstTransferToWaitingQueueTime = lane.drivingQueue.peek().getMinPollTime();
+            congestionModel.makeTickEvent(this, 
+                    firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
         }
     }
 }

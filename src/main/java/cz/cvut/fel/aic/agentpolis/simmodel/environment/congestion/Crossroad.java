@@ -83,6 +83,9 @@ public class Crossroad extends Connection {
             
             // if there are no waiting vehicles
             if (readyLanes.isEmpty()) {
+                for (Lane inputLane : inputLanes) {
+                    checkDrivingQue(inputLane);
+                }
                 break;
             }
 
@@ -183,15 +186,19 @@ public class Crossroad extends Connection {
         // first vehicle
         VehicleTripData vehicleTripData = chosenLane.getFirstWaitingVehicle();
         
+        double vehicleLength = vehicleTripData.getVehicle().getLength();
+        
         // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
-            endDriving(vehicleTripData, chosenLane);
-            return true;
+            scheduleEndDriving(vehicleTripData, chosenLane);
+            
+            metersTransferedThisBatch += vehicleLength;
+            
+            return false;
         }
 
         Lane nextLane = getNextLane(chosenLane, vehicleTripData);
-        double vehicleLength = vehicleTripData.getVehicle().getLength();
-        
+
         // succesfull transfer
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             scheduleVehicleTransfer(vehicleTripData, chosenLane, nextLane);
