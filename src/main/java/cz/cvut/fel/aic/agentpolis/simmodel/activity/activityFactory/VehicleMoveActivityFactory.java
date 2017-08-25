@@ -14,7 +14,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.activity.VehicleMove;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 
 /**
  * @author fido

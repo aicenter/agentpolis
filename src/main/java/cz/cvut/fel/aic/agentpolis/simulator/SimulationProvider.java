@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 
 /**
  *

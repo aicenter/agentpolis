@@ -8,7 +8,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.alite.common.event.EventHandler;
+import cz.cvut.fel.aic.alite.common.event.EventHandler;
 import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;

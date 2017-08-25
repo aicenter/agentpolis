@@ -4,8 +4,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 
-import cz.agents.alite.vis.Vis;
-import cz.agents.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.alite.vis.Vis;
+import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;

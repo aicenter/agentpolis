@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
-import cz.agents.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
 
 /**
  *

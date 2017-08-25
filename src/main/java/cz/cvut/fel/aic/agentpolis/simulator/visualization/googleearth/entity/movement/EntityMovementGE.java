@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.agents.agentpolis.apgooglearth.regionbounds.RegionBounds;
-import cz.agents.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.geographtools.Node;
 import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 

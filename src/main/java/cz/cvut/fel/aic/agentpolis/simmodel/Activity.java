@@ -4,8 +4,8 @@
 package cz.cvut.fel.aic.agentpolis.simmodel;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.typed.AliteEntity;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.typed.AliteEntity;
 import java.util.logging.Level;
 
 /**

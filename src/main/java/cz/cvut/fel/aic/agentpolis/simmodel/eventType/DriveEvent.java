@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
 
-import cz.agents.alite.common.event.EventType;
+import cz.cvut.fel.aic.alite.common.event.EventType;
 
 /**
  *

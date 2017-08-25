@@ -11,8 +11,8 @@ import com.google.inject.name.Named;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.agents.alite.vis.Vis;
-import cz.agents.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.alite.vis.Vis;
+import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.geographtools.Graph;
 
 import javax.vecmath.Point2d;
