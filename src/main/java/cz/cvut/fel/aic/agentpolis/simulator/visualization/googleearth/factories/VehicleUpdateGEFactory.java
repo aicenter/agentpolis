@@ -12,7 +12,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.VehicleStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.entity.movement.EntityMovementGE;
-import cz.agents.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.agents.alite.googleearth.cameraalt.visibility.CameraAltVisibility;
 import cz.agents.alite.googleearth.updates.UpdateKmlView;
 import cz.cvut.fel.aic.geographtools.Node;

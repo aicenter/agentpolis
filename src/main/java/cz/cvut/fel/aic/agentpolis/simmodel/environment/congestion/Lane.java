@@ -6,8 +6,8 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.EventHandlerAdapter;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;

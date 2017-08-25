@@ -3,11 +3,11 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
-import cz.agents.alite.simulation.Simulation;
-import cz.agents.alite.vis.Vis;
-import cz.agents.alite.vis.layer.AbstractLayer;
-import cz.agents.alite.vis.layer.common.HelpLayer;
-import cz.agents.alite.vis.layer.toggle.KeyToggleLayer;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.vis.Vis;
+import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
+import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

@@ -17,9 +17,9 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInit
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.HighwayLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.NodeIdLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.SimulationControlLayer;
-import cz.agents.alite.simulation.Simulation;
-import cz.agents.alite.vis.VisManager;
-import cz.agents.alite.vis.layer.common.ColorLayer;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.vis.VisManager;
+import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.GridLayer;
 import java.awt.Color;
 

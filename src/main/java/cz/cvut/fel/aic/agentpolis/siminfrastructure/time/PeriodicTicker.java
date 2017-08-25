@@ -6,9 +6,9 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.EventHandlerAdapter;
-import cz.agents.alite.common.event.EventType;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
+import cz.cvut.fel.aic.alite.common.event.EventType;
 
 /**
  *

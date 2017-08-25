@@ -6,12 +6,12 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-import cz.agents.alite.simulation.Simulation;
-import cz.agents.alite.vis.Vis;
-import cz.agents.alite.vis.VisManager;
-import cz.agents.alite.vis.layer.common.FpsLayer;
-import cz.agents.alite.vis.layer.common.HelpLayer;
-import cz.agents.alite.vis.layer.common.VisInfoLayer;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.vis.Vis;
+import cz.cvut.fel.aic.alite.vis.VisManager;
+import cz.cvut.fel.aic.alite.vis.layer.common.FpsLayer;
+import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
+import cz.cvut.fel.aic.alite.vis.layer.common.VisInfoLayer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.MetrowayNetwork;

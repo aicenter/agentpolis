@@ -8,8 +8,8 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.EventHandlerAdapter;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
 /**
  *

@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
-import cz.agents.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;

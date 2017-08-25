@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.EDayInWeek;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
-import cz.agents.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 
 public class TimeEndUtilTest {
 
