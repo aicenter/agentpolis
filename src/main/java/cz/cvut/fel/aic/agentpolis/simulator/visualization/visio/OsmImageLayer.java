@@ -17,8 +17,8 @@ public class OsmImageLayer extends AbstractLayer {
 
     private Logger LOGGER = Logger.getLogger(Simulation.class);
 
-    private static final double WORLD_X = 20037509.92 * 2;
-    private static final double WORLD_Y = 20037508.34 * 2;
+    private static final double WORLD_X = 4.007501984E7;
+    private static final double WORLD_Y = 4.007501668E7;
     private static final String OSM_TILES_ROOT = System.getProperty("user.home")+"/.GMapCatcher";
 
     private final Path dir = Paths.get(OSM_TILES_ROOT + "/OSM_tiles");
@@ -87,13 +87,13 @@ public class OsmImageLayer extends AbstractLayer {
     }
 
     private void drawImages(Graphics2D graphics) {
-        graphics.setColor(Color.BLACK);
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         for (int i = minIDX; i < maxIDX; i++) {
             for (int j = minIDY; j < maxIDY; j++) {
                 BufferedImage bufferedImage = getTile(zoomLevel,i,j);
                 if (bufferedImage != null) graphics.drawImage(bufferedImage,
                         Vis.transX(SlippyToWorldX(i)),Vis.transY(SlippyToWorldY(j)),
-                        zoomW,zoomH,null);
+                        zoomW+1,zoomH+1,null);
             }
         }
     }
