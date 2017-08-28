@@ -204,7 +204,7 @@ public class Lane extends EventHandlerAdapter {
     }
 
     private double computeCongestedSpeed(double freeFlowVelocity, SimulationEdge edge) {
-        double carsPerKilometer = getCarsCountOnLane() / (double) edge.length * 1000.0;
+        double carsPerKilometer = getDrivingCarsCountOnLane() / (double) edge.length * 1000.0;
 
         double congestedSpeed;
         if (carsPerKilometer < 20) {
@@ -219,8 +219,8 @@ public class Lane extends EventHandlerAdapter {
         return congestedSpeed;
     }
 
-    private int getCarsCountOnLane() {
-        return drivingQueue.size() + waitingQueue.size();
+    private int getDrivingCarsCountOnLane() {
+        return drivingQueue.size();
     }
 
     private double calculateSpeedCoefficient(double carsPerKilometer) {
