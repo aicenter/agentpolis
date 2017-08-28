@@ -63,18 +63,6 @@
             <groupId>cz.cvut.fel.aic</groupId>
             <artifactId>geographtools</artifactId>
         </dependency>
-		<dependency>
-			<groupId>cz.agents.alite.googleearth</groupId>
-			<artifactId>kml_visio</artifactId>
-            <version>1.0.0</version>
-		</dependency>
-
-		<!-- AgentPolis projects -->
-		<dependency>
-			<groupId>cz.agents.agentpolis</groupId>
-			<artifactId>apgooglearth</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
-		</dependency>    
 
 		<!-- External lib -->
         <dependency>
@@ -114,11 +102,6 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>de.micromata.jak</groupId>
-            <artifactId>CustomJavaAPIforKml</artifactId>
-            <version>2.2.0</version>
-        </dependency>
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts</artifactId>

@@ -15,7 +15,6 @@ import cz.cvut.fel.aic.alite.common.event.EventHandler;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.alite.common.event.EventProcessorEventType;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
-import cz.agents.alite.googleearth.updates.Synthetiser;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
 import org.apache.log4j.Logger;
@@ -48,8 +47,6 @@ public class SimulationCreator {
 
 
     private TypedSimulation simulation;
-
-    private Synthetiser synthetiser;
     
 
     /**
