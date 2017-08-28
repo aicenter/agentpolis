@@ -78,6 +78,14 @@
 
 		<!-- External lib -->
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
           </dependency>
@@ -96,19 +104,9 @@
 			<artifactId>commons-lang</artifactId>
             <version>2.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-            <version>3.4</version>
-		</dependency>
         <dependency>
             <groupId>ninja.fido.config</groupId>
             <artifactId>core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
 			<groupId>org.mockito</groupId>
@@ -116,5 +114,25 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+        <dependency>
+            <groupId>de.micromata.jak</groupId>
+            <artifactId>CustomJavaAPIforKml</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>jgrapht-jdk1.6</groupId>
+            <artifactId>jgrapht-jdk1.6</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>java3d</groupId>
+            <artifactId>vecmath</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+	</dependencies>
 </project>
