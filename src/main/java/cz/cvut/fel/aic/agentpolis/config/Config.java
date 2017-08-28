@@ -13,13 +13,9 @@ public class Config implements GeneratedConfig {
 
   public String dirForResults;
 
-  public String pathToKmlFile;
-
   public CongestionModel congestionModel;
 
   public Integer simulationDurationInMillis;
-
-  public Boolean turnOnGeneratingGeLinks;
 
   public Boolean showVisio;
 
@@ -38,10 +34,8 @@ public class Config implements GeneratedConfig {
     this.showEventViewer = (Boolean) config.get("show_event_viewer");
     this.pathToScriptsAndTheirInputParameters = (String) config.get("path_to_scripts_and_their_input_parameters");
     this.dirForResults = (String) config.get("dir_for_results");
-    this.pathToKmlFile = (String) config.get("path_to_kml_file");
     this.congestionModel = new CongestionModel((HashMap) config.get("congestion_model"));
     this.simulationDurationInMillis = (Integer) config.get("simulation_duration_in_millis");
-    this.turnOnGeneratingGeLinks = (Boolean) config.get("turn_on_generating_ge_links");
     this.showVisio = (Boolean) config.get("show_visio");
     this.log4jXmlDir = (String) config.get("log4j_xml_dir");
     this.pathToCsvEventLogFile = (String) config.get("path_to_csv_event_log_file");
