@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import org.apache.log4j.Logger;
 
 import java.time.Duration;

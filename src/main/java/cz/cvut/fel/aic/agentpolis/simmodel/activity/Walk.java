@@ -18,8 +18,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.agentpolis.simmodel.eventType.DriveEvent;
 import cz.cvut.fel.aic.agentpolis.simmodel.eventType.Transit;
-import cz.agents.alite.common.event.EventProcessor;
-import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.geographtools.Graph;
 
 /**

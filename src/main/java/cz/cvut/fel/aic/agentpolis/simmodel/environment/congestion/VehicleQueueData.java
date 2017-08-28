@@ -12,7 +12,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 public class VehicleQueueData {
     private final VehicleTripData vehicleTripData;
     
-    private final long minPollTime;
+    private long minPollTime;
 
     public VehicleTripData getVehicleTripData() {
         return vehicleTripData;
@@ -21,6 +21,11 @@ public class VehicleQueueData {
     public long getMinPollTime() {
         return minPollTime;
     }
+
+    public void setMinPollTime(long minPollTime) {
+        this.minPollTime = minPollTime;
+    }
+    
     
     
 

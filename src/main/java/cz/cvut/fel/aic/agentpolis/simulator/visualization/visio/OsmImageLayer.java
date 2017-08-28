@@ -1,11 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-import cz.agents.alite.simulation.Simulation;
-import cz.agents.alite.vis.Vis;
-import cz.agents.alite.vis.layer.AbstractLayer;
+
 import cz.cvut.fel.aic.agentpolis.downloader.DownloadManager;
 import cz.cvut.fel.aic.agentpolis.downloader.DownloadTask;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.vis.Vis;
+import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;

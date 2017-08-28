@@ -2,8 +2,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.entity;
 
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.agents.alite.common.event.typed.AliteEntity;
-import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.common.event.typed.AliteEntity;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 /**

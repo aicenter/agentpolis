@@ -20,7 +20,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
-import cz.agents.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 
 /**
  * @author fido
@@ -70,7 +70,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
     public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
         vehicleCheck(vehicle);
-        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+        Trip<SimulationNode> trip = tripsUtil.createTrip(vehicle.getPosition().getId(), targetPosition.getId());
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
                 tripIdGenerator.getId());
     }

@@ -9,15 +9,13 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.googleearth.UpdateGEFactory;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
-import cz.agents.alite.common.event.Event;
-import cz.agents.alite.common.event.EventHandler;
-import cz.agents.alite.common.event.EventProcessor;
-import cz.agents.alite.common.event.EventProcessorEventType;
-import cz.agents.alite.common.event.typed.TypedSimulation;
-import cz.agents.alite.googleearth.updates.Synthetiser;
-import cz.agents.alite.simulation.Simulation;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.EventHandler;
+import cz.cvut.fel.aic.alite.common.event.EventProcessor;
+import cz.cvut.fel.aic.alite.common.event.EventProcessorEventType;
+import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -49,8 +47,6 @@ public class SimulationCreator {
 
 
     private TypedSimulation simulation;
-
-    private Synthetiser synthetiser;
     
 
     /**
@@ -61,8 +57,6 @@ public class SimulationCreator {
     private final Config config;
 
     private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
-    
-    private final List<UpdateGEFactory> factoryGoogleEarths = new ArrayList<>();
     
     private final SimulationProvider simulationProvider;
     
@@ -130,15 +124,6 @@ public class SimulationCreator {
 
             LOGGER.info(String.format("Simulation - runtime: %s ms", (System.currentTimeMillis() -
                     simulationStartTime)));
-
-            if (config.turnOnGeneratingGeLinks) {
-                try {
-                    synthetiser.stop();
-                    LOGGER.info("Google Earth - Synthesizer was stopped ");
-                } catch (Exception e) {
-                    LOGGER.error(e.getLocalizedMessage(), e);
-                }
-            }
 
             if (!config.pathToScriptsAndTheirInputParameters.equals("")) {
                 LOGGER.info("Executing post groovy scripts:");
@@ -210,12 +195,6 @@ public class SimulationCreator {
     
 
     private void initVisioAndGE() {
-        if (config.turnOnGeneratingGeLinks) {
-            LOGGER.info("Initializing Google Earth");
-            createGoogleEarthUpdaters(config.pathToKmlFile);
-            LOGGER.info("Initialized Google Earth");
-        }
-
         if (config.showVisio) {
             LOGGER.info("Initializing Visio");
 			visioInitializerProvider.get().initialize(simulation);
@@ -226,48 +205,9 @@ public class SimulationCreator {
             simulation.setSimulationSpeed(0);
         }
     }
-
-    // -------------------- Create methods
-    // --------------------------------------------------
-
-    private void createGoogleEarthUpdaters(String nameOfKMLFile) {
-
-        synthetiser = new Synthetiser();
-        LOGGER.info("Google Earth - was started ");
-
-//        double north = boundsOfMap.getMaxLatE6() / 1E6;
-//        double east = boundsOfMap.getMaxLonE6() / 1E6;
-//        double south = boundsOfMap.getMinLatE6() / 1E6;
-//        double west = boundsOfMap.getMinLonE6() / 1E6;
-
-//        RegionBounds regionBounds = RegionBounds.createRegionBounds(north, south, east, west);
-
-        for (UpdateGEFactory factoryGoogleEarth : factoryGoogleEarths) {
-            
-            // TODO - rework google earth to be able to work without injector
-//            synthetiser.addUpdateKmlView(new CameraAltUpdateKmlProviderFacotryImpl(factoryGoogleEarth
-//                    .getCameraAltVisibility(), factoryGoogleEarth.getNameUpdateKmlView(), factoryGoogleEarth
-//                    .createUpdateKmlView(injector, regionBounds)));
-        }
-
-        synthetiser.makeLinks(new File(nameOfKMLFile));
-
-        try {
-            synthetiser.start();
-        } catch (Exception e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
-        }
-
-    }
-
-    /**
-     * Adding Google Earth factory
-     *
-     * @param factoryGoogleEarth
-     */
-    public void addGoogleEarthUpdater(UpdateGEFactory factoryGoogleEarth) {
-        factoryGoogleEarths.add(factoryGoogleEarth);
-    }
+    
+    
+    
 
     /**
      * reports some info every day

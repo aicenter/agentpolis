@@ -55,7 +55,7 @@
         
         <!-- AIC projects -->
 		<dependency>
-			<groupId>cz.agents.alite</groupId>
+			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>alite</artifactId>
             <version>1.2-SNAPSHOT</version>
 		</dependency>
@@ -63,20 +63,16 @@
             <groupId>cz.cvut.fel.aic</groupId>
             <artifactId>geographtools</artifactId>
         </dependency>
-		<dependency>
-			<groupId>cz.agents.alite.googleearth</groupId>
-			<artifactId>kml_visio</artifactId>
-            <version>1.0.0</version>
-		</dependency>
-
-		<!-- AgentPolis projects -->
-		<dependency>
-			<groupId>cz.agents.agentpolis</groupId>
-			<artifactId>apgooglearth</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
-		</dependency>    
 
 		<!-- External lib -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -96,19 +92,9 @@
 			<artifactId>commons-lang</artifactId>
             <version>2.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-            <version>3.4</version>
-		</dependency>
         <dependency>
             <groupId>ninja.fido.config</groupId>
             <artifactId>core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
 			<groupId>org.mockito</groupId>
@@ -116,5 +102,20 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>jgrapht-jdk1.6</groupId>
+            <artifactId>jgrapht-jdk1.6</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>java3d</groupId>
+            <artifactId>vecmath</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+	</dependencies>
 </project>
