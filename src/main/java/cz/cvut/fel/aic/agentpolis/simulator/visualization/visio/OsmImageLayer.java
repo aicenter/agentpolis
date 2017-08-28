@@ -1,12 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-
-import cz.cvut.fel.aic.agentpolis.downloader.DownloadManager;
-import cz.cvut.fel.aic.agentpolis.downloader.DownloadTask;
+import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.agentpolis.downloader.DownloadManager;
+import cz.cvut.fel.aic.agentpolis.downloader.DownloadTask;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
@@ -25,8 +25,7 @@ public class OsmImageLayer extends AbstractLayer {
 
     private static final double WORLD_X = 4.007501984E7;
     private static final double WORLD_Y = 4.007501668E7;
-    private static final String OSM_TILES_LOCAL_ROOT = System.getProperty("user.home")+"/.GMapCatcher";
-    private static final String OSM_TILES_SERVER = "a.tile.openstreetmap.org";
+    private final String osmTileServer;
 
     private final Path dir;
 
@@ -40,9 +39,10 @@ public class OsmImageLayer extends AbstractLayer {
     private DownloadManager downloadManager;
 
     @Inject
-    public OsmImageLayer(DownloadManager downloadManager) {
+    public OsmImageLayer(DownloadManager downloadManager, Config config) {
         this.downloadManager = downloadManager;
-        dir = Paths.get(OSM_TILES_LOCAL_ROOT + "/OSM_tiles");
+        this.dir = Paths.get(config.pathToTileDirRoot + "/OSM_tiles");
+        this.osmTileServer = config.osmTileServer;
         if (!Files.isDirectory(dir)) {
             LOGGER.info("No OSM tile folder found.");
             OSMTiles = null;
@@ -82,7 +82,7 @@ public class OsmImageLayer extends AbstractLayer {
         if (!OSMDownloads.containsKey(osmKey)) {
             String directoryUrl = "/"+Integer.toString(zoom)+"/"+Integer.toString(x)+"/"+Integer.toString(y)+".png";
             try {
-                URL downloadUrl = new URL("http",OSM_TILES_SERVER, directoryUrl);
+                URL downloadUrl = new URL("http",osmTileServer, directoryUrl);
                 DownloadTask downloadTask = new DownloadTask(downloadUrl,p.toFile());
                 Future<?> future = downloadManager.submit(downloadTask);
                 OSMDownloads.put(osmKey,future);
@@ -109,7 +109,7 @@ public class OsmImageLayer extends AbstractLayer {
         // modify and bind zoomLevel and recalculate zoomed image sizes
         if (zoomLevelModifier != 0) {
             zoomLevel += zoomLevelModifier;
-            if (zoomLevel > 16) zoomLevel=16;
+            if (zoomLevel > 19) zoomLevel=19;
             else if (zoomLevel < 0) zoomLevel=0;
             zoomW = Vis.transW(WORLD_X/(1<<zoomLevel));
             zoomH = Vis.transH(WORLD_Y/(1<<zoomLevel));
