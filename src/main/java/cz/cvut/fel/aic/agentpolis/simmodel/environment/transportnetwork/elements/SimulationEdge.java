@@ -1,6 +1,8 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import cz.cvut.fel.aic.geographtools.Edge;
+
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -10,7 +12,7 @@ import java.util.List;
  */
 public class SimulationEdge extends Edge {
     /**
-     * unique ID for each edge, also recognize directions
+     * unique ID for each edge
      */
     private final int uniqueId;
 
@@ -20,13 +22,17 @@ public class SimulationEdge extends Edge {
     private final int oppositeWayId; // unique edge id that is in opposite direction, otherwise -1 (one-way)
 
     /**
-     * TODO: lanes
+     * Available lanes
+     */
+    private final int lanesCount;
+
+    /**
+     * List of lanes with their properties
      * Lanes turn                   lanesTurn{left,through|through,right}
      * Lanes continues to edges:    lanesContinuesToEdge = {{1,2},{2,3}}
      * Lanes count                  lanesCount = 2
      */
-    private final int lanesCount;
-    private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
+    private List<Lane> lanesTurn;
     
     /**
 	 * maximal allowed speed in meters per second
@@ -43,9 +49,9 @@ public class SimulationEdge extends Edge {
      * @param fromId sourceId
      * @param toId destinationId
      * @param osmWayID osm id of this edge
-     * @param uniqueWayId
+     * @param uniqueWayId unique id of edge across simulation
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
-     * @param lengthInMetres -
+     * @param lengthInMetres - edge length
      * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
      *                      Input should be correct, it is not validated!
      * @param lanesCount total number of lanes for ModeOfTransport-car
@@ -64,18 +70,30 @@ public class SimulationEdge extends Edge {
         this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
         this.wayID = osmWayID;
 
+        // opposite way
         if (oppositeWayId >= -1) {
             this.oppositeWayId = oppositeWayId;
         } else {
             this.oppositeWayId = -2;
         }
 
+        // lanes count
         if (lanesCount >= 1) {
             this.lanesCount = lanesCount;
         } else {
             this.lanesCount = 1; //minimum
         }
 
+        //lanes
+        lanesTurn = new LinkedList<>();
+    }
+
+    /**
+     * Temporary class, should move to the constructor
+     * @param lanes
+     */
+    public void setlanes(List<Lane> lanes){
+        this.lanesTurn = lanes;
     }
 
     /**
@@ -94,6 +112,14 @@ public class SimulationEdge extends Edge {
      */
     public int getOppositeWayId() {
         return oppositeWayId;
+    }
+
+    /**
+     * List of available lanes for this edge (and in this direction from-to)
+     * @return list of lanes
+     */
+    public List<Lane> getLanes(){
+        return lanesTurn;
     }
 
     /**
