@@ -124,11 +124,12 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         int y2 = (int) (entityPosition.getY() + radius);
         if (x2 > 0 && x1 < dim.width && y2 > 0 && y1 < dim.height) {
             canvas.fillOval(x1, y1, width, width);
-        }
-        if(entities.size() > 1){
-            VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
-                new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color, 
-                getTextBackgroundColor());
+            
+            if(entities.size() > 1){
+                VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
+                    new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color, 
+                    getTextBackgroundColor());
+            }
         }
     }
 
