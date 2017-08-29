@@ -5,21 +5,73 @@ import cz.cvut.fel.aic.agentpolis.config.Config;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
-import cz.cvut.fel.aic.agentpolis.downloader.DownloadManager;
-import cz.cvut.fel.aic.agentpolis.downloader.DownloadTask;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.*;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class OsmImageLayer extends AbstractLayer {
+public class MapTitlesLayer extends AbstractLayer {
+
+    public static class DownloadTask implements Runnable {
+
+        private URL url;
+        private File file;
+
+        public DownloadTask(URL url, File file) {
+            this.url = url;
+            this.file = file;
+        }
+
+        @Override
+        public void run() {
+            file.getParentFile().mkdirs();
+            try {
+                downloadFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void downloadFile() throws IOException {
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.addRequestProperty("User-Agent", "Agentpolis");
+
+            InputStream inputStream = urlConnection.getInputStream();
+            ReadableByteChannel rbc = Channels.newChannel(inputStream);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        }
+    }
+
+    public static class DownloadManager {
+
+        public static final int MAX_CONCURRENT_DOWNLOADS = 2;
+
+        private ExecutorService exec;
+        @Inject
+        public DownloadManager() {
+            this.exec = Executors.newFixedThreadPool(MAX_CONCURRENT_DOWNLOADS);
+        }
+
+        public Future<?> submit(DownloadTask downloadTask) {
+            return exec.submit(downloadTask);
+        }
+    }
 
     private Logger LOGGER = Logger.getLogger(Simulation.class);
 
@@ -39,12 +91,12 @@ public class OsmImageLayer extends AbstractLayer {
     private DownloadManager downloadManager;
 
     @Inject
-    public OsmImageLayer(DownloadManager downloadManager, Config config) {
-        this.downloadManager = downloadManager;
-        this.dir = Paths.get(config.pathToTileDirRoot + "/OSM_tiles");
+    public MapTitlesLayer(Config config) {
+        this.downloadManager = new DownloadManager();
+        this.dir = Paths.get(config.pathToMapTitles);
         this.osmTileServer = config.osmTileServer;
         if (!Files.isDirectory(dir)) {
-            LOGGER.info("No OSM tile folder found.");
+            LOGGER.info("Cannot access the directory with map titles: " + config.pathToMapTitles);
             OSMTiles = null;
             OSMDownloads = null;
             return;
