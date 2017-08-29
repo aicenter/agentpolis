@@ -8,8 +8,6 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioUtils;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import java.awt.Color;
@@ -129,8 +127,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         }
         if(entities.size() > 1){
             VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
-                new Point((int) (x1 - DEFAULT_TEXT_MARGIN_BOTTOM), y1 - (y2 - y1) / 2), color, 
-                DEFAULT_TEXT_BACKGROUND_COLOR);
+                new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color, 
+                getTextBackgroundColor());
         }
     }
 
@@ -140,6 +138,22 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
     protected boolean skipDrawing(E entity) {
         return false;
+    }
+    
+    protected Color getTextBackgroundColor(){
+        return DEFAULT_TEXT_BACKGROUND_COLOR;
+    }
+    
+    protected double getTextMargin(){
+        return DEFAULT_TEXT_MARGIN_BOTTOM;
+    }
+    
+    protected double getTextMarginTransX(){
+        return Vis.transW(getTextMargin());
+    }
+    
+    protected double getTextMarginTransY(){
+        return Vis.transH(getTextMargin());
     }
     
 }

@@ -60,12 +60,17 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
 
-        int x1 = (int) (entityPosition.getX());
-        int y1 = (int) (entityPosition.getY());
-        int x2 = (int) (entityPosition.getX());
-        int y2 = (int) (entityPosition.getY());
+        int x = (int) (entityPosition.getX());
+        int y = (int) (entityPosition.getY());
         
-        if (x2 > 0 && x1 < dim.width && y2 > 0 && y1 < dim.height) {
+        if (x > 0 && x < dim.width && y > 0 && y < dim.height) {
+            
+            /* entity count text */
+            if(entities.size() > 1){
+                VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
+                    new Point((int) (x - getTextMarginTransX()), (int) (y - getTextMarginTransY())), color, 
+                    getTextBackgroundColor());
+            }
             
             double angle = 0;
             Driver driver = representative.getDriver();
@@ -100,12 +105,6 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
 
             Shape s = CAR_REPRESENTATION_SHAPE.createTransformedShape(translate);
             canvas.fill(s);
-        }
-        
-        if(entities.size() > 1){
-            VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
-                new Point((int) (x1 - DEFAULT_TEXT_MARGIN_BOTTOM), y1 - (y2 - y1) / 2), color, 
-                DEFAULT_TEXT_BACKGROUND_COLOR);
         }
     }
     
