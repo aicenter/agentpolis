@@ -19,6 +19,10 @@ public class Config implements GeneratedConfig {
 
   public Boolean showVisio;
 
+  public String pathToMapTitles;
+
+  public String osmTileServer;
+
   public String log4jXmlDir;
 
   public String pathToCsvEventLogFile;
@@ -37,6 +41,8 @@ public class Config implements GeneratedConfig {
     this.congestionModel = new CongestionModel((HashMap) config.get("congestion_model"));
     this.simulationDurationInMillis = (Integer) config.get("simulation_duration_in_millis");
     this.showVisio = (Boolean) config.get("show_visio");
+    this.pathToMapTitles = (String) config.get("path_to_map_titles");
+    this.osmTileServer = (String) config.get("osm_tile_server");
     this.log4jXmlDir = (String) config.get("log4j_xml_dir");
     this.pathToCsvEventLogFile = (String) config.get("path_to_csv_event_log_file");
     this.skipSimulation = (Boolean) config.get("skip_simulation");
