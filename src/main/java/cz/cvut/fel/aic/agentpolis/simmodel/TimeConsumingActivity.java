@@ -15,6 +15,7 @@ import cz.cvut.fel.aic.alite.common.event.EventProcessor;
  * @param <A> Agent type
  */
 public abstract class TimeConsumingActivity<A extends Agent> extends Activity<A>{
+    protected long delay;
     
     public TimeConsumingActivity(ActivityInitializer activityInitializer, A agent) {
         super(activityInitializer, agent);
@@ -22,7 +23,7 @@ public abstract class TimeConsumingActivity<A extends Agent> extends Activity<A>
 
     @Override
     void runActityLogic() {
-        long delay = performPreDelayActions();
+        this.delay = performPreDelayActions();
         if(!failed()){
             getEventProcessor().addEvent(new EventHandler() {
 
