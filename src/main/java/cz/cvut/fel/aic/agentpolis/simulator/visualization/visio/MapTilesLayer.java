@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MapTitlesLayer extends AbstractLayer {
+public class MapTilesLayer extends AbstractLayer {
 
     public static class DownloadTask implements Runnable {
 
@@ -91,12 +91,12 @@ public class MapTitlesLayer extends AbstractLayer {
     private DownloadManager downloadManager;
 
     @Inject
-    public MapTitlesLayer(Config config) {
+    public MapTilesLayer(Config config) {
         this.downloadManager = new DownloadManager();
-        this.dir = Paths.get(config.pathToMapTitles);
+        this.dir = Paths.get(config.pathToMapTiles);
         this.osmTileServer = config.osmTileServer;
         if (!Files.isDirectory(dir)) {
-            LOGGER.info("Cannot access the directory with map titles: " + config.pathToMapTitles);
+            LOGGER.info("Cannot access the directory with map tiles: " + config.pathToMapTiles);
             OSMTiles = null;
             OSMDownloads = null;
             return;
