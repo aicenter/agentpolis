@@ -77,6 +77,7 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     protected void onChildActivityFinish(Activity activity) {
         if (trip.isEmpty()) {
             agent.endDriving();
+            vehicle.setLastFromPosition(from);
             finish();
         } else {
             from = to;

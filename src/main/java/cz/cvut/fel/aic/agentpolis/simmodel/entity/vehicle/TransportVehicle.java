@@ -35,7 +35,7 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 
     public void dropOff(T entityToDropOff) {
         transportedEntities.remove(entityToDropOff);
-        entityToDropOff.setTransportingEntity(null);
+        setDropOffForTransportable(entityToDropOff);
     }
 
     public TransportVehicle(String id, SimulationNode position) {
@@ -52,9 +52,9 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
     public void dropOffAll() {
         Iterator<T> transportedEntitiesIterator = transportedEntities.iterator();
         while (transportedEntitiesIterator.hasNext()) {
-            TransportableEntity transportedEntity = transportedEntitiesIterator.next();
+            T transportedEntity = transportedEntitiesIterator.next();
             transportedEntitiesIterator.remove();
-            transportedEntity.setTransportingEntity(null);
+            setDropOffForTransportable(transportedEntity);
         }
     }
 
@@ -62,5 +62,10 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
     public String toString() {
         return "TransportVehicle{" +
                 "id=" + super.getId() + ", entitiesOnBoard=" + transportedEntities.size() + "}";
+    }
+
+    private void setDropOffForTransportable(T entityToDropOff) {
+        entityToDropOff.setTransportingEntity(null);
+        entityToDropOff.setLastFromPosition(getLastFromPosition());
     }
 }

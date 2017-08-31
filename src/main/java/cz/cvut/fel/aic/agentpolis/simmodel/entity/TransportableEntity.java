@@ -18,4 +18,6 @@ public interface TransportableEntity {
     public <T extends TransportEntity> void setTransportingEntity(T transportingEntity);
     
     public void setPosition(SimulationNode position);
+    
+    public void setLastFromPosition(SimulationNode lastTargetPosition);
 }

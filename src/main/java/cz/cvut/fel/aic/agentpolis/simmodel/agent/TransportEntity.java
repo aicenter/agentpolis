@@ -20,5 +20,6 @@ public interface TransportEntity<T extends TransportableEntity> extends MovingEn
     
     public int getCapacity();
     
+    public Driver getDriver();
     
 }

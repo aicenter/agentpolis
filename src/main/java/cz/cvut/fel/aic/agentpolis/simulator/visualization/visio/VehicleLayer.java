@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -24,9 +25,9 @@ import javax.vecmath.Point2d;
  */
 public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     
-    private Path2D CAR_REPRESENTATION_SHAPE;
+    private Path2D CarRepresentationShape;
     
-    
+   
     
 	
 	@Inject
@@ -53,8 +54,8 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     protected void drawEntities(ArrayList<V> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         V representative = entities.get(0);
         
-        if(CAR_REPRESENTATION_SHAPE == null){
-            CAR_REPRESENTATION_SHAPE = createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
+        if(CarRepresentationShape == null){
+            CarRepresentationShape = createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
         }
         
         Color color = getEntityDrawColor(entities.get(0));
@@ -73,14 +74,23 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
             }
             
             double angle = 0;
+            SimulationNode target = null;
+            SimulationNode position = representative.getPosition();
             Driver driver = representative.getDriver();
-            if(driver != null){
-                SimulationNode target = driver.getTargetNode();
-
-                if(target != null){
-                    SimulationNode position = representative.getPosition();
-                    angle = getAngle(position, target);
-                }
+            if(driver != null && driver.getTargetNode() != null){
+                target = driver.getTargetNode();
+            }
+            else if(representative instanceof TransportableEntity 
+                    && ((TransportableEntity) representative).getTransportingEntity() != null){
+                target = ((TransportableEntity) representative).getTransportingEntity().getDriver().getTargetNode();
+            }
+            else{
+                position = representative.getLastFromPosition();
+                target = representative.getPosition();
+            }
+            
+            if(target != null && position != null){
+                angle = getAngle(position, target);
             }
             
             double centerShift = getVehicleWidth(representative) / 2;
@@ -103,7 +113,7 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
             scale.concatenate(rotate);
             translate.concatenate(scale);
 
-            Shape s = CAR_REPRESENTATION_SHAPE.createTransformedShape(translate);
+            Shape s = CarRepresentationShape.createTransformedShape(translate);
             canvas.fill(s);
         }
     }

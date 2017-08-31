@@ -20,6 +20,20 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity{
     
     private double queueBeforeVehicleLength; 
     
+    private SimulationNode lastFromPosition;
+
+    public SimulationNode getLastFromPosition() {
+        return lastFromPosition;
+    }
+    
+    
+
+    public void setLastFromPosition(SimulationNode lastTargetPosition) {
+        this.lastFromPosition = lastTargetPosition;
+    }
+    
+    
+    
 
     public Driver getDriver() {
         return driver;
