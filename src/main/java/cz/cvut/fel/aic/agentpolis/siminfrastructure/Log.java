@@ -21,7 +21,7 @@ public class Log {
      * Java logger.
      */
     private static Logger logger;
-    
+
     private static FileHandler fileHandler;
 
 
@@ -57,9 +57,9 @@ public class Log {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static void close(){
-        if(fileHandler != null){
+
+    public static void close() {
+        if (fileHandler != null) {
             fileHandler.close();
         }
     }
@@ -103,5 +103,21 @@ public class Log {
 
     public static void error(Object caller, String msg) {
         log(caller, Level.SEVERE, msg);
+    }
+
+    public static void info(Object caller, String msg, Object... params) {
+        log(caller, Level.INFO, msg, params);
+    }
+
+    public static void warn(Object caller, String msg, Object... params) {
+        log(caller, Level.WARNING, msg, params);
+    }
+
+    public static void debug(Object caller, String msg, Object... params) {
+        log(caller, Level.FINE, msg, params);
+    }
+
+    public static void error(Object caller, String msg, Object... params) {
+        log(caller, Level.SEVERE, msg, params);
     }
 }
