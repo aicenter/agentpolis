@@ -19,21 +19,13 @@ import javax.vecmath.Point2d;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author fido
- */
 @Singleton
 public class NodeIdLayer extends AbstractLayer{
     
     private final HighwayNetwork highwayNetwork;
-    
     private final PositionUtil positionUtil;
-    
     private final LinkedList<Integer> highLightedNodes;
 
-    
-    
     @Inject
     public NodeIdLayer(HighwayNetwork highwayNetwork, PositionUtil positionUtil) {
         this.highwayNetwork = highwayNetwork;
@@ -41,10 +33,6 @@ public class NodeIdLayer extends AbstractLayer{
         highLightedNodes = new LinkedList<>();
         
         highLightedNodes.add(12775);
-//        highLightedNodes.add(39675);
-//        
-//        highLightedNodes.add(37832);
-//        highLightedNodes.add(19420);
     }
 
     
@@ -53,7 +41,7 @@ public class NodeIdLayer extends AbstractLayer{
     @Override
     public void paint(Graphics2D canvas) {
         canvas.setColor(Color.BLUE);
-        canvas.setFont(new Font("TimesRoman", Font.BOLD, 15)); 
+        //canvas.setFont(new Font("TimesRoman", Font.BOLD, 15));
         List<SimulationNode> highlightedNodes = new LinkedList<>();
         for (SimulationNode node : highwayNetwork.getNetwork().getAllNodes()) {
             Font f = null;
@@ -68,14 +56,14 @@ public class NodeIdLayer extends AbstractLayer{
         }
         
         canvas.setColor(Color.GREEN);
-        canvas.setFont(new Font("TimesRoman", Font.BOLD, 25));
+        //canvas.setFont(new Font("TimesRoman", Font.BOLD, 25));
         for (SimulationNode highlightedNode : highlightedNodes) {
             Point2d nodePoint = positionUtil.getCanvasPosition(highlightedNode);
             canvas.drawString(Integer.toString(highlightedNode.getId()), (int) nodePoint.x, (int) nodePoint.y);
         }
         
         canvas.setColor(Color.BLUE);
-        canvas.setFont(new Font("TimesRoman", Font.BOLD, 15));
+        // canvas.setFont(new Font("TimesRoman", Font.BOLD, 15));
     }
     
     
