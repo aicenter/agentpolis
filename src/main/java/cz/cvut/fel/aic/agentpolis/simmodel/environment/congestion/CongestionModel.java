@@ -92,7 +92,7 @@ public class CongestionModel {
         queueHandlingStarted = false;
 //        buildCongestionGraph();
         random = new Random(config.congestionModel.randomSeed);
-        addFundamentalDiagramDelay = false;
+        addFundamentalDiagramDelay = config.congestionModel.fundamentalDiagramDelay;
     }
 
     @Inject
