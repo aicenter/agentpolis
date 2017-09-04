@@ -171,7 +171,7 @@ public class TripsUtil {
         }
         return newTrip;
     }
-    
+
     public static VehicleTrip mergeTripsOld(VehicleTrip<TripItem>... trips) {
         int i = 0;
         VehicleTrip firstTrip = null;
@@ -197,6 +197,11 @@ public class TripsUtil {
         return network.getEdge(startNodeId, targetNodeId).getLength();
     }
 
+    private float getEdgeDuration(int startNodeId, int targetNodeId) {
+        SimulationEdge edge = network.getEdge(startNodeId, targetNodeId);
+        return edge.getLength() / edge.allowedMaxSpeedInMpS;
+    }
+
 
     public int getTripLengthInMeters(Trip<? extends Node> trip) {
         int length = 0;
@@ -213,5 +218,22 @@ public class TripsUtil {
 
         return length;
     }
+
+    public float getTripDurationInSeconds(Trip<? extends Node> trip) {
+        float duration = 0;
+
+        LinkedList<? extends Node> locations = trip.getLocations();
+        if (locations.size() >= 2) {
+            int startNodeId = locations.getFirst().id;
+            for (int i = 1; i < locations.size(); i++) {
+                int targetNodeId = locations.get(i).id;
+                duration += getEdgeDuration(startNodeId, targetNodeId);
+                startNodeId = targetNodeId;
+            }
+        }
+
+        return duration;
+    }
+
 
 }
