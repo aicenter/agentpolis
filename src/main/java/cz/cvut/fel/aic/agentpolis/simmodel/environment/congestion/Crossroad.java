@@ -213,10 +213,11 @@ public class Crossroad extends Connection {
         } 
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINE, "Crossroad {0}: No space in queue to {1}!", node.id, 
+            Log.log(Connection.class, Level.FINER, "Crossroad {0}: No space in queue to {1}!", node.id, 
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
-            return false;
+            laneDepleted(chosenLane);
+            return true;
         }
     }
     
