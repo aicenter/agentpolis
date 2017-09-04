@@ -134,7 +134,7 @@ public class MapTilesLayer extends AbstractLayer {
         if (!OSMDownloads.containsKey(osmKey)) {
             String directoryUrl = "/"+Integer.toString(zoom)+"/"+Integer.toString(x)+"/"+Integer.toString(y)+".png";
             try {
-                URL downloadUrl = new URL("http",osmTileServer, directoryUrl);
+                URL downloadUrl = new URL("http://" + osmTileServer + directoryUrl);
                 DownloadTask downloadTask = new DownloadTask(downloadUrl,p.toFile());
                 Future<?> future = downloadManager.submit(downloadTask);
                 OSMDownloads.put(osmKey,future);

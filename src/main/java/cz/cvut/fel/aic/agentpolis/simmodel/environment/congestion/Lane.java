@@ -274,7 +274,6 @@ public class Lane extends EventHandlerAdapter {
     public void handleEvent(Event event) {
         startFirstVehicleInStartHereQueue();
         tryScheduleStartVehicle();
-        eventScheduled = false;
     }
 
     public void wakeUpNextConnection(long delay) {
@@ -288,6 +287,7 @@ public class Lane extends EventHandlerAdapter {
     private void startFirstVehicleInStartHereQueue() {
         VehicleTripData vehicleTripData = startHereQueue.pollFirst();
         addToQue(vehicleTripData);
+        eventScheduled = false;
     }
 
     private void tryScheduleStartVehicle() {
@@ -306,8 +306,10 @@ public class Lane extends EventHandlerAdapter {
         this.prepareAddingToqueue(vehicleTripData);
 
         long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
+        
+        String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, delay);
         eventScheduled = true;
     }
 
