@@ -18,7 +18,7 @@
 	</parent>
     
     <properties>
-        <config.path>./cz/cvut/fel/aic/agentpolis/config/default-config.cfg</config.path>
+        <config.path>./cz/cvut/fel/aic/agentpolis/config/config.cfg</config.path>
     </properties>
     
     <build>
