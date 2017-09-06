@@ -1,5 +1,8 @@
+### Config agentpolis
+/src/main/resources/cz/cvut/fel/aic/agentpolis/config/local-config-location.txt
+
 /target/
-.idea
+.idea/
 *.log
 log.txt*
 
