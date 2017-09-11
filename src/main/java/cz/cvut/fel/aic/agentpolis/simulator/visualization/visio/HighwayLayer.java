@@ -13,11 +13,14 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 
 import javax.vecmath.Point2d;
 import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -72,11 +75,21 @@ public class HighwayLayer extends AbstractLayer{
 
     protected void paintGraph(Graphics2D canvas, Rectangle2D drawingRectangle) {
         for (SimulationEdge edge : graph.getAllEdges()) {
-            Point2d from = positionUtil.getCanvasPosition(graph.getNode(edge.fromId));
-            Point2d to = positionUtil.getCanvasPosition(graph.getNode(edge.toId));
-            Line2D line2d = new Line2D.Double(from.x, from.y, to.x, to.y);
-            if (line2d.intersects(drawingRectangle)) {
-                canvas.draw(line2d);
+            if (edge.gpsLocations == null) {
+                Point2d from = positionUtil.getCanvasPosition(graph.getNode(edge.fromId));
+                Point2d to = positionUtil.getCanvasPosition(graph.getNode(edge.toId));
+                Line2D line2d = new Line2D.Double(from.x, from.y, to.x, to.y);
+                if (line2d.intersects(drawingRectangle)) {
+                    canvas.draw(line2d);
+                }
+            } else {
+                GeneralPath path = new GeneralPath();
+                Point2d location = positionUtil.getCanvasPosition(edge.gpsLocations.get(0));
+                path.moveTo(location.x,location.y);
+                edge.gpsLocations.stream().skip(1).map(positionUtil::getCanvasPosition).forEach(d -> path.lineTo(d.x, d.y));
+                if (path.intersects(drawingRectangle)) {
+                    canvas.draw(path);
+                }
             }
         }
     }
