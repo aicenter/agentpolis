@@ -4,12 +4,14 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 
 import java.awt.*;
@@ -90,7 +92,8 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
             }
             
             if(target != null && position != null){
-                angle = getAngle(position, target);
+                SimulationEdge edge = positionUtil.getEdge(position.id,target.id);
+                angle = positionUtil.getAngle(driver, edge);
             }
             
             double centerShift = getVehicleWidth(representative) / 2;
@@ -125,12 +128,6 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
         p0.lineTo(0, width);
         p0.closePath();
         return p0;
-    }
-
-    private double getAngle(SimulationNode position, SimulationNode target) {
-        double dy = target.getLatitudeProjected1E2() - position.getLatitudeProjected1E2();
-        double dx = target.getLongitudeProjected1E2() - position.getLongitudeProjected1E2();
-        return Math.atan2(dy,dx);
     }
 
 	
