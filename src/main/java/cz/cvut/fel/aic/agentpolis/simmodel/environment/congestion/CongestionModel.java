@@ -211,7 +211,7 @@ public class CongestionModel {
     public GPSLocation getPositionInterpolatedForVehicle(Vehicle vehicle) {
         SimulationNode position = vehicle.getDriver().getPosition();
         SimulationNode targetNode = vehicle.getDriver().getTargetNode();
-        SimulationEdge edge = positionUtil.getEdge(position.id, targetNode.id);
+        SimulationEdge edge = positionUtil.getEdge(position.id, targetNode.id, PositionUtil.NetworkType.HIGHWAY);
         double endOfTheQueue = getPositionAtEndOfTheQueue(vehicle);
         return positionUtil.getPointOnEdge(edge, endOfTheQueue);
     }

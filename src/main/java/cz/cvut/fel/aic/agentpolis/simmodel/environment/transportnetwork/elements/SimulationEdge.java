@@ -40,29 +40,8 @@ public class SimulationEdge extends Edge {
 	 */
 	public final long wayID;
 	
-	public final List<GPSLocation> gpsLocations;
+	public final EdgeShape shape;
 
-    /**
-     *  @param fromId sourceId
-     * @param toId destinationId
- * @param osmWayID osm id of this edge
- * @param uniqueWayId
- * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
-     *                      Input should be correct, it is not validated!
- * @param lengthInMetres -
- * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
- * @param lanesCount total number of lanes for ModeOfTransport-car      
-     */
-    public SimulationEdge(int fromId,
-                          int toId,
-                          long osmWayID,
-                          int uniqueWayId,
-                          int oppositeWayId,
-                          int lengthInMetres,
-                          float allowedMaxSpeedInMpS,
-                          int lanesCount) {
-        this(fromId, toId, osmWayID, uniqueWayId, oppositeWayId, lengthInMetres, allowedMaxSpeedInMpS, lanesCount, null);
-    }
 
     /**
      *
@@ -75,7 +54,7 @@ public class SimulationEdge extends Edge {
      * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
      *                      Input should be correct, it is not validated!
      * @param lanesCount total number of lanes for ModeOfTransport-car
-     * @param gpsLocations List of gps points that define the geometry of the edge
+     * @param edgeShape instance of EdgeShape with correct GPS coordinates
      */
     public SimulationEdge(int fromId,
                           int toId,
@@ -85,7 +64,7 @@ public class SimulationEdge extends Edge {
                           int lengthInMetres,
                           float allowedMaxSpeedInMpS,
                           int lanesCount,
-                          List<GPSLocation> gpsLocations) {
+                          List<GPSLocation> edgeShape) {
         super(fromId, toId, lengthInMetres);
 
         this.uniqueId = uniqueWayId;
@@ -104,7 +83,7 @@ public class SimulationEdge extends Edge {
             this.lanesCount = 1; //minimum
         }
 
-        this.gpsLocations = gpsLocations;
+        this.shape = new EdgeShape(edgeShape);
     }
 
     /**
