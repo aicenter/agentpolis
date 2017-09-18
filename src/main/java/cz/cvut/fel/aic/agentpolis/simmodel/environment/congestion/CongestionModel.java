@@ -48,7 +48,7 @@ public class CongestionModel {
     
     protected final Map<SimulationEdge,Link> linksMappedByEdges;
     
-    final Config config;
+    private final Config config;
     
     private final SimulationProvider simulationProvider;
     
@@ -209,18 +209,18 @@ public class CongestionModel {
     }
     
     public GPSLocation getPositionInterpolatedForVehicle(Vehicle vehicle) {
-        GPSLocation startPosition = vehicle.getPrecisePosition();
-        GPSLocation targetPosition = getPositionAtEndOfTheQueue(vehicle);
-
-        return positionUtil.getPositionInterpolated(startPosition, targetPosition, vehicle.getDriver().getDelayData());
+        SimulationNode position = vehicle.getDriver().getPosition();
+        SimulationNode targetNode = vehicle.getDriver().getTargetNode();
+        SimulationEdge edge = positionUtil.getEdge(position.id, targetNode.id);
+        double endOfTheQueue = getPositionAtEndOfTheQueue(vehicle);
+        return positionUtil.getPointOnEdge(edge, endOfTheQueue);
     }
     
-    private GPSLocation getPositionAtEndOfTheQueue(Vehicle vehicle){
+    private double getPositionAtEndOfTheQueue(Vehicle vehicle){
         Node startNode = vehicle.getPosition();
         Node targetNode = vehicle.getDriver().getTargetNode();
         SimulationEdge edge = graph.getEdge(startNode.id, targetNode.id);
-        double portion = (edge.length - vehicle.getQueueBeforeVehicleLength()) / edge.length;
-        return positionUtil.getPointOnEdge(edge, portion);
+        return (edge.length - vehicle.getQueueBeforeVehicleLength()) / edge.length;
     }
     
     
