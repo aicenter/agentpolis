@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.CollectionUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -25,7 +26,7 @@ import java.util.Map.Entry;
  * @param <ES>
  * @author fido
  */
-public class AllEdgesLoad<E extends AgentPolisEntity & MovingAgent, ES extends EntityStorage<E>>
+public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends EntityStorage<E>>
         implements Iterable<Entry<Integer, Integer>> {
 
     protected final ES entityStorage;

@@ -16,9 +16,4 @@ public interface MovingAgent extends MovingEntity {
 
     public void setDelayData(DelayData targetNode);
 
-    public SimulationNode getTargetNode();
-
-    public DelayData getDelayData();
-
-    public SimulationNode getPosition();
 }

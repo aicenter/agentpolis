@@ -6,10 +6,18 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.entity;
 
 
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+
 /**
  *
  * @author fido
  */
 public interface MovingEntity {
     public double getVelocity();
+    public SimulationNode getTargetNode();
+
+    public DelayData getDelayData();
+
+    public SimulationNode getPosition();
 }
