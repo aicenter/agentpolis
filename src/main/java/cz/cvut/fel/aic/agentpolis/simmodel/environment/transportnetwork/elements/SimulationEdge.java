@@ -83,7 +83,7 @@ public class SimulationEdge extends Edge {
             this.lanesCount = 1; //minimum
         }
 
-        this.shape = new EdgeShape(edgeShape);
+        this.shape = EdgeShape.EdgeShapeFactory.create(edgeShape);
     }
 
     /**

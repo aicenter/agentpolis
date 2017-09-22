@@ -13,33 +13,34 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
- *
  * @author fido
  */
 public class TestTwoNodesBothDirections {
-    
+
     @Test
-    public void run() throws Throwable{
+    public void run() throws Throwable {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-        
+
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
         SimulationNode node2 = new SimulationNode(1, 0, 100, 0, 0, 0, 0);
-        
+
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
-        
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1);
-        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1);
-        
+
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, Arrays.asList(node1, node2));
+        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1, Arrays.asList(node2, node1));
+
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
-        
+
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
+
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
-        
+
         Log.close();
     }
 }

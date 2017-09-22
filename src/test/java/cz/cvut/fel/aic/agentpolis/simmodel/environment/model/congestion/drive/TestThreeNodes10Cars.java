@@ -15,6 +15,8 @@ import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
+import java.util.Arrays;
+
 /**
  *
  * @author fido
@@ -26,20 +28,20 @@ public class TestThreeNodes10Cars {
     @Test 
     public void run() throws Throwable{
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-        
-        SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-        SimulationNode node2 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0);
-        SimulationNode node3 = new SimulationNode(2, 0, 0, 0, 0, 20000, 0);
-        
+
+        SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
+        SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
+        SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
+
+        graphBuilder.addNode(node0);
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
-        graphBuilder.addNode(node3);
-        
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1);
-        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1);
-        SimulationEdge edge3 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1);
-        SimulationEdge edge4 = new SimulationEdge(2, 1, 0, 0, 0, 100, 40, 1);
-        
+
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, Arrays.asList(node0,node1));
+        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1, Arrays.asList(node1,node0));
+        SimulationEdge edge3 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1, Arrays.asList(node1,node2));
+        SimulationEdge edge4 = new SimulationEdge(2, 1, 0, 0, 0, 100, 40, 1, Arrays.asList(node2,node1));
+
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
         graphBuilder.addEdge(edge3);
@@ -50,7 +52,7 @@ public class TestThreeNodes10Cars {
         Trip<SimulationNode>[] trips = new Trip[10];
         
         for(int i = 0; i < trips.length; i++){
-            Trip<SimulationNode> trip = new Trip<>(node1, node2, node3);
+            Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
             trips[i] = trip;
         }
         

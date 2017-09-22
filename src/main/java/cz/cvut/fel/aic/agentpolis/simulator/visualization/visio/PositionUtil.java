@@ -16,7 +16,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
@@ -78,7 +77,7 @@ public class PositionUtil {
             case HIGHWAY:
                 return highwayNetwork.getEdge(fromNodeId, toNodeId);
             case PEDESTRIAN:
-                return pedestrianNetwork.getEdge(fromNodeId,toNodeId);
+                return pedestrianNetwork.getEdge(fromNodeId, toNodeId);
             default:
                 throw new IllegalArgumentException();
         }
@@ -182,12 +181,8 @@ public class PositionUtil {
 
         // edge length
         SimulationEdge edge = getEdge(currentNode.id, targetNode.id, NetworkType.HIGHWAY);
-        double length = getEdgeLength(edge);
 
-        // portion of the edge that is free for ride
-        double portion = 1d - (vehicle.getQueueBeforeVehicleLength() / length);
-
-        return getCanvasPositionInterpolated(edge, portion, vehicle.getDriver());
+        return getCanvasPositionInterpolated(edge, 0, vehicle.getDriver());
 
     }
 
@@ -209,7 +204,7 @@ public class PositionUtil {
         SimulationEdge edge = getEdge(startNode.id, targetNode.id, type);
         if (edge == null) {
             //throw new NullPointerException();
-            return new Point2d(0,0);
+            return new Point2d(0, 0);
         }
         return getCanvasPositionInterpolated(edge, 1, entity);
     }
@@ -218,76 +213,14 @@ public class PositionUtil {
         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - agent.getDelayData().getDelayStartTime())
                 / agent.getDelayData().getDelay();
         if (portionCompleted > 1) portionCompleted = 1;
-        double lengthCompleted = portionCompleted * getEdgeLength(edge) * portion;
-        EdgeShape shape = edge.shape;
-        int i = 0;
-        double edgePartLength = GPSLocationTools.computeDistance(shape.get(0), shape.get(1));
-        while (edgePartLength < lengthCompleted && i < shape.size() - 2) {
-            lengthCompleted -= edgePartLength;
-            i++;
-            edgePartLength = GPSLocationTools.computeDistance(shape.get(i), shape.get(i + 1));
-        }
 
-        if (edge.shape.getSegmentAngles() == null) applySegmentAngles(edge.shape);
-        movingAgentAngle.put(agent, edge.shape.getSegmentAngles()[i]);
-
-        Point2d startPosition = getCanvasPosition(shape.get(i));
-        Point2d targetPosition = getCanvasPosition(shape.get(i + 1));
-
-        double xIncrement = (targetPosition.x - startPosition.x) * lengthCompleted / edgePartLength;
-        double yIncrement = (targetPosition.y - startPosition.y) * lengthCompleted / edgePartLength;
-
-        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
-    }
-
-    private void applySegmentAngles(EdgeShape shape) {
-        double[] angles = new double[shape.size() - 1];
-        for (int i = 0; i < angles.length; i++) {
-            angles[i] = getAngle(shape.get(i), shape.get(i + 1));
-        }
-        shape.setSegmentAngles(angles);
-    }
-
-    public GPSLocation getPointOnEdge(SimulationEdge edge, double portion) {
-        double lengthCompleted = getEdgeLength(edge) * portion;
-        EdgeShape shape = edge.shape;
-        int i = 0;
-        double edgePartLength = GPSLocationTools.computeDistance(shape.get(0), shape.get(1));
-        while (edgePartLength < lengthCompleted) {
-            lengthCompleted -= edgePartLength;
-            i++;
-            edgePartLength = GPSLocationTools.computeDistance(shape.get(i), shape.get(i + 1));
-        }
-        GPSLocation startPosition = shape.get(i);
-        GPSLocation targetPosition = shape.get(i + 1);
-        return getPointOnVector(startPosition, targetPosition, portion);
-    }
-
-    private GPSLocation getPointOnVector(GPSLocation gps1, GPSLocation gps2, double portion) {
-        int xIncrement = (int) Math.round((gps2.getLongitudeProjected1E2()
-                - gps1.getLongitudeProjected1E2()) * portion);
-        int yIncrement = (int) Math.round((gps2.getLatitudeProjected1E2()
-                - gps1.getLatitudeProjected1E2()) * portion);
-
-        return new GPSLocation(0, 0, gps1.getLatitudeProjected1E2() + yIncrement,
-                gps1.getLongitudeProjected1E2() + xIncrement);
-    }
-
-    private double getEdgeLength(SimulationEdge e) {
-        double length = e.shape.getVisualLength();
-        if (length != 0)
-            return length;
-
-        EdgeShape shape = e.shape;
-        for (int i = 1; i < shape.size(); i++)
-            length += getDistance(shape.get(i - 1), shape.get(i));
-        e.shape.setVisualLength(length);
-        return length;
+        return getCanvasPosition(edge.shape.getPositionOnPath(portionCompleted));
     }
 
     public double getDistance(GPSLocation gps1, GPSLocation gps2) {
-        return Math.sqrt(Math.pow(Math.abs(gps1.getLatitudeProjected() - gps2.getLatitudeProjected()), 2)
-                + Math.pow(Math.abs(gps1.getLongitudeProjected() - gps2.getLongitudeProjected()), 2));
+//        return Math.sqrt(Math.pow(Math.abs(gps1.getLatitudeProjected() - gps2.getLatitudeProjected()), 2)
+//                + Math.pow(Math.abs(gps1.getLongitudeProjected() - gps2.getLongitudeProjected()), 2));
+        return GPSLocationTools.computeDistanceAsDouble(gps1, gps2);
     }
 
     private HashMap<MovingAgent, Double> movingAgentAngle = new HashMap<>();
@@ -298,9 +231,5 @@ public class PositionUtil {
         return movingAgentAngle.get(agent);
     }
 
-    private double getAngle(GPSLocation position, GPSLocation target) {
-        double dy = target.getLatitudeProjected1E2() - position.getLatitudeProjected1E2();
-        double dx = target.getLongitudeProjected1E2() - position.getLongitudeProjected1E2();
-        return Math.atan2(dy, dx);
-    }
+
 }

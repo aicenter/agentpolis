@@ -12,31 +12,32 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
- *
  * @author fido
  */
 public class TwoNodes {
-    
+
     @Test
-    public void run(){
+    public void run() {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-        
+
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 5000, 0, 0);
         SimulationNode node2 = new SimulationNode(1, 0, 0, 0, 5000, 10000, 0);
-        
+
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
-        
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 10000, 40, 1);
-        
+
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 10000, 40, 1, Arrays.asList(node1, node2));
+
         graphBuilder.addEdge(edge1);
-        
+
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
+
         VisioTest visioTest = new VisioTest();
         visioTest.run(graph);
-        
+
         Log.close();
     }
 }
