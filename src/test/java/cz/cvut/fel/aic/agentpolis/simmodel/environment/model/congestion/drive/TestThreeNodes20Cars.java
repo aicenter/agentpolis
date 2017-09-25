@@ -8,6 +8,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
@@ -18,17 +19,14 @@ import org.junit.runner.JUnitCore;
 import java.util.Arrays;
 
 /**
- *
  * @author fido
  */
 public class TestThreeNodes20Cars {
-    
-    
-    
-    @Test 
-    public void run() throws Throwable{
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
+
+    @Test
+    public void run() throws Throwable {
+        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
         SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
         SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
@@ -37,31 +35,32 @@ public class TestThreeNodes20Cars {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, Arrays.asList(node0,node1));
-        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1, Arrays.asList(node1,node0));
-        SimulationEdge edge3 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1, Arrays.asList(node1,node2));
-        SimulationEdge edge4 = new SimulationEdge(2, 1, 0, 0, 0, 100, 40, 1, Arrays.asList(node2,node1));
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
+        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)));
+        SimulationEdge edge3 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+        SimulationEdge edge4 = new SimulationEdge(2, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
+
 
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
         graphBuilder.addEdge(edge3);
         graphBuilder.addEdge(edge4);
-        
+
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
+
         Trip<SimulationNode>[] trips = new Trip[20];
-        
-        for(int i = 0; i < trips.length; i++){
+
+        for (int i = 0; i < trips.length; i++) {
             Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
             trips[i] = trip;
         }
-        
+
         DriveTest driveTest = new DriveTest();
         driveTest.run(graph, trips);
-        
+
         Log.close();
     }
-    
+
     public static void main(String[] args) {
         new JUnitCore().run(TestThreeNodes20Cars.class);
     }

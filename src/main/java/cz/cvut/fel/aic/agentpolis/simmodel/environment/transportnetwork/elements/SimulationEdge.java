@@ -1,13 +1,13 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import cz.cvut.fel.aic.geographtools.Edge;
-import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 import java.util.List;
 
 /**
  * Extended RoadEdge, contains road situation (lanes,two way pairs,...)
  * Also provides extended identification of the edge.
+ *
  * @author Zdenek Bousa
  */
 public class SimulationEdge extends Edge {
@@ -29,32 +29,31 @@ public class SimulationEdge extends Edge {
      */
     private final int lanesCount;
     private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
-    
+
     /**
-	 * maximal allowed speed in meters per second
-	 */
-	public final float allowedMaxSpeedInMpS;
-    
+     * maximal allowed speed in meters per second
+     */
+    public final float allowedMaxSpeedInMpS;
+
     /**
-	 * osm id of this edge
-	 */
-	public final long wayID;
-	
-	public final EdgeShape shape;
+     * osm id of this edge
+     */
+    public final long wayID;
+
+    public final EdgeShape shape;
 
 
     /**
-     *
-     * @param fromId sourceId
-     * @param toId destinationId
-     * @param osmWayID osm id of this edge
+     * @param fromId               sourceId
+     * @param toId                 destinationId
+     * @param osmWayID             osm id of this edge
      * @param uniqueWayId
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
-     * @param lengthInMetres -
-     * @param oppositeWayId -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
-     *                      Input should be correct, it is not validated!
-     * @param lanesCount total number of lanes for ModeOfTransport-car
-     * @param edgeShape instance of EdgeShape with correct GPS coordinates
+     * @param lengthInMetres       -
+     * @param oppositeWayId        -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
+     *                             Input should be correct, it is not validated!
+     * @param lanesCount           total number of lanes for ModeOfTransport-car
+     * @param edgeShape            instance of EdgeShape representing the shape of the road edge
      */
     public SimulationEdge(int fromId,
                           int toId,
@@ -64,7 +63,7 @@ public class SimulationEdge extends Edge {
                           int lengthInMetres,
                           float allowedMaxSpeedInMpS,
                           int lanesCount,
-                          List<GPSLocation> edgeShape) {
+                          EdgeShape edgeShape) {
         super(fromId, toId, lengthInMetres);
 
         this.uniqueId = uniqueWayId;
@@ -83,7 +82,7 @@ public class SimulationEdge extends Edge {
             this.lanesCount = 1; //minimum
         }
 
-        this.shape = EdgeShape.EdgeShapeFactory.create(edgeShape);
+        this.shape = edgeShape;
     }
 
     /**
@@ -112,8 +111,8 @@ public class SimulationEdge extends Edge {
     public int getLanesCount() {
         return lanesCount;
     }
-    
-    public String getLogInfo(){
-        return fromId + "-" + toId; 
+
+    public String getLogInfo() {
+        return fromId + "-" + toId;
     }
 }

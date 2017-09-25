@@ -7,6 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
@@ -16,6 +17,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.ShapeUtils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
@@ -39,9 +41,10 @@ import java.util.Map;
 @Singleton
 public class PositionUtil {
 
+
     public enum NetworkType {
         HIGHWAY,
-        PEDESTRIAN
+        PEDESTRIAN;
     }
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
@@ -54,17 +57,19 @@ public class PositionUtil {
 
     private final GraphSpec2D mapSpecification;
 
+    private final ShapeUtils shapeUtils;
 
     @Inject
     public PositionUtil(AllNetworkNodes allNetworkNodes,
                         HighwayNetwork highwayNetwork,
                         PedestrianNetwork pedestrianNetwork,
-                        TimeProvider timeProvider, GraphSpec2D mapSpecification) {
+                        TimeProvider timeProvider, GraphSpec2D mapSpecification, ShapeUtils shapeUtils) {
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
         this.highwayNetwork = highwayNetwork.getNetwork();
         this.pedestrianNetwork = pedestrianNetwork.getNetwork();
         this.timeProvider = timeProvider;
         this.mapSpecification = mapSpecification;
+        this.shapeUtils = shapeUtils;
     }
 
 
@@ -138,11 +143,11 @@ public class PositionUtil {
 
         List<TripItem> locations = graphTrip.getLocations();
 
-        int stratNodeId = locations.get(0).tripPositionByNodeId;
+        int startNodeId = locations.get(0).tripPositionByNodeId;
         for (int i = 1; i < locations.size(); i++) {
             int targetNodeId = locations.get(i).tripPositionByNodeId;
-            length += getEdgeLength(stratNodeId, targetNodeId);
-            stratNodeId = targetNodeId;
+            length += getEdgeLength(startNodeId, targetNodeId);
+            startNodeId = targetNodeId;
         }
 
         return length;
@@ -181,6 +186,9 @@ public class PositionUtil {
 
         // edge length
         SimulationEdge edge = getEdge(currentNode.id, targetNode.id, NetworkType.HIGHWAY);
+        if (edge == null) {
+            Log.error(this, "Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
+        }
 
         return getCanvasPositionInterpolated(edge, 0, vehicle.getDriver());
 
@@ -213,13 +221,13 @@ public class PositionUtil {
         double portionCompleted = (double) (timeProvider.getCurrentSimTime() - agent.getDelayData().getDelayStartTime())
                 / agent.getDelayData().getDelay();
         if (portionCompleted > 1) portionCompleted = 1;
-
-        return getCanvasPosition(edge.shape.getPositionOnPath(portionCompleted));
+        GPSLocation positionOnPath = shapeUtils.getPositionOnPath(edge.shape, portionCompleted);
+        double angleOnPath = shapeUtils.getAngleOnPath(edge.shape, portionCompleted);
+        movingAgentAngle.put(agent, angleOnPath);
+        return getCanvasPosition(positionOnPath);
     }
 
     public double getDistance(GPSLocation gps1, GPSLocation gps2) {
-//        return Math.sqrt(Math.pow(Math.abs(gps1.getLatitudeProjected() - gps2.getLatitudeProjected()), 2)
-//                + Math.pow(Math.abs(gps1.getLongitudeProjected() - gps2.getLongitudeProjected()), 2));
         return GPSLocationTools.computeDistanceAsDouble(gps1, gps2);
     }
 
