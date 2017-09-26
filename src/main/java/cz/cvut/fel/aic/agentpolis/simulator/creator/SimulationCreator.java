@@ -41,7 +41,6 @@ public class SimulationCreator {
     private final Provider<VisioInitializer> visioInitializerProvider;
     private final TimeEventGenerator timeEventGenerator;
 
-
     @Inject
     public SimulationCreator(final Config config, SimulationProvider simulationProvider,
                              AllNetworkNodes allNetworkNodes, Graphs graphs,
@@ -268,7 +267,6 @@ public class SimulationCreator {
 
         @Override
         public EventProcessor getEventProcessor() {
-            // TODO Auto-generated method stub
             return null;
         }
     }
