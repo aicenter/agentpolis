@@ -13,7 +13,6 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.ShapeUtils;
@@ -21,11 +20,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
 import cz.cvut.fel.aic.alite.common.event.EventHandler;
-import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.Node;
 
 import java.security.ProviderException;
 import java.util.*;
@@ -48,8 +44,6 @@ public class CongestionModel {
 
     private final SimulationProvider simulationProvider;
 
-    final PositionUtil positionUtil;
-
     final TimeProvider timeProvider;
 
     private final Random random;
@@ -71,13 +65,12 @@ public class CongestionModel {
 
     @Inject
     public CongestionModel(TransportNetworks transportNetworks, Config config,
-                           SimulationProvider simulationProvider, TimeProvider timeProvider, PositionUtil positionUtil, ShapeUtils shapeUtils)
+                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils)
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.timeProvider = timeProvider;
-        this.positionUtil = positionUtil;
         this.shapeUtils = shapeUtils;
         connectionsMappedByNodes = new HashMap<>();
         linksMappedByEdges = new HashMap<>();
@@ -191,30 +184,16 @@ public class CongestionModel {
         vehicle.setPosition(nextLink.fromNode);
         vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
 
-        long delay = nextLane.computeDelay(vehicleData.getVehicle(), true);
+        double distance = nextLink.edge.shape.getShapeLength() - vehicle.getQueueBeforeVehicleLength();
+
+        long delay = nextLane.computeDelay(vehicleData.getVehicle(), distance);
+        DelayData delayData = new DelayData(delay, getTimeProvider().getCurrentSimTime(), distance);
 
         driver.setTargetNode(nextLink.toNode);
-        driver.setDelayData(new DelayData(delay, getTimeProvider().getCurrentSimTime()));
+        driver.setDelayData(delayData);
 
-        return delay;
+        return delayData.getDelay();
     }
-
-    public GPSLocation getPositionInterpolatedForVehicle(Vehicle vehicle) {
-        SimulationNode position = vehicle.getDriver().getPosition();
-        SimulationNode targetNode = vehicle.getDriver().getTargetNode();
-        SimulationEdge edge = positionUtil.getEdge(position.id, targetNode.id, PositionUtil.NetworkType.HIGHWAY);
-        double endOfTheQueue = getPositionAtEndOfTheQueue(vehicle); //TODO wtf? what does it mean?
-        return shapeUtils.getPositionOnPath(edge.shape, endOfTheQueue);
-//        return positionUtil.getPointOnEdge(edge, endOfTheQueue);
-    }
-
-    private double getPositionAtEndOfTheQueue(Vehicle vehicle) {
-        Node startNode = vehicle.getPosition();
-        Node targetNode = vehicle.getDriver().getTargetNode();
-        SimulationEdge edge = graph.getEdge(startNode.id, targetNode.id);
-        return (edge.length - vehicle.getQueueBeforeVehicleLength()) / edge.length;
-    }
-
 
     public void wakeUpConnection(Connection connection, long delay) {
         makeTickEvent(connection, delay);

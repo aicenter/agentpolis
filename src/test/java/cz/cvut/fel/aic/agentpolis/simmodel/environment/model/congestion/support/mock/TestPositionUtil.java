@@ -26,7 +26,7 @@ public class TestPositionUtil extends PositionUtil {
     @Inject
     public TestPositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
                             HighwayNetwork highwayNetwork, PedestrianNetwork pedestrianNetwork, TimeProvider timeProvider, Config config, GraphSpec2D mapSpecification, ShapeUtils shapeUtils) {
-        super(allNetworkNodes, highwayNetwork, pedestrianNetwork, timeProvider, mapSpecification, shapeUtils);
+        super(allNetworkNodes, highwayNetwork, pedestrianNetwork, timeProvider, shapeUtils);
     }
 
 }

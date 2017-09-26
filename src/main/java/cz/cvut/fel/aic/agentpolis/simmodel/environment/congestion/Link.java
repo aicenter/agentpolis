@@ -32,16 +32,16 @@ public class Link {
     final SimulationNode toNode;
 
     final SimulationNode fromNode;
-    
+
     final Connection fromConnection;
-    
+
     final Connection toConnection;
 
     public SimulationEdge getEdge() {
         return edge;
     }
-    
-    
+
+
     private Lane laneForTripEnd;
 
 
@@ -61,8 +61,8 @@ public class Link {
         return lanesMappedByNodes.size();
     }
 
-    public int getLength() {
-        return edge.length;
+    public double getLength() {
+        return edge.shape.getShapeLength();
     }
 
     public Lane getLaneByNextNode(SimulationNode node) {
@@ -79,12 +79,12 @@ public class Link {
             SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
             nextLane = getLaneByNextNode(nextLocation);
         }
-        
+
         nextLane.startDriving(vehicleData);
     }
 
     void addLane(Lane lane, SimulationNode nextNode) {
-        if(laneForTripEnd == null){
+        if (laneForTripEnd == null) {
             laneForTripEnd = lane;
         }
         lanesMappedByNodes.put(nextNode, lane);
@@ -93,14 +93,13 @@ public class Link {
     Lane getLaneForTripEnd() {
         return laneForTripEnd;
     }
-                
-    private Lane getRandomLane(){
+
+    private Lane getRandomLane() {
         Entry<SimulationNode, Lane> randomEntry
                 = CollectionUtil.getRandomEntryFromMap(lanesMappedByNodes, congestionModel.getRandom());
         return randomEntry.getValue();
     }
 
-    
 
     public Collection<Lane> getLanes() {
         return lanesMappedByNodes.values();

@@ -16,7 +16,7 @@ public class ShapeUtils {
         this.transformer = transformer;
     }
 
-    public GPSLocation getPositionOnPath(EdgeShape shape, double portion) {
+    public PositionAndAngle getPositionAndAngleOnPath(EdgeShape shape, double portion) {
         assert portion >= 0. && portion <= 1.0;
         double distance = portion * shape.shapeLength;
         int segment = 0;
@@ -27,7 +27,10 @@ public class ShapeUtils {
         double distanceOnSegment = distance - distanceOnPreviousSegments;
         double segmentLength = shape.segmentCumulativeLength[segment] - distanceOnPreviousSegments;
         double segmentPortion = distanceOnSegment / segmentLength;
-        return getPointOnVector(shape.backingMap.get(segment), shape.backingMap.get(segment + 1), segmentPortion);
+        GPSLocation pointOnPath = getPointOnVector(shape.backingMap.get(segment), shape.backingMap.get(segment + 1), segmentPortion);
+        double angle = shape.segmentAngles[segment];
+
+        return new PositionAndAngle(pointOnPath, angle);
     }
 
     private GPSLocation getPointOnVector(GPSLocation gps1, GPSLocation gps2, double portion) {
@@ -42,14 +45,14 @@ public class ShapeUtils {
         return GPSLocationTools.createGPSLocationFromProjected(latProjected, lonProjected, elevation, transformer);
     }
 
-    public double getAngleOnPath(EdgeShape shape, double portion) {
-        assert portion >= 0. && portion <= 1.0;
-        double distance = portion * shape.shapeLength;
-        int segment = 0;
-        while (shape.segmentCumulativeLength[segment] < distance) {
-            segment++;
-        }
-        return shape.segmentAngles[segment];
 
+    public class PositionAndAngle {
+        public final GPSLocation point;
+        public final double angle;
+
+        public PositionAndAngle(GPSLocation pointOnPath, double angle) {
+            this.point = pointOnPath;
+            this.angle = angle;
+        }
     }
 }

@@ -30,9 +30,9 @@ public class TestCongestionModel extends CongestionModel {
 
     @Inject
     public TestCongestionModel(TransportNetworks transportNetworks, Config config,
-                               SimulationProvider simulationProvider, TimeProvider timeProvider, PositionUtil positionUtil, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
+                               SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
             ProviderException {
-        super(transportNetworks, config, simulationProvider, timeProvider, positionUtil, shapeUtils);
+        super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils);
     }
 
     public Connection getConnectionByNode(SimulationNode node) {

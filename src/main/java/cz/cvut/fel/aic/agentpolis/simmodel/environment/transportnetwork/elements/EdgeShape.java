@@ -63,4 +63,7 @@ public class EdgeShape implements Iterable<GPSLocation> {
         return backingMap.stream();
     }
 
+    public double getShapeLength() {
+        return shapeLength;
+    }
 }
