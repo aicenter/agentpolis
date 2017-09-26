@@ -25,6 +25,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.time.ZonedDateTime;
 
@@ -47,8 +48,10 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	protected void configure() {
         
         bindConstant().annotatedWith(Names.named("mapSrid")).to(config.srid);
-        
-        bind(Config.class).toInstance(config);
+
+		bind(Transformer.class).toInstance(new Transformer(config.srid));
+
+		bind(Config.class).toInstance(config);
         
         bind(TimeProvider.class).to(StandardTimeProvider.class);
         

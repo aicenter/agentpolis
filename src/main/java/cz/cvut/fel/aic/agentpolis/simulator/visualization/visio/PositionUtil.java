@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
@@ -18,46 +14,49 @@ import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.ShapeUtils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.PedestrianNetwork;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.Node;
-import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
 
 import javax.vecmath.Point2d;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author fido
- */
+
 @Singleton
 public class PositionUtil {
 
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
-    private final Graph<SimulationNode, SimulationEdge> network;
+    private final Graph<SimulationNode, SimulationEdge> highwayNetwork;
+
+    private final Graph<SimulationNode, SimulationEdge> pedestrianNetwork;
 
     private final TimeProvider timeProvider;
 
-    private final GraphSpec2D mapSpecification;
+    private final ShapeUtils shapeUtils;
 
+    private HashMap<MovingAgent, Double> movingAgentAngle = new HashMap<>();
 
     @Inject
     public PositionUtil(AllNetworkNodes allNetworkNodes,
-                        HighwayNetwork highwayNetwork, TimeProvider timeProvider, GraphSpec2D mapSpecification) {
+                        HighwayNetwork highwayNetwork,
+                        PedestrianNetwork pedestrianNetwork,
+                        TimeProvider timeProvider, ShapeUtils shapeUtils) {
         this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
-        network = highwayNetwork.getNetwork();
+        this.highwayNetwork = highwayNetwork.getNetwork();
+        this.pedestrianNetwork = pedestrianNetwork.getNetwork();
         this.timeProvider = timeProvider;
-        this.mapSpecification = mapSpecification;
+        this.shapeUtils = shapeUtils;
     }
 
 
@@ -65,8 +64,15 @@ public class PositionUtil {
         return nodesFromAllGraphs.get(nodeId);
     }
 
-    public SimulationEdge getEdge(int fromNodeId, int toNodeId) {
-        return network.getEdge(fromNodeId, toNodeId);
+    public SimulationEdge getEdge(int fromNodeId, int toNodeId, EGraphType type) {
+        switch (type) {
+            case HIGHWAY:
+                return highwayNetwork.getEdge(fromNodeId, toNodeId);
+            case PEDESTRIAN:
+                return pedestrianNetwork.getEdge(fromNodeId, toNodeId);
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     public Point2d getPosition(GPSLocation position) {
@@ -78,7 +84,7 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPosition(int nodeId) {
-        return getCanvasPosition(nodesFromAllGraphs.get(nodeId));
+        return getCanvasPosition(getNode(nodeId));
     }
 
     public Point2d getCanvasPosition(AgentPolisEntity entity) {
@@ -89,49 +95,23 @@ public class PositionUtil {
         return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
     }
 
-    public int getWorldWidth() {
-//        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-//                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
-//        Point2d minMax = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-//                mapBounds.getMaxNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
-//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinNode(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d minMax = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMaxLonE6(), 0, 0));
-//
-//        return (int) (minMax.x - minMin.x);
-        return mapSpecification.getWidth();
-    }
-
-    public int getWorldHeight() {
-//        Point2d minMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMinNode().getLatitude(), 
-//                mapBounds.getMinNode().getLongitude(), mapBounds.getMinNode().elevation, transformer));
-//        Point2d maxMin = getPosition(GPSLocationTools.createGPSLocation(mapBounds.getMaxNode().getLatitude(), 
-//                mapBounds.getMinNode().getLongitude(), mapBounds.getMaxNode().elevation, transformer));
-//        Point2d minMin = getPosition(new GPSLocation(mapBounds.getMinLatE6(), mapBounds.getMinLonE6(), 0, 0));
-//        Point2d maxMin = getPosition(new GPSLocation(mapBounds.getMaxLatE6(), mapBounds.getMinLonE6(), 0, 0));
-//
-//        return (int) (minMin.y - maxMin.y);
-        return mapSpecification.getHeight();
-    }
-
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
-        return network.getEdge(entityPositionNodeId, targetNodeId).getLength();
+        return getEdge(entityPositionNodeId, targetNodeId, EGraphType.HIGHWAY).getLength();
     }
-
 
     public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip) {
-        int lenght = 0;
+        int length = 0;
 
-        LinkedList<TripItem> locations = graphTrip.getLocations();
+        List<TripItem> locations = graphTrip.getLocations();
 
-        int stratNodeId = locations.get(0).tripPositionByNodeId;
+        int startNodeId = locations.get(0).tripPositionByNodeId;
         for (int i = 1; i < locations.size(); i++) {
             int targetNodeId = locations.get(i).tripPositionByNodeId;
-            lenght += getEdgeLength(stratNodeId, targetNodeId);
-            stratNodeId = targetNodeId;
+            length += getEdgeLength(startNodeId, targetNodeId);
+            startNodeId = targetNodeId;
         }
 
-        return lenght;
+        return length;
     }
 
     private Point2d getCanvasPositionInterpolatedForTransportable(TransportableEntity entity) {
@@ -140,7 +120,7 @@ public class PositionUtil {
             return getCanvasPosition((AgentPolisEntity) entity);
         } else {
             if (transportEntity instanceof MovingAgent) {
-                return getCanvasPositionInterpolated((MovingAgent) transportEntity);
+                return getCanvasPositionInterpolated((MovingAgent) transportEntity, EGraphType.HIGHWAY);
             } else {
                 return getCanvasPositionInterpolatedForVehicle((Vehicle) transportEntity);
             }
@@ -148,35 +128,35 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPositionInterpolatedForVehicle(Vehicle vehicle) {
-        
+
         // if the vehicle itself is being transported
         if (vehicle instanceof TransportableEntity && ((TransportableEntity) vehicle).getTransportingEntity() != null) {
             return getCanvasPositionInterpolatedForTransportable((TransportableEntity) vehicle);
         }
-        
+
         Driver driver = vehicle.getDriver();
         if (driver == null) {
             return getCanvasPosition(vehicle);
-        } 
+        }
 
         Node currentNode = vehicle.getDriver().getPosition();
         Node targetNode = vehicle.getDriver().getTargetNode();
 
         /* driver is in the car but he does not drive */
         if (targetNode == null) return getCanvasPosition(vehicle);
-        else {
-            // edge length
-            SimulationEdge edge = getEdge(currentNode.id, targetNode.id);
-            double length = getEdgeLength(edge);
+        if (targetNode == currentNode) return getCanvasPosition(currentNode);
 
-            // portion of the edge that is free for ride
-            double portion = 1d - (vehicle.getQueueBeforeVehicleLength() / length);
-
-            return getCanvasPositionInterpolated(edge, portion, vehicle.getDriver());
+        // edge length
+        SimulationEdge edge = getEdge(currentNode.id, targetNode.id, EGraphType.HIGHWAY);
+        if (edge == null) {
+            Log.error(this, "Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
         }
+
+        return getCanvasPositionInterpolated(edge, vehicle.getDriver());
+
     }
 
-    public <A extends MovingAgent> Point2d getCanvasPositionInterpolated(A entity) {
+    public Point2d getCanvasPositionInterpolated(MovingAgent entity, EGraphType type) {
 
         // if the entity is transported
         if (entity instanceof TransportableEntity && ((TransportableEntity) entity).getTransportingEntity() != null) {
@@ -186,97 +166,38 @@ public class PositionUtil {
         Node startNode = entity.getPosition();
         Node targetNode = entity.getTargetNode();
 
-        // entity waits 
-        if (targetNode == null) {
+        // entity waits
+        if (targetNode == null || targetNode == startNode) {
             return getCanvasPosition(startNode);
         }
 
-        SimulationEdge edge = getEdge(startNode.id,targetNode.id);
+        SimulationEdge edge = getEdge(startNode.id, targetNode.id, type);
 
-        return getCanvasPositionInterpolated(edge,1, entity);
+        return getCanvasPositionInterpolated(edge, entity);
     }
 
-    private Point2d getCanvasPositionInterpolated(SimulationEdge edge, double portion, MovingAgent agent) {
-        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - agent.getDelayData().getDelayStartTime())
-                / agent.getDelayData().getDelay();
+    public GPSLocation getPositionInterpolated(SimulationEdge edge, MovingAgent agent) {
+        DelayData delayData = agent.getDelayData();
+        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
+                / delayData.getDelay();
         if (portionCompleted > 1) portionCompleted = 1;
-        double lengthCompleted = portionCompleted * getEdgeLength(edge) * portion;
-        List<GPSLocation> gps = edge.gpsLocations;
-        int i = 0;
-        double edgePartLength = GPSLocationTools.computeDistance(gps.get(0),gps.get(1));
-        while (edgePartLength < lengthCompleted && i < gps.size() - 2) {
-            lengthCompleted -= edgePartLength;
-            i++;
-            edgePartLength = GPSLocationTools.computeDistance(gps.get(i), gps.get(i+1));
-        }
-        movingAgentSegmentHashMap.put(agent,i);
-        Point2d startPosition = getCanvasPosition(gps.get(i));
-        Point2d targetPosition = getCanvasPosition(gps.get(i+1));
 
-        double xIncrement = (targetPosition.x - startPosition.x) * lengthCompleted / edgePartLength;
-        double yIncrement = (targetPosition.y - startPosition.y) * lengthCompleted / edgePartLength;
-
-        return new Point2d(startPosition.x + xIncrement, startPosition.y + yIncrement);
+        double distanceOfDrivenInterval = delayData.getDelayDistance();
+        double portionOfEdgeDistance = (delayData.getStartDistanceOffset() + distanceOfDrivenInterval * portionCompleted) / edge.shape.getShapeLength();
+        ShapeUtils.PositionAndAngle positionAndAngleOnPath = shapeUtils.getPositionAndAngleOnPath(edge.shape, portionOfEdgeDistance);
+        movingAgentAngle.put(agent, positionAndAngleOnPath.angle);
+        return positionAndAngleOnPath.point;
     }
 
-    public GPSLocation getPointOnEdge(SimulationEdge edge, double portion){
-        double lengthCompleted = getEdgeLength(edge) * portion;
-        List<GPSLocation> gps = edge.gpsLocations;
-        int i = 0;
-        double edgePartLength = GPSLocationTools.computeDistance(gps.get(0),gps.get(1));
-        while (edgePartLength < lengthCompleted) {
-            lengthCompleted -= edgePartLength;
-            i++;
-            edgePartLength = GPSLocationTools.computeDistance(gps.get(i), gps.get(i+1));
-        }
-        GPSLocation startPosition = gps.get(i);
-        GPSLocation targetPosition = gps.get(i+1);
-        return getPointOnVector(startPosition, targetPosition, portion);
+    public Point2d getCanvasPositionInterpolated(SimulationEdge edge, MovingAgent agent) {
+        return getCanvasPosition(getPositionInterpolated(edge, agent));
     }
 
-    private GPSLocation getPointOnVector(GPSLocation gps1, GPSLocation gps2, double portion){
-        int xIncrement = (int) Math.round((gps2.getLongitudeProjected1E2()
-                - gps1.getLongitudeProjected1E2()) * portion);
-        int yIncrement = (int) Math.round((gps2.getLatitudeProjected1E2()
-                - gps1.getLatitudeProjected1E2()) * portion);
-
-        return new GPSLocation(0, 0, gps1.getLatitudeProjected1E2() + yIncrement,
-                gps1.getLongitudeProjected1E2() + xIncrement);
-    }
-
-    private HashMap<SimulationEdge, Double> backingLengthMap = new HashMap<>();
-
-    private double getEdgeLength(SimulationEdge e){
-        if (e.gpsLocations == null)
-            return getDistance(network.getNode(e.fromId),network.getNode(e.toId));
-
-        if (backingLengthMap.containsKey(e))
-            return backingLengthMap.get(e);
-
-        List<GPSLocation> gpsLocations = e.gpsLocations;
-        double length = 0;
-        for (int i = 1; i < gpsLocations.size(); i++)
-            length += getDistance(gpsLocations.get(i - 1), gpsLocations.get(i));
-        backingLengthMap.put(e,length);
-        return length;
-    }
-
-    public double getDistance(GPSLocation gps1, GPSLocation gps2){
-        return Math.sqrt(Math.pow(Math.abs(gps1.getLatitudeProjected()- gps2.getLatitudeProjected()), 2)
-                + Math.pow(Math.abs(gps1.getLongitudeProjected() - gps2.getLongitudeProjected()), 2));
-    }
-
-    private HashMap<MovingAgent, Integer> movingAgentSegmentHashMap = new HashMap<>();
-
-    public double getAngle(MovingAgent agent, SimulationEdge edge) {
-        if (!movingAgentSegmentHashMap.containsKey(agent))
+    public double getAngle(MovingAgent agent) {
+        if (!movingAgentAngle.containsKey(agent))
             return 0;
-        int segment = movingAgentSegmentHashMap.get(agent);
-        return getAngle(edge.gpsLocations.get(segment),edge.gpsLocations.get(segment + 1));
+        return movingAgentAngle.get(agent);
     }
-    private double getAngle(GPSLocation position, GPSLocation target) {
-        double dy = target.getLatitudeProjected1E2() - position.getLatitudeProjected1E2();
-        double dx = target.getLongitudeProjected1E2() - position.getLongitudeProjected1E2();
-        return Math.atan2(dy,dx);
-    }
+
+
 }

@@ -92,8 +92,7 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
             }
             
             if(target != null && position != null){
-                SimulationEdge edge = positionUtil.getEdge(position.id,target.id);
-                angle = positionUtil.getAngle(driver, edge);
+                angle = positionUtil.getAngle(driver);
             }
             
             double centerShift = getVehicleWidth(representative) / 2;
@@ -101,7 +100,7 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
 
             /* desired order of the transformations */
             
-            /* roate against center of the shape */
+            /* rotate against center of the shape */
             AffineTransform rotate = AffineTransform.getRotateInstance(-angle, centerShift, centerShift);
             
             /* scale according to zoom factor */
@@ -112,7 +111,7 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
                     AffineTransform.getTranslateInstance(entityPosition.getX() - Vis.transW(centerShift), 
                             entityPosition.getY() - Vis.transH(centerShift));
             
-            /* transformaitions are applied in inverse order */
+            /* transformations are applied in inverse order */
             scale.concatenate(rotate);
             translate.concatenate(scale);
 

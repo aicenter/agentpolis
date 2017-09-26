@@ -6,17 +6,25 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.agent;
 
 /**
- *
  * @author fido
  */
 public class DelayData {
     private final Long delay;
-    
     private final Long delayStartTime;
+    private final Double startDistanceOffset;
+    private final Double delayDistance;
 
-    
-    
-    
+    public DelayData(Long delay, Long delayStartTime, Double delayDistance) {
+        this(delay, delayStartTime, delayDistance, 0.0);
+    }
+
+    public DelayData(Long delay, Long delayStartTime, Double delayDistance, Double startDistanceOffset) {
+        this.delay = delay;
+        this.delayStartTime = delayStartTime;
+        this.startDistanceOffset = startDistanceOffset;
+        this.delayDistance = delayDistance;
+    }
+
     public Long getDelay() {
         return delay;
     }
@@ -24,14 +32,13 @@ public class DelayData {
     public Long getDelayStartTime() {
         return delayStartTime;
     }
-    
-    
 
-    
-    public DelayData(Long delay, Long delayStartTime) {
-        this.delay = delay;
-        this.delayStartTime = delayStartTime;
+
+    public Double getStartDistanceOffset() {
+        return startDistanceOffset;
     }
-    
-    
+
+    public Double getDelayDistance() {
+        return delayDistance;
+    }
 }

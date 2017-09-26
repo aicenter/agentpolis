@@ -5,17 +5,16 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
-import cz.cvut.fel.aic.alite.common.event.Event;
-import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.cvut.fel.aic.geographtools.GPSLocation;
+import cz.cvut.fel.aic.alite.common.event.Event;
+import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
 import java.util.LinkedList;
 
@@ -133,15 +132,15 @@ public class Lane extends EventHandlerAdapter {
     }
 
     void addToQue(VehicleTripData vehicleTripData) {
-        
+
         // wake up next connection
-        if(isEmpty()){
-            long minDelay = computeDelay(vehicleTripData.getVehicle(), false);
+        if (isEmpty()) {
+            long minDelay = computeDelay(vehicleTripData.getVehicle());
             wakeUpNextConnection(minDelay);
         }
-        
+
         long estimatedDelayToQueueEnd = link.congestionModel.computeDelayAndSetVehicleData(vehicleTripData, this);
-        
+
         long minExitTime = timeProvider.getCurrentSimTime() + estimatedDelayToQueueEnd;
         drivingQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
     }
@@ -165,46 +164,52 @@ public class Lane extends EventHandlerAdapter {
     public double getUsedLaneCapacityInMeters() {
         return currentlyUsedCapacityInMeters;
     }
-    
-    long computeDelay(PhysicalVehicle vehicle, boolean excludeQueFromDistance) {
-        CongestionModel congestionModel = link.congestionModel;
-        SimulationEdge edge = link.edge;
-        
-        double speed = computeSpeed(vehicle);
-        
-        double distance;
-        if(excludeQueFromDistance){
-            distance = congestionModel.positionUtil.getDistance(
-                vehicle.getPrecisePosition(), congestionModel.graph.getNode(edge.toId))
-                - vehicle.getQueueBeforeVehicleLength();
 
-	    double airDistance = congestionModel.positionUtil.getDistance(congestionModel.graph.getNode(edge.fromId), congestionModel.graph.getNode(edge.toId));
-	    distance = distance * edge.length / airDistance;
-        }
-        else{
-            distance = edge.length;
-        }
-	
+    long computeDelay(PhysicalVehicle vehicle, double distance) {
+        double speed = computeSpeed(vehicle);
         double duration = distance / speed;
         long durationInMs = Math.max(1, (long) (1000 * duration));
         return durationInMs;
     }
-    
-    double computeSpeed(PhysicalVehicle vehicle){
+
+    long computeDelay(PhysicalVehicle vehicle) {
         SimulationEdge edge = link.edge;
-        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(), 
+        return computeDelay(vehicle, edge.shape.getShapeLength());
+    }
+
+    void updateDelayData(PhysicalVehicle vehicle) {
+        CongestionModel congestionModel = link.congestionModel;
+        long currentSimTime = congestionModel.getTimeProvider().getCurrentSimTime();
+
+        SimulationEdge edge = link.edge;
+        DelayData previousDelayData = vehicle.getDelayData();
+        double completionRatioOfPreviousDelay = (currentSimTime - previousDelayData.getDelayStartTime()) / (double) previousDelayData.getDelay();
+        if (completionRatioOfPreviousDelay > 1.0) completionRatioOfPreviousDelay = 1.0;
+
+        double startDistanceOffset = previousDelayData.getStartDistanceOffset() + completionRatioOfPreviousDelay * previousDelayData.getDelayDistance();
+
+        double distance = edge.shape.getShapeLength() - startDistanceOffset - vehicle.getQueueBeforeVehicleLength();
+        assert distance >= 0.0;
+
+        long durationInMs = computeDelay(vehicle, distance);
+        vehicle.getDriver().setDelayData(new DelayData(durationInMs, currentSimTime, distance, startDistanceOffset));
+    }
+
+    double computeSpeed(PhysicalVehicle vehicle) {
+        SimulationEdge edge = link.edge;
+        double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(),
                 edge.allowedMaxSpeedInMpS);
 
         double speed = freeFlowVelocity;
-        if(link.congestionModel.addFundamentalDiagramDelay){  
-	    speed = computeCongestedSpeed(freeFlowVelocity, edge);
+        if (link.congestionModel.addFundamentalDiagramDelay) {
+            speed = computeCongestedSpeed(freeFlowVelocity, edge);
         }
-        
+
         return speed;
     }
 
     private double computeCongestedSpeed(double freeFlowVelocity, SimulationEdge edge) {
-        double carsPerKilometer = getDrivingCarsCountOnLane() / (double) edge.length * 1000.0;
+        double carsPerKilometer = getDrivingCarsCountOnLane() / edge.shape.getShapeLength() * 1000.0;
 
         double congestedSpeed;
         if (carsPerKilometer < 20) {
@@ -250,18 +255,13 @@ public class Lane extends EventHandlerAdapter {
         // set que before vehicle
         vehicle.setQueueBeforeVehicleLength(vehicle.getQueueBeforeVehicleLength() - transferredVehicleLength);
 
-        // change position to current interpolated position
-        GPSLocation currentInterpolatedLocation = link.congestionModel.getPositionInterpolatedForVehicle(vehicle);
-        vehicle.setPrecisePosition(currentInterpolatedLocation);
-        
         long currentSimulationTime = congestionModel.getTimeProvider().getCurrentSimTime();
-        
+
         // create new delay
-        long delay = computeDelay(vehicle, true);
-        vehicle.getDriver().setDelayData(new DelayData(delay, currentSimulationTime));
-        
+        updateDelayData(vehicle);
+
         /* update min exit time for driving queue */
-        vehicleQueueData.setMinPollTime(currentSimulationTime + delay);
+        vehicleQueueData.setMinPollTime(currentSimulationTime + vehicle.getDelayData().getDelay());
     }
 
     private void handleChange() {
@@ -306,7 +306,7 @@ public class Lane extends EventHandlerAdapter {
         this.prepareAddingToqueue(vehicleTripData);
 
         long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
-        
+
         String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, delay);

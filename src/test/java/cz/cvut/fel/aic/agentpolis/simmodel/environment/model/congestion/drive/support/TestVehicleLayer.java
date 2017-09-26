@@ -7,7 +7,10 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
+
 import java.awt.Color;
 import javax.vecmath.Point2d;
 
@@ -25,7 +28,7 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 
     @Override
     protected Point2d getEntityPosition(DriveAgent entity) {
-        return positionUtil.getCanvasPositionInterpolated(entity);
+        return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
     }
 
     @Override
