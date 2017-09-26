@@ -27,71 +27,42 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The {@code SimulationCreator} initializes the simulation model according to added initializers including the
- * environment and agents.
- * The initialized simulation model is possible to run.
- */
 @Singleton
 public class SimulationCreator {
-
-    /**
-     * Logger for creator classes.
-     */
     private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
-	
-	public static SimulationCreator instance;
-	
-	
-	
-
-
+    public static SimulationCreator instance;
     private TypedSimulation simulation;
-    
-
-    /**
-     * write info about day to console
-     */
     private boolean reportDays = false;
-    
     private final Config config;
-
     private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
-    
     private final SimulationProvider simulationProvider;
-    
     private final AllNetworkNodes allNetworkNodes;
-    
     private final Graphs graphs;
-    
     private final Provider<VisioInitializer> visioInitializerProvider;
-    
     private final TimeEventGenerator timeEventGenerator;
 
-    
-	
-	
-	
-	@Inject
+
+    @Inject
     public SimulationCreator(final Config config, SimulationProvider simulationProvider,
-            AllNetworkNodes allNetworkNodes, Graphs graphs,
-            Provider<VisioInitializer> visioInitializerProvider, TimeEventGenerator timeEventGenerator) {
+                             AllNetworkNodes allNetworkNodes, Graphs graphs,
+                             Provider<VisioInitializer> visioInitializerProvider,
+                             TimeEventGenerator timeEventGenerator) {
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
         this.visioInitializerProvider = visioInitializerProvider;
         this.timeEventGenerator = timeEventGenerator;
-		instance = this;
+        this.instance = this;
     }
-    
-    public void prepareSimulation(final MapData osmDTO, final long seed){
-        LOGGER.debug("SEED = " + seed);
-        
+
+    public void prepareSimulation(final MapData osmDTO, final long seed) {
+        LOGGER.debug("Using seed " + seed + ".");
+
         initLogger();
         initSimulation();
 
-        LOGGER.info(">>> MAPS CREATION");
+        LOGGER.info(">>> CREATING MAP");
 
         initEnvironment(osmDTO, seed);
 
@@ -117,7 +88,7 @@ public class SimulationCreator {
             long simulationStartTime = System.currentTimeMillis();
 
             setUpTimeAndCompletenessEstimation();
-            
+
             timeEventGenerator.start();
 
             simulation.run();
@@ -127,32 +98,26 @@ public class SimulationCreator {
 
             if (!config.pathToScriptsAndTheirInputParameters.equals("")) {
                 LOGGER.info("Executing post groovy scripts:");
-                
-                // legacy code - remove
-//                (new CSVPostprocessingGroovyExecutor(config.pathToScriptsAndTheirInputParameters, 
-//                        config.pathToCsvEventLogFile, config.dirForResults)).execute();
+
             }
         }
         simulationFinishedListeners.forEach(SimulationFinishedListener::simulationFinished);
     }
-
-    // -------------------- Create methods
-    // --------------------------------------------------
 
 
     private void initSimulation() {
         LOGGER.info("Setting up Alite simulation modul");
         simulation = new TypedSimulation(config.simulationDurationInMillis);
         simulation.setPrintouts(10000000);
-		simulationProvider.setSimulation(simulation);
+        simulationProvider.setSimulation(simulation);
         LOGGER.info("Set up Alite simulation modul");
     }
 
     private void initEnvironment(MapData osmDTO, long seed) {
-        LOGGER.info("Creating instance of environment");
-		allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
-		graphs.setGraphs(osmDTO.graphByType);
-        LOGGER.info("Created instance of environment");
+        LOGGER.info("Creating instance of environment...");
+        allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
+        graphs.setGraphs(osmDTO.graphByType);
+        LOGGER.info("Done.");
     }
 
     private void initLogger() {
@@ -172,7 +137,7 @@ public class SimulationCreator {
         if (pathToResource != null) {
             try {
                 PropertyConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties");
+                LOGGER.info("Loaded log4j properties.");
                 return;
             } catch (Exception ignored) {
             }
@@ -183,31 +148,28 @@ public class SimulationCreator {
         if (pathToResource != null) {
             try {
                 DOMConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties");
+                LOGGER.info("Loaded log4j properties.");
                 return;
             } catch (Exception ignored) {
 
             }
         }
 
-        LOGGER.info("Failed to load log4j properties");
-    } 
-    
+        LOGGER.info("Failed to load log4j properties.");
+    }
+
 
     private void initVisioAndGE() {
         if (config.showVisio) {
             LOGGER.info("Initializing Visio");
-			visioInitializerProvider.get().initialize(simulation);
+            visioInitializerProvider.get().initialize(simulation);
             simulation.setSimulationSpeed(1);
             LOGGER.info("Initialized Visio");
-        } 
-        else {
+        } else {
             simulation.setSimulationSpeed(0);
         }
     }
-    
-    
-    
+
 
     /**
      * reports some info every day
@@ -243,12 +205,12 @@ public class SimulationCreator {
             sim.addEvent(this, Duration.ofHours(24).toMillis());
         }
 
-		@Override
+        @Override
         public EventProcessor getEventProcessor() {
             return sim;
         }
 
-		@Override
+        @Override
         public void handleEvent(Event event) {
             setTimer();
         }
