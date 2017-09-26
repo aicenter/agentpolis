@@ -10,12 +10,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
-import cz.cvut.fel.aic.alite.common.event.Event;
-import cz.cvut.fel.aic.alite.common.event.EventHandler;
-import cz.cvut.fel.aic.alite.common.event.EventProcessor;
-import cz.cvut.fel.aic.alite.common.event.EventProcessorEventType;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
-import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -23,81 +18,42 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
 import java.net.URL;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The {@code SimulationCreator} initializes the simulation model according to added initializers including the
- * environment and agents.
- * The initialized simulation model is possible to run.
- */
 @Singleton
 public class SimulationCreator {
-
-    /**
-     * Logger for creator classes.
-     */
     private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
-	
-	public static SimulationCreator instance;
-	
-	
-	
-
-
     private TypedSimulation simulation;
-    
-
-    /**
-     * write info about day to console
-     */
-    private boolean reportDays = false;
-    
     private final Config config;
-
-    private final List<SimulationFinishedListener> simulationFinishedListeners = new ArrayList<>();
-    
     private final SimulationProvider simulationProvider;
-    
     private final AllNetworkNodes allNetworkNodes;
-    
     private final Graphs graphs;
-    
     private final Provider<VisioInitializer> visioInitializerProvider;
-    
     private final TimeEventGenerator timeEventGenerator;
 
-    
-	
-	
-	
-	@Inject
+    @Inject
     public SimulationCreator(final Config config, SimulationProvider simulationProvider,
-            AllNetworkNodes allNetworkNodes, Graphs graphs,
-            Provider<VisioInitializer> visioInitializerProvider, TimeEventGenerator timeEventGenerator) {
+                             AllNetworkNodes allNetworkNodes, Graphs graphs,
+                             Provider<VisioInitializer> visioInitializerProvider,
+                             TimeEventGenerator timeEventGenerator) {
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
         this.visioInitializerProvider = visioInitializerProvider;
         this.timeEventGenerator = timeEventGenerator;
-		instance = this;
     }
-    
-    public void prepareSimulation(final MapData osmDTO, final long seed){
-        LOGGER.debug("SEED = " + seed);
-        
+
+    public void prepareSimulation(final MapData osmDTO, final long seed) {
+        LOGGER.debug("Using seed " + seed + ".");
+
         initLogger();
         initSimulation();
 
-        LOGGER.info(">>> MAPS CREATION");
+        LOGGER.info(">>> CREATING MAP");
 
         initEnvironment(osmDTO, seed);
-
-        if (reportDays) {
-            new DayReporter(simulation);
-        }
     }
 
     public void prepareSimulation(final MapData osmDTO) {
@@ -107,52 +63,30 @@ public class SimulationCreator {
     public void startSimulation() {
         long simTimeInit = System.currentTimeMillis();
 
-        initVisioAndGE();
+        initVisio();
 
         if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
-            LOGGER.info(String.format("Simulation - init time: %s ms", (System.currentTimeMillis() - simTimeInit)));
-
+            LOGGER.info(String.format("Simulation initalized. (%s ms)", (System.currentTimeMillis() - simTimeInit)));
             long simulationStartTime = System.currentTimeMillis();
-
-            setUpTimeAndCompletenessEstimation();
-            
             timeEventGenerator.start();
-
             simulation.run();
-
-            LOGGER.info(String.format("Simulation - runtime: %s ms", (System.currentTimeMillis() -
-                    simulationStartTime)));
-
-            if (!config.pathToScriptsAndTheirInputParameters.equals("")) {
-                LOGGER.info("Executing post groovy scripts:");
-                
-                // legacy code - remove
-//                (new CSVPostprocessingGroovyExecutor(config.pathToScriptsAndTheirInputParameters, 
-//                        config.pathToCsvEventLogFile, config.dirForResults)).execute();
-            }
+            LOGGER.info(String.format("Simulation finished: (%s ms)", (System.currentTimeMillis() - simulationStartTime)));
         }
-        simulationFinishedListeners.forEach(SimulationFinishedListener::simulationFinished);
     }
 
-    // -------------------- Create methods
-    // --------------------------------------------------
-
-
     private void initSimulation() {
-        LOGGER.info("Setting up Alite simulation modul");
         simulation = new TypedSimulation(config.simulationDurationInMillis);
         simulation.setPrintouts(10000000);
-		simulationProvider.setSimulation(simulation);
-        LOGGER.info("Set up Alite simulation modul");
+        simulationProvider.setSimulation(simulation);
     }
 
     private void initEnvironment(MapData osmDTO, long seed) {
-        LOGGER.info("Creating instance of environment");
-		allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
-		graphs.setGraphs(osmDTO.graphByType);
-        LOGGER.info("Created instance of environment");
+        LOGGER.info("Creating instance of environment...");
+        allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
+        graphs.setGraphs(osmDTO.graphByType);
+        LOGGER.info("Done.");
     }
 
     private void initLogger() {
@@ -172,7 +106,7 @@ public class SimulationCreator {
         if (pathToResource != null) {
             try {
                 PropertyConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties");
+                LOGGER.info("Loaded log4j properties.");
                 return;
             } catch (Exception ignored) {
             }
@@ -183,131 +117,24 @@ public class SimulationCreator {
         if (pathToResource != null) {
             try {
                 DOMConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties");
+                LOGGER.info("Loaded log4j properties.");
                 return;
             } catch (Exception ignored) {
 
             }
         }
 
-        LOGGER.info("Failed to load log4j properties");
-    } 
-    
+        LOGGER.info("Failed to load log4j properties.");
+    }
 
-    private void initVisioAndGE() {
+    private void initVisio() {
         if (config.showVisio) {
             LOGGER.info("Initializing Visio");
-			visioInitializerProvider.get().initialize(simulation);
+            visioInitializerProvider.get().initialize(simulation);
             simulation.setSimulationSpeed(1);
             LOGGER.info("Initialized Visio");
-        } 
-        else {
+        } else {
             simulation.setSimulationSpeed(0);
-        }
-    }
-    
-    
-    
-
-    /**
-     * reports some info every day
-     */
-    public class DayReporter implements EventHandler {
-
-        private final Simulation sim;
-
-        private long startTime;
-        private long startEvents;
-        private int counter;
-
-        public DayReporter(Simulation sim) {
-            this.sim = sim;
-            counter = 0;
-            System.currentTimeMillis();
-            setTimer();
-        }
-
-        public String reportDay() {
-            String ret = "";
-            ret += "Day: " + counter + "\n";
-            ret += "CPU time [s]: " + (System.currentTimeMillis() - startTime) / 1000 + "\n";
-            ret += "Events: " + (sim.getEventCount() - startEvents) + "\n";
-            return ret;
-        }
-
-        private void setTimer() {
-            startTime = System.currentTimeMillis();
-            startEvents = sim.getEventCount();
-            counter++;
-
-            sim.addEvent(this, Duration.ofHours(24).toMillis());
-        }
-
-		@Override
-        public EventProcessor getEventProcessor() {
-            return sim;
-        }
-
-		@Override
-        public void handleEvent(Event event) {
-            setTimer();
-        }
-
-    }
-
-    public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
-        simulationFinishedListeners.add(simulationFinishedListener);
-    }
-
-    // -------------- cancel simulation --------------
-
-    public void cancelSimulation() {
-        simulation.addEvent(EventProcessorEventType.STOP, null, null, null);
-    }
-
-    // ----------------- estimation --------------------------------
-
-    private void setUpTimeAndCompletenessEstimation() {
-        long stepTimeForCompletenessEvent = (config.simulationDurationInMillis / 100);
-
-        for (int percentValue = 1; percentValue < 100; percentValue++) {
-            simulation.addEvent(new SimulationCompletenessHandler(), stepTimeForCompletenessEvent * percentValue);
-        }
-
-    }
-
-    public long getSimulationCompletenessInPercentages() {
-        return simulationCompletenessInPercentages;
-    }
-
-    private final static double PERCENTAGES_100 = 100.0;
-
-    public long getTimeTillSimulationFinish() {
-        if (simulationCompletenessInPercentages == 0) {
-            return config.simulationDurationInMillis;
-        }
-
-        double durationPerPercentge = simulationDuration / (double) simulationCompletenessInPercentages;
-        double remainPercentage = PERCENTAGES_100 - simulationCompletenessInPercentages;
-
-        return (long) (remainPercentage * durationPerPercentge);
-    }
-
-    private long simulationCompletenessInPercentages = 0;
-    private double simulationDuration = 0;
-
-    private class SimulationCompletenessHandler implements EventHandler {
-
-        @Override
-        public void handleEvent(Event event) {
-            simulationCompletenessInPercentages++;
-            simulationDuration = System.currentTimeMillis();
-        }
-
-        @Override
-        public EventProcessor getEventProcessor() {
-            // TODO Auto-generated method stub
-            return null;
         }
     }
 

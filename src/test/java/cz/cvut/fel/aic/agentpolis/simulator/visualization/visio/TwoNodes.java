@@ -19,7 +19,7 @@ import org.junit.Test;
 public class TwoNodes {
     
     @Test
-    public void run(){
+    public static void run(){
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
         
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 5000, 0, 0);
@@ -39,4 +39,5 @@ public class TwoNodes {
         
         Log.close();
     }
+
 }

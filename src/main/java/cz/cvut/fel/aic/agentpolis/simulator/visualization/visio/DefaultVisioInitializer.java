@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
@@ -23,31 +18,16 @@ import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import javax.vecmath.Point2d;
 
-
-/**
- *
- * @author F-I-D-O
- */
 public class DefaultVisioInitializer implements VisioInitializer{
 	
 	private final PedestrianNetwork pedestrianNetwork;
-	
 	private final BikewayNetwork bikewayNetwork;
-	
 	private final HighwayNetwork highwayNetwork;
-	
 	private final TramwayNetwork tramwayNetwork;
-	
 	private final MetrowayNetwork metrowayNetwork;
-	
 	private final RailwayNetwork railwayNetwork;
-    
     private final SimulationControlLayer simulationControlLayer;
-    
     protected final GridLayer gridLayer;
-    
-    
-    
 
 	@Inject
 	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
@@ -62,8 +42,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
         this.simulationControlLayer = simulationControlLayer;
         this.gridLayer = gridLayer;
 	}
-	
-	
 
 	@Override
 	public void initialize(Simulation simulation) {
@@ -79,25 +57,16 @@ public class DefaultVisioInitializer implements VisioInitializer{
         VisManager.registerLayer(gridLayer);
     }
 
-    protected void initEntityLayers(Simulation simulation) {
+    protected void initEntityLayers(Simulation simulation) { }
 
-    }
+    protected void initLayersAfterEntityLayers() {}
 
-    protected void initLayersAfterEntityLayers() {
-        
-    }
-
-    protected void initLayersBeforeEntityLayers() {
-        
-    }
+    protected void initLayersBeforeEntityLayers() {}
 
     protected void initInfoLayers() {
         VisManager.registerLayer(HelpLayer.create());
         VisManager.registerLayer(FpsLayer.create());
         VisManager.registerLayer(VisInfoLayer.create());
-        
-        // VisManager.registerLayer(LogoLayer.create(ResourceReader.getPathToResource("/img/atg_blue.png")));
-        
         VisManager.registerLayer(simulationControlLayer);
     }
 
@@ -106,13 +75,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
         final int windowWidth = 1900;
         
         VisManager.setInvertYAxis(true);
-
         VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
-        
-
-//        final double zoomFactor = windowWidth / projection.sceneWidth;
-        
-//        final double zoomFactor = 1.2;
 
         VisManager.setSceneParam(new VisManager.SceneParams() {
 
@@ -120,13 +83,6 @@ public class DefaultVisioInitializer implements VisioInitializer{
             public double getDefaultZoomFactor() {
                 return (double) 1900 / Utils2D.getGraphWidth(highwayNetwork.getNetwork());
             }
-            
-            
-
-//            @Override
-//            public Rectangle getWorldBounds() {
-//                return new Rectangle(projection.sceneWidth, projection.sceneHeight);
-//            }
 
             @Override
             public Point2d getDefaultLookAt() {
@@ -137,9 +93,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
             }
 
         });
-        
-        
-        
+
         VisManager.init();
     }
 	

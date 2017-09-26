@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.aic.agentpolis.system;
 
 import com.google.inject.*;
@@ -33,36 +28,20 @@ import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.time.ZonedDateTime;
 
-import java.util.List;
 import java.util.logging.Level;
 import ninja.fido.config.Configuration;
 
-/**
- *
- * @author F-I-D-O
- */
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
     
     protected final Config config;
-    
-
-    private List<Object> loggers;
-    
-
     public Config getConfig() {
         return config;
     }
-    
-    
-	
-	
+
 	public StandardAgentPolisModule() {
         this.config = Configuration.load(new Config());
         Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
-
-	
-	
 
 	@Override
 	protected void configure() {
@@ -81,7 +60,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	}
 
 	protected void configureNext() {
-		
 	}
     
     
@@ -156,8 +134,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	StandardTimeProvider provideTimeProvider(EventProcessor eventProcessor) {
 		return new StandardTimeProvider(eventProcessor, ZonedDateTime.now());
 	}
-    
-    
 
 	protected void bindVisioInitializer() {
 		bind(VisioInitializer.class).to(DefaultVisioInitializer.class);
