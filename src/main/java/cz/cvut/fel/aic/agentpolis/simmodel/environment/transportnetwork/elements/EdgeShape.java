@@ -4,13 +4,17 @@ import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.util.AngleUtil;
 import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class EdgeShape implements Iterable<GPSLocation> {
+public class EdgeShape implements Iterable<GPSLocation>, Serializable {
+
+    private static final long serialVersionUID = -837444965512183266L;
 
     final List<GPSLocation> backingMap;
     double[] segmentAngles;
@@ -65,5 +69,30 @@ public class EdgeShape implements Iterable<GPSLocation> {
 
     public double getShapeLength() {
         return shapeLength;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EdgeShape)) return false;
+
+        EdgeShape that = (EdgeShape) o;
+
+        if (Double.compare(that.shapeLength, shapeLength) != 0) return false;
+        if (!backingMap.equals(that.backingMap)) return false;
+        if (!Arrays.equals(segmentAngles, that.segmentAngles)) return false;
+        return Arrays.equals(segmentCumulativeLength, that.segmentCumulativeLength);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = backingMap.hashCode();
+        result = 31 * result + Arrays.hashCode(segmentAngles);
+        result = 31 * result + Arrays.hashCode(segmentCumulativeLength);
+        temp = Double.doubleToLongBits(shapeLength);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
