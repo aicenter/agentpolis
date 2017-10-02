@@ -184,6 +184,7 @@ public class PositionUtil {
 
         double distanceOfDrivenInterval = delayData.getDelayDistance();
         double portionOfEdgeDistance = (delayData.getStartDistanceOffset() + distanceOfDrivenInterval * portionCompleted) / edge.shape.getShapeLength();
+        portionOfEdgeDistance = Math.min(Math.max(0.0, portionOfEdgeDistance), 1.0);
         ShapeUtils.PositionAndAngle positionAndAngleOnPath = shapeUtils.getPositionAndAngleOnPath(edge.shape, portionOfEdgeDistance);
         movingAgentAngle.put(agent, positionAndAngleOnPath.angle);
         return positionAndAngleOnPath.point;
