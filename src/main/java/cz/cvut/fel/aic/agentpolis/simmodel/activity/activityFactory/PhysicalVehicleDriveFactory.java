@@ -19,4 +19,5 @@ public interface PhysicalVehicleDriveFactory {
     public <A extends Agent & Driver> void runActivity(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip);
 
     public <A extends Agent & Driver> Activity<A> create(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip);
+    public <A extends Agent & Driver> Activity<A> create(A agent, PhysicalVehicle vehicle, SimulationNode target);
 }
