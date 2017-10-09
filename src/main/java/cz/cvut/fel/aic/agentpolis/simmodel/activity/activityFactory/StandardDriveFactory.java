@@ -10,6 +10,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
+import cz.cvut.fel.aic.agentpolis.simmodel.Activity;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.IdGenerator;
@@ -65,9 +66,17 @@ public class StandardDriveFactory extends ActivityFactory implements PhysicalVeh
                 timeProvider, agent, vehicle, trip, tripIdGenerator.getId());
     }
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
-        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+    @Override
+    public <A extends Agent & Driver> Activity<A> create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
+        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
+
         return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
                 agent, vehicle, trip, tripIdGenerator.getId());
     }
+
+//    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
+//        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+//        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
+//                agent, vehicle, trip, tripIdGenerator.getId());
+//    }
 }
