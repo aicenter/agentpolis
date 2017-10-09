@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
@@ -40,7 +40,7 @@ public class CongestionModel {
 
     protected final Map<SimulationEdge, Link> linksMappedByEdges;
 
-    private final Config config;
+    private final AgentpolisConfig config;
 
     private final SimulationProvider simulationProvider;
 
@@ -64,7 +64,7 @@ public class CongestionModel {
 
 
     @Inject
-    public CongestionModel(TransportNetworks transportNetworks, Config config,
+    public CongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
                            SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils)
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);

@@ -38,7 +38,7 @@ public class DriveTest {
     public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
         
         
-//        Config config = Configuration.load(new Config());
+//        AgentpolisConfig config = Configuration.load(new AgentpolisConfig());
         
         //config overwrite
 //        config.agentpolis.simulationDurationInMillis = TEN_MINUTES_IN_MILIS;

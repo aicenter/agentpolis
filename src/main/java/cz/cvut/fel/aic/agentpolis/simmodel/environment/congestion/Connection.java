@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
@@ -40,7 +40,7 @@ public class Connection extends EventHandlerAdapter {
     
 
 
-    public Connection(SimulationProvider simulationProvider, Config config, CongestionModel congestionModel,
+    public Connection(SimulationProvider simulationProvider, AgentpolisConfig config, CongestionModel congestionModel,
                       SimulationNode node) {
         this.congestionModel = congestionModel;
         this.simulationProvider = simulationProvider;

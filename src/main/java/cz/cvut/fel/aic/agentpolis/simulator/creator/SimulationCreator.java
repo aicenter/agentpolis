@@ -3,7 +3,7 @@ package cz.cvut.fel.aic.agentpolis.simulator.creator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeEventGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
@@ -25,7 +25,7 @@ import java.util.List;
 public class SimulationCreator {
     private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
     private TypedSimulation simulation;
-    private final Config config;
+    private final AgentpolisConfig config;
     private final SimulationProvider simulationProvider;
     private final AllNetworkNodes allNetworkNodes;
     private final Graphs graphs;
@@ -33,7 +33,7 @@ public class SimulationCreator {
     private final TimeEventGenerator timeEventGenerator;
 
     @Inject
-    public SimulationCreator(final Config config, SimulationProvider simulationProvider,
+    public SimulationCreator(final AgentpolisConfig config, SimulationProvider simulationProvider,
                              AllNetworkNodes allNetworkNodes, Graphs graphs,
                              Provider<VisioInitializer> visioInitializerProvider,
                              TimeEventGenerator timeEventGenerator) {

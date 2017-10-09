@@ -3,7 +3,7 @@ package cz.cvut.fel.aic.agentpolis.system;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
@@ -27,31 +27,43 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
+import java.io.File;
 import java.time.ZonedDateTime;
 
 import java.util.logging.Level;
 import ninja.fido.config.Configuration;
+import ninja.fido.config.GeneratedConfig;
 
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
     
-    protected final Config config;
-    public Config getConfig() {
-        return config;
+    protected final AgentpolisConfig agentpolisConfig;
+    
+    public AgentpolisConfig getAgentpolisConfig() {
+        return agentpolisConfig;
+    }
+    
+    public StandardAgentPolisModule() {
+        this(null, null, null);
+    }
+    
+    public StandardAgentPolisModule(GeneratedConfig generatedConfig, String keyinClient) {
+        this(generatedConfig, null, keyinClient);
     }
 
-	public StandardAgentPolisModule() {
-        this.config = Configuration.load(new Config());
+	public StandardAgentPolisModule(GeneratedConfig generatedConfig, File clientLocalConfigFile, String keyinClient) {
+        agentpolisConfig = new AgentpolisConfig();
+        Configuration.load(agentpolisConfig, generatedConfig, clientLocalConfigFile, keyinClient);
         Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
 
 	@Override
 	protected void configure() {
         
-        bindConstant().annotatedWith(Names.named("mapSrid")).to(config.srid);
+        bindConstant().annotatedWith(Names.named("mapSrid")).to(agentpolisConfig.srid);
 
-		bind(Transformer.class).toInstance(new Transformer(config.srid));
+		bind(Transformer.class).toInstance(new Transformer(agentpolisConfig.srid));
 
-		bind(Config.class).toInstance(config);
+		bind(AgentpolisConfig.class).toInstance(agentpolisConfig);
         
         bind(TimeProvider.class).to(StandardTimeProvider.class);
         

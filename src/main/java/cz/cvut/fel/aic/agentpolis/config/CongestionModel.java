@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.config;
 
 import java.lang.Boolean;
 import java.lang.Integer;
-import java.util.HashMap;
+import java.util.Map;
 
 public class CongestionModel {
   public Integer randomSeed;
@@ -15,7 +15,7 @@ public class CongestionModel {
 
   public Integer defaultCrossroadDrivingLanes;
 
-  public CongestionModel(HashMap congestionModel) {
+  public CongestionModel(Map congestionModel) {
     this.randomSeed = (Integer) congestionModel.get("random_seed");
     this.maxFlowPerLane = (Integer) congestionModel.get("max_flow_per_lane");
     this.batchSize = (Integer) congestionModel.get("batch_size");
