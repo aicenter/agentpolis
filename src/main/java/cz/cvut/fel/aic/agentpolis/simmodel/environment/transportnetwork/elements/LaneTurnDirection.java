@@ -7,8 +7,10 @@ import java.io.Serializable;
  *
  * @author Zdenek Bousa
  * @see <a href="http://wiki.openstreetmap.org/wiki/Key:turn">Lanes:trun on OSM wiki</a>
+ *
+ * Enum "unknown" stands for all possible directions.
  */
 public enum LaneTurnDirection implements Serializable {
-    slight_left, left, sharp_left, through, slight_right, right, sharp_right, reverse, merge_to_left, merge_to_right, none
+    slight_left, left, sharp_left, through, slight_right, right, sharp_right, reverse, merge_to_left, merge_to_right, unknown
 }
 

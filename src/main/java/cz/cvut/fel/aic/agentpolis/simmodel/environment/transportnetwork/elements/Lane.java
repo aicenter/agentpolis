@@ -2,10 +2,10 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
 
 import com.google.inject.Singleton;
 import org.apache.log4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Basic element that contains information about its heading and which edge is parent.
@@ -14,11 +14,10 @@ import java.util.List;
  * Note: Some people prefer to tag narrow two-way roads with lanes=1.5.
  */
 public class Lane {
-    private static final Logger LOGGER = Logger.getLogger(Lane.class);
     private final long laneUniqueId;
     private final int parentEdgeUniqueId;
-    private LinkedList<Integer> directionWithID = new LinkedList<>();
-    private LinkedList<LaneTurnDirection> directionEnumForID = new LinkedList<>();
+    private final HashMap<LaneTurnDirection, Integer> directions = new HashMap<>();
+    private final HashMap<Integer, LaneTurnDirection> directionById = new HashMap<>();
 
     /**
      * Constructor
@@ -31,56 +30,43 @@ public class Lane {
         this.parentEdgeUniqueId = parentEdgeUniqueId;
     }
 
-    public void addDirection(int followingEdge, LaneTurnDirection directionEnum){
-        directionWithID.add(followingEdge);
-        directionEnumForID.add(directionEnum);
+    public void addDirection(int followingEdge, LaneTurnDirection directionEnum) {
+        directions.put(directionEnum, followingEdge);
+        directionById.put(followingEdge, directionEnum);
     }
 
     /**
      * Get ID of next edge in specified direction
      *
      * @param directionEnum - LaneTurnDirection
-     * @return -1 if there is no connection for selected direction, else it returns id of following edge.
+     * @return -1 for unknown situation, -2 if there is no record for this direction, else it returns id of following edge.
      */
     public int getEdgeIdForDirection(LaneTurnDirection directionEnum) {
-        int index = directionEnumForID.indexOf(directionEnum);
-        if (index == -1) {
+        if (directions.isEmpty()) {
             return -1;
         } else {
-            return directionWithID.get(index);
+            return directions.getOrDefault(directionEnum, -2);
         }
     }
 
     /**
-     * Get enum name of direction by ID of following edge
-     *
-     * @param directionID =  edge id
-     * @return enum laneTurnDirection
+     * Get turn direction for specified edge
+     * @param nextEdge int id
+     * @return {@link LaneTurnDirection}
      */
-    public LaneTurnDirection getDirectionEnumForID(int directionID) {
-        int index = directionWithID.indexOf(directionID);
-        if (index != -1) {
-            return directionEnumForID.get(index);
+    public LaneTurnDirection getDirectionForID(int nextEdge) {
+        if (directionById.isEmpty() || !directionById.containsKey(nextEdge)) {
+            return LaneTurnDirection.unknown;
+        } else {
+            return directionById.get(nextEdge);
         }
-        return null;
     }
 
     /**
-     * List of edges´ ID
-     *
-     * @return list of existing connections to different edges from end of this lane.
+     * @return available directions, enum {@link LaneTurnDirection}
      */
-    public LinkedList<Integer> getDirectionsID() {
-        return directionWithID;
-    }
-
-    /**
-     * List of directions
-     *
-     * @return list of existing directions from end of this lane.
-     */
-    public LinkedList<LaneTurnDirection> getDirectionsEnum() {
-        return directionEnumForID;
+    public Set<LaneTurnDirection> getAvailableDirections() {
+        return directions.keySet();
     }
 
     /**
@@ -95,28 +81,5 @@ public class Lane {
      */
     public int getParentEdgeUniqueId() {
         return parentEdgeUniqueId;
-    }
-
-    /**
-     * Lanes builder, controls uniqueness of id
-     */
-    @Singleton
-    public class LaneBuilder {
-        private long laneCounter = 0;
-        private LinkedList<Lane> allLanes = new LinkedList<>();
-
-        public Lane createNewLane(int parent) {
-            Lane lane = new Lane(laneCounter++, parent);
-            allLanes.add(lane);
-            return lane;
-        }
-
-        public LaneBuilder getBuilder() {
-            return this;
-        }
-
-        public LinkedList<Lane> getAllLanes() {
-            return this.allLanes;
-        }
     }
 }
