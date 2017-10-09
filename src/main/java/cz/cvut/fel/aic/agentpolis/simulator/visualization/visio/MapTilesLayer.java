@@ -63,6 +63,7 @@ public class MapTilesLayer extends AbstractLayer {
         public static final int MAX_CONCURRENT_DOWNLOADS = 2;
 
         private ExecutorService exec;
+
         @Inject
         public DownloadManager() {
             this.exec = Executors.newFixedThreadPool(MAX_CONCURRENT_DOWNLOADS);
@@ -80,6 +81,7 @@ public class MapTilesLayer extends AbstractLayer {
     private final String osmTileServer;
 
     private final Path dir;
+    private static final char DIR_SEPARATOR = '/';
 
     private final HashMap<OsmKey, BufferedImage> OSMTiles;
     private final HashMap<OsmKey, Future<?>> OSMDownloads;
@@ -93,14 +95,25 @@ public class MapTilesLayer extends AbstractLayer {
     @Inject
     public MapTilesLayer(Config config) {
         this.downloadManager = new DownloadManager();
-        this.dir = Paths.get(config.pathToMapTiles);
         this.osmTileServer = config.osmTileServer;
-        if (!Files.isDirectory(dir)) {
+        Path pathTiles = Paths.get(config.pathToMapTiles);
+        if (!Files.isDirectory(pathTiles)) {
             LOGGER.info("Cannot access the directory with map tiles: " + config.pathToMapTiles);
-            OSMTiles = null;
-            OSMDownloads = null;
-            return;
+            String generatedDir = Paths.get("").toAbsolutePath().toString() + DIR_SEPARATOR + "target" +
+                    DIR_SEPARATOR + "generated-cache" + DIR_SEPARATOR + "mapTiles" + DIR_SEPARATOR;
+            try {
+                LOGGER.info("Creating map tiles folder in: " + generatedDir);
+                new File(generatedDir);
+                pathTiles = Paths.get(generatedDir);
+            } catch (NullPointerException e) {
+                LOGGER.info("Cannot create map tiles folder in: " + generatedDir);
+                this.dir = pathTiles;
+                OSMTiles = null;
+                OSMDownloads = null;
+                return;
+            }
         }
+        this.dir = pathTiles;
         OSMTiles = new HashMap<>();
         OSMDownloads = new HashMap<>();
     }
@@ -116,34 +129,33 @@ public class MapTilesLayer extends AbstractLayer {
         if (OSMDownloads.containsKey(osmKey)) {
             if (!OSMDownloads.get(osmKey).isDone()) {
                 return null;
-            }
-            else OSMDownloads.remove(osmKey);
+            } else OSMDownloads.remove(osmKey);
         }
 
         // check if file exists on disk, cache and return it
-        Path p = dir.resolve(Paths.get(Integer.toString(zoom),Integer.toString(x),Integer.toString(y)+".png"));
+        Path p = dir.resolve(Paths.get(Integer.toString(zoom), Integer.toString(x), Integer.toString(y) + ".png"));
         if (Files.isRegularFile(p) && Files.isReadable(p)) try {
             BufferedImage img = ImageIO.read(p.toFile());
             OSMTiles.put(osmKey, img);
             return img;
         } catch (IOException e) {
-            LOGGER.warn("Could not open local file "+p.toString());
+            LOGGER.warn("Could not open local file " + p.toString());
         }
 
         // download tile if not found on disk
         if (!OSMDownloads.containsKey(osmKey)) {
-            String directoryUrl = "/"+Integer.toString(zoom)+"/"+Integer.toString(x)+"/"+Integer.toString(y)+".png";
+            String directoryUrl = "/" + Integer.toString(zoom) + "/" + Integer.toString(x) + "/" + Integer.toString(y) + ".png";
             try {
                 URL downloadUrl = new URL("http://" + osmTileServer + directoryUrl);
-                DownloadTask downloadTask = new DownloadTask(downloadUrl,p.toFile());
+                DownloadTask downloadTask = new DownloadTask(downloadUrl, p.toFile());
                 Future<?> future = downloadManager.submit(downloadTask);
-                OSMDownloads.put(osmKey,future);
+                OSMDownloads.put(osmKey, future);
                 return null;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }
-        return  null;
+        return null;
     }
 
     @Override
@@ -157,21 +169,21 @@ public class MapTilesLayer extends AbstractLayer {
         // calculate zoomed image sizes and level modifier
         zoomW = Vis.transW(WORLD_X / (1 << zoomLevel));
         zoomH = Vis.transH(WORLD_Y / (1 << zoomLevel));
-        int zoomLevelModifier = (int) log2(zoomW/256d);
+        int zoomLevelModifier = (int) log2(zoomW / 256d);
         // modify and bind zoomLevel and recalculate zoomed image sizes
         if (zoomLevelModifier != 0) {
             zoomLevel += zoomLevelModifier;
-            if (zoomLevel > 19) zoomLevel=19;
-            else if (zoomLevel < 0) zoomLevel=0;
-            zoomW = Vis.transW(WORLD_X/(1<<zoomLevel));
-            zoomH = Vis.transH(WORLD_Y/(1<<zoomLevel));
+            if (zoomLevel > 19) zoomLevel = 19;
+            else if (zoomLevel < 0) zoomLevel = 0;
+            zoomW = Vis.transW(WORLD_X / (1 << zoomLevel));
+            zoomH = Vis.transH(WORLD_Y / (1 << zoomLevel));
         }
 
         // calculate tileID bounds for current zoomLevel and screen dimensions
-        minIDX = Math.max(0,worldToSlippyX(Vis.transInvX(0)));
-        minIDY = Math.max(0,worldToSlippyY(Vis.transInvY(0)));
-        maxIDX = Math.min((1<<zoomLevel)-1,worldToSlippyX(Vis.transInvX((int) drawingRectangle.getMaxX())) + 1);
-        maxIDY = Math.min((1<<zoomLevel)-1,worldToSlippyY(Vis.transInvY((int) drawingRectangle.getMaxY())) + 1);
+        minIDX = Math.max(0, worldToSlippyX(Vis.transInvX(0)));
+        minIDY = Math.max(0, worldToSlippyY(Vis.transInvY(0)));
+        maxIDX = Math.min((1 << zoomLevel) - 1, worldToSlippyX(Vis.transInvX((int) drawingRectangle.getMaxX())) + 1);
+        maxIDY = Math.min((1 << zoomLevel) - 1, worldToSlippyY(Vis.transInvY((int) drawingRectangle.getMaxY())) + 1);
 
         // finally draw tiles
         drawImages(canvas);
@@ -181,27 +193,33 @@ public class MapTilesLayer extends AbstractLayer {
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         for (int i = minIDX; i < maxIDX; i++) {
             for (int j = minIDY; j < maxIDY; j++) {
-                BufferedImage bufferedImage = getTile(zoomLevel,i,j);
+                BufferedImage bufferedImage = getTile(zoomLevel, i, j);
                 if (bufferedImage != null) graphics.drawImage(bufferedImage,
-                        Vis.transX(SlippyToWorldX(i)),Vis.transY(SlippyToWorldY(j)),
-                        zoomW+1,zoomH+1,null);
+                        Vis.transX(SlippyToWorldX(i)), Vis.transY(SlippyToWorldY(j)),
+                        zoomW + 1, zoomH + 1, null);
             }
         }
     }
 
     private int worldToSlippyX(double d) {
-        return (int)((d+WORLD_X/2)*(1<<zoomLevel)/WORLD_X);
+        return (int) ((d + WORLD_X / 2) * (1 << zoomLevel) / WORLD_X);
     }
 
-    private int worldToSlippyY(double d) { return (int)(-1*(d-WORLD_Y/2)*(1<<zoomLevel)/WORLD_Y); }
+    private int worldToSlippyY(double d) {
+        return (int) (-1 * (d - WORLD_Y / 2) * (1 << zoomLevel) / WORLD_Y);
+    }
 
     private double SlippyToWorldX(int i) {
-        return i*(WORLD_X/(1<<zoomLevel))-WORLD_X/2;
+        return i * (WORLD_X / (1 << zoomLevel)) - WORLD_X / 2;
     }
 
-    private double SlippyToWorldY(int i) { return -i*(WORLD_Y/(1<<zoomLevel))+WORLD_Y/2; }
+    private double SlippyToWorldY(int i) {
+        return -i * (WORLD_Y / (1 << zoomLevel)) + WORLD_Y / 2;
+    }
 
-    private static double log2(double num) { return (Math.log(num)/Math.log(2)); }
+    private static double log2(double num) {
+        return (Math.log(num) / Math.log(2));
+    }
 
     class OsmKey {
 
