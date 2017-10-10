@@ -18,11 +18,20 @@ public class LaneBuilder {
      * Create list of lanes for edge. List contains Lane, that contains information about available direction from the lane.
      * @param parent id of parent edge
      * @param map to be parsed
-     * @return lanes available for edge + available direction from each lane
+     * @return lanes available for edge + available direction from each lane, always returns List, at least with dummy
+     * Lane[unknown,-1]
      */
-    public List<Lane> createLanes(int parent, List<Map<String, Object>> map) {
-        if (map == null) return null;
+    public List<Lane> createLanes(int parent, List<Map<String, Object>> map, int numberOfLanes) {
         List<Lane> lanes = new ArrayList<>();
+        if (map == null) {
+            // Add all directions
+            for (int i = 0; i < numberOfLanes; i++){
+                Lane lane = createNewLane(parent);
+                lane.addDirection(-1,LaneTurnDirection.unknown);
+                lanes.add(lane);
+            }
+            return lanes;
+        }
         for (Map<String, Object> laneBuild : map) {
             Lane lane = createNewLane(parent);
             laneBuild.forEach((key, value) -> {
