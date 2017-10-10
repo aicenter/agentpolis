@@ -39,10 +39,10 @@ public class TestThreeNodes10Cars {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)));
-        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)));
-        SimulationEdge edge3 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)));
-        SimulationEdge edge4 = new SimulationEdge(2, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)));
+        SimulationEdge edge1 = new SimulationEdge(0, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)),null);
+        SimulationEdge edge2 = new SimulationEdge(1, 0,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)),null);
+        SimulationEdge edge3 = new SimulationEdge(1, 2,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)),null);
+        SimulationEdge edge4 = new SimulationEdge(2, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)),null);
 
 
         graphBuilder.addEdge(edge1);

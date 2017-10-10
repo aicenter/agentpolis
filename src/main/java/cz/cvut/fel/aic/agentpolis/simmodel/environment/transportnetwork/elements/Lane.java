@@ -1,10 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
-import com.google.inject.Singleton;
-import org.apache.log4j.Logger;
-
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -13,7 +10,7 @@ import java.util.Set;
  * @author Zdenek Bousa
  * Note: Some people prefer to tag narrow two-way roads with lanes=1.5.
  */
-public class Lane {
+public class Lane implements Serializable{
     private final long laneUniqueId;
     private final int parentEdgeUniqueId;
     private final HashMap<LaneTurnDirection, Integer> directions = new HashMap<>();
@@ -30,6 +27,11 @@ public class Lane {
         this.parentEdgeUniqueId = parentEdgeUniqueId;
     }
 
+    /**
+     *
+     * @param followingEdge id of available edge
+     * @param directionEnum name of the direction,{@link LaneTurnDirection}
+     */
     public void addDirection(int followingEdge, LaneTurnDirection directionEnum) {
         directions.put(directionEnum, followingEdge);
         directionById.put(followingEdge, directionEnum);

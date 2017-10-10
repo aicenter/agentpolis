@@ -11,34 +11,27 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphTyp
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
+
 import java.util.Map;
 
 /**
- *
  * @author F-I-D-O
  */
 @Singleton
 public class Graphs {
-	private Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs;
+    private Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs;
 
-	
-	
-	
-	
-	public Map<GraphType, Graph<SimulationNode, SimulationEdge>> getGraphs() {
-		return graphs;
-	}
+    public Map<GraphType, Graph<SimulationNode, SimulationEdge>> getGraphs() {
+        return graphs;
+    }
 
-	public void setGraphs(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs) {
-		this.graphs = graphs;
-	}
-	
-	
-	
-	
-	@Inject
-	public Graphs() {
-	}
-	
-	
+    public void setGraphs(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs) {
+        this.graphs = graphs;
+    }
+
+    @Inject
+    public Graphs() {
+    }
+
+
 }

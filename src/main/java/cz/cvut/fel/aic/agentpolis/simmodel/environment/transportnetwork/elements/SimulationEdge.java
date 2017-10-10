@@ -50,7 +50,6 @@ public class SimulationEdge extends Edge {
     /**
      * @param fromId sourceId
      * @param toId destinationId
-     * @param osmWayID osm id of this edge
      * @param uniqueWayId unique id of edge across simulation
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
      * @param lengthInMetres       -
@@ -61,18 +60,18 @@ public class SimulationEdge extends Edge {
      */
     public SimulationEdge(int fromId,
                           int toId,
-                          long osmWayID,
                           int uniqueWayId,
                           int oppositeWayId,
                           int lengthInMetres,
                           float allowedMaxSpeedInMpS,
                           int lanesCount,
-                          EdgeShape edgeShape) {
+                          EdgeShape edgeShape,
+                          List<Lane> lanesTurn) {
         super(fromId, toId, lengthInMetres);
 
         this.uniqueId = uniqueWayId;
         this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
-        this.wayID = osmWayID;
+        this.wayID = -1;
 
         // opposite way
         if (oppositeWayId >= -1) {
@@ -89,8 +88,7 @@ public class SimulationEdge extends Edge {
         }
 
         this.shape = edgeShape;
-        //lanes
-        lanesTurn = new LinkedList<>();
+        lanesTurn = lanesTurn;
     }
 
     /**

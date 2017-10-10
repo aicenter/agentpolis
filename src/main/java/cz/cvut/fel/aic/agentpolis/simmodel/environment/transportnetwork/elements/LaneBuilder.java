@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
 
 import com.google.inject.Singleton;
 
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Lanes builder, controls uniqueness of lane´s id
@@ -12,19 +12,61 @@ import java.util.LinkedList;
 @Singleton
 public class LaneBuilder {
     private long laneCounter = 0;
-    private LinkedList<Lane> allLanes = new LinkedList<>();
+    private Set<Lane> allLanes = new HashSet<>();
 
-    public Lane createNewLane(int parent) {
-        Lane lane = new Lane(laneCounter++, parent);
-        allLanes.add(lane);
-        return lane;
+    /**
+     * Create list of lanes for edge. List contains Lane, that contains information about available direction from the lane.
+     * @param parent id of parent edge
+     * @param map to be parsed
+     * @return lanes available for edge + available direction from each lane
+     */
+    public List<Lane> createLanes(int parent, List<Map<String, Object>> map) {
+        if (map == null) return null;
+        List<Lane> lanes = new ArrayList<>();
+        for (Map<String, Object> laneBuild : map) {
+            Lane lane = createNewLane(parent);
+            laneBuild.forEach((key, value) -> {
+
+                // get direction
+                LaneTurnDirection direction;
+                if (LaneTurnDirection.contains(key)) direction = LaneTurnDirection.getEnumForKey(key);
+                else direction = LaneTurnDirection.unknown;
+
+                // get following edge
+                int val = -1;
+                if (value instanceof Integer) val = (int) value;
+                else if (value instanceof Long) val = ((Long) value).intValue();
+
+                // repair bug for id=(-1) and change this direction to "unknown"
+                if (val == -1) direction = LaneTurnDirection.unknown;
+
+                // add to list of lanes
+                lane.addDirection(val, direction);
+            });
+            lanes.add(lane);
+        }
+        return lanes;
     }
 
+    /**
+     * Get builder to ensure proper lanes id
+     * @return builder
+     */
     public LaneBuilder getBuilder() {
         return this;
     }
 
-    public LinkedList<Lane> getAllLanes() {
+    /**
+     * Get all lanes added to the network
+     * @return set of all lanes
+     */
+    public Set<Lane> getAllLanes() {
         return this.allLanes;
+    }
+
+    private Lane createNewLane(int parent) {
+        Lane lane = new Lane(laneCounter++, parent);
+        allLanes.add(lane);
+        return lane;
     }
 }

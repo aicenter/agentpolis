@@ -34,8 +34,8 @@ public class Utils {
             graphBuilder.addNode(node);
 
             for (int j = 0; j < i; j++) {
-                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
-                SimulationEdge edge2 = new SimulationEdge(j, i, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
+                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))),null);
+                SimulationEdge edge2 = new SimulationEdge(j, i,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))),null);
 
                 graphBuilder.addEdge(edge1);
                 graphBuilder.addEdge(edge2);

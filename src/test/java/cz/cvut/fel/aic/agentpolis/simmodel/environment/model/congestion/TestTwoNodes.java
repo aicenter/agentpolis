@@ -33,7 +33,7 @@ public class TestTwoNodes {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+        SimulationEdge edge1 = new SimulationEdge(0, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)),null);
 
         graphBuilder.addEdge(edge1);
 
