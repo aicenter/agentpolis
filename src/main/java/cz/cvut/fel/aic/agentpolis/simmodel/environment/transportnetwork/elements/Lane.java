@@ -8,9 +8,8 @@ import java.util.Set;
  * Basic element that contains information about its heading and which edge is parent.
  *
  * @author Zdenek Bousa
- * Note: Some people prefer to tag narrow two-way roads with lanes=1.5.
  */
-public class Lane implements Serializable{
+public class Lane implements Serializable {
     private final long laneUniqueId;
     private final int parentEdgeUniqueId;
     private final HashMap<LaneTurnDirection, Integer> directions = new HashMap<>();
@@ -28,7 +27,6 @@ public class Lane implements Serializable{
     }
 
     /**
-     *
      * @param followingEdge id of available edge
      * @param directionEnum name of the direction,{@link LaneTurnDirection}
      */
@@ -41,18 +39,19 @@ public class Lane implements Serializable{
      * Get ID of next edge in specified direction
      *
      * @param directionEnum - LaneTurnDirection
-     * @return -1 for unknown situation, -2 if there is no record for this direction, else it returns id of following edge.
+     * @return -1 for unknown situation, else it returns id of following edge.
      */
     public int getEdgeIdForDirection(LaneTurnDirection directionEnum) {
         if (directions.isEmpty()) {
             return -1;
         } else {
-            return directions.getOrDefault(directionEnum, -2);
+            return directions.getOrDefault(directionEnum, -1);
         }
     }
 
     /**
      * Get turn direction for specified edge
+     *
      * @param nextEdge int id
      * @return {@link LaneTurnDirection}
      */
