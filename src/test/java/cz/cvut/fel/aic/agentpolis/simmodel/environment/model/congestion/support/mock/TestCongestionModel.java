@@ -9,10 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.ModelConstructionFailedException;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.ShapeUtils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -29,9 +26,9 @@ public class TestCongestionModel extends CongestionModel {
 
     @Inject
     public TestCongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
-                               SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
+                               SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils, LaneCongestionModel laneCongestionModel) throws ModelConstructionFailedException,
             ProviderException {
-        super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils);
+        super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils, laneCongestionModel);
     }
 
     public Connection getConnectionByNode(SimulationNode node) {

@@ -8,6 +8,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
@@ -53,6 +54,7 @@ public class CongestionModel {
 
     private boolean queueHandlingStarted;
     private ShapeUtils shapeUtils;
+    private LaneCongestionModel laneCongestionModel;
 
     Random getRandom() {
         return random;
@@ -65,13 +67,14 @@ public class CongestionModel {
 
     @Inject
     public CongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
-                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils)
+                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils, LaneCongestionModel laneCongestionModel)
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.timeProvider = timeProvider;
         this.shapeUtils = shapeUtils;
+        this.laneCongestionModel = laneCongestionModel;
         connectionsMappedByNodes = new HashMap<>();
         linksMappedByEdges = new HashMap<>();
         links = new LinkedList<>();
@@ -112,7 +115,7 @@ public class CongestionModel {
     private void buildConnections(Collection<SimulationNode> allNodes) {
         for (SimulationNode node : allNodes) {
             if (graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1) {
-                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node);
+                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node, timeProvider);
                 connectionsMappedByNodes.put(node, crossroad);
             } else {
                 Connection connection = new Connection(simulationProvider, config, this, node);
@@ -200,10 +203,24 @@ public class CongestionModel {
     }
 
     public void makeTickEvent(EventHandler target, long delay) {
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, target, null, null, delay + 80);
+        Log.info(this, "making tick: delay = " + delay + "target =" + target);
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, target, null, null, delay != 0 ? delay : 1);
     }
 
-    public static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {
-        return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
+    public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
+        return laneCongestionModel.computeTransferDelay(vehicleTripData, toLane);
     }
+
+    public long computeArrivalDelay(VehicleTripData vehicleTripData) {
+        long arrivalDelay = 0;
+        DelayData delayData = vehicleTripData.getVehicle().getDelayData();
+        if (delayData != null) {
+            long currentSimTime = timeProvider.getCurrentSimTime();
+            long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
+            arrivalDelay = Math.max(0, arrivalExpectedTime - currentSimTime);
+        }
+        return arrivalDelay;
+    }
+
+
 }

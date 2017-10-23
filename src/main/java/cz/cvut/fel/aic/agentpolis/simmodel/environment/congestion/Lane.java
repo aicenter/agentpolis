@@ -17,6 +17,7 @@ import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 /**
  * @author fido
@@ -50,6 +51,7 @@ public class Lane extends EventHandlerAdapter {
 
 
     private boolean eventScheduled;
+    private CongestionModel congestionModel;
 
 
     public boolean wakeConnectionAfterTransfer() {
@@ -68,6 +70,7 @@ public class Lane extends EventHandlerAdapter {
     public Lane(Link link, double linkCapacityInMeters, TimeProvider timeProvider,
                 SimulationProvider simulationProvider) {
         this.link = link;
+        this.congestionModel = link.congestionModel;
         this.simulationProvider = simulationProvider;
         this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS
                 ? linkCapacityInMeters : MIN_LINK_CAPACITY_IN_METERS;
@@ -219,12 +222,12 @@ public class Lane extends EventHandlerAdapter {
         } else {
             congestedSpeed = freeFlowVelocity * calculateSpeedCoefficient(carsPerKilometer);
         }
-        Log.info(this, "Congested speed: " + carsPerKilometer + "cars / km -> " + congestedSpeed + "m / s");
+        Log.log(this, Level.FINE, "Congested speed: " + carsPerKilometer + "cars / km -> " + congestedSpeed + "m / s");
 
         return congestedSpeed;
     }
 
-    private int getDrivingCarsCountOnLane() {
+    public int getDrivingCarsCountOnLane() {
         return drivingQueue.size();
     }
 
@@ -305,7 +308,7 @@ public class Lane extends EventHandlerAdapter {
         /* next que capacity reservation */
         this.prepareAddingToqueue(vehicleTripData);
 
-        long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
+        long delay = congestionModel.computeTransferDelay(vehicleTripData, this);
 
         String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
