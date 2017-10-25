@@ -39,6 +39,8 @@ public class Connection extends EventHandlerAdapter {
 
     private VehicleEventData vehicleEventData;
 
+    protected long closestCarArrivalTime = Long.MAX_VALUE;
+
 
     public Connection(SimulationProvider simulationProvider, AgentpolisConfig config, CongestionModel congestionModel,
                       SimulationNode node) {
@@ -190,7 +192,7 @@ public class Connection extends EventHandlerAdapter {
         /* next que capacity reservation */
         to.prepareAddingToqueue(vehicleTripData);
 
-        congestionModel.makeTickEvent(this, delay);
+        congestionModel.makeScheduledEvent(this, this, delay);
         Log.info(this, "Scheduling vehicle transfer END");
     }
 
@@ -208,7 +210,7 @@ public class Connection extends EventHandlerAdapter {
         vehicleEventData = new VehicleEndData(lane, vehicleTripData, transferFinishTime);
 
 //        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
-        congestionModel.makeTickEvent(this, delay);
+        congestionModel.makeScheduledEvent(this, this, delay);
         Log.info(this, "Schedule end driving END");
 
     }
@@ -223,10 +225,17 @@ public class Connection extends EventHandlerAdapter {
 
     protected void checkDrivingQue(Lane lane) {
         if (!lane.drivingQueue.isEmpty()) {
-            Log.info(this, "checking driving queue at " + congestionModel.timeProvider.getCurrentSimTime());
+            long currentTime = congestionModel.timeProvider.getCurrentSimTime();
+            if (currentTime >= closestCarArrivalTime) {
+                closestCarArrivalTime = Long.MAX_VALUE;
+            }
+            Log.info(this, "checking driving queue of " + lane + " at " + currentTime);
             long firstTransferToWaitingQueueTime = lane.drivingQueue.peek().getMinPollTime();
-            congestionModel.makeTickEvent(this,
-                    firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
+            if (firstTransferToWaitingQueueTime < closestCarArrivalTime) {
+                closestCarArrivalTime = firstTransferToWaitingQueueTime;
+                congestionModel.makeTickEvent(this, this,
+                        firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
+            }
         }
     }
 }
