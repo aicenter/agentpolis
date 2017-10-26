@@ -74,12 +74,11 @@ public class Crossroad extends Connection {
 
     void init() {
         initInputLanesRandomTable();
-//        carsPerTick = computeFlowInMetersPerTick();
     }
 
     @Override
     protected void serveLanes() {
-        Log.info(this,"Serve lanes START");
+        Log.info(this, "Serve lanes START");
 
         // getting all lanes with waiting vehicles
         findNonEmptyLanes();
@@ -103,7 +102,7 @@ public class Crossroad extends Connection {
 
             tryTransferNextVehicle = tryTransferVehicle(chosenLane);
         }
-        Log.info(this,"Serve lanes END, with "+c+" loops");
+        Log.info(this, "Serve lanes END, with " + c + " loops");
     }
 
     private void laneDepleted(Lane lane) {
@@ -237,14 +236,22 @@ public class Crossroad extends Connection {
 
     @Override
     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
+
+        return computeCrossroadArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toLane);
+    }
+
+    private long computeCrossroadArrivalDelay(VehicleTripData vehicleTripData) {
         DelayData delayData = vehicleTripData.getVehicle().getDelayData();
         long currentSimTime = timeProvider.getCurrentSimTime();
         long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
-        long arrivalDelay = Math.max(0, arrivalExpectedTime - currentSimTime);
-        double freeFlowVehicleTransferTime = vehicleTripData.getVehicle().getLength() / vehicleTripData.getVehicle().getVelocity();
-        double crossroadTransferTime = vehicleTripData.getVehicle().getLength() / maxFlow;
-        double crossroadDelay = Math.max(0.0, crossroadTransferTime - freeFlowVehicleTransferTime);
-        return arrivalDelay + (long) (crossroadDelay * 1E3);
+        return Math.max(0, arrivalExpectedTime - currentSimTime);
+    }
+
+    private long computeCrossroadDelay(VehicleTripData vehicleTripData, Lane toLane) {
+        long freeFlowVehicleTransferTime = congestionModel.computeTransferDelay(vehicleTripData, toLane);
+//        long freeFlowVehicleTransferTime = (long) (1E3 * vehicleTripData.getVehicle().getLength() / vehicleTripData.getVehicle().getVelocity());
+        long crossroadTransferTime = (long) (1E3 * vehicleTripData.getVehicle().getLength() / maxFlow);
+        return Math.max(0, crossroadTransferTime - freeFlowVehicleTransferTime);
     }
 
 

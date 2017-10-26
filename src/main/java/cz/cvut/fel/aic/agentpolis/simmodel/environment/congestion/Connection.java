@@ -184,7 +184,7 @@ public class Connection extends EventHandlerAdapter {
     }
 
     void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
-        Log.info(this, "Scheduling vehicle transfer START");
+        Log.info(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
         long delay = computeTransferDelay(vehicleTripData, to);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
