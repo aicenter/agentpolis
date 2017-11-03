@@ -189,8 +189,13 @@ public class Connection extends EventHandlerAdapter {
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
 
+
         /* next que capacity reservation */
         to.prepareAddingToqueue(vehicleTripData);
+
+        if (vehicleTripData.getTrip().isEmpty()) {
+            vehicleTripData.setTripFinished(true);
+        }
 
         congestionModel.makeScheduledEvent(this, this, delay);
         Log.info(this, "Scheduling vehicle transfer END");

@@ -216,10 +216,6 @@ public class Crossroad extends Connection {
 
             metersTransferedThisBatch += vehicleLength;
 
-            if (vehicleTripData.getTrip().isEmpty()) {
-                vehicleTripData.setTripFinished(true);
-            }
-
             return false;
         }
         // next queue is full
