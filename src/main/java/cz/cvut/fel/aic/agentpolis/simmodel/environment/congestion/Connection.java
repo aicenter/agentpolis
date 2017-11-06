@@ -10,6 +10,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
@@ -202,9 +203,16 @@ public class Connection extends EventHandlerAdapter {
     }
 
     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
-        return congestionModel.computeTransferDelay(vehicleTripData, to);
+        return computeConnectionArrivalDelay(vehicleTripData);// + congestionModel.computeTransferDelay(vehicleTripData, to);
     }
 
+    protected long computeConnectionArrivalDelay(VehicleTripData vehicleTripData) {
+        DelayData delayData = vehicleTripData.getVehicle().getDelayData();
+        long currentSimTime = congestionModel.timeProvider.getCurrentSimTime();
+        long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
+        return Math.max(0, arrivalExpectedTime - currentSimTime);
+
+    }
 
     void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane) {
         Log.info(this, "Schedule end driving START");

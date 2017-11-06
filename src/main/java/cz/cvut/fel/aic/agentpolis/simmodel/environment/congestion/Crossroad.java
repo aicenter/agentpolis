@@ -233,10 +233,11 @@ public class Crossroad extends Connection {
     @Override
     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
 
-        return computeCrossroadArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toLane);
+        return computeConnectionArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toLane);
     }
 
-    private long computeCrossroadArrivalDelay(VehicleTripData vehicleTripData) {
+    @Override
+    protected long computeConnectionArrivalDelay(VehicleTripData vehicleTripData) {
         DelayData delayData = vehicleTripData.getVehicle().getDelayData();
         long currentSimTime = timeProvider.getCurrentSimTime();
         long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
