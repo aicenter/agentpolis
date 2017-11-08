@@ -5,7 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
@@ -50,7 +50,7 @@ public class Crossroad extends Connection {
     
     
 
-    public Crossroad(Config config, SimulationProvider simulationProvider, CongestionModel congestionModel,
+    public Crossroad(AgentpolisConfig config, SimulationProvider simulationProvider, CongestionModel congestionModel,
                      SimulationNode node) {
         super(simulationProvider, config, congestionModel, node);
         inputLanes = new LinkedList<>();

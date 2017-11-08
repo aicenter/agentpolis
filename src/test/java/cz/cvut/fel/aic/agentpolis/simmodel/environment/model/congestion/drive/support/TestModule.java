@@ -16,13 +16,13 @@ public class TestModule extends StandardAgentPolisModule{
 
     public TestModule() {
         super();
-        if(System.getProperty("test") == null){
-            config.showVisio = false;
-        }
+//        if(System.getProperty("test") == null){
+//            config.showVisio = false;
+//        }
         
-        config.congestionModel.batchSize = 1;
-        config.congestionModel.maxFlowPerLane = 5;
-        config.congestionModel.defaultCrossroadDrivingLanes = 2;
+        agentpolisConfig.congestionModel.batchSize = 1;
+        agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
+        agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
     }
     
     

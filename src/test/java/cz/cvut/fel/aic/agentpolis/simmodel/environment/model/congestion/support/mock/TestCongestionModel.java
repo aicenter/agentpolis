@@ -7,7 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
@@ -18,7 +18,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
 
 import java.security.ProviderException;
 
@@ -29,7 +28,7 @@ import java.security.ProviderException;
 public class TestCongestionModel extends CongestionModel {
 
     @Inject
-    public TestCongestionModel(TransportNetworks transportNetworks, Config config,
+    public TestCongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
                                SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
             ProviderException {
         super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils);

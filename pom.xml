@@ -17,10 +17,6 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
     
-    <properties>
-        <config.path>./cz/cvut/fel/aic/agentpolis/config/config.cfg</config.path>
-    </properties>
-    
     <build>
         <plugins>
             <plugin>
@@ -38,15 +34,6 @@
                 <artifactId>config-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                
-                <!--used to transffer data from pom to resources-->
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
 
@@ -57,7 +44,6 @@
 		<dependency>
 			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>alite</artifactId>
-            <version>1.2-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>cz.cvut.fel.aic</groupId>
@@ -80,12 +66,10 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.0</version>
 		</dependency>
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-assistedinject</artifactId>
-            <version>4.1.0</version>
         </dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -115,7 +99,6 @@
         <dependency>
             <groupId>java3d</groupId>
             <artifactId>vecmath</artifactId>
-            <version>1.5.2</version>
         </dependency>
 	</dependencies>
 </project>

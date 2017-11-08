@@ -1,7 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
@@ -91,7 +91,7 @@ public class MapTilesLayer extends AbstractLayer {
     private DownloadManager downloadManager;
 
     @Inject
-    public MapTilesLayer(Config config) {
+    public MapTilesLayer(AgentpolisConfig config) {
         this.downloadManager = new DownloadManager();
         this.dir = Paths.get(config.pathToMapTiles);
         this.osmTileServer = config.osmTileServer;

@@ -4,10 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
-import org.apache.log4j.Logger;
 
 public class AgentPolisInitializer {
-    private static final Logger LOGGER = Logger.getLogger(AgentPolisInitializer.class);
     private Module mainModule;
 
     public AgentPolisInitializer(StandardAgentPolisModule mainModule) {
