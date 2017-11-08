@@ -10,13 +10,15 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
+
 import java.util.logging.Level;
 
 /**
@@ -35,9 +37,10 @@ public class Connection extends EventHandlerAdapter {
     private Link outLink;
 
     protected boolean isTicking;
-    
+
     private VehicleEventData vehicleEventData;
-    
+
+    protected long closestCarArrivalTime = Long.MAX_VALUE;
 
 
     public Connection(SimulationProvider simulationProvider, AgentpolisConfig config, CongestionModel congestionModel,
@@ -51,30 +54,30 @@ public class Connection extends EventHandlerAdapter {
 
     @Override
     public void handleEvent(Event event) {
-        
+
         /* if event comes while connection is woken up */
-        if(vehicleEventData != null 
-                && vehicleEventData.transferFinishTime > congestionModel.timeProvider.getCurrentSimTime()){
+        if (vehicleEventData != null
+                && vehicleEventData.transferFinishTime > congestionModel.timeProvider.getCurrentSimTime()) {
+            Log.info(this, "if event comes while connection is woken up");
             return;
         }
         
         /* if the vehicle should be transfere by this event */
-        if(vehicleEventData != null){
-            if(vehicleEventData instanceof VehicleTransferData) {
+        if (vehicleEventData != null) {
+            if (vehicleEventData instanceof VehicleTransferData) {
                 transferVehicleFromLastTick();
-            }
-            else{
+            } else {
                 endVehicleFromLastTick();
             }
-            
+
         }
-        
+
         serveLanes();
     }
 
     protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
         currentLane.removeFromQueue(vehicleData);
-        
+
         nextLane.addToQue(vehicleData);
 
         if (!vehicleData.getTrip().isEmpty()) {
@@ -84,19 +87,21 @@ public class Connection extends EventHandlerAdapter {
 
     /**
      * Tries to transffer one vehicle. The vehicle will be transfered in next tick.
+     *
      * @return true if next vehicle can be tried, false otherwise.
      */
     private boolean tryTransferVehicle() {
-        
+
+        Log.info(this, "TryTransferVehicles START");
         /* no one is waiting */
-        if(!inLane.hasWaitingVehicles()){
+        if (!inLane.hasWaitingVehicles()) {
             checkDrivingQue(inLane);
             return false;
         }
-        
+
         // first vehicle
         VehicleTripData vehicleTripData = inLane.getFirstWaitingVehicle();
-        
+
         // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
             scheduleEndDriving(vehicleTripData, inLane);
@@ -109,10 +114,10 @@ public class Connection extends EventHandlerAdapter {
         if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
             scheduleVehicleTransfer(vehicleTripData, inLane, nextLane);
             return false;
-        } 
+        }
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id, 
+            Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id,
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
             return false;
@@ -129,7 +134,7 @@ public class Connection extends EventHandlerAdapter {
         nextLink.startDriving(vehicleData);
     }
 
-    
+
     protected Lane getNextLane(Lane lane, VehicleTripData vehicleTripData) {
         Link nextLink = getNextLink(lane);
 
@@ -160,11 +165,10 @@ public class Connection extends EventHandlerAdapter {
     public Link getNextLink(Connection nextConnection) {
         return outLink;
     }
-    
-    
+
 
     protected void serveLanes() {
-        while(tryTransferVehicle()){        
+        while (tryTransferVehicle()) {
         }
     }
 
@@ -176,45 +180,75 @@ public class Connection extends EventHandlerAdapter {
     private void transferVehicleFromLastTick() {
         VehicleTransferData vehicleTransferData = (VehicleTransferData) vehicleEventData;
         transferVehicle(vehicleTransferData.vehicleTripData, vehicleTransferData.from, vehicleTransferData.to);
+        Log.info(this, "Transfering vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: " + vehicleTransferData.transferFinishTime);
         vehicleEventData = null;
     }
 
     void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
-        long delay = computeTransferDelay(vehicleTripData);
+        Log.info(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
+        long delay = computeTransferDelay(vehicleTripData, to);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
-        
+
+
         /* next que capacity reservation */
         to.prepareAddingToqueue(vehicleTripData);
-        
-        congestionModel.makeTickEvent(this, delay);
+
+        if (vehicleTripData.getTrip().isEmpty()) {
+            vehicleTripData.setTripFinished(true);
+        }
+
+        congestionModel.makeScheduledEvent(this, this, delay);
+        Log.info(this, "Scheduling vehicle transfer END");
     }
 
-    protected long computeTransferDelay(VehicleTripData vehicleTripData) {
-        return CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
+    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
+        return computeConnectionArrivalDelay(vehicleTripData);// + congestionModel.computeTransferDelay(vehicleTripData, to);
     }
-    
-    void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane){
-//        long delay = CongestionModel.computeFreeflowTransferDelay(vehicleTripData.getVehicle());
-        long delay = 100;
+
+    protected long computeConnectionArrivalDelay(VehicleTripData vehicleTripData) {
+        DelayData delayData = vehicleTripData.getVehicle().getDelayData();
+        long currentSimTime = congestionModel.timeProvider.getCurrentSimTime();
+        long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
+        return Math.max(0, arrivalExpectedTime - currentSimTime);
+
+    }
+
+    void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane) {
+        Log.info(this, "Schedule end driving START");
+
+//        long delay = CongestionModel.computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
+        long delay = congestionModel.computeArrivalDelay(vehicleTripData);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleEventData = new VehicleEndData(lane, vehicleTripData, transferFinishTime);
-        
+
 //        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
-        congestionModel.makeTickEvent(this, delay);
+        congestionModel.makeScheduledEvent(this, this, delay);
+        Log.info(this, "Schedule end driving END");
+
     }
 
     private void endVehicleFromLastTick() {
+        Log.info(this, "Ending vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: ");
+
         VehicleEndData vehicleEndData = (VehicleEndData) vehicleEventData;
         endDriving(vehicleEndData.vehicleTripData, vehicleEndData.lane);
         vehicleEventData = null;
     }
-    
-    protected void checkDrivingQue(Lane lane){
-        if(!lane.drivingQueue.isEmpty()){
+
+    protected void checkDrivingQue(Lane lane) {
+        if (!lane.drivingQueue.isEmpty()) {
+            long currentTime = congestionModel.timeProvider.getCurrentSimTime();
+            if (currentTime >= closestCarArrivalTime) {
+                closestCarArrivalTime = Long.MAX_VALUE;
+            }
+            Log.info(this, "checking driving queue of " + lane + " at " + currentTime);
             long firstTransferToWaitingQueueTime = lane.drivingQueue.peek().getMinPollTime();
-            congestionModel.makeTickEvent(this, 
-                    firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
+            if (firstTransferToWaitingQueueTime < closestCarArrivalTime) {
+                closestCarArrivalTime = firstTransferToWaitingQueueTime;
+                congestionModel.makeTickEvent(this, this,
+                        firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
+            }
         }
     }
 }

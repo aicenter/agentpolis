@@ -6,6 +6,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import com.google.inject.Injector;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.CongestedDriveFactory;
@@ -71,7 +72,6 @@ public class DriveTest {
 
             congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
         }
-        
         creator.startSimulation();
     }
     

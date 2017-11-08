@@ -12,5 +12,5 @@ import cz.cvut.fel.aic.alite.common.event.EventType;
  * @author fido
  */
 public enum ConnectionEvent implements EventType{
-    TICK
+    SCHEDULED_EVENT, TICK
 }
