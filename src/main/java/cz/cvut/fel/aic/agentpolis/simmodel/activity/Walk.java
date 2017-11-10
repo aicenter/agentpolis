@@ -86,7 +86,7 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
     private void triggerVehicleEnteredEdgeEvent() {
         SimulationEdge edge = graph.getEdge(from.id, to.id);
-        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
+        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getUniqueId(), tripId);
         eventProcessor.addEvent(DriveEvent.PEDESTRIAN_ENTERED_EDGE, null, null, transit);
     }
 }

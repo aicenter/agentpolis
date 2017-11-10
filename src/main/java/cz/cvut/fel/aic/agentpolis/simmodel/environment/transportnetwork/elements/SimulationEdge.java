@@ -39,11 +39,6 @@ public class SimulationEdge extends Edge {
      */
     public final float allowedMaxSpeedInMpS;
 
-    /**
-     * osm id of this edge
-     */
-    public final long wayID;
-
     public final EdgeShape shape;
 
 
@@ -71,7 +66,6 @@ public class SimulationEdge extends Edge {
 
         this.uniqueId = uniqueWayId;
         this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
-        this.wayID = -1;
 
         // opposite way
         if (oppositeWayId >= -1) {
