@@ -2,11 +2,11 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionLane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
@@ -53,11 +53,11 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
             double usedCapacity = 0;
             double sumLength = 0;
             double sumUsedCapacity = 0;
-            for (Lane lane : link.getLanes()) {
-                length = Math.max(length, lane.getQueueLength());
-                sumLength += lane.getQueueLength();
-                usedCapacity = Math.max(usedCapacity, lane.getUsedLaneCapacityInMeters());
-                sumUsedCapacity += lane.getUsedLaneCapacityInMeters();
+            for (CongestionLane congestionLane : link.getLanes()) {
+                length = Math.max(length, congestionLane.getQueueLength());
+                sumLength += congestionLane.getQueueLength();
+                usedCapacity = Math.max(usedCapacity, congestionLane.getUsedLaneCapacityInMeters());
+                sumUsedCapacity += congestionLane.getUsedLaneCapacityInMeters();
             }
             paintBarOnEdge(canvas, drawingRectangle, edge, usedCapacity, sumUsedCapacity, Color.LIGHT_GRAY);
             paintBarOnEdge(canvas, drawingRectangle, edge, length, sumLength, Color.RED);
