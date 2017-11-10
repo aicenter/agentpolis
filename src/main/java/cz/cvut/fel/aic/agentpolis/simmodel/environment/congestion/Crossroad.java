@@ -27,9 +27,9 @@ public class Crossroad extends Connection {
 
     private final List<ChoosingTableData> inputLanesChoosingTable;
 
-    private final List<Lane> inputLanes;
+    private final List<CongestionLane> inputCongestionLanes;
 
-    private final Map<Lane, Link> outputLinksMappedByInputLanes;
+    private final Map<CongestionLane, Link> outputLinksMappedByInputLanes;
     private final Map<Connection, Link> outputLinksMappedByNextConnections;
 
     final TimeProvider timeProvider;
@@ -38,14 +38,14 @@ public class Crossroad extends Connection {
     private final double maxFlow;
 
     /**
-     * currently or last served lane
+     * currently or last served congestionLane
      */
-    private Lane chosenLane;
+    private CongestionLane chosenCongestionLane;
 
     /**
-     * lanes that are ready to transfer vehicles ie non-empty with free next lane
+     * lanes that are ready to transfer vehicles ie non-empty with free next congestionLane
      */
-    private List<Lane> readyLanes;
+    private List<CongestionLane> readyCongestionLanes;
 
     /**
      * total length off all vehicles transferred this batch
@@ -57,7 +57,7 @@ public class Crossroad extends Connection {
                      SimulationNode node, TimeProvider timeProvider) {
         super(simulationProvider, config, congestionModel, node);
         this.timeProvider = timeProvider;
-        inputLanes = new LinkedList<>();
+        inputCongestionLanes = new LinkedList<>();
         inputLanesChoosingTable = new LinkedList<>();
         outputLinksMappedByInputLanes = new HashMap<>();
         outputLinksMappedByNextConnections = new HashMap<>();
@@ -67,8 +67,8 @@ public class Crossroad extends Connection {
     }
 
 
-    private void addInputLane(Lane lane) {
-        inputLanes.add(lane);
+    private void addInputLane(CongestionLane congestionLane) {
+        inputCongestionLanes.add(congestionLane);
 
     }
 
@@ -89,29 +89,29 @@ public class Crossroad extends Connection {
             c++;
 
             // if there are no waiting vehicles
-            if (readyLanes.isEmpty()) {
-                for (Lane inputLane : inputLanes) {
-                    checkDrivingQue(inputLane);
+            if (readyCongestionLanes.isEmpty()) {
+                for (CongestionLane inputCongestionLane : inputCongestionLanes) {
+                    checkDrivingQue(inputCongestionLane);
                 }
                 break;
             }
 
-            if (chosenLane == null || (metersTransferedThisBatch > batchSize)) {
+            if (chosenCongestionLane == null || (metersTransferedThisBatch > batchSize)) {
                 chooseLane();
             }
 
-            tryTransferNextVehicle = tryTransferVehicle(chosenLane);
+            tryTransferNextVehicle = tryTransferVehicle(chosenCongestionLane);
         }
         Log.info(this, "Serve lanes END, with " + c + " loops");
     }
 
-    private void laneDepleted(Lane lane) {
-        readyLanes.remove(chosenLane);
-        chosenLane = null;
+    private void laneDepleted(CongestionLane congestionLane) {
+        readyCongestionLanes.remove(chosenCongestionLane);
+        chosenCongestionLane = null;
     }
 
     public int getNumberOfInputLanes() {
-        return inputLanes.size();
+        return inputCongestionLanes.size();
     }
 
     private int getOutputLaneCount() {
@@ -124,41 +124,41 @@ public class Crossroad extends Connection {
     }
 
     private void initInputLanesRandomTable() {
-        final double step = (double) 1 / inputLanes.size();
+        final double step = (double) 1 / inputCongestionLanes.size();
         double key = step;
 
-        for (Lane inputLane : inputLanes) {
-            inputLanesChoosingTable.add(new ChoosingTableData(key, inputLane));
+        for (CongestionLane inputCongestionLane : inputCongestionLanes) {
+            inputLanesChoosingTable.add(new ChoosingTableData(key, inputCongestionLane));
             key += step;
         }
     }
 
     private void chooseLane() {
-        if (readyLanes.size() == 1) {
-            chosenLane = readyLanes.get(0);
+        if (readyCongestionLanes.size() == 1) {
+            chosenCongestionLane = readyCongestionLanes.get(0);
         } else {
             do {
-                chosenLane = chooseRandomFreeLane();
-            } while (!chosenLane.hasWaitingVehicles());
+                chosenCongestionLane = chooseRandomFreeLane();
+            } while (!chosenCongestionLane.hasWaitingVehicles());
         }
         metersTransferedThisBatch = 0;
     }
 
-    private Lane chooseRandomFreeLane() {
+    private CongestionLane chooseRandomFreeLane() {
         double random = Math.random();
-        Lane chosenLane = null;
+        CongestionLane chosenCongestionLane = null;
         for (ChoosingTableData choosingTableData : inputLanesChoosingTable) {
             if (random <= choosingTableData.threshold) {
-                chosenLane = choosingTableData.inputLane;
+                chosenCongestionLane = choosingTableData.inputCongestionLane;
                 break;
             }
         }
-        return chosenLane;
+        return chosenCongestionLane;
     }
 
     @Override
-    protected Link getNextLink(Lane inputLane) {
-        return outputLinksMappedByInputLanes.get(inputLane);
+    protected Link getNextLink(CongestionLane inputCongestionLane) {
+        return outputLinksMappedByInputLanes.get(inputCongestionLane);
     }
 
     @Override
@@ -167,52 +167,52 @@ public class Crossroad extends Connection {
     }
 
 
-    void addNextLink(Link link, Lane inputLane, Connection targetConnection) {
-        outputLinksMappedByInputLanes.put(inputLane, link);
+    void addNextLink(Link link, CongestionLane inputCongestionLane, Connection targetConnection) {
+        outputLinksMappedByInputLanes.put(inputCongestionLane, link);
         outputLinksMappedByNextConnections.put(targetConnection, link);
-        addInputLane(inputLane);
+        addInputLane(inputCongestionLane);
     }
 
     private void findNonEmptyLanes() {
-        readyLanes = new LinkedList();
-        for (Lane inputLane : inputLanes) {
-            if (inputLane.hasWaitingVehicles()) {
-                readyLanes.add(inputLane);
+        readyCongestionLanes = new LinkedList();
+        for (CongestionLane inputCongestionLane : inputCongestionLanes) {
+            if (inputCongestionLane.hasWaitingVehicles()) {
+                readyCongestionLanes.add(inputCongestionLane);
             }
         }
     }
 
-    private boolean tryTransferVehicle(Lane chosenLane) {
+    private boolean tryTransferVehicle(CongestionLane chosenCongestionLane) {
         Log.info(this, "CROSSROAD: TryTransferVehicles START");
 
         /* no vehicles in queue */
-        if (!chosenLane.hasWaitingVehicles()) {
-            laneDepleted(chosenLane);
-            Log.info(this, "CROSSROAD: TryTransferVehicles END returns true - lane depleted");
+        if (!chosenCongestionLane.hasWaitingVehicles()) {
+            laneDepleted(chosenCongestionLane);
+            Log.info(this, "CROSSROAD: TryTransferVehicles END returns true - congestionLane depleted");
 
             return true;
         }
 
         // first vehicle
-        VehicleTripData vehicleTripData = chosenLane.getFirstWaitingVehicle();
+        VehicleTripData vehicleTripData = chosenCongestionLane.getFirstWaitingVehicle();
 
         double vehicleLength = vehicleTripData.getVehicle().getLength();
 
         // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
 
-            scheduleEndDriving(vehicleTripData, chosenLane);
+            scheduleEndDriving(vehicleTripData, chosenCongestionLane);
 
             metersTransferedThisBatch += vehicleLength;
 
             return false;
         }
 
-        Lane nextLane = getNextLane(chosenLane, vehicleTripData);
+        CongestionLane nextCongestionLane = getNextLane(chosenCongestionLane, vehicleTripData);
 
         // successful transfer
-        if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
-            scheduleVehicleTransfer(vehicleTripData, chosenLane, nextLane);
+        if (nextCongestionLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
+            scheduleVehicleTransfer(vehicleTripData, chosenCongestionLane, nextCongestionLane);
 
             metersTransferedThisBatch += vehicleLength;
 
@@ -221,9 +221,9 @@ public class Crossroad extends Connection {
         // next queue is full
         else {
             Log.log(Connection.class, Level.FINER, "Crossroad {0}: No space in queue to {1}!", node.id,
-                    nextLane.link.toNode.id);
-            nextLane.setWakeConnectionAfterTransfer(true);
-            laneDepleted(chosenLane);
+                    nextCongestionLane.parentLink.toNode.id);
+            nextCongestionLane.setWakeConnectionAfterTransfer(true);
+            laneDepleted(chosenCongestionLane);
             Log.info(this, "TryTransferVehicles END - returning true");
 
             return true;
@@ -231,9 +231,9 @@ public class Crossroad extends Connection {
     }
 
     @Override
-    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
+    protected long computeTransferDelay(VehicleTripData vehicleTripData, CongestionLane toCongestionLane) {
 
-        return computeConnectionArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toLane);
+        return computeConnectionArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toCongestionLane);
     }
 
     @Override
@@ -244,8 +244,8 @@ public class Crossroad extends Connection {
         return Math.max(0, arrivalExpectedTime - currentSimTime);
     }
 
-    private long computeCrossroadDelay(VehicleTripData vehicleTripData, Lane toLane) {
-        long freeFlowVehicleTransferTime = congestionModel.computeTransferDelay(vehicleTripData, toLane);
+    private long computeCrossroadDelay(VehicleTripData vehicleTripData, CongestionLane toCongestionLane) {
+        long freeFlowVehicleTransferTime = congestionModel.computeTransferDelay(vehicleTripData, toCongestionLane);
 //        long freeFlowVehicleTransferTime = (long) (1E3 * vehicleTripData.getVehicle().getLength() / vehicleTripData.getVehicle().getVelocity());
         long crossroadTransferTime = (long) (1E3 * vehicleTripData.getVehicle().getLength() / maxFlow);
         return Math.max(0, crossroadTransferTime - freeFlowVehicleTransferTime);
@@ -255,11 +255,11 @@ public class Crossroad extends Connection {
     private final class ChoosingTableData {
         final double threshold;
 
-        final Lane inputLane;
+        final CongestionLane inputCongestionLane;
 
-        public ChoosingTableData(double threshold, Lane inputLane) {
+        public ChoosingTableData(double threshold, CongestionLane inputCongestionLane) {
             this.threshold = threshold;
-            this.inputLane = inputLane;
+            this.inputCongestionLane = inputCongestionLane;
         }
 
 

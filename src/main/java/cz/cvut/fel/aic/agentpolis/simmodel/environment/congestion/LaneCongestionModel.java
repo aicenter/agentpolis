@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 
 public class LaneCongestionModel {
@@ -17,10 +16,10 @@ public class LaneCongestionModel {
         this.timeProvider = timeProvider;
     }
 
-    public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
+    public long computeTransferDelay(VehicleTripData vehicleTripData, CongestionLane toCongestionLane) {
 
         if (config.congestionModel.fundamentalDiagramDelay) {
-            return computeCongestedTransferDelay(vehicleTripData, toLane);
+            return computeCongestedTransferDelay(vehicleTripData, toCongestionLane);
         } else {
             return computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
         }
@@ -28,8 +27,8 @@ public class LaneCongestionModel {
 
 
 
-    private double computeCongestedSpeed(double freeFlowVelocity, Lane lane) {
-        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
+    private double computeCongestedSpeed(double freeFlowVelocity, CongestionLane congestionLane) {
+        double carsPerKilometer = congestionLane.getDrivingCarsCountOnLane() / congestionLane.parentLink.edge.shape.getShapeLength() * 1000.0;
 
         double congestedSpeed;
         if (carsPerKilometer < 20) {
@@ -53,9 +52,9 @@ public class LaneCongestionModel {
         return reducedSpeed / 100.0;
     }
 
-    private long computeCongestedTransferDelay(VehicleTripData vehicleTripData, Lane lane) {
+    private long computeCongestedTransferDelay(VehicleTripData vehicleTripData, CongestionLane congestionLane) {
         double freeFlowSpeed = vehicleTripData.getVehicle().getVelocity();
-        double congestedSpeed = computeCongestedSpeed(freeFlowSpeed, lane);
+        double congestedSpeed = computeCongestedSpeed(freeFlowSpeed, congestionLane);
         return Math.round(vehicleTripData.getVehicle().getLength() * 1E3 / congestedSpeed);
     }
 

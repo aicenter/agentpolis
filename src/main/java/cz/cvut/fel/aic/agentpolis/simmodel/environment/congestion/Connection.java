@@ -32,7 +32,7 @@ public class Connection extends EventHandlerAdapter {
 
     protected final SimulationNode node;
 
-    private Lane inLane;
+    private CongestionLane inCongestionLane;
 
     private Link outLink;
 
@@ -75,10 +75,10 @@ public class Connection extends EventHandlerAdapter {
         serveLanes();
     }
 
-    protected void transferVehicle(VehicleTripData vehicleData, Lane currentLane, Lane nextLane) {
-        currentLane.removeFromQueue(vehicleData);
+    protected void transferVehicle(VehicleTripData vehicleData, CongestionLane currentCongestionLane, CongestionLane nextCongestionLane) {
+        currentCongestionLane.removeFromQueue(vehicleData);
 
-        nextLane.addToQue(vehicleData);
+        nextCongestionLane.addToQue(vehicleData);
 
         if (!vehicleData.getTrip().isEmpty()) {
             vehicleData.getTrip().removeFirstLocation();
@@ -94,32 +94,32 @@ public class Connection extends EventHandlerAdapter {
 
         Log.info(this, "TryTransferVehicles START");
         /* no one is waiting */
-        if (!inLane.hasWaitingVehicles()) {
-            checkDrivingQue(inLane);
+        if (!inCongestionLane.hasWaitingVehicles()) {
+            checkDrivingQue(inCongestionLane);
             return false;
         }
 
         // first vehicle
-        VehicleTripData vehicleTripData = inLane.getFirstWaitingVehicle();
+        VehicleTripData vehicleTripData = inCongestionLane.getFirstWaitingVehicle();
 
         // vehicle ends on this node
         if (vehicleTripData.isTripFinished()) {
-            scheduleEndDriving(vehicleTripData, inLane);
+            scheduleEndDriving(vehicleTripData, inCongestionLane);
             return false;
         }
 
-        Lane nextLane = getNextLane(inLane, vehicleTripData);
+        CongestionLane nextCongestionLane = getNextLane(inCongestionLane, vehicleTripData);
 
         // succesfull transfer
-        if (nextLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
-            scheduleVehicleTransfer(vehicleTripData, inLane, nextLane);
+        if (nextCongestionLane.queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
+            scheduleVehicleTransfer(vehicleTripData, inCongestionLane, nextCongestionLane);
             return false;
         }
         // next queue is full
         else {
             Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id,
-                    nextLane.link.toNode.id);
-            nextLane.setWakeConnectionAfterTransfer(true);
+                    nextCongestionLane.parentLink.toNode.id);
+            nextCongestionLane.setWakeConnectionAfterTransfer(true);
             return false;
         }
     }
@@ -135,25 +135,25 @@ public class Connection extends EventHandlerAdapter {
     }
 
 
-    protected Lane getNextLane(Lane lane, VehicleTripData vehicleTripData) {
-        Link nextLink = getNextLink(lane);
+    protected CongestionLane getNextLane(CongestionLane congestionLane, VehicleTripData vehicleTripData) {
+        Link nextLink = getNextLink(congestionLane);
 
         Trip<SimulationNode> trip = vehicleTripData.getTrip();
 
         if (trip.isEmpty()) {
-            return nextLink.getLaneForTripEnd();
+            return nextLink.getCongestionLaneForTripEnd();
         } else {
             SimulationNode NextNextLocation = trip.getFirstLocation();
-            return nextLink.getLaneByNextNode(NextNextLocation);
+            return nextLink.getBestLaneByNextNode(NextNextLocation);
         }
     }
 
-    protected Link getNextLink(Lane inputLane) {
+    protected Link getNextLink(CongestionLane inputCongestionLane) {
         return outLink;
     }
 
-    protected void endDriving(VehicleTripData vehicleTripData, Lane lane) {
-        lane.removeFromQueue(vehicleTripData);
+    protected void endDriving(VehicleTripData vehicleTripData, CongestionLane congestionLane) {
+        congestionLane.removeFromQueue(vehicleTripData);
 
         vehicleTripData.getVehicle().setPosition(node);
 
@@ -172,9 +172,9 @@ public class Connection extends EventHandlerAdapter {
         }
     }
 
-    void setOutLink(Link outLink, Lane inLane) {
+    void setOutLink(Link outLink, CongestionLane inCongestionLane) {
         this.outLink = outLink;
-        this.inLane = inLane;
+        this.inCongestionLane = inCongestionLane;
     }
 
     private void transferVehicleFromLastTick() {
@@ -184,7 +184,7 @@ public class Connection extends EventHandlerAdapter {
         vehicleEventData = null;
     }
 
-    void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
+    void scheduleVehicleTransfer(VehicleTripData vehicleTripData, CongestionLane from, CongestionLane to) {
         Log.info(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
         long delay = computeTransferDelay(vehicleTripData, to);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
@@ -202,7 +202,7 @@ public class Connection extends EventHandlerAdapter {
         Log.info(this, "Scheduling vehicle transfer END");
     }
 
-    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
+    protected long computeTransferDelay(VehicleTripData vehicleTripData, CongestionLane to) {
         return computeConnectionArrivalDelay(vehicleTripData);// + congestionModel.computeTransferDelay(vehicleTripData, to);
     }
 
@@ -214,13 +214,13 @@ public class Connection extends EventHandlerAdapter {
 
     }
 
-    void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane) {
+    void scheduleEndDriving(VehicleTripData vehicleTripData, CongestionLane congestionLane) {
         Log.info(this, "Schedule end driving START");
 
 //        long delay = CongestionModel.computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
         long delay = congestionModel.computeArrivalDelay(vehicleTripData);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
-        vehicleEventData = new VehicleEndData(lane, vehicleTripData, transferFinishTime);
+        vehicleEventData = new VehicleEndData(congestionLane, vehicleTripData, transferFinishTime);
 
 //        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
         congestionModel.makeScheduledEvent(this, this, delay);
@@ -232,22 +232,21 @@ public class Connection extends EventHandlerAdapter {
         Log.info(this, "Ending vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: ");
 
         VehicleEndData vehicleEndData = (VehicleEndData) vehicleEventData;
-        endDriving(vehicleEndData.vehicleTripData, vehicleEndData.lane);
+        endDriving(vehicleEndData.vehicleTripData, vehicleEndData.congestionLane);
         vehicleEventData = null;
     }
 
-    protected void checkDrivingQue(Lane lane) {
-        if (!lane.drivingQueue.isEmpty()) {
+    protected void checkDrivingQue(CongestionLane congestionLane) {
+        if (!congestionLane.drivingQueue.isEmpty()) {
             long currentTime = congestionModel.timeProvider.getCurrentSimTime();
             if (currentTime >= closestCarArrivalTime) {
                 closestCarArrivalTime = Long.MAX_VALUE;
             }
-            Log.info(this, "checking driving queue of " + lane + " at " + currentTime);
-            long firstTransferToWaitingQueueTime = lane.drivingQueue.peek().getMinPollTime();
+            Log.info(this, "checking driving queue of " + congestionLane + " at " + currentTime);
+            long firstTransferToWaitingQueueTime = congestionLane.drivingQueue.peek().getMinPollTime();
             if (firstTransferToWaitingQueueTime < closestCarArrivalTime) {
                 closestCarArrivalTime = firstTransferToWaitingQueueTime;
-                congestionModel.makeTickEvent(this, this,
-                        firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
+                congestionModel.makeTickEvent(this, this,firstTransferToWaitingQueueTime - congestionModel.timeProvider.getCurrentSimTime());
             }
         }
     }
