@@ -7,7 +7,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.Config;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
@@ -35,7 +36,7 @@ public class CongestionModel {
     final TimeProvider timeProvider;
 
     private final Graph<SimulationNode, SimulationEdge> graph;
-    private final Config config;
+    private final AgentpolisConfig config;
 
     protected final Map<SimulationNode, Connection> connectionsMappedByNodes = new HashMap<>();
     protected final Map<SimulationEdge, Link> linksMappedByEdges = new HashMap<>();
@@ -49,8 +50,8 @@ public class CongestionModel {
 
 
     @Inject
-    public CongestionModel(TransportNetworks transportNetworks, Config config,
-                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils,LaneCongestionModel laneCongestionModel)
+    public CongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
+                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils, LaneCongestionModel laneCongestionModel)
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
@@ -105,15 +106,17 @@ public class CongestionModel {
 
     /**
      * Wakeup connection
+     *
      * @param connection - to be waked up
-     * @param delay - positive number
+     * @param delay      - positive number
      */
-    void wakeUpConnection(Connection connection, long delay) {
-        makeTickEvent(connection, delay);
+    public void wakeUpConnection(Connection connection, long delay) {
+        makeTickEvent(this, connection, delay);
     }
 
     /**
      * Tick
+     *
      * @param target
      * @param delay
      */
@@ -154,6 +157,7 @@ public class CongestionModel {
     TimeProvider getTimeProvider() {
         return timeProvider;
     }
+
     /**
      * Build connection or crossroad
      *
@@ -162,10 +166,10 @@ public class CongestionModel {
     private void buildConnections(Collection<SimulationNode> allNodes) {
         for (SimulationNode node : allNodes) {
             if (graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1) {
-                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node,timeProvider);
+                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node, timeProvider);
                 connectionsMappedByNodes.put(node, crossroad);
             } else {
-                Connection connection = new Connection(simulationProvider, config, this, node,timeProvider);
+                Connection connection = new Connection(simulationProvider, config, this, node);
                 connectionsMappedByNodes.put(node, connection);
             }
         }
