@@ -88,7 +88,7 @@ public class SimulationEdge extends Edge {
         }
 
         this.shape = edgeShape;
-        lanesTurn = lanesTurn;
+        this.lanesTurn = lanesTurn;
     }
 
     /**
@@ -132,6 +132,20 @@ public class SimulationEdge extends Edge {
      */
     public int getLanesCount() {
         return lanesCount;
+    }
+
+    /**
+     * Get lane by its unique ID.
+     * @param id long id of the lane in this edge
+     * @return Lane or null, if edge does not contain Lane with specified id.
+     */
+    public Lane getLaneById(long id){
+        for(Lane l : lanesTurn){
+            if(l.getLaneUniqueId() == id){
+                return l;
+            }
+        }
+        return null;
     }
 
     public String getLogInfo() {

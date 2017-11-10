@@ -229,7 +229,7 @@ public class CongestionLane extends EventHandlerAdapter {
         return congestedSpeed;
     }
 
-    private int getDrivingCarsCountOnLane() {
+    public int getDrivingCarsCountOnLane() {
         return drivingQueue.size();
     }
 

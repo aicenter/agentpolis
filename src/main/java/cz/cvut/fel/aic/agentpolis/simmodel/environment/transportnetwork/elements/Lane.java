@@ -77,6 +77,10 @@ public class Lane implements Serializable {
         return laneUniqueId;
     }
 
+    public Set<Integer> getAvailableEdges(){
+        return directionById.keySet();
+    }
+
     /**
      * @return parent´s ID
      */

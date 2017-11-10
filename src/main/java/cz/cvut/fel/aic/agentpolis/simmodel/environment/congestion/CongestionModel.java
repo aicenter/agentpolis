@@ -29,6 +29,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import java.security.ProviderException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 @Singleton
 public class CongestionModel {
@@ -216,33 +217,37 @@ public class CongestionModel {
 
             Connection toConnection = connectionsMappedByNodes.get(toNode);
 
-            for (Lane lane : lanes) {
-                Set<Integer> followingEdgeId = lane.getAvailableEdges();
-                List<SimulationNode> followingNodes = new LinkedList<>();
+            if(lanes != null) {
+                for (Lane lane : lanes) {
+                    Set<Integer> followingEdgeId = lane.getAvailableEdges();
+                    List<SimulationNode> followingNodes = new LinkedList<>();
 
-                // in case of all directions or unknown
-                if (!followingEdgeId.contains(-1)) {
-                    for (Integer i : followingEdgeId) {
-                        followingNodes.add(graph.getNode(this.edgesMappedById.get(i).toId));
-                    }
-                } else {
-                    for (SimulationEdge e : allFollowingEdges) {
-                        followingNodes.add(graph.getNode(e.toId));
-                    }
-                }
-
-                CongestionLane congestionLane = new CongestionLane(link, lane.getLaneUniqueId(), link.getLength(), timeProvider, simulationProvider);
-                link.addCongestionLane(congestionLane, followingNodes);
-
-                // Build info for connection
-                for (SimulationNode e : followingNodes) { // following nodes for congestion lane
-                    Link outLink = linksMappedByEdges.get(graph.getEdge(toNode.id, e.id));
-                    if (toConnection instanceof Crossroad) {
-                        ((Crossroad) toConnection).addNextLink(outLink, congestionLane, connectionsMappedByNodes.get(e));
+                    // in case of all directions or unknown
+                    if (!followingEdgeId.contains(-1)) {
+                        for (Integer i : followingEdgeId) {
+                            followingNodes.add(graph.getNode(this.edgesMappedById.get(i).toId));
+                        }
                     } else {
-                        toConnection.setOutLink(outLink, congestionLane);
+                        for (SimulationEdge e : allFollowingEdges) {
+                            followingNodes.add(graph.getNode(e.toId));
+                        }
+                    }
+
+                    CongestionLane congestionLane = new CongestionLane(link, lane.getLaneUniqueId(), link.getLength(), timeProvider, simulationProvider);
+                    link.addCongestionLane(congestionLane, followingNodes);
+
+                    // Build info for connection
+                    for (SimulationNode e : followingNodes) { // following nodes for congestion lane
+                        Link outLink = linksMappedByEdges.get(graph.getEdge(toNode.id, e.id));
+                        if (toConnection instanceof Crossroad) {
+                            ((Crossroad) toConnection).addNextLink(outLink, congestionLane, connectionsMappedByNodes.get(e));
+                        } else {
+                            toConnection.setOutLink(outLink, congestionLane);
+                        }
                     }
                 }
+            } else{
+                throw new ModelConstructionFailedException("Lanes cannot be null");
             }
         }
     }
