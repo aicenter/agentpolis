@@ -80,23 +80,19 @@ public class SimulationEdge extends Edge {
             this.oppositeWayId = -2;
         }
 
-        // lanes count
-        if (lanesCount >= 1) {
-            this.lanesCount = lanesCount;
-        } else {
-            this.lanesCount = 1; //minimum
+        // lanes count - merging
+        if(lanesTurn.size() > 0){ // data available from lanesTurn
+            this.lanesCount = lanesTurn.size();
+        }else{
+            if (lanesCount >= 1) {
+                this.lanesCount = lanesCount;
+            } else {
+                this.lanesCount = 1; //minimum
+            }
         }
 
         this.shape = edgeShape;
         this.lanesTurn = lanesTurn;
-    }
-
-    /**
-     * Temporary class, should move to the constructor
-     * @param lanes
-     */
-    public void setlanes(List<Lane> lanes){
-        this.lanesTurn = lanes;
     }
 
     /**
