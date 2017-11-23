@@ -101,4 +101,7 @@
             <artifactId>vecmath</artifactId>
         </dependency>
 	</dependencies>
+    <properties>
+        <netbeans.hint.license>lgpl21</netbeans.hint.license>
+    </properties>
 </project>
