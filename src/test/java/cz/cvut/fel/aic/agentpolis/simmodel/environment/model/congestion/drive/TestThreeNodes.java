@@ -5,6 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
+import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
@@ -13,7 +14,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -55,5 +55,9 @@ public class TestThreeNodes {
         driveTest.run(graph, trip);
         
         Log.close();
+    }
+    
+    public static void main(String[] args) {
+        VisualTests.runVisualTest(TestThreeNodes.class);
     }
 }

@@ -5,6 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
+import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.system.StandardAgentPolisModule;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 
@@ -15,10 +16,13 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer
 public class TestModule extends StandardAgentPolisModule{
 
     public TestModule() {
-        super();
+        super();      
+        
 //        if(System.getProperty("test") == null){
-//            config.showVisio = false;
+//            agentpolisConfig.showVisio = false;
 //        }
+
+        agentpolisConfig.showVisio = VisualTests.SHOW_VISIO;
         
         agentpolisConfig.congestionModel.batchSize = 1;
         agentpolisConfig.congestionModel.maxFlowPerLane = 5;
