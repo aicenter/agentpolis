@@ -17,32 +17,25 @@ import java.util.logging.Level;
  * @author Zbynek Moler
  */
 public abstract class Agent extends AgentPolisEntity {
-
-
     /**
      * Current chosen activity.
      */
     Activity currentActivity;
 
+    public Agent(final String agentId, SimulationNode position) {
+        super(agentId, position);
+    }
 
     public Activity getCurrentActivity() {
         return currentActivity;
     }
 
-
-    public Agent(final String agentId, SimulationNode position) {
-        super(agentId, position);
-    }
-
     public void born() {
-
     }
 
     public void die() {
-
     }
 
-    ;
 
     public abstract EntityType getType();
 
