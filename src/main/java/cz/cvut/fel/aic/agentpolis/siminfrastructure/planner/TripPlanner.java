@@ -10,8 +10,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trips;
  * 
  * 
  * @author Zbynek Moler
- * 
- * @param <TTrip>
+ *
  */
 public interface TripPlanner {
 
