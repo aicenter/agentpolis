@@ -75,7 +75,7 @@ public class SimulationEdge extends Edge {
         }
 
         // lanes count - merging
-        if(lanesTurn.size() > 0){ // data available from lanesTurn
+        if(lanesTurn != null && lanesTurn.size() > 0){ // data available from lanesTurn
             this.lanesCount = lanesTurn.size();
         }else{
             if (lanesCount >= 1) {
@@ -84,7 +84,6 @@ public class SimulationEdge extends Edge {
                 this.lanesCount = 1; //minimum
             }
         }
-
         this.shape = edgeShape;
         this.lanesTurn = lanesTurn;
     }
