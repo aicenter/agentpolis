@@ -22,7 +22,7 @@ import java.util.Arrays;
  *
  * @author fido
  */
-public class TestThreeNodes {
+public class TestOneLaneConnectionOnly {
     
     @Test 
     public void run() throws Throwable{

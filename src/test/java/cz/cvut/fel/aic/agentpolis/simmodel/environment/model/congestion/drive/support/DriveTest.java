@@ -7,6 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Injector;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.CongestedDriveFactory;
@@ -20,6 +21,7 @@ import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,39 +29,37 @@ import java.util.Map;
  * @author fido
  */
 public class DriveTest {
-    
-    private static final int TEN_MINUTES_IN_MILIS = 600000;
-    
-    // we expect trips to be no longer then 40 minutes
-    private static final int TRIP_MAX_DURATION = 2400000;
-    
-    private static final int START_TIME_MILIS = 25200000;
-    
-    
+    private final int time_limit_in_milis;
+    private DriveAgentStorage agents;
+
+    public DriveTest(int time_limit){
+        time_limit_in_milis = time_limit;
+    }
+
+    public DriveTest(){
+        time_limit_in_milis = -1;
+    }
+
     public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
-        
-        
-//        AgentpolisConfig config = Configuration.load(new AgentpolisConfig());
-        
-        //config overwrite
-//        config.agentpolis.simulationDurationInMillis = TEN_MINUTES_IN_MILIS;
-//        config.agentpolis.startTime = START_TIME_MILIS;
-//        config.agentpolis.showVisio = true;
-//        Common.setTestResultsDir(config, "test");
-        
+
         // Guice configuration
         AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
-//        agentPolisInitializer.overrideModule(new TestModule());
+        //agentPolisInitializer.overrideModule(new TestModule());
         Injector injector = agentPolisInitializer.initialize();
 
         SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
         // prepare map, entity storages...
+        if(time_limit_in_milis != -1) {
+            AgentpolisConfig config = injector.getInstance(AgentpolisConfig.class);
+            config.simulationDurationInMillis = time_limit_in_milis;
+            Log.info(this,"Override simulation time limit (ms): "+ time_limit_in_milis);
+        }
         creator.prepareSimulation(getMapData(graph));
         
         CongestedDriveFactory congestedDriveFactory = injector.getInstance(CongestedDriveFactory.class);
         DriveAgentStorage driveAgentStorage = injector.getInstance(DriveAgentStorage.class);
-        
+
         
         for (int i = 0; i < trips.length; i++) {
             Trip<SimulationNode> trip = trips[i];
@@ -69,10 +69,15 @@ public class DriveTest {
             DriveAgent driveAgent = new DriveAgent("Test driver" + i, graph.getNode(0));
 
             driveAgentStorage.addEntity(driveAgent);
-
             congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
         }
+        agents = driveAgentStorage;
         creator.startSimulation();
+
+    }
+
+    public DriveAgentStorage getAgents(){
+        return this.agents;
     }
     
     private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){

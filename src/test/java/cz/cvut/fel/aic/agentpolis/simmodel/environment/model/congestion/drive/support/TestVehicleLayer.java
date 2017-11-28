@@ -33,7 +33,7 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 
     @Override
     protected Color getEntityDrawColor(DriveAgent driveAgent) {
-        return Color.CYAN;
+        return Color.RED;
     }
 
     @Override

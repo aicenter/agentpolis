@@ -16,16 +16,10 @@ public class TestModule extends StandardAgentPolisModule{
 
     public TestModule() {
         super();
-//        if(System.getProperty("test") == null){
-//            config.showVisio = false;
-//        }
-        
         agentpolisConfig.congestionModel.batchSize = 1;
         agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
         agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
     }
-    
-    
 
     @Override
     protected void bindVisioInitializer() {

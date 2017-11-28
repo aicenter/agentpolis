@@ -17,7 +17,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
+//import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
 import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;
@@ -64,12 +64,12 @@ public class CongestionModelTest {
             //each node have a connection test
             assertNotNull(connection);
             
-            if(connection instanceof Crossroad){
-                checkCrossroad((Crossroad) connection);
-            }
-            else{
+            //if(connection instanceof Crossroad){
+            //    checkCrossroad((Crossroad) connection);
+            //}
+            //else{
                 checkConnection(connection);
-            }
+            //}
         }
     }
     
@@ -96,7 +96,7 @@ public class CongestionModelTest {
         for (SimulationEdge outEdge : outEdges) {
             SimulationNode nextNode = roadGraph.getNode(outEdge.toId);
             
-            assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
+            assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getBestLaneByNextNode(nextNode));
         }
     }
 
@@ -104,7 +104,7 @@ public class CongestionModelTest {
         assertNotNull(connection.getNextLink((Connection) null));
     }
 
-    private void checkCrossroad(Crossroad crossroad) {
-        assertTrue(crossroad.getNumberOfInputLanes() > 0);
-    }
+    //private void checkCrossroad(Crossroad crossroad) {
+      //  assertTrue(crossroad.getNumberOfInputLanes() > 0);
+    //}
 }

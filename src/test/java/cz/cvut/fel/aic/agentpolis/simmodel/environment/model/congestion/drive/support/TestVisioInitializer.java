@@ -61,13 +61,13 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
 
     @Override
     protected void initEntityLayers(Simulation simulation) {
-//        super.initEntityLayers(simulation, projection); 
+        super.initEntityLayers(simulation);
         VisManager.registerLayer(carLayer); 
     }
     
     @Override
     protected void initLayersAfterEntityLayers() {
-        VisManager.registerLayer(nodeIdLayer);
+       VisManager.registerLayer(nodeIdLayer);
     }
     
     

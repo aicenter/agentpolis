@@ -51,8 +51,6 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
         this.drivenCar = null;
     }
 
-    
-
     @Override
     public void setTargetNode(SimulationNode targetNode) {
         this.targetNode = targetNode;
@@ -72,8 +70,6 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
     public DelayData getDelayData() {
         return delayData;
     }
-
-
 
     @Override
     public double getVelocity() {

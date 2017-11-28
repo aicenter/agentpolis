@@ -61,13 +61,17 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
     @Override
     protected void drawEntities(ArrayList<DriveAgent> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         DriveAgent representative = entities.get(0);
-        
+
         if(CAR_REPRESENTATION_SHAPE == null){
             CAR_REPRESENTATION_SHAPE = createCarShape((float) representative.getVehicle().getLength());
         }
-        
+
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
+        //trip ended
+        if (representative.getTargetNode() == representative.getPosition()){
+            canvas.setColor(Color.GRAY);
+        }
         double radius = Vis.transW(getEntityDrawRadius(entities.get(0)));
         int width = (int) Math.round(radius * 2);
 
@@ -95,7 +99,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
         
         if(entities.size() > 1){
             VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
-                new Point((int) (x1 - DEFAULT_TEXT_MARGIN_BOTTOM), y1 - (y2 - y1) / 2), color, 
+                new Point((int) (x1 - DEFAULT_TEXT_MARGIN_BOTTOM) - 10, y1 - (y2 - y1) / 2), Color.BLACK,
                 DEFAULT_TEXT_BACKGROUND_COLOR);
         }
     }
