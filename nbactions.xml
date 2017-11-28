@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-deploy</actionName>
+            <displayName>deploy</displayName>
+            <goals>
+                <goal>deploy</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-analyze-duplicate</actionName>
+            <displayName>analyze-duplicate</displayName>
+            <goals>
+                <goal>dependency:analyze-duplicate</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-dependency:analyze</actionName>
+            <displayName>dependency:analyze</displayName>
+            <goals>
+                <goal>dependency:analyze</goal>
+            </goals>
+        </action>
+    </actions>
