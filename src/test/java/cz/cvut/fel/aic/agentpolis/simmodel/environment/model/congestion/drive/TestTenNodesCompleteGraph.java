@@ -23,15 +23,21 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.PrepareDummyLanes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -51,15 +57,21 @@ public class TestTenNodesCompleteGraph {
                 graph.getNode(1), graph.getNode(2), graph.getNode(4), graph.getNode(8), graph.getNode(7), graph.getNode(6));
 
         DriveTest driveTest = new DriveTest(30000);
+        driveTest.run(graph, trip);
+
         DriveAgentStorage a = driveTest.getAgents();
         Assert.assertTrue(a != null);
-        for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == agent.getTargetNode());
-        }
 
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trip.getLocations().getLast());
+        }
+    }
+
+    @After
+    public void after() {
         Log.close();
     }
-    
+
     public static void main(String[] args) {
         VisualTests.runVisualTest(TestTenNodesCompleteGraph.class);
     }

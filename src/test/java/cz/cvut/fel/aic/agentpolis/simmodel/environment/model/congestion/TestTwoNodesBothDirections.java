@@ -18,25 +18,32 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
+import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.PrepareDummyLanes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author fido
  */
 public class TestTwoNodesBothDirections {
+    private Graph<SimulationNode, SimulationEdge> graph;
 
-    @Test
-    public void run() throws Throwable {
+    @Before
+    public void prepare(){
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
@@ -45,17 +52,29 @@ public class TestTwoNodesBothDirections {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)),null);
-        SimulationEdge edge2 = new SimulationEdge(1, 0,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)),null);
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
+
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)), lanes.get(0));
+        SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)), lanes.get(1));
 
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
 
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
+        graph = graphBuilder.createGraph();
+    }
 
+    @Test
+    public void run() throws Throwable {
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
+    }
 
+    @After
+    public void after(){
         Log.close();
+    }
+
+    public static void main(String[] args) {
+        VisualTests.runVisualTest(TestTwoNodesBothDirections.class);
     }
 }

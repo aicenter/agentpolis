@@ -30,7 +30,7 @@ public class VisualTests {
     
     public static void runVisualTest(Class testClass){
         SHOW_VISIO = true;
-//        JUnitCore.runClasses(testClass);
+        //JUnitCore.runClasses(testClass);
         JUnitCore junit = new JUnitCore();
         junit.addListener(new TextListener(System.out));
         junit.run(testClass);

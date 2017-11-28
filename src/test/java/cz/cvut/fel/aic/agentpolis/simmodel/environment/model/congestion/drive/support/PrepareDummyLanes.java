@@ -9,8 +9,50 @@ import java.util.List;
 /**
  * @author Zdenek Bousa
  */
-public class SixLanes {
-    public static List<Lane> getLanesTwo(){
+public class PrepareDummyLanes {
+    public static List<LinkedList<Lane>> getLanesOne() {
+        //Lanes
+        LinkedList<Lane> lanes1 = new LinkedList<>();
+        Lane lane1 = new Lane(0, 0);
+        lane1.addDirection(-1, LaneTurnDirection.unknown);
+        lanes1.add(lane1);
+
+        LinkedList<Lane> lanes2 = new LinkedList<>();
+        Lane lane2 = new Lane(2, 1);
+        lane2.addDirection(-1, LaneTurnDirection.unknown);
+        lanes2.add(lane2);
+
+        LinkedList<Lane> lanes3 = new LinkedList<>();
+        Lane lane3 = new Lane(4, 2);
+        lane3.addDirection(-1, LaneTurnDirection.unknown);
+        lanes3.add(lane3);
+
+        LinkedList<Lane> lanes4 = new LinkedList<>();
+        Lane lane4 = new Lane(6, 3);
+        lane4.addDirection(-1, LaneTurnDirection.unknown);
+        lanes4.add(lane4);
+
+        LinkedList<Lane> lanes5 = new LinkedList<>();
+        Lane lane5 = new Lane(8, 4);
+        lane5.addDirection(-1, LaneTurnDirection.unknown);
+        lanes5.add(lane5);
+
+        LinkedList<Lane> lanes6 = new LinkedList<>();
+        Lane lane6 = new Lane(10, 5);
+        lane6.addDirection(-1, LaneTurnDirection.unknown);
+        lanes6.add(lane6);
+
+        List<LinkedList<Lane>> laneList = new LinkedList<>();
+        laneList.add(lanes1);
+        laneList.add(lanes2);
+        laneList.add(lanes3);
+        laneList.add(lanes4);
+        laneList.add(lanes5);
+        laneList.add(lanes6);
+        return laneList;
+    }
+
+    public static List<LinkedList<Lane>> getLanesTwo() {
         //Lanes
         LinkedList<Lane> lanes1 = new LinkedList<>();
         Lane lane1 = new Lane(0, 0);

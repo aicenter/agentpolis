@@ -3,6 +3,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgent;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.PrepareDummyLanes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
@@ -12,6 +14,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +25,7 @@ import java.util.List;
 /**
  * @author Zdenek Bousa
  */
-public class TestThreeNodes {
+public class TestThreeNodesWithComplexConnection {
     private Graph<SimulationNode, SimulationEdge> graph;
     private SimulationNode node0,node1,node2;
     @Before
@@ -63,6 +66,12 @@ public class TestThreeNodes {
 
         DriveTest driveTest = new DriveTest(70000);
         driveTest.run(graph, trips);
+
+        DriveAgentStorage a = driveTest.getAgents();
+        Assert.assertTrue(a != null);
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+        }
     }
 
     @Test
@@ -76,6 +85,12 @@ public class TestThreeNodes {
 
         DriveTest driveTest = new DriveTest(40000);
         driveTest.run(graph, trips);
+
+        DriveAgentStorage a = driveTest.getAgents();
+        Assert.assertTrue(a != null);
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+        }
     }
 
     @Test
@@ -89,6 +104,12 @@ public class TestThreeNodes {
 
         DriveTest driveTest = new DriveTest(20000);
         driveTest.run(graph, trips);
+
+        DriveAgentStorage a = driveTest.getAgents();
+        Assert.assertTrue(a != null);
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+        }
     }
 
     @Test
@@ -102,6 +123,12 @@ public class TestThreeNodes {
 
         DriveTest driveTest = new DriveTest(20000);
         driveTest.run(graph, trips);
+
+        DriveAgentStorage a = driveTest.getAgents();
+        Assert.assertTrue(a != null);
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+        }
     }
 
     @After
@@ -110,6 +137,6 @@ public class TestThreeNodes {
     }
 
     public static void main(String[] args) {
-        VisualTests.runVisualTest(TestThreeNodes.class);
+        VisualTests.runVisualTest(TestThreeNodesWithComplexConnection.class);
     }
 }

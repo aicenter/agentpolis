@@ -22,7 +22,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -31,7 +30,7 @@ import java.util.List;
 /**
  * @author fido
  */
-public class TestThreeNodes100CarsWithConnection {
+public class TestThreeNodesWithSimpleConnection {
     private Graph<SimulationNode, SimulationEdge> graph;
     private SimulationNode node0,node1,node2;
 
@@ -50,8 +49,8 @@ public class TestThreeNodes100CarsWithConnection {
         List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
 
         SimulationEdge edge1 = new SimulationEdge(0, 1, 0,  0, 100, 40, 2, new EdgeShape(Arrays.asList(node0, node1)),lanes.get(0));
-        SimulationEdge edge2 = new SimulationEdge(2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)),lanes.get(1));
-        SimulationEdge edge3 = new SimulationEdge(1, 2,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)),lanes.get(2));
+        SimulationEdge edge2 = new SimulationEdge(2, 0, 0, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node2, node0)),lanes.get(1));
+        SimulationEdge edge3 = new SimulationEdge(1, 2,  0, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node1, node2)),lanes.get(2));
 
 
         graphBuilder.addEdge(edge1);
@@ -62,7 +61,7 @@ public class TestThreeNodes100CarsWithConnection {
     }
 
     @Test
-    public void run() throws Throwable {
+    public void hundredCars() throws Throwable {
         Trip<SimulationNode>[] trips = new Trip[100];
 
         for (int i = 0; i < trips.length; i++) {
@@ -74,10 +73,9 @@ public class TestThreeNodes100CarsWithConnection {
         driveTest.run(graph, trips);
 
         DriveAgentStorage a = driveTest.getAgents();
-
-        Assert.assertTrue(a != null);
+        Assert.assertNotNull(a);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == agent.getTargetNode());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
         }
     }
 
@@ -87,6 +85,6 @@ public class TestThreeNodes100CarsWithConnection {
     }
 
     public static void main(String[] args) {
-        VisualTests.runVisualTest(TestThreeNodes100CarsWithConnection.class);
+        VisualTests.runVisualTest(TestThreeNodesWithSimpleConnection.class);
     }
 }

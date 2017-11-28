@@ -20,57 +20,78 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgent;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveAgentStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.PrepareDummyLanes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- *
  * @author fido
  */
 public class TestOneLaneConnectionOnly {
-    
-    @Test 
-    public void run() throws Throwable{
+    private Graph<SimulationNode, SimulationEdge> graph;
+    private SimulationNode node0, node1, node2;
+
+    @Before
+    public void prepare() throws Throwable {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-        SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-        SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
-        SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
-        
+        node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
+        node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
+        node2 = new SimulationNode(2, 0, 0, 0, 10000, 20000, 0);
+
         graphBuilder.addNode(node0);
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)),null);
-        SimulationEdge edge2 = new SimulationEdge(1, 0,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)),null);
-        SimulationEdge edge3 = new SimulationEdge(1, 2,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)),null);
-        SimulationEdge edge4 = new SimulationEdge(2, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)),null);
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesOne();
 
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
+        SimulationEdge edge2 = new SimulationEdge(1, 2, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)), lanes.get(1));
+        SimulationEdge edge3 = new SimulationEdge(2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node0)), lanes.get(2));
 
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
         graphBuilder.addEdge(edge3);
-        graphBuilder.addEdge(edge4);
-        
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
+
+        graph = graphBuilder.createGraph();
+    }
+
+    @Test
+    public void run() throws Throwable {
         Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
-        
-        DriveTest driveTest = new DriveTest();
+
+        DriveTest driveTest = new DriveTest(20000);
         driveTest.run(graph, trip);
-        
+
+        DriveAgentStorage a = driveTest.getAgents();
+        Assert.assertTrue(a != null);
+        for (DriveAgent agent : a.getEntities()) {
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trip.getLocations().getLast());
+        }
+    }
+
+    @After
+    public void after() {
         Log.close();
     }
-    
+
     public static void main(String[] args) {
-        VisualTests.runVisualTest(TestThreeNodes.class);
+        VisualTests.runVisualTest(TestOneLaneConnectionOnly.class);
     }
 }
