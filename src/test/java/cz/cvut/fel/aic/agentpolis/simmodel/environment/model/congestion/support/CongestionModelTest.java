@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestCongestionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestModule;
 import com.google.inject.Injector;
@@ -114,6 +115,7 @@ public class CongestionModelTest {
     }
 
     private void checkConnection(Connection connection) {
+        if(connection instanceof Crossroad) return;
         assertNotNull(connection.getNextLink((Connection) null));
     }
 

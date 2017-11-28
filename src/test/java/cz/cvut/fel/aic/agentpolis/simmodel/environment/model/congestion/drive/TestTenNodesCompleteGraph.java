@@ -55,7 +55,7 @@ public class TestTenNodesCompleteGraph {
 
         Trip<SimulationNode> trip = new Trip<>(graph.getNode(0), graph.getNode(5), graph.getNode(9), graph.getNode(3),
                 graph.getNode(1), graph.getNode(2), graph.getNode(4), graph.getNode(8), graph.getNode(7), graph.getNode(6));
-
+        SimulationNode goal = trip.getLocations().getLast();
         DriveTest driveTest = new DriveTest(30000);
         driveTest.run(graph, trip);
 
@@ -63,7 +63,7 @@ public class TestTenNodesCompleteGraph {
         Assert.assertTrue(a != null);
 
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trip.getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 

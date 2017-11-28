@@ -18,13 +18,17 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.PrepareDummyLanes;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author fido
@@ -32,7 +36,8 @@ import java.util.Arrays;
 public class Utils {
     public static GraphBuilder<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount) {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesOne();
+        
         int radius = 1000;
 
         for (int i = 0; i < nodeCount; i++) {
@@ -47,8 +52,8 @@ public class Utils {
             graphBuilder.addNode(node);
 
             for (int j = 0; j < i; j++) {
-                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))),null);
-                SimulationEdge edge2 = new SimulationEdge(j, i,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))),null);
+                SimulationEdge edge1 = new SimulationEdge(i, j, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))),lanes.get(0));
+                SimulationEdge edge2 = new SimulationEdge(j, i,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))),lanes.get(1));
 
                 graphBuilder.addEdge(edge1);
                 graphBuilder.addEdge(edge2);

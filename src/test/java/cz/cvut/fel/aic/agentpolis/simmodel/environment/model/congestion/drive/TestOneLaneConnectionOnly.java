@@ -75,14 +75,14 @@ public class TestOneLaneConnectionOnly {
     @Test
     public void run() throws Throwable {
         Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
-
+        SimulationNode goal = trip.getLocations().getLast();
         DriveTest driveTest = new DriveTest(20000);
         driveTest.run(graph, trip);
 
         DriveAgentStorage a = driveTest.getAgents();
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trip.getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 

@@ -68,14 +68,14 @@ public class TestThreeNodesWithSimpleConnection {
             Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(70000);
         driveTest.run(graph, trips);
 
         DriveAgentStorage a = driveTest.getAgents();
         Assert.assertNotNull(a);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() ==  goal);
         }
     }
 

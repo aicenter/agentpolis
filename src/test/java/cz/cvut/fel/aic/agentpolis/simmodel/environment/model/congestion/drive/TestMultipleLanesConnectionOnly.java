@@ -71,14 +71,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(10000);
         driveTest.run(graph, trips);
         DriveAgentStorage a = driveTest.getAgents();
 
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 
@@ -90,14 +90,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2, node3);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(10000);
         driveTest.run(graph, trips);
         DriveAgentStorage a = driveTest.getAgents();
 
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 
@@ -109,14 +109,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2, node3,node4);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(30000);
         driveTest.run(graph, trips);
         DriveAgentStorage a = driveTest.getAgents();
 
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
     @Test //@Ignore
@@ -127,14 +127,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2, node3, node4, node5, node0, node1);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(61000);
         driveTest.run(graph, trips);
         DriveAgentStorage a = driveTest.getAgents();
 
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 
@@ -146,14 +146,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2, node3,node4);
             trips[i] = trip;
         }
-
+        SimulationNode goal = trips[0].getLocations().getLast();
         DriveTest driveTest = new DriveTest(30000);
         driveTest.run(graph, trips);
         DriveAgentStorage a = driveTest.getAgents();
 
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 
@@ -165,14 +165,14 @@ public class TestMultipleLanesConnectionOnly {
             Trip<SimulationNode> trip = new Trip<>(node1, node2, node3, node4, node5);
             trips[i] = trip;
         }
-
-        DriveTest driveTest = new DriveTest(120000);
+        SimulationNode goal = trips[0].getLocations().getLast();
+        DriveTest driveTest = new DriveTest(12000);
         driveTest.run(graph, trips);
 
         DriveAgentStorage a = driveTest.getAgents();
         Assert.assertTrue(a != null);
         for (DriveAgent agent : a.getEntities()) {
-            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == trips[0].getLocations().getLast());
+            Assert.assertTrue(agent.getId() + "did not make it to its target node.", agent.getPosition() == goal);
         }
     }
 
