@@ -20,7 +20,7 @@ public class VehicleTransferData extends VehicleEventData{
     public final VehicleTripData vehicleTripData;
 
     public VehicleTransferData(CongestionLane from, CongestionLane to, VehicleTripData vehicleTripData, long transferFinishTime) {
-        super(transferFinishTime);
+        super(transferFinishTime,-2);
         this.from = from;
         this.to = to;
         this.vehicleTripData = vehicleTripData;

@@ -18,7 +18,6 @@ import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author fido
@@ -26,13 +25,13 @@ import java.util.List;
 public class CongestionLane extends EventHandlerAdapter {
     private final long id;
 
+    private static final int MIN_LINK_CAPACITY_IN_METERS = 5;
+    private final double linkCapacityInMeters;
+
     private final TimeProvider timeProvider;
     private final SimulationProvider simulationProvider;
 
-    final Link parentLink; // parent parentLink
-
-    private static final int MIN_LINK_CAPACITY_IN_METERS = 5;
-    private final double linkCapacityInMeters;
+    final Link parentLink;
 
     final LinkedList<VehicleQueueData> drivingQueue;
     private final LinkedList<VehicleQueueData> waitingQueue;
@@ -42,8 +41,7 @@ public class CongestionLane extends EventHandlerAdapter {
     private double currentlyUsedCapacityInMeters;
     private double waitingQueueInMeters;
 
-    private boolean wakeConnectionAfterTransfer;
-
+    private boolean wakePreviousConnectionAfterTransfer;
     private boolean eventScheduled;
 
     public CongestionLane(Link link, long laneId, double linkCapacityInMeters, TimeProvider timeProvider, SimulationProvider simulationProvider) {
@@ -57,50 +55,55 @@ public class CongestionLane extends EventHandlerAdapter {
         eventScheduled = false;
     }
 
-    @Override
-    public void handleEvent(Event event) {
-        startFirstVehicleInStartHereQueue();
-        tryScheduleStartVehicle();
-    }
-
     /**
-     * Information about lane
-     *
-     * @return
+     * @return parent Lane {@link Lane}
      */
     public Lane getLane() {
         return this.parentLink.edge.getLaneById(this.id);
+    }
+
+    public long getId(){
+        return this.id;
     }
 
     public double getUsedLaneCapacityInMeters() {
         return currentlyUsedCapacityInMeters;
     }
 
-    /**
-     * Connection wakeup
-     */
-    public boolean wakeConnectionAfterTransfer() {
-        return wakeConnectionAfterTransfer;
-    }
-
     public double getQueueLength() {
         return waitingQueueInMeters;
     }
 
-    void setWakeConnectionAfterTransfer(boolean wakeConnectionAfterTransfer) {
-        this.wakeConnectionAfterTransfer = wakeConnectionAfterTransfer;
+    public boolean hasWaitingVehicles() {
+        updateWaitingQueue();
+        return !waitingQueue.isEmpty();
     }
 
-    void startDriving(VehicleTripData vehicleTripData) {
+    //
+    // ========================= Drive ======================
+    //
+    public void startDriving(VehicleTripData vehicleTripData) {
         addToStartHereQueue(vehicleTripData);
         handleChange();
     }
 
-    boolean hasWaitingVehicles() {
-        updateWaitingQueue();
-        return !waitingQueue.isEmpty();
-
+    //
+    // ========================= Event simulation ======================
+    //
+    @Override
+    public void handleEvent(Event event) {
+        startFirstVehicleInStartHereQueue();
+        tryScheduleStartVehicle();
     }
+
+    public boolean wakeConnectionAfterTransfer() {
+        return wakePreviousConnectionAfterTransfer;
+    }
+
+    void setWakePreviousConnectionAfterTransfer(boolean wakePreviousConnectionAfterTransfer) {
+        this.wakePreviousConnectionAfterTransfer = wakePreviousConnectionAfterTransfer;
+    }
+
 
     void removeFromQueue(VehicleTripData vehicleData) {
         currentlyUsedCapacityInMeters -= vehicleData.getVehicle().getLength();
@@ -110,7 +113,7 @@ public class CongestionLane extends EventHandlerAdapter {
         updateVehiclesInQueue(vehicleData.getVehicle().getLength());
 
         // wake previous connection and start que processing
-        if (wakeConnectionAfterTransfer) {
+        if (wakePreviousConnectionAfterTransfer) {
 
             /* wake up previous connection */
             wakeUpPreviousConnection(0);
@@ -118,7 +121,7 @@ public class CongestionLane extends EventHandlerAdapter {
             /* wake up start here processing */
             handleChange();
 
-            setWakeConnectionAfterTransfer(false);
+            setWakePreviousConnectionAfterTransfer(false);
         }
     }
 
@@ -237,8 +240,7 @@ public class CongestionLane extends EventHandlerAdapter {
         //        WoframAlpha LinearModelFit[{{20, 100}, {30, 60}, {40, 40}, {70, 10}}, {x, x^2}, x]
         // interpolate speed for freeFlowSpeed = 100kmph
         //        0.0428177 x^2 - 5.61878 x + 193.757 (quadratic)
-        double x = carsPerKilometer;
-        double reducedSpeed = (0.0428177 * x * x - 5.61878 * x + 193.757);
+        double reducedSpeed = 0.0428177 * carsPerKilometer * carsPerKilometer - 5.61878 * carsPerKilometer + 193.757;
         return reducedSpeed / 100.0;
     }
 
@@ -288,7 +290,7 @@ public class CongestionLane extends EventHandlerAdapter {
         VehicleTripData vehicleTripData = startHereQueue.peek();
 
         if (!queueHasSpaceForVehicle(vehicleTripData.getVehicle())) {
-            setWakeConnectionAfterTransfer(true);
+            setWakePreviousConnectionAfterTransfer(true);
             return;
         }
 

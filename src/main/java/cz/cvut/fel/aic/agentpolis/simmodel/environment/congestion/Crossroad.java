@@ -11,6 +11,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
+import cz.cvut.fel.aic.alite.common.event.Event;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -77,7 +78,7 @@ public class Crossroad extends Connection {
     }
 
     @Override
-    protected void serveLanes() {
+    protected void serveLanes(Event event) {
         Log.info(this, "Serve lanes START");
 
         // getting all lanes with waiting vehicles
@@ -157,7 +158,7 @@ public class Crossroad extends Connection {
     }
 
     @Override
-    protected Link getNextLink(CongestionLane inputCongestionLane) {
+    public Link getNextLink(CongestionLane inputCongestionLane) {
         return outputLinksMappedByInputLanes.get(inputCongestionLane);
     }
 
@@ -222,7 +223,7 @@ public class Crossroad extends Connection {
         else {
             Log.log(Connection.class, Level.FINER, "Crossroad {0}: No space in queue to {1}!", node.id,
                     nextCongestionLane.parentLink.toNode.id);
-            nextCongestionLane.setWakeConnectionAfterTransfer(true);
+            nextCongestionLane.setWakePreviousConnectionAfterTransfer(true);
             laneDepleted(chosenCongestionLane);
             Log.info(this, "TryTransferVehicles END - returning true");
 

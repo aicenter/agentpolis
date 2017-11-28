@@ -9,17 +9,14 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionLane
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleTripData;
 
 /**
- *
  * @author fido
  */
-public class VehicleEndData extends VehicleEventData{
+public class VehicleEndData extends VehicleEventData {
     public final CongestionLane congestionLane;
-
     public final VehicleTripData vehicleTripData;
 
-
-    public VehicleEndData(CongestionLane congestionLane, VehicleTripData vehicleTripData, long endingFinishTime) {
-        super(endingFinishTime);
+    public VehicleEndData(CongestionLane congestionLane, VehicleTripData vehicleTripData, long endingFinishTime, long laneId) {
+        super(endingFinishTime, laneId);
         this.congestionLane = congestionLane;
         this.vehicleTripData = vehicleTripData;
     }

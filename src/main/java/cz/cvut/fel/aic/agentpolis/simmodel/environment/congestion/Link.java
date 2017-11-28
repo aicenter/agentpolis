@@ -5,6 +5,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -16,24 +17,16 @@ import java.util.*;
  */
 public class Link {
     final CongestionModel congestionModel;
-
-    /**
-     * Lanes mapped by next nodes
-     */
-    private final Map<SimulationNode, List<CongestionLane>> lanesMappedByNodes;
-
     final SimulationEdge edge;
 
     final SimulationNode toNode;
-
     final SimulationNode fromNode;
 
     final Connection fromConnection;
-
     final Connection toConnection;
 
+    private final Map<SimulationNode, List<CongestionLane>> lanesMappedByNodes;
     private CongestionLane congestionLaneForTripEnd;
-
 
     public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
                 SimulationNode targetNode, Connection fromConnection, Connection toConnection) {
@@ -55,22 +48,27 @@ public class Link {
     }
 
     public double getLength() {
-        return edge.shape.getShapeLength();
+        return edge.length;
     }
 
-    public List<CongestionLane> getLaneByNextNode(SimulationNode node) {
-        return lanesMappedByNodes.get(node);
+    /**
+     * Return list of lanes for direction
+     * @param node
+     * @return
+     */
+    public List<CongestionLane> getLanesByNextNode(SimulationNode node) {
+        return this.lanesMappedByNodes.get(node);
     }
 
     /**
      * Return best lane for selected direction
      */
     public CongestionLane getBestLaneByNextNode(SimulationNode node) {
-        return getLane(node);
+        return getBestLane(node);
     }
 
     /**
-     * Select available lanes
+     * Select all lanes
      *
      * @return
      */
@@ -93,10 +91,14 @@ public class Link {
     /**
      * Default lane for trip end, vehicle does not drive to next connection.
      */
-    CongestionLane getCongestionLaneForTripEnd() {
+    public CongestionLane getCongestionLaneForTripEnd() {
         return congestionLaneForTripEnd;
     }
 
+
+    //
+    // ========================= Driving ======================
+    //
     void startDriving(VehicleTripData vehicleData) {
         Trip<SimulationNode> trip = vehicleData.getTrip();
         CongestionLane nextCongestionLane = null;
@@ -108,12 +110,13 @@ public class Link {
             nextCongestionLane = getBestLaneByNextNode(nextLocation);
         }
 
+        Log.info(this, "Congestion lane=" + nextCongestionLane.getLane().getLaneUniqueId() +  " car="+ vehicleData.getVehicle().getId(), congestionModel.timeProvider.getCurrentSimTime());
         nextCongestionLane.startDriving(vehicleData);
     }
 
-    /**
-     * Build data
-     */
+    //
+    // ========================= Build ======================
+    //
     void addCongestionLane(CongestionLane congestionLane, List<SimulationNode> nextNodes) {
         if (congestionLaneForTripEnd == null) {
             congestionLaneForTripEnd = congestionLane;
@@ -132,7 +135,7 @@ public class Link {
     //
     // ========================= Lanes balancing ======================
     //
-    private CongestionLane getLane(SimulationNode direction) {
+    private CongestionLane getBestLane(SimulationNode direction) {
         List<CongestionLane> possibleLanes = lanesMappedByNodes.get(direction);
         if (possibleLanes != null) {
             // balancing
@@ -141,15 +144,19 @@ public class Link {
                 return bestLane;
             }
             // or selected randomly
+            // TODO: debug remove
             return getRandomLane(possibleLanes);
+            //possibleLanes.get(0);
         }
         return null;
     }
 
+    // return random lane out of possible
     private CongestionLane getRandomLane(List<CongestionLane> possibleLanes) {
         return possibleLanes.get(congestionModel.getRandom().nextInt(possibleLanes.size()));
     }
 
+    // get best lane out of possible
     private CongestionLane getBestLane(List<CongestionLane> possibleLanes) {
         Map<CongestionLane, Double> available = availablePossibleLanes(possibleLanes);
         if (available == null) {
@@ -158,7 +165,7 @@ public class Link {
         CongestionLane selected = null;
         for (Map.Entry<CongestionLane, Double> entry : available.entrySet()) {
             if (selected != null) {
-                if (selected.getUsedLaneCapacityInMeters() < entry.getValue()) {
+                if (selected.getUsedLaneCapacityInMeters() > entry.getValue()) {
                     selected = entry.getKey();
                 }
             } else {
@@ -168,10 +175,12 @@ public class Link {
         return selected;
     }
 
+    // Return all possible lanes based of free space in them
     private Map<CongestionLane, Double> availablePossibleLanes(List<CongestionLane> possibleLanes) {
+        Collections.shuffle(possibleLanes, congestionModel.getRandom()); // randomly shuffle lanes - better for same lanes
         Map<CongestionLane, Double> available = new HashMap<>();
         for (CongestionLane l : possibleLanes) {
-            if (l.getUsedLaneCapacityInMeters() > 5) {
+            if (l.parentLink.getEdge().length - l.getUsedLaneCapacityInMeters() > 5) {
                 available.put(l, l.getUsedLaneCapacityInMeters());
             }
         }
