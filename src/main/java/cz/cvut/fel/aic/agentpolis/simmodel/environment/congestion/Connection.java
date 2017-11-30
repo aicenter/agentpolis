@@ -215,7 +215,7 @@ public class Connection extends EventHandlerAdapter {
     }
 
     void scheduleEndDriving(VehicleTripData vehicleTripData, Lane lane) {
-        Log.info(this, "Schedule end driving START");
+        Log.debug(this, "Schedule end driving START");
 
 //        long delay = CongestionModel.computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
         long delay = congestionModel.computeArrivalDelay(vehicleTripData);
@@ -224,12 +224,12 @@ public class Connection extends EventHandlerAdapter {
 
 //        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, delay);
         congestionModel.makeScheduledEvent(this, this, delay);
-        Log.info(this, "Schedule end driving END");
+        Log.debug(this, "Schedule end driving END");
 
     }
 
     private void endVehicleFromLastTick() {
-        Log.info(this, "Ending vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: ");
+        Log.debug(this, "Ending vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: ");
 
         VehicleEndData vehicleEndData = (VehicleEndData) vehicleEventData;
         endDriving(vehicleEndData.vehicleTripData, vehicleEndData.lane);
@@ -242,7 +242,7 @@ public class Connection extends EventHandlerAdapter {
             if (currentTime >= closestCarArrivalTime) {
                 closestCarArrivalTime = Long.MAX_VALUE;
             }
-            Log.info(this, "checking driving queue of " + lane + " at " + currentTime);
+            Log.debug(this, "checking driving queue of " + lane + " at " + currentTime);
             long firstTransferToWaitingQueueTime = lane.drivingQueue.peek().getMinPollTime();
             if (firstTransferToWaitingQueueTime < closestCarArrivalTime) {
                 closestCarArrivalTime = firstTransferToWaitingQueueTime;
