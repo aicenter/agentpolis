@@ -58,7 +58,7 @@ public class Connection extends EventHandlerAdapter {
         /* if event comes while connection is woken up */
         if (vehicleEventData != null
                 && vehicleEventData.transferFinishTime > congestionModel.timeProvider.getCurrentSimTime()) {
-            Log.info(this, "if event comes while connection is woken up");
+            Log.debug(this, "if event comes while connection is woken up");
             return;
         }
         
@@ -92,7 +92,7 @@ public class Connection extends EventHandlerAdapter {
      */
     private boolean tryTransferVehicle() {
 
-        Log.info(this, "TryTransferVehicles START");
+        Log.debug(this, "TryTransferVehicles START");
         /* no one is waiting */
         if (!inLane.hasWaitingVehicles()) {
             checkDrivingQue(inLane);
@@ -117,7 +117,7 @@ public class Connection extends EventHandlerAdapter {
         }
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id,
+            Log.debug(Connection.class, "Connection {0}: No space in queue to {1}!", node.id,
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
             return false;
@@ -180,12 +180,12 @@ public class Connection extends EventHandlerAdapter {
     private void transferVehicleFromLastTick() {
         VehicleTransferData vehicleTransferData = (VehicleTransferData) vehicleEventData;
         transferVehicle(vehicleTransferData.vehicleTripData, vehicleTransferData.from, vehicleTransferData.to);
-        Log.info(this, "Transfering vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: " + vehicleTransferData.transferFinishTime);
+        Log.debug(this, "Transfering vehicle from last tick: currentTime:" + congestionModel.timeProvider.getCurrentSimTime() + " tr_finish_time: " + vehicleTransferData.transferFinishTime);
         vehicleEventData = null;
     }
 
     void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
-        Log.info(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
+        Log.debug(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
         long delay = computeTransferDelay(vehicleTripData, to);
         long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
         vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
@@ -199,7 +199,7 @@ public class Connection extends EventHandlerAdapter {
         }
 
         congestionModel.makeScheduledEvent(this, this, delay);
-        Log.info(this, "Scheduling vehicle transfer END");
+        Log.debug(this, "Scheduling vehicle transfer END");
     }
 
     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
