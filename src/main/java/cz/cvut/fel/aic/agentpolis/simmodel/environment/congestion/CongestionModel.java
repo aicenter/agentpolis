@@ -203,11 +203,11 @@ public class CongestionModel {
     }
 
     public void makeTickEvent(Object caller, EventHandler target, long delay) {
-        Log.info(this, "adding tick: delay = " + delay + "source:" + caller + "target =" + target);
+        Log.debug(this, "adding tick: delay = " + delay + "source:" + caller + "target =" + target);
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, target, null, null, delay != 0 ? delay : 1);
     }
     public void makeScheduledEvent(Object caller, EventHandler target, long delay) {
-        Log.info(this, "adding scheduled event: delay = " + delay + "source:" + caller + "target =" + target);
+        Log.debug(this, "adding scheduled event: delay = " + delay + "source:" + caller + "target =" + target);
         simulationProvider.getSimulation().addEvent(ConnectionEvent.SCHEDULED_EVENT, target, null, null, delay != 0 ? delay : 1);
     }
 

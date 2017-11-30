@@ -78,7 +78,7 @@ public class Crossroad extends Connection {
 
     @Override
     protected void serveLanes() {
-        Log.info(this, "Serve lanes START");
+        Log.debug(this, "Serve lanes START");
 
         // getting all lanes with waiting vehicles
         findNonEmptyLanes();
@@ -102,7 +102,7 @@ public class Crossroad extends Connection {
 
             tryTransferNextVehicle = tryTransferVehicle(chosenLane);
         }
-        Log.info(this, "Serve lanes END, with " + c + " loops");
+        Log.debug(this, "Serve lanes END, with " + c + " loops");
     }
 
     private void laneDepleted(Lane lane) {
@@ -183,12 +183,12 @@ public class Crossroad extends Connection {
     }
 
     private boolean tryTransferVehicle(Lane chosenLane) {
-        Log.info(this, "CROSSROAD: TryTransferVehicles START");
+        Log.debug(this, "CROSSROAD: TryTransferVehicles START");
 
         /* no vehicles in queue */
         if (!chosenLane.hasWaitingVehicles()) {
             laneDepleted(chosenLane);
-            Log.info(this, "CROSSROAD: TryTransferVehicles END returns true - lane depleted");
+            Log.debug(this, "CROSSROAD: TryTransferVehicles END returns true - lane depleted");
 
             return true;
         }
@@ -220,11 +220,11 @@ public class Crossroad extends Connection {
         }
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINER, "Crossroad {0}: No space in queue to {1}!", node.id,
+            Log.debug(Connection.class, "Crossroad {0}: No space in queue to {1}!", node.id,
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
             laneDepleted(chosenLane);
-            Log.info(this, "TryTransferVehicles END - returning true");
+            Log.debug(this, "TryTransferVehicles END - returning true");
 
             return true;
         }
