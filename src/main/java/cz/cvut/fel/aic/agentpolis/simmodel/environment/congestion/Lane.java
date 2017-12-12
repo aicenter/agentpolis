@@ -228,7 +228,7 @@ public class Lane extends EventHandlerAdapter {
     }
 
     public int getDrivingCarsCountOnLane() {
-        return drivingQueue.size();
+        return drivingQueue.size()+waitingQueue.size();
     }
 
     private double calculateSpeedCoefficient(double carsPerKilometer) {
