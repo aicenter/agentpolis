@@ -52,6 +52,7 @@ public class Lane extends EventHandlerAdapter {
 
     private boolean eventScheduled;
     private CongestionModel congestionModel;
+    private double criticalDensity;
 
 
     public boolean wakeConnectionAfterTransfer() {
@@ -68,7 +69,7 @@ public class Lane extends EventHandlerAdapter {
 
 
     public Lane(Link link, double linkCapacityInMeters, TimeProvider timeProvider,
-                SimulationProvider simulationProvider) {
+                SimulationProvider simulationProvider, double criticalDensity) {
         this.link = link;
         this.congestionModel = link.congestionModel;
         this.simulationProvider = simulationProvider;
@@ -78,6 +79,7 @@ public class Lane extends EventHandlerAdapter {
         this.drivingQueue = new LinkedList<>();
         this.waitingQueue = new LinkedList<>();
         eventScheduled = false;
+        this.criticalDensity = criticalDensity;
     }
 
 
@@ -215,7 +217,7 @@ public class Lane extends EventHandlerAdapter {
         double carsPerKilometer = getDrivingCarsCountOnLane() / edge.shape.getShapeLength() * 1000.0;
 
         double congestedSpeed;
-        if (carsPerKilometer < 20) {
+        if (carsPerKilometer <= criticalDensity) {
             congestedSpeed = freeFlowVelocity;
         } else if (carsPerKilometer > 70) {
             congestedSpeed = 0.1 * freeFlowVelocity;
@@ -309,7 +311,6 @@ public class Lane extends EventHandlerAdapter {
         this.prepareAddingToqueue(vehicleTripData);
 
         long delay = congestionModel.computeTransferDelay(vehicleTripData, this);
-
         String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, delay);

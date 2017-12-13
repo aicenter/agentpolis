@@ -150,7 +150,7 @@ public class CongestionModel {
             Connection toConnection = connectionsMappedByNodes.get(toNode);
             for (SimulationEdge outEdge : nextEdges) {
                 SimulationNode nextNode = graph.getNode(outEdge.toId);
-                Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider);
+                Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider,config.congestionModel.criticalDensity);
                 link.addLane(newLane, nextNode);
                 Link outLink = linksMappedByEdges.get(outEdge);
                 if (toConnection instanceof Crossroad) {

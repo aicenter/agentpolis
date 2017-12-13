@@ -32,7 +32,7 @@ public class LaneCongestionModel {
         double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
 
         double congestedSpeed;
-        if (carsPerKilometer < 20) {
+        if (carsPerKilometer <= config.congestionModel.criticalDensity) {
             congestedSpeed = freeFlowVelocity;
         } else if (carsPerKilometer > 70) {
             congestedSpeed = 0.1 * freeFlowVelocity;
