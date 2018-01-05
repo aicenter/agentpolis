@@ -25,6 +25,7 @@ import java.util.logging.Level;
  * @author fido
  */
 public class Connection extends EventHandlerAdapter {
+    private long lastTransferTime;
 
     protected final CongestionModel congestionModel;
 
@@ -186,8 +187,12 @@ public class Connection extends EventHandlerAdapter {
 
     void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
         Log.debug(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
-        long delay = computeTransferDelay(vehicleTripData, to);
-        long transferFinishTime = congestionModel.timeProvider.getCurrentSimTime() + delay;
+        long arrivalDelay = computeConnectionArrivalDelay(vehicleTripData);
+        long timeHeadaway = computeTransferDelay(vehicleTripData, to);
+        long arrivalTime = congestionModel.timeProvider.getCurrentSimTime() + arrivalDelay;
+        long earliestTransferTime = lastTransferTime + timeHeadaway;
+        long transferFinishTime = Math.max(arrivalTime, earliestTransferTime);
+        lastTransferTime = transferFinishTime;
         vehicleEventData = new VehicleTransferData(from, to, vehicleTripData, transferFinishTime);
 
 
@@ -198,12 +203,12 @@ public class Connection extends EventHandlerAdapter {
             vehicleTripData.setTripFinished(true);
         }
 
-        congestionModel.makeScheduledEvent(this, this, delay);
+        congestionModel.makeScheduledEvent(this, this, arrivalDelay);
         Log.debug(this, "Scheduling vehicle transfer END");
     }
 
     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
-        return computeConnectionArrivalDelay(vehicleTripData);// + congestionModel.computeTransferDelay(vehicleTripData, to);
+        return congestionModel.computeTransferDelay(vehicleTripData, to);
     }
 
     protected long computeConnectionArrivalDelay(VehicleTripData vehicleTripData) {

@@ -230,7 +230,7 @@ public class Lane extends EventHandlerAdapter {
     }
 
     public int getDrivingCarsCountOnLane() {
-        return drivingQueue.size()+waitingQueue.size();
+        return drivingQueue.size() + waitingQueue.size();
     }
 
     private double calculateSpeedCoefficient(double carsPerKilometer) {
@@ -313,7 +313,7 @@ public class Lane extends EventHandlerAdapter {
         long delay = congestionModel.computeTransferDelay(vehicleTripData, this);
         String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, delay);
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, (delay > 0 ? delay : 1));
         eventScheduled = true;
     }
 

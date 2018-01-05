@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 
 public class LaneCongestionModel {
@@ -18,14 +17,29 @@ public class LaneCongestionModel {
     }
 
     public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
-
-        if (config.congestionModel.fundamentalDiagramDelay) {
-            return computeCongestedTransferDelay(vehicleTripData, toLane);
-        } else {
-            return computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
-        }
+        return computeTimeHeadway(vehicleTripData, toLane);
+//        if (config.congestionModel.fundamentalDiagramDelay) {
+//            return computeCongestedTransferDelay(vehicleTripData, toLane);
+//        } else {
+//            return computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
+//        }
     }
 
+    private long computeTimeHeadway(VehicleTripData tripData, Lane lane) {
+        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
+        double velocity = tripData.getVehicle().getVelocity();
+        double flow = computeFlow(carsPerKilometer);
+        long timeHeadway = (long) (1 / flow * 1000);
+        return timeHeadway;
+    }
+
+    private double computeFlow(double carsPerKilometer) {
+        if(carsPerKilometer < config.congestionModel.criticalDensity){
+            return max_flow;
+        }else{
+            return carsPerKilometer / maxDensity *( 1-carsPerKilometer / maxDensity) * max_speed;
+        }
+    }
 
 
     private double computeCongestedSpeed(double freeFlowVelocity, Lane lane) {
