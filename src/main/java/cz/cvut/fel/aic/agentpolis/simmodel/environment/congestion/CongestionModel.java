@@ -211,8 +211,11 @@ public class CongestionModel {
         simulationProvider.getSimulation().addEvent(ConnectionEvent.SCHEDULED_EVENT, target, null, null, delay != 0 ? delay : 1);
     }
 
+    public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane, Lane fromLane) {
+        return laneCongestionModel.computeTransferDelay(vehicleTripData, toLane, fromLane);
+    }
     public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
-        return laneCongestionModel.computeTransferDelay(vehicleTripData, toLane);
+        return laneCongestionModel.computeTransferDelay(vehicleTripData, toLane, null);
     }
 
     public long computeArrivalDelay(VehicleTripData vehicleTripData) {
@@ -225,6 +228,7 @@ public class CongestionModel {
         }
         return arrivalDelay;
     }
+
 
 
 }

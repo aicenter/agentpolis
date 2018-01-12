@@ -231,7 +231,7 @@ public class Crossroad extends Connection {
     }
 
     @Override
-    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
+    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane, Lane from) {
 
         return computeConnectionArrivalDelay(vehicleTripData) + computeCrossroadDelay(vehicleTripData, toLane);
     }

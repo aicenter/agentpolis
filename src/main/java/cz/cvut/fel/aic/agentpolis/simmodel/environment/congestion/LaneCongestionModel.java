@@ -16,8 +16,8 @@ public class LaneCongestionModel {
         this.timeProvider = timeProvider;
     }
 
-    public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane) {
-        return computeTimeHeadway(vehicleTripData, toLane);
+    public long computeTransferDelay(VehicleTripData vehicleTripData, Lane toLane, Lane fromLane) {
+        return computeTimeHeadway(vehicleTripData, toLane, fromLane);
 //        if (config.congestionModel.fundamentalDiagramDelay) {
 //            return computeCongestedTransferDelay(vehicleTripData, toLane);
 //        } else {
@@ -25,27 +25,44 @@ public class LaneCongestionModel {
 //        }
     }
 
-    private long computeTimeHeadway(VehicleTripData tripData, Lane lane) {
-        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
+    private long computeTimeHeadway(VehicleTripData tripData, Lane toLane, Lane fromLane) {
+        double carsPerKilometer = toLane.getDrivingCarsCountOnLane() / toLane.link.edge.shape.getShapeLength() * 1000.0;
         double velocity = tripData.getVehicle().getVelocity();
-        double flow = computeFlow(carsPerKilometer);
-        long timeHeadway = (long) (1 / flow * 1000);
+        double supplyFlow = toLane.link.edge.getLanesCount() * computeFlow(toLane.getDrivingCarsCountOnLane()/toLane.link.edge.getLanesCount(), toLane.link.edge.shape.getShapeLength(), velocity);
+        double demandFlow = Double.MAX_VALUE;
+        if (fromLane != null) {
+            demandFlow = fromLane.link.edge.getLanesCount() * computeDemandFlow(fromLane.getDrivingCarsCountOnLane()/fromLane.link.edge.getLanesCount(), fromLane.link.edge.shape.getShapeLength(), velocity);
+        }
+        double flow = Math.min(supplyFlow, demandFlow);
+        long timeHeadway = (long) (1 / flow * 1000);//* ((int)(0.75+0.5*Math.random()));
         return timeHeadway;
     }
 
-    private double computeFlow(double carsPerKilometer) {
-        if(carsPerKilometer < config.congestionModel.criticalDensity){
-            return max_flow;
-        }else{
-            return carsPerKilometer / maxDensity *( 1-carsPerKilometer / maxDensity) * max_speed;
+    private double computeFlow(double carsOnSegment, double segmentLength, double velocity) {
+        double carsPerMeter = carsOnSegment / segmentLength;
+        double congestedVelocity = computeCongestedSpeed(velocity, carsPerMeter);
+        double flow = config.congestionModel.criticalDensity / 1000.0 * velocity;
+        if (congestedVelocity < velocity) {
+            flow = carsPerMeter * congestedVelocity;
         }
+        return flow;
     }
 
+    private double computeDemandFlow(double carsOnSegment, double segmentLength, double velocity) {
+        double carsPerMeter = carsOnSegment / segmentLength;
+        double congestedVelocity = computeCongestedSpeed(velocity, carsPerMeter);
+        double flow = config.congestionModel.criticalDensity / 1000.0 * velocity;
+        if (congestedVelocity < velocity) {
+            flow = config.congestionModel.criticalDensity / 1000 * velocity;
+        } else {
+            flow = carsPerMeter * velocity;
+        }
+        return flow;
+    }
 
-    private double computeCongestedSpeed(double freeFlowVelocity, Lane lane) {
-        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
-
+    private double computeCongestedSpeed(double freeFlowVelocity, double carsPerMeter) {
         double congestedSpeed;
+        double carsPerKilometer = carsPerMeter * 1000;
         if (carsPerKilometer <= config.congestionModel.criticalDensity) {
             congestedSpeed = freeFlowVelocity;
         } else if (carsPerKilometer > 70) {
@@ -56,6 +73,12 @@ public class LaneCongestionModel {
         Log.debug(this, "Congested speed: " + carsPerKilometer + "cars / km -> " + congestedSpeed + "m / s");
 
         return congestedSpeed;
+    }
+
+    private double computeCongestedSpeed(double freeFlowVelocity, Lane lane) {
+        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength();
+
+        return computeCongestedSpeed(freeFlowVelocity, carsPerKilometer);
     }
 
     private double calculateSpeedCoefficient(double carsPerKilometer) {

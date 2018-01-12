@@ -19,8 +19,6 @@ import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
-import java.util.logging.Level;
-
 /**
  * @author fido
  */
@@ -186,9 +184,9 @@ public class Connection extends EventHandlerAdapter {
     }
 
     void scheduleVehicleTransfer(VehicleTripData vehicleTripData, Lane from, Lane to) {
-        Log.debug(this, "Scheduling vehicle transfer START {0}",congestionModel.timeProvider.getCurrentSimTime() );
+        Log.debug(this, "Scheduling vehicle transfer START {0}", congestionModel.timeProvider.getCurrentSimTime());
         long arrivalDelay = computeConnectionArrivalDelay(vehicleTripData);
-        long timeHeadaway = computeTransferDelay(vehicleTripData, to);
+        long timeHeadaway = computeTransferDelay(vehicleTripData, to, from);
         long arrivalTime = congestionModel.timeProvider.getCurrentSimTime() + arrivalDelay;
         long earliestTransferTime = lastTransferTime + timeHeadaway;
         long transferFinishTime = Math.max(arrivalTime, earliestTransferTime);
@@ -202,13 +200,13 @@ public class Connection extends EventHandlerAdapter {
         if (vehicleTripData.getTrip().isEmpty()) {
             vehicleTripData.setTripFinished(true);
         }
-
-        congestionModel.makeScheduledEvent(this, this, arrivalDelay);
+        long delay = Math.max(1, transferFinishTime - congestionModel.timeProvider.getCurrentSimTime());
+        congestionModel.makeScheduledEvent(this, this, delay);
         Log.debug(this, "Scheduling vehicle transfer END");
     }
 
-    protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to) {
-        return congestionModel.computeTransferDelay(vehicleTripData, to);
+     protected long computeTransferDelay(VehicleTripData vehicleTripData, Lane to,Lane from) {
+        return congestionModel.computeTransferDelay(vehicleTripData, to, from);
     }
 
     protected long computeConnectionArrivalDelay(VehicleTripData vehicleTripData) {
