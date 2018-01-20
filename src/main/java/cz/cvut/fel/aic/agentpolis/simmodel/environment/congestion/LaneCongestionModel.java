@@ -26,18 +26,20 @@ public class LaneCongestionModel {
     }
 
     private long computeTimeHeadway(VehicleTripData tripData, Lane lane) {
-        double carsPerKilometer = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength() * 1000.0;
+        double density = lane.getDrivingCarsCountOnLane() / lane.link.edge.shape.getShapeLength();
         double velocity = tripData.getVehicle().getVelocity();
-        double flow = computeFlow(carsPerKilometer);
+        double maxDensity = lane.link.edge.shape.getShapeLength() / 500.0;
+        double flow = computeFlow(density, maxDensity, velocity);
         long timeHeadway = (long) (1 / flow * 1000);
         return timeHeadway;
     }
 
-    private double computeFlow(double carsPerKilometer) {
-        if(carsPerKilometer < config.congestionModel.criticalDensity){
-            return max_flow;
-        }else{
-            return carsPerKilometer / maxDensity *( 1-carsPerKilometer / maxDensity) * max_speed;
+    private double computeFlow(double carsPerKilometer, double maxDensity, double maxSpeed) {
+        double occupancy = carsPerKilometer / maxDensity;
+        if (occupancy < 0.5) {
+            return 0.25;
+        } else {
+            return occupancy * (1 - occupancy) * maxSpeed;
         }
     }
 

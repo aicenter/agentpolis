@@ -84,7 +84,7 @@ public class CongestionModelTest {
             assertTrue("Link " + simulationEdge.getLogInfo()+ " has no lanes!", 
                     link.getLaneCount() > 0);
             
-            // check all next nodes has a lane
+            // check all next nodes has a segment
             checkLaneForEachNextNode(roadGraph, link);
         }
     }
@@ -96,7 +96,7 @@ public class CongestionModelTest {
         for (SimulationEdge outEdge : outEdges) {
             SimulationNode nextNode = roadGraph.getNode(outEdge.toId);
             
-            assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
+            assertNotNull("No segment for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
         }
     }
 

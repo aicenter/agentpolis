@@ -38,12 +38,12 @@ public class Crossroad extends Connection {
     private final double maxFlow;
 
     /**
-     * currently or last served lane
+     * currently or last served segment
      */
     private Lane chosenLane;
 
     /**
-     * lanes that are ready to transfer vehicles ie non-empty with free next lane
+     * lanes that are ready to transfer vehicles ie non-empty with free next segment
      */
     private List<Lane> readyLanes;
 
@@ -188,7 +188,7 @@ public class Crossroad extends Connection {
         /* no vehicles in queue */
         if (!chosenLane.hasWaitingVehicles()) {
             laneDepleted(chosenLane);
-            Log.debug(this, "CROSSROAD: TryTransferVehicles END returns true - lane depleted");
+            Log.debug(this, "CROSSROAD: TryTransferVehicles END returns true - segment depleted");
 
             return true;
         }
