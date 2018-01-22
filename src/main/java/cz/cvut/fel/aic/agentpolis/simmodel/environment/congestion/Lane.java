@@ -146,7 +146,8 @@ public class Lane extends EventHandlerAdapter {
 
         long estimatedDelayToQueueEnd = link.congestionModel.computeDelayAndSetVehicleData(vehicleTripData, this);
 
-        long minExitTime = timeProvider.getCurrentSimTime() + estimatedDelayToQueueEnd;
+        long minExitTime = timeProvider.getCurrentSimTime() + 1;
+//        long minExitTime = timeProvider.getCurrentSimTime() + estimatedDelayToQueueEnd;
         drivingQueue.add(new VehicleQueueData(vehicleTripData, minExitTime));
     }
 

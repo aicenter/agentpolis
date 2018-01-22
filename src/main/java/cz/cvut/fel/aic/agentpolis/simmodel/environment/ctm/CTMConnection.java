@@ -2,6 +2,9 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.ctm;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.Message;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMessage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleQueueData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleTripData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
@@ -19,7 +22,7 @@ import java.util.Map;
 public class CTMConnection extends EventHandlerAdapter {
 
     private final SimulationNode position;
-    long deltaT = 10 * 1000;
+    private long deltaT = 10 * 1000;
     private SimulationProvider simulationProvider;
     private List<Segment> inSegments;
     private Map<SimulationNode, Segment> outSegments;
@@ -40,8 +43,8 @@ public class CTMConnection extends EventHandlerAdapter {
             update();
             simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, deltaT);
         } else if (event.getType().equals(ConnectionEvent.SCHEDULED_EVENT)) {
-            if (event.getContent() instanceof VehicleEndData) {
-                finnishCar((VehicleCTMEndData) event.getContent());
+            if (event.getContent() instanceof VehicleCTMEndData) {
+                finishCar((VehicleCTMEndData) event.getContent());
             } else if (event.getContent() instanceof VehicleCTMTransferData) {
                 // car transfer
                 transferCar((VehicleCTMTransferData) event.getContent());
@@ -56,9 +59,13 @@ public class CTMConnection extends EventHandlerAdapter {
         addCarToNextSegment(toSegment, car);
     }
 
-    private void finnishCar(VehicleCTMEndData data) {
+    private void finishCar(VehicleCTMEndData data) {
         Segment segment = data.segment;
         VehicleQueueData car = segment.carQueue.pollCar();
+
+        car.getVehicleTripData().getVehicle().setPosition(position);
+        ((Agent) car.getVehicleTripData().getVehicle().getDriver()).processMessage(new Message(
+                CongestionMessage.DRIVING_FINISHED, null));
 
     }
 

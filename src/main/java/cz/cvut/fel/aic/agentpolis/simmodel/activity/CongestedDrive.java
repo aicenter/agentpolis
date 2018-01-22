@@ -13,25 +13,23 @@ import cz.cvut.fel.aic.agentpolis.simmodel.Message;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CTMCongestionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMessage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 
 /**
- *
- * @author fido
  * @param <A>
+ * @author fido
  */
-public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends Activity<A> implements PhysicalVehicleDrive{
-    
+public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends Activity<A> implements PhysicalVehicleDrive {
+
     private final CTMCongestionModel congestionModel;
-    
+
     private final Trip<SimulationNode> trip;
-    
+
     private final PhysicalVehicle vehicle;
 
     public CongestedDrive(ActivityInitializer activityInitializer, A agent, CTMCongestionModel congestionModel,
-            Trip<SimulationNode> trip, PhysicalVehicle vehicle) {
+                          Trip<SimulationNode> trip, PhysicalVehicle vehicle) {
         super(activityInitializer, agent);
         this.congestionModel = congestionModel;
         this.trip = trip;
@@ -46,12 +44,11 @@ public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends A
 
     @Override
     public void processMessage(Message message) {
-        if(message.getType() == CongestionMessage.DRIVING_FINISHED){
+        if (message.getType() == CongestionMessage.DRIVING_FINISHED) {
             agent.endDriving();
             finish();
         }
     }
-    
-    
-    
+
+
 }
