@@ -60,7 +60,7 @@ public class TestFiveNodesInRow {
         graphBuilder.addEdge(edgeBack);
 
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        Trip<SimulationNode>[] trips = new Trip[50];
+        Trip<SimulationNode>[] trips = new Trip[100];
 
         for(int i = 0; i < trips.length; i++){
             Trip<SimulationNode> trip = new Trip<>(node0, node1, node2, node3, node4);

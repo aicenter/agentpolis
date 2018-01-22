@@ -310,7 +310,7 @@ public class Lane extends EventHandlerAdapter {
         /* next que capacity reservation */
         this.prepareAddingToqueue(vehicleTripData);
 
-        long delay = congestionModel.computeTransferDelay(vehicleTripData, this);
+        long delay = congestionModel.computeTransferDelay(vehicleTripData, this);// / (1 + (int) (Math.random() * 2));
         String message = "Vehicle " + vehicleTripData.getVehicle().getId() + " delayed start";
 
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, message, (delay > 0 ? delay : 1));
