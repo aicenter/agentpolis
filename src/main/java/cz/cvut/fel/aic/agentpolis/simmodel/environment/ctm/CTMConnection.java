@@ -4,11 +4,12 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMessage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleQueueData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleTripData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
@@ -22,10 +23,11 @@ import java.util.Map;
 public class CTMConnection extends EventHandlerAdapter {
 
     private final SimulationNode position;
-    private long deltaT = 10 * 1000;
+    private long deltaT = 5 * 1000;
     private SimulationProvider simulationProvider;
     private List<Segment> inSegments;
     private Map<SimulationNode, Segment> outSegments;
+
 
     public CTMConnection(SimulationNode position, SimulationProvider simulationProvider, List<Segment> inSegments, Map<SimulationNode, Segment> outSegments) {
         this.simulationProvider = simulationProvider;
@@ -77,20 +79,22 @@ public class CTMConnection extends EventHandlerAdapter {
     }
 
     private void scheduleTransfers(int carsToTransfer, Segment fromSegment) {
-        long currentTime = simulationProvider.getSimulation().getCurrentTime();
-        long firstStartTime = currentTime + 1;
-        long endTime = currentTime + deltaT;
-        double period = endTime - firstStartTime;
-        double headwayInS = period / carsToTransfer;
-        Iterator carIterator = fromSegment.carQueue.carQueue.iterator();
-        for (long t = firstStartTime; t < endTime && carIterator.hasNext(); t += headwayInS) {
-            VehicleQueueData car = (VehicleQueueData) carIterator.next();
-            VehicleTripData tripData = car.getVehicleTripData();
-            if (tripData.isTripFinished()) {
-                scheduleFinish(fromSegment, t);
-            } else {
-                Segment toSegment = getNextSegment(tripData);
-                scheduleTransfer(fromSegment, toSegment, t);
+        if (carsToTransfer > 0) {
+            long currentTime = simulationProvider.getSimulation().getCurrentTime();
+            long endTime = currentTime + deltaT;
+            long period = endTime - currentTime;
+            long headwayInMS = period / carsToTransfer;
+            long firstStartTime = currentTime + headwayInMS / 2;
+            Iterator carIterator = fromSegment.carQueue.carQueue.iterator();
+            for (long t = firstStartTime; t < endTime && carIterator.hasNext(); t += headwayInMS) {
+                VehicleQueueData car = (VehicleQueueData) carIterator.next();
+                VehicleTripData tripData = car.getVehicleTripData();
+                if (tripData.isTripFinished()) {
+                    scheduleFinish(fromSegment, t);
+                } else {
+                    Segment toSegment = getNextSegment(tripData);
+                    scheduleTransfer(fromSegment, toSegment, t);
+                }
             }
         }
     }
@@ -135,7 +139,7 @@ public class CTMConnection extends EventHandlerAdapter {
         } else {
             flow = Math.max(0, -segment.w * (density - jamDensity));
         }
-        int cars = (int) (flow * deltaT/1000);
+        int cars = (int) (flow * deltaT / 1000);
         return cars;
 
     }
@@ -149,7 +153,7 @@ public class CTMConnection extends EventHandlerAdapter {
         } else {
             flow = criticalFlow;
         }
-        int cars = (int) (flow * deltaT/1000);
+        int cars = (int) (flow * deltaT / 1000);
         return cars;
     }
 
@@ -163,11 +167,18 @@ public class CTMConnection extends EventHandlerAdapter {
     private void addCarToNextSegment(Segment segmentToGo, VehicleQueueData vehicleQueueData) {
         segmentToGo.carQueue.insertCar(vehicleQueueData);
         Trip trip = vehicleQueueData.getVehicleTripData().getTrip();
+        SimulationNode nextNode = (SimulationNode) trip.getFirstLocation();
         trip.removeFirstLocation();
         if (trip.isEmpty()) {
             vehicleQueueData.getVehicleTripData().setTripFinished(true);
         }
         vehicleQueueData.getVehicleTripData().getVehicle().setPosition(position);
+        long delay = 15000;
+        DelayData delayData = new DelayData(delay, simulationProvider.getSimulation().getCurrentTime(), segmentToGo.length);
+
+        Driver driver = vehicleQueueData.getVehicleTripData().getVehicle().getDriver();
+        driver.setTargetNode(nextNode);
+        driver.setDelayData(delayData);
 
     }
 

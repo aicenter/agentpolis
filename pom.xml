@@ -100,5 +100,10 @@
             <groupId>java3d</groupId>
             <artifactId>vecmath</artifactId>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>edu.mines.jtk</groupId>
+            <artifactId>edu-mines-jtk</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

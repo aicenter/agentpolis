@@ -28,31 +28,42 @@ public class TestNNodesInRow {
     public void run() throws Throwable {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-        int N = 21;
-        int overallLength = 200000;
+        int N = 101;
+        int overallLength = 2000000;
         int projectedOffset = overallLength / (N - 1);
-        int segmentLength = overallLength / (N - 1)/100;
-        ArrayList<SimulationNode> nodes = new ArrayList<>(N);
+        int segmentLength = overallLength / (N - 1) / 100;
+
+        float v = 30;
+
+        int uniqueWayId = 0;
+
+        ArrayList<SimulationNode> nodes = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             SimulationNode node = new SimulationNode(i, 0, 0, 0, i * projectedOffset, i * projectedOffset, 0);
             graphBuilder.addNode(node);
             nodes.add(node);
         }
+
+        SimulationNode extraNode = new SimulationNode(N, 0, 0, 0, 100000, 0, 0);
+        graphBuilder.addNode(extraNode);
+        nodes.add(extraNode);
         for (int i = 0; i < N - 1; i++) {
-            int lanes = 4;
-            if(i==5){
-                lanes = 4;
+            int lanes = 2;
+            if (i == N/2) {
+                lanes = 1;
             }
-            SimulationEdge edge = new SimulationEdge(i, i + 1, 0, 0, 0, segmentLength, 40, lanes, new EdgeShape(Arrays.asList(nodes.get(i), nodes.get(i + 1))));
+            SimulationEdge edge = new SimulationEdge(i, i + 1, 0, uniqueWayId++, 0, segmentLength, v, lanes, new EdgeShape(Arrays.asList(nodes.get(i), nodes.get(i + 1))));
             graphBuilder.addEdge(edge);
 
         }
 
-        SimulationEdge edgeBack = new SimulationEdge(N - 1, 0, 0, 0, 0, overallLength/100, 40, 1, new EdgeShape(Arrays.asList(nodes.get(N - 1), nodes.get(0))));
-        graphBuilder.addEdge(edgeBack);
+        SimulationEdge edgeBack1 = new SimulationEdge(N - 1, extraNode.id, 0, uniqueWayId++, 0, segmentLength, v, 1, new EdgeShape(Arrays.asList(nodes.get(N - 1), nodes.get(N))));
+        SimulationEdge edgeBack2 = new SimulationEdge(extraNode.id, 0, 0, uniqueWayId++, 0, segmentLength, v, 1, new EdgeShape(Arrays.asList(nodes.get(N), nodes.get(0))));
+        graphBuilder.addEdge(edgeBack1);
+        graphBuilder.addEdge(edgeBack2);
 
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        Trip<SimulationNode>[] trips = new Trip[100];
+        Trip<SimulationNode>[] trips = new Trip[1000];
 
         for (int i = 0; i < trips.length; i++) {
             Trip<SimulationNode> trip = new Trip<>(new LinkedList<>(nodes));

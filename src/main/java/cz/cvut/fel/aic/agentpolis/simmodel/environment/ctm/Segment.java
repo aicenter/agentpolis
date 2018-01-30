@@ -13,7 +13,7 @@ public class Segment {
         this.length = edge.shape.getShapeLength();
         this.v = edge.allowedMaxSpeedInMpS;
         this.w = edge.allowedMaxSpeedInMpS;
-        this.criticalDensity = 0.02;
+        this.criticalDensity = 0.02 * edge.getLanesCount();
         this.carQueue = new SegmentQueue();
     }
 }
