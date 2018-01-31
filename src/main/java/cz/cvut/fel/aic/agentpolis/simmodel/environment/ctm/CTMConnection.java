@@ -15,9 +15,7 @@ import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class CTMConnection extends EventHandlerAdapter {
@@ -72,10 +70,16 @@ public class CTMConnection extends EventHandlerAdapter {
     }
 
     private void update() {
+        HashMap<Segment, Integer> carsToSend = new HashMap<>();
+        HashMap<Segment, Integer> carsToReceive = new HashMap<>();
+
         inSegments.forEach(fromSegment -> {
-            int carsToTransfer = computeFlow(fromSegment);
-            scheduleTransfers(carsToTransfer, fromSegment);
+            carsToSend.put(fromSegment, computeSupply(fromSegment));
         });
+        outSegments.values().forEach(toSegment -> {
+            carsToReceive.put(toSegment, computeDemand(toSegment));
+        });
+        int carsToTransfer = computeFlow(carsToSend, carsToReceive);
     }
 
     private void scheduleTransfers(int carsToTransfer, Segment fromSegment) {
@@ -118,15 +122,18 @@ public class CTMConnection extends EventHandlerAdapter {
         simulationProvider.getSimulation().addEvent(ConnectionEvent.SCHEDULED_EVENT, this, null, content, delay != 0 ? delay : 1);
     }
 
-    private int computeFlow(Segment fromSegment) {
-        if (outSegments.size() == 1) {
-            Segment toSegment = outSegments.values().iterator().next();
-            int supply = computeSupply(fromSegment);
-            int demand = computeDemand(toSegment);
-            return Math.min(supply, demand);
-        } else {
-            return 0;
+    private int computeFlow(HashMap<Segment, Integer> supply, HashMap<Segment, Integer> demand) {
+        // according to connection type decide which inSegments are active(green lights),
+        //schedule tranfers while demnad capacities are respected
+        Map.Entry<Segment, Integer> minDemand = Collections.min(demand.entrySet(),
+                Comparator.comparingInt(Map.Entry::getValue));
+
+        for (Segment fromSegment : supply.keySet()) {
+            int carsToTransfer = Math.min(supply.get(fromSegment), minDemand.getValue());
+            scheduleTransfers(carsToTransfer, fromSegment);
         }
+        return 0;
+
     }
 
     private int computeDemand(Segment segment) {

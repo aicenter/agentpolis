@@ -103,13 +103,13 @@ public class CTMCongestionModel {
                 outSegments.put(graph.getNode(edge.toId), linksMappedByEdges.get(edge));
             });
 
-            if (graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1) {
+//            if (graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1) {
 //                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node, timeProvider);
 //                connectionsMappedByNodes.put(node, crossroad);
-            } else {
+//            } else {
                 CTMConnection connection = new CTMConnection(node, simulationProvider, inSegments, outSegments);
                 connectionsMappedByNodes.put(node, connection);
-            }
+//            }
         }
     }
 
