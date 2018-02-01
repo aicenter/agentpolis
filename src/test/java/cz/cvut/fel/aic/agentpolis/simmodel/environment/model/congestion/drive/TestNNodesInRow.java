@@ -49,11 +49,13 @@ public class TestNNodesInRow {
         nodes.add(extraNode);
         for (int i = 0; i < N - 1; i++) {
             int lanes = 2;
-            if (i == N/2) {
+            if (i == N / 2) {
                 lanes = 1;
             }
             SimulationEdge edge = new SimulationEdge(i, i + 1, 0, uniqueWayId++, 0, segmentLength, v, lanes, new EdgeShape(Arrays.asList(nodes.get(i), nodes.get(i + 1))));
+            SimulationEdge edgeBack = new SimulationEdge(i + 1, i, 0, uniqueWayId++, 0, segmentLength, v, lanes, new EdgeShape(Arrays.asList(nodes.get(i + 1), nodes.get(i))));
             graphBuilder.addEdge(edge);
+            graphBuilder.addEdge(edgeBack);
 
         }
 

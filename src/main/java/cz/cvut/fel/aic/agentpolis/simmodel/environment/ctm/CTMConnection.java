@@ -79,7 +79,7 @@ public class CTMConnection extends EventHandlerAdapter {
         outSegments.values().forEach(toSegment -> {
             carsToReceive.put(toSegment, computeDemand(toSegment));
         });
-        int carsToTransfer = computeFlow(carsToSend, carsToReceive);
+        int carTransfered = computeFlow(carsToSend, carsToReceive);
     }
 
     private void scheduleTransfers(int carsToTransfer, Segment fromSegment) {
@@ -133,6 +133,7 @@ public class CTMConnection extends EventHandlerAdapter {
             scheduleTransfers(carsToTransfer, fromSegment);
         }
         return 0;
+
 
     }
 
