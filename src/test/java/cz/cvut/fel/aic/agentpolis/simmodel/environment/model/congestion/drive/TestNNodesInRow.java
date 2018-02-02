@@ -7,6 +7,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.ctm.CTMConnection;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
@@ -34,7 +35,15 @@ public class TestNNodesInRow {
         int segmentLength = overallLength / (N - 1) / 100;
 
         float v = 30;
+        System.out.println("v = " + v);
+        System.out.println("h = " + segmentLength);
+        System.out.println("deltaT = " + CTMConnection.deltaT / 1000);
+        boolean CFLCondition = (v * CTMConnection.deltaT / 1000 < segmentLength);
+        System.out.println("Courant-Friedrich-Lewy (CFL) condition v*deltaT < h is " + CFLCondition);
 
+        if(!CFLCondition){
+            System.exit(1);
+        }
         int uniqueWayId = 0;
 
         ArrayList<SimulationNode> nodes = new ArrayList<>();
@@ -44,7 +53,7 @@ public class TestNNodesInRow {
             nodes.add(node);
         }
 
-        SimulationNode extraNode = new SimulationNode(N, 0, 0, 0, 100000, 0, 0);
+        SimulationNode extraNode = new SimulationNode(N, 0, 0, 0, 1000000, 1000000, 0);
         graphBuilder.addNode(extraNode);
         nodes.add(extraNode);
         for (int i = 0; i < N - 1; i++) {

@@ -21,7 +21,7 @@ import java.util.*;
 public class CTMConnection extends EventHandlerAdapter {
 
     private final SimulationNode position;
-    private long deltaT = 5 * 1000;
+    public static long deltaT = 5 * 1000;
     private SimulationProvider simulationProvider;
     private List<Segment> inSegments;
     private Map<SimulationNode, Segment> outSegments;
