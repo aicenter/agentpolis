@@ -30,9 +30,8 @@ public class TestNNodesInRow {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
         int N = 101;
-        int overallLength = 2000000;
-        int projectedOffset = overallLength / (N - 1);
-        int segmentLength = overallLength / (N - 1) / 100;
+        int segmentLength = 200;
+        int projectedOffset = segmentLength * 100;
 
         float v = 30;
         System.out.println("v = " + v);
@@ -41,14 +40,14 @@ public class TestNNodesInRow {
         boolean CFLCondition = (v * CTMConnection.deltaT / 1000 < segmentLength);
         System.out.println("Courant-Friedrich-Lewy (CFL) condition v*deltaT < h is " + CFLCondition);
 
-        if(!CFLCondition){
+        if (!CFLCondition) {
             System.exit(1);
         }
         int uniqueWayId = 0;
 
         ArrayList<SimulationNode> nodes = new ArrayList<>();
         for (int i = 0; i < N; i++) {
-            SimulationNode node = new SimulationNode(i, 0, 0, 0, i * projectedOffset, i * projectedOffset, 0);
+            SimulationNode node = new SimulationNode(i, 0, 0, 0, i * projectedOffset, 0, 0);
             graphBuilder.addNode(node);
             nodes.add(node);
         }
@@ -61,15 +60,18 @@ public class TestNNodesInRow {
             if (i == N / 2) {
                 lanes = 1;
             }
-            SimulationEdge edge = new SimulationEdge(i, i + 1, 0, uniqueWayId++, 0, segmentLength, v, lanes, new EdgeShape(Arrays.asList(nodes.get(i), nodes.get(i + 1))));
-            SimulationEdge edgeBack = new SimulationEdge(i + 1, i, 0, uniqueWayId++, 0, segmentLength, v, lanes, new EdgeShape(Arrays.asList(nodes.get(i + 1), nodes.get(i))));
+            EdgeShape shape = new EdgeShape(Arrays.asList(nodes.get(i), nodes.get(i + 1)));
+            SimulationEdge edge = new SimulationEdge(i, i + 1, 0, uniqueWayId++, 0, (int) shape.getShapeLength(), v, lanes, shape);
+            EdgeShape shapeBack = new EdgeShape(Arrays.asList(nodes.get(i + 1), nodes.get(i)));
+            SimulationEdge edgeBack = new SimulationEdge(i + 1, i, 0, uniqueWayId++, 0, (int) shapeBack.getShapeLength(), v, lanes, shapeBack);
             graphBuilder.addEdge(edge);
             graphBuilder.addEdge(edgeBack);
 
         }
-
-        SimulationEdge edgeBack1 = new SimulationEdge(N - 1, extraNode.id, 0, uniqueWayId++, 0, segmentLength, v, 1, new EdgeShape(Arrays.asList(nodes.get(N - 1), nodes.get(N))));
-        SimulationEdge edgeBack2 = new SimulationEdge(extraNode.id, 0, 0, uniqueWayId++, 0, segmentLength, v, 1, new EdgeShape(Arrays.asList(nodes.get(N), nodes.get(0))));
+        EdgeShape shapeBack1 = new EdgeShape(Arrays.asList(nodes.get(N - 1), nodes.get(N)));
+        SimulationEdge edgeBack1 = new SimulationEdge(N - 1, extraNode.id, 0, uniqueWayId++, 0, (int) shapeBack1.getShapeLength(), v, 1, shapeBack1);
+        EdgeShape shapeBack2 = new EdgeShape(Arrays.asList(nodes.get(N), nodes.get(0)));
+        SimulationEdge edgeBack2 = new SimulationEdge(extraNode.id, 0, 0, uniqueWayId++, 0, (int) shapeBack2.getShapeLength(), v, 1, shapeBack2);
         graphBuilder.addEdge(edgeBack1);
         graphBuilder.addEdge(edgeBack2);
 
