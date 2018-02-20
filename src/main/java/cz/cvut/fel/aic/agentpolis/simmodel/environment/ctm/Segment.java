@@ -16,4 +16,12 @@ public class Segment {
         this.criticalDensity = 0.02 * edge.getLanesCount();
         this.carQueue = new SegmentQueue();
     }
+
+    public Segment(double length, double v, double w, double criticalDensity) {
+        this.length = length;
+        this.v = v;
+        this.w = w;
+        this.criticalDensity = criticalDensity;
+        this.carQueue = new SegmentQueue();
+    }
 }

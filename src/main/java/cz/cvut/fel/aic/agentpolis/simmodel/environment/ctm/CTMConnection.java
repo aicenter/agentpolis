@@ -22,17 +22,32 @@ public class CTMConnection extends EventHandlerAdapter {
 
     private final SimulationNode position;
     public static long deltaT = 5 * 1000;
+
     private SimulationProvider simulationProvider;
     private List<Segment> inSegments;
     private Map<SimulationNode, Segment> outSegments;
+    private final Segment startSegment = new Segment(10.0, 10.0, 10.0, 2);
+    private HashMap<Segment, Double> accumulatedDemands;
+    private HashMap<Segment, Double> accumulatedSupplies;
 
 
     public CTMConnection(SimulationNode position, SimulationProvider simulationProvider, List<Segment> inSegments, Map<SimulationNode, Segment> outSegments) {
         this.simulationProvider = simulationProvider;
         this.inSegments = inSegments;
         this.outSegments = outSegments;
-        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, deltaT);
         this.position = position;
+        inSegments.add(startSegment);
+        simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, this, null, null, deltaT);
+
+        accumulatedSupplies = new HashMap<>();
+        accumulatedDemands = new HashMap<>();
+        accumulatedSupplies.put(startSegment, 0.0);
+        for (Segment inSegment : this.inSegments) {
+            accumulatedSupplies.put(inSegment, 0.0);
+        }
+        for (Segment outSegment : this.outSegments.values()) {
+            accumulatedDemands.put(outSegment, 0.0);
+        }
     }
 
 
@@ -147,7 +162,10 @@ public class CTMConnection extends EventHandlerAdapter {
         } else {
             flow = Math.max(0, -segment.w * (density - jamDensity));
         }
-        int cars = (int) (flow * deltaT / 1000);
+        double carsFlow = accumulatedDemands.get(segment) + (flow * deltaT / 1000);
+        int cars = (int) carsFlow;
+        double remainingFlow = carsFlow - cars;
+        accumulatedDemands.put(segment, remainingFlow);
         return cars;
 
     }
@@ -161,15 +179,27 @@ public class CTMConnection extends EventHandlerAdapter {
         } else {
             flow = criticalFlow;
         }
-        int cars = (int) (flow * deltaT / 1000);
+        double carsFlow = accumulatedSupplies.get(segment) + (flow * deltaT / 1000);
+        int cars = (int) carsFlow;
+        double remainingFlow = carsFlow - cars;
+        accumulatedSupplies.put(segment, remainingFlow);
         return cars;
     }
 
-    public void startDriving(VehicleTripData vehicleData) {
-        Segment segmentToGo = getNextSegment(vehicleData);
+    public void startDriving(VehicleTripData vehicleTripData) {
         long currentTime = simulationProvider.getSimulation().getCurrentTime();
-        VehicleQueueData vehicleQueueData = new VehicleQueueData(vehicleData, currentTime);
-        addCarToNextSegment(segmentToGo, vehicleQueueData);
+        VehicleQueueData vehicleQueueData = new VehicleQueueData(vehicleTripData, currentTime);
+        startSegment.carQueue.insertCar(vehicleQueueData);
+        Trip trip = vehicleQueueData.getVehicleTripData().getTrip();
+        SimulationNode nextNode = (SimulationNode) trip.getFirstLocation();
+
+        vehicleQueueData.getVehicleTripData().getVehicle().setPosition(position);
+        long delay = 15000;
+        DelayData delayData = new DelayData(delay, simulationProvider.getSimulation().getCurrentTime(), startSegment.length);
+
+        Driver driver = vehicleQueueData.getVehicleTripData().getVehicle().getDriver();
+        driver.setTargetNode(nextNode);
+        driver.setDelayData(delayData);
     }
 
     private void addCarToNextSegment(Segment segmentToGo, VehicleQueueData vehicleQueueData) {
