@@ -46,7 +46,7 @@ public class TestThreeNodesWithSimpleConnection {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(3,2);
 
         SimulationEdge edge1 = new SimulationEdge(0, 1, 0,  0, 100, 40, 2, new EdgeShape(Arrays.asList(node0, node1)),lanes.get(0));
         SimulationEdge edge2 = new SimulationEdge(2, 0, 0, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node2, node0)),lanes.get(1));
