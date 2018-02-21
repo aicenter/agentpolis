@@ -42,6 +42,7 @@ import java.util.List;
 
 /**
  * @author fido
+ * @author Zdenek Bousa
  */
 public class TestOneLaneConnectionOnly {
     private Graph<SimulationNode, SimulationEdge> graph;
@@ -59,15 +60,12 @@ public class TestOneLaneConnectionOnly {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(3,1);
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(2,1);
 
         SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
         SimulationEdge edge2 = new SimulationEdge(1, 2, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)), lanes.get(1));
-        SimulationEdge edge3 = new SimulationEdge(2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node0)), lanes.get(2));
-
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
-        graphBuilder.addEdge(edge3);
 
         graph = graphBuilder.createGraph();
     }
