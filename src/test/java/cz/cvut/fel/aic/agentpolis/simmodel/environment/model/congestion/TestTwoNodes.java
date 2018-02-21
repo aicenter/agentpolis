@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
+import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.ModelConstructionFailedException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
@@ -27,6 +28,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -35,9 +38,10 @@ import java.util.Arrays;
  * @author fido
  */
 public class TestTwoNodes {
+    private Graph<SimulationNode, SimulationEdge> graph;
 
-    @Test(expected = ModelConstructionFailedException.class)
-    public void run() throws Throwable {
+    @Before
+    public void prepare() throws Throwable {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
         SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
@@ -52,9 +56,21 @@ public class TestTwoNodes {
 
         Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
 
-        CongestionModelTest congestionModelTest = new CongestionModelTest();
-        congestionModelTest.run(graph);
 
         Log.close();
+    }
+    @Test(expected = ModelConstructionFailedException.class)
+    public void run() throws Throwable {
+        CongestionModelTest congestionModelTest = new CongestionModelTest();
+        congestionModelTest.run(graph);
+    }
+
+    @After
+    public void after(){
+        Log.close();
+    }
+
+    public static void main(String[] args) {
+        VisualTests.runVisualTest(TestTwoNodesBothDirections.class);
     }
 }
