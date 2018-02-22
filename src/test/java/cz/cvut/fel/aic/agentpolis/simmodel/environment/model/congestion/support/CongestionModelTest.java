@@ -18,7 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestCongestionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestModule;
 import com.google.inject.Injector;
@@ -30,8 +30,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphTyp
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
-//import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.Connection;
+//import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
 import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;

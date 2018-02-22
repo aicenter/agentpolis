@@ -55,7 +55,7 @@ public class TestCrossroad {
         graphBuilder.addNode(node2);
         graphBuilder.addNode(node3);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(6,2);
 
         SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
         SimulationEdge edge2 = new SimulationEdge(1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)), lanes.get(1));

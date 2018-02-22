@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Simple connection (one-way) test.
  * @author Zdenek Bousa
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -43,7 +44,7 @@ public class TestMultipleLanesConnectionOnly {
         graphBuilder.addNode(node4);
         graphBuilder.addNode(node5);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(6,2);
 
 
         SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
@@ -166,7 +167,7 @@ public class TestMultipleLanesConnectionOnly {
             trips[i] = trip;
         }
         SimulationNode goal = trips[0].getLocations().getLast();
-        DriveTest driveTest = new DriveTest(12000);
+        DriveTest driveTest = new DriveTest(1200000);
         driveTest.run(graph, trips);
 
         DriveAgentStorage a = driveTest.getAgents();

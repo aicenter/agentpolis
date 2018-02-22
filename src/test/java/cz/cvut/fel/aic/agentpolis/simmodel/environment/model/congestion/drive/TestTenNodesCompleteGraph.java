@@ -44,7 +44,7 @@ import java.util.List;
  * @author fido
  */
 public class TestTenNodesCompleteGraph {
-
+    //TODO: repair crossroad and complete graph
     @Test
     public void run() throws Throwable {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = Utils.getCompleteGraph(10);

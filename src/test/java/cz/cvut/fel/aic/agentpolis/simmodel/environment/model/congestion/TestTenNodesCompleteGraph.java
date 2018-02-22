@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
+import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
@@ -26,6 +27,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -33,16 +36,26 @@ import org.junit.Test;
  * @author fido
  */
 public class TestTenNodesCompleteGraph {
-    
-    @Test
-    public void run() throws Throwable{
+    private Graph<SimulationNode, SimulationEdge> graph;
+
+    @Before
+    public void prepare(){
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = Utils.getCompleteGraph(10);
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
+        graph = graphBuilder.createGraph();
+    }
+    @Test
+    public void run() throws Throwable {
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
-        
+    }
+
+    @After
+    public void after(){
         Log.close();
+    }
+
+    public static void main(String[] args) {
+        VisualTests.runVisualTest(TestTwoNodesBothDirections.class);
     }
     
 }

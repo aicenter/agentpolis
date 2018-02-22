@@ -36,7 +36,7 @@ import java.util.List;
 public class Utils {
     public static GraphBuilder<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount) {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesOne();
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(3,1);
         
         int radius = 1000;
 

@@ -40,7 +40,7 @@ public class TestThreeNodesWithComplexConnection {
         graphBuilder.addNode(node1);
         graphBuilder.addNode(node2);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanesTwo();
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(4,1);
 
         SimulationEdge edge1 = new SimulationEdge(0, 1,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)),lanes.get(0));
         SimulationEdge edge2 = new SimulationEdge(1, 0,  0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)),lanes.get(1));
