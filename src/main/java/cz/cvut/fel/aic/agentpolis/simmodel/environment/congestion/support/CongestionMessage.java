@@ -16,20 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support;
 
 /**
+ *
  * @author fido
  */
-public class VehicleEventData {
-    public final long transferFinishTime;
-    /**
-     * -2 if it is transfer from lane to lane
-     */
-    public long laneId;
-
-    public VehicleEventData(long transferFinishTime, long laneId) {
-        this.transferFinishTime = transferFinishTime;
-        this.laneId = laneId;
-    }
+public enum CongestionMessage {
+    DRIVING_FINISHED
 }

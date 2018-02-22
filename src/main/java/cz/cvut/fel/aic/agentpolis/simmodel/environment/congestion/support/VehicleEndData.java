@@ -16,21 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionLane;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleTripData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.CongestedTripData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.lanes.CongestionLane;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.VehicleTripData;
 
 /**
- * @author fido
+ *
  */
 public class VehicleEndData extends VehicleEventData {
-    public final CongestionLane congestionLane;
-    public final VehicleTripData vehicleTripData;
+    private final CongestionLane congestionLane;
+    private final CongestedTripData congestedTripData;
 
-    public VehicleEndData(CongestionLane congestionLane, VehicleTripData vehicleTripData, long endingFinishTime, long laneId) {
+    public VehicleEndData(CongestionLane congestionLane, CongestedTripData congestedTripData, long endingFinishTime, long laneId) {
         super(endingFinishTime, laneId);
         this.congestionLane = congestionLane;
-        this.vehicleTripData = vehicleTripData;
+        this.congestedTripData = congestedTripData;
+    }
+
+    public CongestionLane getCongestionLane(){
+        return this.congestionLane;
+    }
+
+    public CongestedTripData getCongestedTripData() {
+        return congestedTripData;
     }
 }

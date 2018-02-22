@@ -1,31 +1,48 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.lanes;
 
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.CongestedTripData;
 
-public class LaneCongestionModel {
+public class CongestionLaneModel {
     private AgentpolisConfig config;
     private TimeProvider timeProvider;
 
     @Inject
-    public LaneCongestionModel(AgentpolisConfig config, TimeProvider timeProvider) {
+    public CongestionLaneModel(AgentpolisConfig config, TimeProvider timeProvider) {
         this.config = config;
         this.timeProvider = timeProvider;
     }
 
-    public long computeTransferDelay(VehicleTripData vehicleTripData, CongestionLane toCongestionLane) {
-
+    /**
+     * Called from Congestion model
+     *
+     * @param congestedTripData vehicle trip
+     * @param toCongestionLane  target lane
+     * @return ms
+     */
+    public long computeTransferDelay(CongestedTripData congestedTripData, CongestionLane toCongestionLane) {
         if (config.congestionModel.fundamentalDiagramDelay) {
-            return computeCongestedTransferDelay(vehicleTripData, toCongestionLane);
+            return computeCongestedTransferDelay(congestedTripData, toCongestionLane);
         } else {
-            return computeFreeFlowTransferDelay(vehicleTripData.getVehicle());
+            return computeFreeFlowTransferDelay(congestedTripData.getVehicle());
         }
     }
 
+    // Free flow
+    private static long computeFreeFlowTransferDelay(PhysicalVehicle vehicle) {
+        return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
+    }
 
+    // Congested
+    private long computeCongestedTransferDelay(CongestedTripData congestedTripData, CongestionLane congestionLane) {
+        double freeFlowSpeed = congestedTripData.getVehicle().getVelocity();
+        double congestedSpeed = computeCongestedSpeed(freeFlowSpeed, congestionLane);
+        return Math.round(congestedTripData.getVehicle().getLength() * 1E3 / congestedSpeed);
+    }
 
     private double computeCongestedSpeed(double freeFlowVelocity, CongestionLane congestionLane) {
         double carsPerKilometer = congestionLane.getDrivingCarsCountOnLane() / congestionLane.parentLink.edge.shape.getShapeLength() * 1000.0;
@@ -50,16 +67,5 @@ public class LaneCongestionModel {
         double x = carsPerKilometer;
         double reducedSpeed = (0.0428177 * x * x - 5.61878 * x + 193.757);
         return reducedSpeed / 100.0;
-    }
-
-    private long computeCongestedTransferDelay(VehicleTripData vehicleTripData, CongestionLane congestionLane) {
-        double freeFlowSpeed = vehicleTripData.getVehicle().getVelocity();
-        double congestedSpeed = computeCongestedSpeed(freeFlowSpeed, congestionLane);
-        return Math.round(vehicleTripData.getVehicle().getLength() * 1E3 / congestedSpeed);
-    }
-
-    public static long computeFreeFlowTransferDelay(PhysicalVehicle vehicle) {
-
-        return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
     }
 }

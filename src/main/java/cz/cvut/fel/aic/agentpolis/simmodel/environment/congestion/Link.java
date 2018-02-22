@@ -20,26 +20,31 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.CongestedTripData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.Connection;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.lanes.CongestionLane;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.LaneTurnDirection;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 
 import java.util.*;
 
 /**
- * @author fido
+ *
  */
 public class Link {
-    final CongestionModel congestionModel;
-    final SimulationEdge edge;
+    public final CongestionModel congestionModel;
 
-    final SimulationNode toNode;
-    final SimulationNode fromNode;
+    public final SimulationEdge edge;
+    public final SimulationNode toNode;
+    public final SimulationNode fromNode;
 
-    final Connection fromConnection;
-    final Connection toConnection;
+    public final Connection fromConnection;
+    public final Connection toConnection;
 
     private final Map<SimulationNode, List<CongestionLane>> lanesMappedByNodes;
     private CongestionLane congestionLaneForTripEnd;
+    private Set<LaneTurnDirection> priorityEndCollection = new HashSet<>();
 
     public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
                 SimulationNode targetNode, Connection fromConnection, Connection toConnection) {
@@ -50,6 +55,10 @@ public class Link {
         this.fromConnection = fromConnection;
         this.toConnection = toConnection;
         this.lanesMappedByNodes = new HashMap<>();
+
+        priorityEndCollection.add(LaneTurnDirection.through);
+        priorityEndCollection.add(LaneTurnDirection.right);
+        priorityEndCollection.add(LaneTurnDirection.unknown);
     }
 
     public SimulationEdge getEdge() {
@@ -65,12 +74,20 @@ public class Link {
     }
 
     /**
-     * Return list of lanes for direction
-     * @param node
-     * @return
+     * Default lane for trip end, vehicle does not drive to next connection.
      */
-    public List<CongestionLane> getLanesByNextNode(SimulationNode node) {
-        return this.lanesMappedByNodes.get(node);
+    public CongestionLane getCongestionLaneForTripEnd() {
+        return congestionLaneForTripEnd;
+    }
+
+    /**
+     * Return list of lanes for direction
+     *
+     * @param targetNode next node
+     * @return list of lanes
+     */
+    public List<CongestionLane> getLanesByNextNode(SimulationNode targetNode) {
+        return this.lanesMappedByNodes.get(targetNode);
     }
 
     /**
@@ -83,9 +100,9 @@ public class Link {
     /**
      * Select all lanes
      *
-     * @return
+     * @return lanes
      */
-    public Collection<CongestionLane> getLanes() {
+    public Collection<CongestionLane> getAllLanes() {
         Collection<CongestionLane> lanes = new LinkedList<>();
         for (Map.Entry<SimulationNode, List<CongestionLane>> entry : lanesMappedByNodes.entrySet()) {
             List<CongestionLane> c = entry.getValue();
@@ -101,38 +118,37 @@ public class Link {
         return lanes;
     }
 
-    /**
-     * Default lane for trip end, vehicle does not drive to next connection.
-     */
-    public CongestionLane getCongestionLaneForTripEnd() {
-        return congestionLaneForTripEnd;
-    }
-
 
     //
     // ========================= Driving ======================
     //
-    void startDriving(VehicleTripData vehicleData) {
-        Trip<SimulationNode> trip = vehicleData.getTrip();
+    public void startDriving(CongestedTripData congestedTripData) {
+        Trip<SimulationNode> trip = congestedTripData.getTrip();
         CongestionLane nextCongestionLane = null;
         if (trip.isEmpty()) {
             nextCongestionLane = getCongestionLaneForTripEnd();
-            vehicleData.setTripFinished(true);
+            congestedTripData.setTripFinished(true);
+        }else if(trip.getLocations().size() == 1){
+            nextCongestionLane = getCongestionLaneForTripEnd();
+            trip.getAndRemoveFirstLocation();
         } else {
             SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
             nextCongestionLane = getBestLaneByNextNode(nextLocation);
         }
-
-        Log.info(this, "Congestion lane=" + nextCongestionLane.getLane().getLaneUniqueId() +  " car="+ vehicleData.getVehicle().getId(), congestionModel.timeProvider.getCurrentSimTime());
-        nextCongestionLane.startDriving(vehicleData);
+        nextCongestionLane.startDriving(congestedTripData);
     }
 
     //
     // ========================= Build ======================
     //
-    void addCongestionLane(CongestionLane congestionLane, List<SimulationNode> nextNodes) {
+    public void addCongestionLane(CongestionLane congestionLane, List<SimulationNode> nextNodes) {
         if (congestionLaneForTripEnd == null) {
             congestionLaneForTripEnd = congestionLane;
+        } else {
+            if (!(congestionLaneForTripEnd.getLane().getAvailableDirections().stream().anyMatch(priorityEndCollection::contains))
+                    && (congestionLane.getLane().getAvailableDirections().stream().anyMatch(priorityEndCollection::contains))) {
+                congestionLaneForTripEnd = congestionLane;
+            }
         }
         if (nextNodes != null) {
             for (SimulationNode e : nextNodes) {
@@ -154,12 +170,13 @@ public class Link {
             // balancing
             CongestionLane bestLane = getBestLane(possibleLanes);
             if (bestLane != null) {
+                Log.info("Lanes balancing", "Best lane=" + bestLane.getId() + " directionNode=" + direction.getId(), congestionModel.timeProvider.getCurrentSimTime());
                 return bestLane;
             }
             // or selected randomly
-            // TODO: debug remove
-            return getRandomLane(possibleLanes);
-            //possibleLanes.get(0);
+            bestLane = getRandomLane(possibleLanes);
+            Log.info("Lanes balancing", "Random lane=" + bestLane.getId() + " directionNode=" + direction.getId(), congestionModel.timeProvider.getCurrentSimTime());
+            return bestLane;
         }
         return null;
     }
@@ -188,7 +205,7 @@ public class Link {
         return selected;
     }
 
-    // Return all possible lanes based of free space in them
+    // Return all possible lanes based on free space in them
     private Map<CongestionLane, Double> availablePossibleLanes(List<CongestionLane> possibleLanes) {
         Collections.shuffle(possibleLanes, congestionModel.getRandom()); // randomly shuffle lanes - better for same lanes
         Map<CongestionLane, Double> available = new HashMap<>();
@@ -199,6 +216,4 @@ public class Link {
         }
         return available;
     }
-
-
 }

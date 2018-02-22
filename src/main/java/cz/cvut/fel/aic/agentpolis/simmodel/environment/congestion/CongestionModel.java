@@ -28,11 +28,16 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.CongestedTripData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.agent.VehicleTripData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.Connection;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.ConnectionEvent;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support.ModelConstructionFailedException;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support.VehicleEventData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support.VehicleTransferData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.lanes.CongestionLane;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.lanes.CongestionLaneModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.ShapeUtils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -43,31 +48,30 @@ import cz.cvut.fel.aic.geographtools.Graph;
 
 import java.security.ProviderException;
 import java.util.*;
-import java.util.Map.Entry;
 
 @Singleton
 public class CongestionModel {
-    private final SimulationProvider simulationProvider;
-    final TimeProvider timeProvider;
+    protected final SimulationProvider simulationProvider;
+    public final TimeProvider timeProvider;
 
-    private final Graph<SimulationNode, SimulationEdge> graph;
-    private final AgentpolisConfig config;
+    protected final Graph<SimulationNode, SimulationEdge> graph;
+    protected final AgentpolisConfig config;
 
-    protected final Map<SimulationNode, Connection> connectionsMappedByNodes = new HashMap<>();
+    public final Map<SimulationNode, Connection> connectionsMappedByNodes = new HashMap<>();
     protected final Map<SimulationEdge, Link> linksMappedByEdges = new HashMap<>();
     protected final Map<Integer, SimulationEdge> edgesMappedById = new HashMap<>();
 
-    private final List<Link> links = new LinkedList<>();
-    private final List<CongestionLane> congestionLanes = new LinkedList<>();
+    protected final List<Link> links = new LinkedList<>();
+    protected final List<CongestionLane> congestionLanes = new LinkedList<>();
 
     private final Random random;
-    final boolean addFundamentalDiagramDelay;
-    private LaneCongestionModel congestionLaneModel;
+    public final boolean addFundamentalDiagramDelay;
+    private CongestionLaneModel congestionLaneModel;
 
 
     @Inject
     public CongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
-                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils, LaneCongestionModel congestionLaneModel)
+                           SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils, CongestionLaneModel congestionLaneModel)
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
@@ -84,26 +88,42 @@ public class CongestionModel {
     //
     @Inject
     public void buildCongestionGraph() throws ModelConstructionFailedException {
-        buildEdges(graph.getAllEdges());
-        buildConnections(graph.getAllNodes());
-        buildLinks(graph.getAllEdges());
-        buildLanes();
-
-        //initCrossroads();
+        BuildCongestionModel model = new BuildCongestionModel(this);
+        model.build();
     }
 
+    //
+    // ========================= Setter & Getter ======================
+    //
+
+    /**
+     * All links in simulation
+     * @return list
+     */
     public List<Link> getLinks() {
         return links;
     }
 
+    /**
+     * Random gen.
+     * @return random seed
+     */
     public Random getRandom() {
         return random;
     }
 
+    /**
+     * List of all lanes
+     * @return list
+     */
     public List<CongestionLane> getCongestionLanes() {
         return congestionLanes;
     }
 
+    /**
+     * Timer
+     * @return TimeProvider
+     */
     public TimeProvider getTimeProvider() {
         return timeProvider;
     }
@@ -111,13 +131,21 @@ public class CongestionModel {
     //
     // ========================= Driving ======================
     //
+
+    /**
+     * Add vehicle and put it in start queue
+     * @param vehicle agent
+     * @param trip path (nodes)
+     */
     public void drive(PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
-        VehicleTripData vehicleData = new VehicleTripData(vehicle, trip);
         SimulationNode startLocation = trip.getAndRemoveFirstLocation();
         Connection startConnection = connectionsMappedByNodes.get(startLocation);
-        startConnection.startDriving(vehicleData);
+        startConnection.startDriving(new VehicleTripData(vehicle, trip));
     }
 
+    //
+    // ========================= Simulation events ======================
+    //
     /**
      * Wakeup connection
      *
@@ -130,21 +158,21 @@ public class CongestionModel {
 
     public void makeTickEvent(Object caller, EventHandler target, long delay) {
         Log.info(this, "                adding tick: delay=" + delay + " source=" + caller + " target =" + target);
-        if (target instanceof Connection){
-            Connection c = (Connection)target;
+        if (target instanceof Connection) {
+            Connection c = (Connection) target;
             VehicleEventData e = c.vehicleEventData;
         }
         simulationProvider.getSimulation().addEvent(ConnectionEvent.TICK, target, null, null, delay != 0 ? delay : 1);
     }
 
     public void makeScheduledEvent(Object caller, EventHandler target, long delay) {
-        if (target instanceof Connection){
-            Connection c = (Connection)target;
+        if (target instanceof Connection) {
+            Connection c = (Connection) target;
             VehicleEventData e = c.vehicleEventData;
-            if(e instanceof VehicleTransferData){
-                VehicleTransferData v = (VehicleTransferData)e;
+            if (e instanceof VehicleTransferData) {
+                VehicleTransferData v = (VehicleTransferData) e;
                 Log.info(this, "adding scheduled event: delay=" + delay + //" source=" + caller + " target=" + target);
-                        " vehicle="+ v.vehicleTripData.getVehicle());
+                        " vehicle=" + v.congestedTripData.getVehicle());
             }
         }
         //Log.info(this, "adding scheduled event: delay=" + delay + //" source=" + caller + " target=" + target);
@@ -154,29 +182,30 @@ public class CongestionModel {
 
 
     //
-    // ========================= Delay ======================
+    // ========================= Delay on  ======================
     //
-    long computeTransferDelay(VehicleTripData vehicleTripData, CongestionLane toLane) {
-        return congestionLaneModel.computeTransferDelay(vehicleTripData, toLane);
+    /**
+     * Compute delay on lane -> get status on lane
+     * @param congestedTripData vehicle
+     * @param transferToLane moving to lane
+     * @return ms
+     */
+    public long computeTransferDelay(CongestedTripData congestedTripData, CongestionLane transferToLane) {
+        return congestionLaneModel.computeTransferDelay(congestedTripData, transferToLane);
     }
 
-    long computeArrivalDelay(VehicleTripData vehicleTripData) {
-        long arrivalDelay = 0;
-        DelayData delayData = vehicleTripData.getVehicle().getDelayData();
-        if (delayData != null) {
-            long currentSimTime = timeProvider.getCurrentSimTime();
-            long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
-            arrivalDelay = Math.max(0, arrivalExpectedTime - currentSimTime);
-        }
-        return arrivalDelay;
-    }
-
-    long computeDelayAndSetVehicleData(VehicleTripData vehicleData, CongestionLane nextCongestionLane) {
+    /**
+     * Delay for visio
+     * @param congestedTripData vehicle data
+     * @param nextCongestionLane following lane
+     * @return ms
+     */
+    public long computeDelayAndSetVehicleData(CongestedTripData congestedTripData, CongestionLane nextCongestionLane) {
         Link nextLink = nextCongestionLane.parentLink;
 
         // for visio
-        Driver driver = vehicleData.getVehicle().getDriver();
-        PhysicalVehicle vehicle = vehicleData.getVehicle();
+        Driver driver = congestedTripData.getVehicle().getDriver();
+        PhysicalVehicle vehicle = congestedTripData.getVehicle();
 
         vehicle.setPosition(nextLink.fromNode);
         vehicle.setQueueBeforeVehicleLength(nextCongestionLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
@@ -184,7 +213,7 @@ public class CongestionModel {
 
         double distance = nextLink.edge.shape.getShapeLength() - vehicle.getQueueBeforeVehicleLength();
 
-        long delay = nextCongestionLane.computeDelay(vehicleData.getVehicle(), distance);
+        long delay = nextCongestionLane.computeDelay(congestedTripData.getVehicle(), distance);
         DelayData delayData = new DelayData(delay, getTimeProvider().getCurrentSimTime(), distance);
 
         driver.setTargetNode(nextLink.toNode);
@@ -193,113 +222,28 @@ public class CongestionModel {
         return delayData.getDelay();
     }
 
-    static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {
+    /**
+     * Maximum speed over node
+     * @param vehicle for length of vehicle
+     * @return ms
+     */
+    public static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {
         return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
     }
 
-    //
-    // ========================= Private Build ======================
-    //
-    private void buildConnections(Collection<SimulationNode> allNodes) {
-        for (SimulationNode node : allNodes) {
-            if (isCrossroad(node)) {
-                Crossroad crossroad = new Crossroad(config, simulationProvider, this, node, timeProvider);
-                connectionsMappedByNodes.put(node, crossroad);
-            } else {
-                Connection connection = new Connection(simulationProvider, config, this, node);
-                connectionsMappedByNodes.put(node, connection);
-            }
+    /**
+     * Update expected delay
+     * @param congestedTripData vehicle trip
+     * @return ms
+     */
+    public long computeArrivalDelay(CongestedTripData congestedTripData) {
+        long arrivalDelay = 0;
+        DelayData delayData = congestedTripData.getVehicle().getDelayData();
+        if (delayData != null) {
+            long currentSimTime = timeProvider.getCurrentSimTime();
+            long arrivalExpectedTime = delayData.getDelayStartTime() + delayData.getDelay();
+            arrivalDelay = Math.max(0, arrivalExpectedTime - currentSimTime);
         }
-    }
-
-    private boolean isCrossroad(SimulationNode node) {
-        if (graph.getOutEdges(node).size() > 1 || graph.getInEdges(node).size() > 1) {
-            if (graph.getOutEdges(node).size() == 2 && graph.getInEdges(node).size() == 2) {
-                //test two-way
-                List<SimulationEdge> outEdges = graph.getOutEdges(node);
-                List<SimulationEdge> inEdges = graph.getInEdges(node);
-                if ((outEdges.get(0).toId == inEdges.get(0).fromId && outEdges.get(1).toId == inEdges.get(1).fromId) ||
-                        (outEdges.get(0).toId == inEdges.get(1).fromId && outEdges.get(1).toId == inEdges.get(0).fromId))
-                    return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private void buildEdges(Collection<SimulationEdge> allEdges) {
-        for (SimulationEdge e : allEdges) {
-            edgesMappedById.put(e.getUniqueId(), e);
-        }
-    }
-
-    private void initCrossroads() {
-        for (Entry<SimulationNode, Connection> entry : connectionsMappedByNodes.entrySet()) {
-            Connection connection = entry.getValue();
-            if (connection instanceof Crossroad) {
-                ((Crossroad) connection).init();
-            }
-        }
-    }
-
-    private void buildLinks(Collection<SimulationEdge> allEdges) {
-        for (SimulationEdge edge : allEdges) {
-            SimulationNode fromNode = graph.getNode(edge.fromId);
-            SimulationNode toNode = graph.getNode(edge.toId);
-            Link link = new Link(this, edge, fromNode, toNode, connectionsMappedByNodes.get(fromNode), connectionsMappedByNodes.get(toNode));
-            links.add(link);
-            linksMappedByEdges.put(edge, link);
-        }
-    }
-
-    private void buildLanes() throws ModelConstructionFailedException {
-        for (Link link : links) {
-            SimulationNode toNode = graph.getNode(link.getEdge().toId);
-
-            // outgoing edges from toNode
-            List<SimulationEdge> allFollowingEdges = graph.getOutEdges(toNode); // following edges
-            List<Lane> lanes = link.getEdge().getLanes();
-
-            //dead end test
-            if (allFollowingEdges.isEmpty()) {
-                throw new ModelConstructionFailedException("Dead end detected - this is prohibited in road graph");
-            }
-
-            Connection toConnection = connectionsMappedByNodes.get(toNode);
-
-            if (lanes != null) {
-                for (Lane lane : lanes) {
-                    Set<Integer> followingEdgeId = lane.getAvailableEdges();
-                    List<SimulationNode> followingNodes = new LinkedList<>();
-
-                    // in case of all directions or unknown
-                    if (!followingEdgeId.contains(-1)) {
-                        for (Integer i : followingEdgeId) {
-                            followingNodes.add(graph.getNode(this.edgesMappedById.get(i).toId));
-                        }
-                    } else {
-                        for (SimulationEdge e : allFollowingEdges) {
-                            followingNodes.add(graph.getNode(e.toId));
-                        }
-                    }
-
-                    CongestionLane congestionLane = new CongestionLane(link, lane.getLaneUniqueId(), link.getLength(), timeProvider, simulationProvider);
-                    link.addCongestionLane(congestionLane, followingNodes);
-                    congestionLanes.add(congestionLane);
-
-                    // Build info for connection
-                    for (SimulationNode e : followingNodes) { // following nodes for congestion lane
-                        Link outLink = linksMappedByEdges.get(graph.getEdge(toNode.id, e.id));
-                        if (toConnection instanceof Crossroad) {
-                            ((Crossroad) toConnection).addNextLink(outLink, congestionLane, connectionsMappedByNodes.get(e));
-                        } else {
-                            toConnection.setOutLink(outLink, congestionLane);
-                        }
-                    }
-                }
-            } else {
-                throw new ModelConstructionFailedException("Lanes cannot be null");
-            }
-        }
+        return arrivalDelay;
     }
 }

@@ -16,36 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.support;
 
 /**
  *
  * @author fido
  */
-public class VehicleQueueData {
-    private final VehicleTripData vehicleTripData;
-    
-    private long minPollTime;
+public class ModelConstructionFailedException extends Exception{
 
-    public VehicleTripData getVehicleTripData() {
-        return vehicleTripData;
+    public ModelConstructionFailedException(String message) {
+        super(message);
     }
-
-    public long getMinPollTime() {
-        return minPollTime;
-    }
-
-    public void setMinPollTime(long minPollTime) {
-        this.minPollTime = minPollTime;
-    }
-    
-    
-    
-
-    public VehicleQueueData(VehicleTripData vehicleTripData, long minPollTime) {
-        this.vehicleTripData = vehicleTripData;
-        this.minPollTime = minPollTime;
-    }
-    
     
 }
