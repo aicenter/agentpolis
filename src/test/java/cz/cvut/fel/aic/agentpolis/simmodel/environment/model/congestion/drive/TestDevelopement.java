@@ -46,15 +46,17 @@ public class TestDevelopement {
         graphBuilder.addNode(node4);
         graphBuilder.addNode(node5);
 
-        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(6,2);
+        List<LinkedList<Lane>> lanes = PrepareDummyLanes.getLanes(6,1);
+
+        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
+        SimulationEdge edge2 = new SimulationEdge(1, 2, 1, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)), lanes.get(1));
+        SimulationEdge edge3 = new SimulationEdge(2, 3, 2, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node3)), lanes.get(2));
 
 
-        SimulationEdge edge1 = new SimulationEdge(0, 1, 0, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node0, node1)), lanes.get(0));
-        SimulationEdge edge2 = new SimulationEdge(1, 2, 1, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node1, node2)), lanes.get(1));
-        SimulationEdge edge3 = new SimulationEdge(2, 3, 2, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node2, node3)), lanes.get(2));
-        SimulationEdge edge4 = new SimulationEdge(3, 4, 3, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node3, node4)), lanes.get(3));
-        SimulationEdge edge5 = new SimulationEdge(4, 5, 4, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node4, node5)), lanes.get(4));
-        SimulationEdge edge6 = new SimulationEdge(5, 0, 5, 0, 100, 40, 2, new EdgeShape(Arrays.asList(node5, node0)), lanes.get(5));
+        // Other way
+        SimulationEdge edge4 = new SimulationEdge(3, 2, 3, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node2)), lanes.get(3));
+        SimulationEdge edge5 = new SimulationEdge(2, 1, 4, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)), lanes.get(4));
+        SimulationEdge edge6 = new SimulationEdge(1, 0, 5, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)), lanes.get(5));
 
         graphBuilder.addEdge(edge1);
         graphBuilder.addEdge(edge2);
@@ -71,7 +73,7 @@ public class TestDevelopement {
         Trip<SimulationNode>[] trips = new Trip[2];
 
         for (int i = 0; i < trips.length; i++) {
-            Trip<SimulationNode> trip = new Trip<>(node1, node2, node3, node4, node5, node0, node1);
+            Trip<SimulationNode> trip = new Trip<>(node0,node1, node2, node3);
             trips[i] = trip;
         }
         SimulationNode goal = trips[0].getLocations().getLast();
