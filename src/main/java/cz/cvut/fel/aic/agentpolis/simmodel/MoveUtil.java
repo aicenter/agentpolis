@@ -18,6 +18,9 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
+
 
 /**
  * Utility for support movement. - It computes duration
@@ -58,4 +61,10 @@ public final class MoveUtil {
     public static double computeAgentOnEdgeVelocity(double driverMaximalVelocity, float allowedMaxSpeedOnRoad) {
         return Double.min(driverMaximalVelocity, allowedMaxSpeedOnRoad);
     }
+	
+	public static long computeDuration(MovingEntity entity, SimulationEdge edge){
+		double distance = edge.shape.getShapeLength();
+		double velocity = computeAgentOnEdgeVelocity(entity.getVelocity(), edge.allowedMaxSpeedInMpS);
+		return computeDuration(velocity, distance);
+	}
 }

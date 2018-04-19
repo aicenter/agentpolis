@@ -41,7 +41,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
  * @param <A>
  * @author fido
  */
-public class Drive<A extends Agent & Driver> extends Activity<A> {
+public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
     private final Vehicle vehicle;
 
@@ -61,9 +61,12 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     private SimulationNode from;
 
     private SimulationNode to;
+	
+	private boolean stop;
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
+                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, 
+				 StandardTimeProvider timeProvider,
                  A agent, Vehicle vehicle, Trip<SimulationNode> trip,
                  int tripId) {
         super(activityInitializer, agent);
@@ -74,21 +77,24 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
         this.timeProvider = timeProvider;
         this.tripId = tripId;
         graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
+		stop = false;
     }
+	
+	public void end(){
+		stop = true;
+	}
 
 
     @Override
     protected void performAction() {
         agent.startDriving(vehicle);
-//        double moveTime = computeMoveTime();
         from = trip.getAndRemoveFirstLocation();
         move();
-
     }
 
     @Override
     protected void onChildActivityFinish(Activity activity) {
-        if (trip.isEmpty()) {
+        if (trip.isEmpty() || stop) {
             agent.endDriving();
             vehicle.setLastFromPosition(from);
             finish();
@@ -115,19 +121,4 @@ public class Drive<A extends Agent & Driver> extends Activity<A> {
     public Trip<SimulationNode> getTrip() {
         return trip;
     }
-
-
-    /**
-     * Computes time based on vehicle length and velocity
-     *
-     * @return
-     */
-//    private long computeMoveTime() {
-//        double vehicleVelocityInMeterPerMillis = agent.getVelocity() / 1000;
-//        long moveTime = (long) (vehicle.getLength() / vehicleVelocityInMeterPerMillis);
-//
-//        return MoveTimeNormalizer.normalizeMoveTimeForQueue(moveTime);
-//    }
-
-
 }

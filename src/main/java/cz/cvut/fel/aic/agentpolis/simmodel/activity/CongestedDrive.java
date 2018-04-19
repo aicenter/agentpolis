@@ -34,7 +34,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMode
  * @author fido
  * @param <A>
  */
-public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends Activity<A> implements PhysicalVehicleDrive{
+public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends PhysicalVehicleDrive<A> {
     
     private final CongestionModel congestionModel;
     
@@ -63,6 +63,11 @@ public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends A
             finish();
         }
     }
+
+	@Override
+	public void end() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
     
     
     
