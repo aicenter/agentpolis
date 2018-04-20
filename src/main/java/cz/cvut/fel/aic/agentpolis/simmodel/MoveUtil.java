@@ -44,10 +44,8 @@ public final class MoveUtil {
      */
     public static long computeDuration(double velocityInmps, double lengthInMeter) {
 
-        double velocityInmpms = velocityInmps / 1000;
-
-        // Compute duration on edge
-        long duration = Math.round(lengthInMeter / velocityInmpms);
+        // Compute duration on edge (in miliseconds)
+        long duration = Math.round(lengthInMeter / velocityInmps / 1000);
 
         // Minimal duration
         if (duration < 1) {
