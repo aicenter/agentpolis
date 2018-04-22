@@ -24,6 +24,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import java.util.Arrays;
 
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -103,6 +104,38 @@ public class Trip<L> {
     public boolean isEmpty() {
         return locations.isEmpty();
     }
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Trip of type + ").append(locations.getFirst().getClass());
+		for(L location: locations){
+			sb.append(location.toString());
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Trip<?> other = (Trip<?>) obj;
+		if (!Objects.equals(this.locations, other.locations)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	
 
     private void checkLocations(LinkedList<L> locations) throws TripException {
         for (L location : locations) {
