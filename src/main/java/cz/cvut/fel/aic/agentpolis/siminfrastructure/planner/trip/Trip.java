@@ -19,13 +19,14 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.Arrays;
 
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @param <L> locationType
@@ -133,7 +134,16 @@ public class Trip<L> {
 		return true;
 	}
 	
-	
+	// TEMPORARY SOLUTION, should go to node trip class!!
+	public String locationIdsToString(){
+		int[] locationIds = getLoacationIds();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Trip of type + ").append(locations.getFirst().getClass());
+		sb.append("[");
+		String locString = Arrays.stream(locationIds).mapToObj(String::valueOf).collect(Collectors.joining(", "));
+		sb.append(locString).append("]");
+		return sb.toString();
+	}
 	
 	
 
@@ -144,4 +154,16 @@ public class Trip<L> {
             }
         }
     }
+// TEMPORARY SOLUTION, should go to node trip class!!
+	public int[] getLoacationIds() {
+		int[] ids = new int[locations.size()];
+		int index = 0;
+		for(L location: locations){
+			Node node = (Node) location;
+			ids[index] = node.id;
+			index++;
+		}
+		return ids;
+	}
+	
 }
