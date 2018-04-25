@@ -56,24 +56,14 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected PositionUtil positionUtil;
     
     protected Dimension dim;
-	
-	protected boolean transformSize;
 
-	
-	
-	
     public EntityLayer(EntityStorage<E> entityStorage) {
-        this(entityStorage, true, true);
+        this(entityStorage, true);
     }
     
     public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
-        this(entityStorage, showStackedEntitiesCount, true);
-    }
-	
-	public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
-		this.entityStorage = entityStorage;
+        this.entityStorage = entityStorage;
         this.showStackedEntitiesCount = showStackedEntitiesCount;
-		this.transformSize = transformSize;
     }
     
     @Inject
@@ -123,9 +113,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected void drawEntity(E entity, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entity);
         canvas.setColor(color);
-		
-        double radius = getRadius(entity);
-		
+        double radius = Vis.transW(getEntityDrawRadius(entity));
         int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
@@ -140,7 +128,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
-        double radius = getRadius(entities.get(0));
+        double radius = Vis.transW(getEntityDrawRadius(entities.get(0)));
         int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
@@ -160,9 +148,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
     protected abstract Color getEntityDrawColor(E entity);
 
-    protected abstract int getEntityTransformableRadius(E entity);
-	
-	protected abstract double getEntityStaticRadius(E entity);
+    protected abstract int getEntityDrawRadius(E entity);
 
     protected boolean skipDrawing(E entity) {
         return false;
@@ -183,14 +169,5 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected double getTextMarginTransY(){
         return Vis.transH(getTextMargin());
     }
-
-	private double getRadius(E entity) {
-		if(transformSize){
-			return Vis.transW(getEntityTransformableRadius(entity));
-		}
-		else{
-			return getEntityStaticRadius(entity);
-		}
-	}
-
+    
 }

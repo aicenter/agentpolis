@@ -68,7 +68,7 @@ public class NodeIdLayer extends AbstractLayer{
             canvas.drawString(Integer.toString(node.getId()), (int) nodePoint.x, (int) nodePoint.y);
         }
         
-        canvas.setColor(Color.RED);
+        canvas.setColor(Color.GREEN);
         //canvas.setFont(new Font("TimesRoman", Font.BOLD, 25));
         for (SimulationNode highlightedNode : highlightedNodes) {
             Point2d nodePoint = positionUtil.getCanvasPosition(highlightedNode);

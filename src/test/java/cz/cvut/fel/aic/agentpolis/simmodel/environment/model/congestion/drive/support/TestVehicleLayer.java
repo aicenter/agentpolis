@@ -50,7 +50,7 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
     }
 
     @Override
-    protected int getEntityTransformableRadius(DriveAgent driveAgent) {
+    protected int getEntityDrawRadius(DriveAgent driveAgent) {
         return (int) driveAgent.getVehicle().getLength() / 2;
     }
 

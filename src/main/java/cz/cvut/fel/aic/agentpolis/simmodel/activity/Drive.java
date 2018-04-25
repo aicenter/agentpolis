@@ -62,8 +62,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
     private SimulationNode to;
 	
-	
-	
+	private boolean stop;
 
     public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
                  VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, 
@@ -78,7 +77,13 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
         this.timeProvider = timeProvider;
         this.tripId = tripId;
         graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
+		stop = false;
     }
+	
+	public void end(){
+		stop = true;
+	}
+
 
     @Override
     protected void performAction() {
@@ -89,7 +94,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
     @Override
     protected void onChildActivityFinish(Activity activity) {
-        if (trip.isEmpty() || stoped) {
+        if (trip.isEmpty() || stop) {
             agent.endDriving();
             vehicle.setLastFromPosition(from);
             finish();

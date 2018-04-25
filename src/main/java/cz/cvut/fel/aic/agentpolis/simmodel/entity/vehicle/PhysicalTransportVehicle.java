@@ -25,8 +25,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphTyp
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -54,15 +52,7 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
     }
     
     public void dropOff(T entityToDropOff) {
-        boolean success = transportedEntities.remove(entityToDropOff);
-		if(!success){
-			try {
-                throw new Exception(
-						String.format("Cannot drop off entity, it is not transported! [%s]", entityToDropOff));
-            } catch (Exception ex) {
-                Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
-            }
-		}
+        transportedEntities.remove(entityToDropOff);
         entityToDropOff.setTransportingEntity(null);
     }
 

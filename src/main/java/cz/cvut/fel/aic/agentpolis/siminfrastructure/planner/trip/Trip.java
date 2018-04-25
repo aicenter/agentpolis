@@ -19,14 +19,12 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
-import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 
 import java.util.Arrays;
 
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
  * @param <L> locationType
@@ -106,47 +104,6 @@ public class Trip<L> {
         return locations.isEmpty();
     }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Trip of type + ").append(locations.getFirst().getClass());
-		for(L location: locations){
-			sb.append(location.toString());
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Trip<?> other = (Trip<?>) obj;
-		if (!Objects.equals(this.locations, other.locations)) {
-			return false;
-		}
-		return true;
-	}
-	
-	// TEMPORARY SOLUTION, should go to node trip class!!
-	public String locationIdsToString(){
-		int[] locationIds = getLoacationIds();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Trip of type + ").append(locations.getFirst().getClass());
-		sb.append("[");
-		String locString = Arrays.stream(locationIds).mapToObj(String::valueOf).collect(Collectors.joining(", "));
-		sb.append(locString).append("]");
-		return sb.toString();
-	}
-	
-	
-
     private void checkLocations(LinkedList<L> locations) throws TripException {
         for (L location : locations) {
             if (location == null) {
@@ -154,16 +111,4 @@ public class Trip<L> {
             }
         }
     }
-// TEMPORARY SOLUTION, should go to node trip class!!
-	public int[] getLoacationIds() {
-		int[] ids = new int[locations.size()];
-		int index = 0;
-		for(L location: locations){
-			Node node = (Node) location;
-			ids[index] = node.id;
-			index++;
-		}
-		return ids;
-	}
-	
 }

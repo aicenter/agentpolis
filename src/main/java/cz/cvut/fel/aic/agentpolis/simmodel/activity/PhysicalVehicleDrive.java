@@ -7,21 +7,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 
 public abstract class PhysicalVehicleDrive<A extends Agent & Driver> extends Activity<A>{
-	
-	protected boolean stoped;
-
-	public boolean isStoped() {
-		return stoped;
-	}
-	
-	
 
 	public PhysicalVehicleDrive(ActivityInitializer activityInitializer, A agent) {
 		super(activityInitializer, agent);
-		stoped = false;
 	}
 	
-	public void end(){
-		stoped = true;
-	}
+	public abstract void end();
 }
