@@ -36,10 +36,18 @@ import java.util.logging.Logger;
 public class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements TransportEntity<T>{
     
     protected final List<T> transportedEntities;
+	
+	private final int vehiclePassengerCapacity; // number of passenger, including driver
+	
+	
+    public int getCapacity() {
+        return vehiclePassengerCapacity;
+    }
     
     public PhysicalTransportVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity, 
             GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
-        super(vehicleId, type, lengthInMeters, vehiclePassengerCapacity, usingGraphTypeForMoving, position, maxVelocity);
+        super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
+		this.vehiclePassengerCapacity = vehiclePassengerCapacity;
         transportedEntities = new LinkedList<>();
     }
 

@@ -16,9 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.siminfrastructure;
+package cz.cvut.fel.aic.agentpolis;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -29,6 +28,15 @@ import java.util.Random;
 public class CollectionUtil {
     
     public static <K> void incrementMapValue(Map<K,Integer> map, K key, int increment){
+		if(map.containsKey(key)){
+			map.put(key, map.get(key) + increment);
+		}
+		else{
+			map.put(key, increment);
+		}
+	}
+	
+	public static <K> void incrementMapValue(Map<K,Long> map, K key, long increment){
 		if(map.containsKey(key)){
 			map.put(key, map.get(key) + increment);
 		}

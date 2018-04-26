@@ -31,6 +31,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,13 +44,37 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable<TEntity> {
 
     private final Map<String, TEntity> entities;
+	
     private final Map<EntityType, Set<String>> entitiesByType;
+	
+	
+	private AgentPolisEntity[] entitiesForIteration = new AgentPolisEntity[1];
 
+	private boolean entitiesForIterationValid = false;
+
+	
+	
+	
+	public AgentPolisEntity[] getEntitiesForIteration() {
+		if(!entitiesForIterationValid){
+			entitiesForIteration = entities.values().toArray(entitiesForIteration);
+			entitiesForIterationValid = true;
+		}
+		
+		return entitiesForIteration;
+	}
+	
+	
+	
+	
     public EntityStorage() {
         super();
         this.entities = new ConcurrentHashMap<>();
         this.entitiesByType = new ConcurrentHashMap<>();
     }
+	
+	
+	
 
     /**
      * Adds entity into the storage, its id has to be unique
