@@ -46,7 +46,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     
     
     
-    private final EntityStorage<E> entityStorage;
+    protected final EntityStorage<E> entityStorage;
     
     private final boolean showStackedEntitiesCount;
     
@@ -183,8 +183,10 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected double getTextMarginTransY(){
         return Vis.transH(getTextMargin());
     }
+	
+	
 
-	private double getRadius(E entity) {
+	protected double getRadius(E entity) {
 		if(transformSize){
 			return Vis.transW(getEntityTransformableRadius(entity));
 		}

@@ -57,6 +57,14 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
     }
     
     public void pickUp(T entity) {
+		if(transportedEntities.size() == vehiclePassengerCapacity){
+			try {
+                throw new Exception(
+						String.format("Cannot pick up entity, the vehicle is full! [%s]", entity));
+            } catch (Exception ex) {
+                Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		}
         transportedEntities.add(entity);
         entity.setTransportingEntity(this);
     }
