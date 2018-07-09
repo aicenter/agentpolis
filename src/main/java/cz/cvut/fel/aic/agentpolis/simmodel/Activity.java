@@ -63,6 +63,11 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	public final A getAgent() {
 		return agent;
 	}
+
+	Activity getParrentActivity() {
+		return parrentActivity;
+	}
+	
 	
 
 

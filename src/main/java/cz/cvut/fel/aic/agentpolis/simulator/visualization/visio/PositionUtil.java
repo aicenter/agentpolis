@@ -115,8 +115,12 @@ public class PositionUtil {
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
         return getEdge(entityPositionNodeId, targetNodeId, EGraphType.HIGHWAY).getLength();
     }
+	
+	public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip){
+		return getTripLengthInMeters(graphTrip, null);
+	}
 
-    public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip) {
+    public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip, Node stopPosition) {
         int length = 0;
 
         List<TripItem> locations = graphTrip.getLocations();
@@ -125,6 +129,11 @@ public class PositionUtil {
         for (int i = 1; i < locations.size(); i++) {
             int targetNodeId = locations.get(i).tripPositionByNodeId;
             length += getEdgeLength(startNodeId, targetNodeId);
+			
+			if(stopPosition != null && stopPosition.id == targetNodeId){
+				break;
+			}
+			
             startNodeId = targetNodeId;
         }
 

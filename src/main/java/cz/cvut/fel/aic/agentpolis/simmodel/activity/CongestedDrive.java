@@ -63,12 +63,4 @@ public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends P
             finish();
         }
     }
-
-	@Override
-	public void end() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-    
-    
-    
 }

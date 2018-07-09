@@ -59,6 +59,11 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 //        super.drawEntity(entity, agentPosition, canvas, dim); 
 //        canvas.fillOval(0, 0, 10, 10);
 //    }
+
+	@Override
+	protected double getEntityStaticRadius(DriveAgent entity) {
+		return  5;
+	}
     
     
     

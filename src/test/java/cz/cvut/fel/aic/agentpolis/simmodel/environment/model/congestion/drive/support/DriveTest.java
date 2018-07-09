@@ -75,7 +75,7 @@ public class DriveTest {
         
         for (int i = 0; i < trips.length; i++) {
             Trip<SimulationNode> trip = trips[i];
-            PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle" + i, CongestionTestType.TEST_VEHICLE, 5, 2, 
+            PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle" + i, CongestionTestType.TEST_VEHICLE, 2, 
                EGraphType.HIGHWAY, graph.getNode(0), 15);
         
             DriveAgent driveAgent = new DriveAgent("Test driver" + i, graph.getNode(0));

@@ -16,10 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment;
+package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
 import java.util.Comparator;
 import javax.vecmath.Point2d;
 
@@ -33,20 +32,20 @@ public class NearestEntityComparator<E extends AgentPolisEntity>
 	
 	protected final Point2d from;
 	
-	protected final PositionUtil positionUtil;
+	protected final EntityLayer<E> entityLayer;
 
 	
-	public NearestEntityComparator(PositionUtil positionUtil, Point2d from) {
+	public NearestEntityComparator(EntityLayer<E> entittyLayer, Point2d from) {
 		this.from = from;
-		this.positionUtil = positionUtil;
+		this.entityLayer = entittyLayer;
 	}
 	
 	
 
 	@Override
-	public int compare(AgentPolisEntity e1, AgentPolisEntity e2) {
-		return Double.compare(positionUtil.getPosition(e1.getPosition()).distance(from), 
-				positionUtil.getPosition(e2.getPosition()).distance(from));
+	public int compare(E e1, E e2) {
+		return Double.compare(entityLayer.getEntityPosition(e1).distance(from), 
+				entityLayer.getEntityPosition(e2).distance(from));
 	}
 	
 }

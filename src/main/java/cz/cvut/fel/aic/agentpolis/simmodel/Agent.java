@@ -46,6 +46,14 @@ public abstract class Agent extends AgentPolisEntity {
     public Activity getCurrentActivity() {
         return currentActivity;
     }
+	
+	protected Activity getCurrentTopLevelActivity(){
+		Activity activity = getCurrentActivity();
+		while(activity.getParrentActivity() != null){
+			activity = activity.getParrentActivity();
+		}
+		return activity;
+	}
 
 
     public Agent(final String agentId, SimulationNode position) {

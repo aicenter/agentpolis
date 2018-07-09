@@ -141,5 +141,10 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
         return Math.atan2(dy,dx);
     }
 
+	@Override
+	protected double getEntityStaticRadius(DriveAgent entity) {
+		return 5;
+	}
+
 	
 }
