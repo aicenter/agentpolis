@@ -20,14 +20,12 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.geographtools.GPSLocation;
 
 
 import java.awt.*;
@@ -46,11 +44,12 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     private Path2D CarRepresentationShape;
     
    
-    
-	
-	@Inject
     public VehicleLayer(EntityStorage<V> driverStorage) {
-        super(driverStorage);
+        this(driverStorage, true, true);
+    }
+	
+    public VehicleLayer(EntityStorage<V> driverStorage, boolean showStackedEntitiesCount, boolean transformSize) {
+        super(driverStorage, showStackedEntitiesCount, transformSize);
     }
 
     @Override
@@ -60,20 +59,37 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     
     //not used
     @Override
-    protected int getEntityDrawRadius(V vehicle) {
+    protected int getEntityTransformableRadius(V vehicle) {
         return 0;
     }
+	
+	//not used
+	@Override
+	protected double getEntityStaticRadius(V vehicle) {
+		return  0;
+	}
     
     protected abstract float getVehicleWidth(V vehicle);
     
     protected abstract float getVehicleLength(V vehicle);
+	
+	protected abstract float getVehicleStaticWidth(V vehicle);
+    
+    protected abstract float getVehicleStaticLength(V vehicle);
 
     @Override
     protected void drawEntities(ArrayList<V> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         V representative = entities.get(0);
         
         if(CarRepresentationShape == null){
-            CarRepresentationShape = createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
+			if(transformSize){
+				CarRepresentationShape
+						= createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
+			}
+			else{
+				CarRepresentationShape
+						= createCarShape(getVehicleStaticLength(representative), getVehicleStaticWidth(representative));
+			}
         }
         
         Color color = getEntityDrawColor(entities.get(0));
@@ -119,18 +135,24 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
             /* rotate against center of the shape */
             AffineTransform rotate = AffineTransform.getRotateInstance(-angle, centerShift, centerShift);
             
-            /* scale according to zoom factor */
-            AffineTransform scale = AffineTransform.getScaleInstance(Vis.getZoomFactor(),Vis.getZoomFactor());
-            
             /* translate the center of the shape to entity position */
             AffineTransform translate = 
                     AffineTransform.getTranslateInstance(entityPosition.getX() - Vis.transW(centerShift), 
                             entityPosition.getY() - Vis.transH(centerShift));
             
             /* transformations are applied in inverse order */
-            scale.concatenate(rotate);
-            translate.concatenate(scale);
-
+			if(transformSize){
+				
+				/* scale according to zoom factor */
+				AffineTransform scale = AffineTransform.getScaleInstance(Vis.getZoomFactor(),Vis.getZoomFactor());
+				
+				scale.concatenate(rotate);
+				translate.concatenate(scale);
+			}
+			else{
+				translate.concatenate(rotate);
+			}
+			
             Shape s = CarRepresentationShape.createTransformedShape(translate);
             canvas.fill(s);
         }

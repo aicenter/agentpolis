@@ -70,7 +70,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 
     // not used
     @Override
-    protected int getEntityDrawRadius(DriveAgent driveAgent) {
+    protected int getEntityTransformableRadius(DriveAgent driveAgent) {
         return 0;
     }
 
@@ -84,7 +84,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
         
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
-        double radius = Vis.transW(getEntityDrawRadius(entities.get(0)));
+        double radius = Vis.transW(getEntityTransformableRadius(entities.get(0)));
         int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
