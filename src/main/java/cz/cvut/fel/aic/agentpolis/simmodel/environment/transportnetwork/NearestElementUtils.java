@@ -73,7 +73,7 @@ public class NearestElementUtils {
         
         NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
         
-        return (SimulationNode[]) nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
+        return nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
     }
 
     private void createNearestElementUtil(GraphType graphType) {
