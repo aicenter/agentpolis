@@ -18,7 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.CollectionUtil;
+import cz.cvut.fel.aic.agentpolis.CollectionUtil;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;

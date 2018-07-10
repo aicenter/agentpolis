@@ -220,8 +220,11 @@ public class TripsUtil {
         return edge.getLength() / edge.allowedMaxSpeedInMpS;
     }
 
+	public int getTripLengthInMeters(Trip<? extends Node> trip){
+		return getTripLengthInMeters(trip, null);
+	}
 
-    public int getTripLengthInMeters(Trip<? extends Node> trip) {
+    public int getTripLengthInMeters(Trip<? extends Node> trip, Node stopPosition) {
         int length = 0;
 
         LinkedList<? extends Node> locations = trip.getLocations();
@@ -230,6 +233,11 @@ public class TripsUtil {
             for (int i = 1; i < locations.size(); i++) {
                 int targetNodeId = locations.get(i).id;
                 length += getEdgeLength(startNodeId, targetNodeId);
+				
+				if(stopPosition != null && stopPosition.id == targetNodeId){
+					break;
+				}
+				
                 startNodeId = targetNodeId;
             }
         }

@@ -114,10 +114,21 @@ public class MapTilesLayer extends AbstractLayer {
         this.dir = Paths.get(config.pathToMapTiles);
         this.osmTileServer = config.osmTileServer;
         if (!Files.isDirectory(dir)) {
-            LOGGER.info("Cannot access the directory with map tiles: " + config.pathToMapTiles);
-            OSMTiles = null;
-            OSMDownloads = null;
-            return;
+            File fileDir = new File(config.pathToMapTiles);
+            boolean successMkdir = false;
+            try {
+                successMkdir = fileDir.mkdir();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (!successMkdir) {
+                    LOGGER.warn("Cannot create the directory with map tiles: " + config.pathToMapTiles);
+                    OSMTiles = null;
+                    OSMDownloads = null;
+                    return;
+                }
+            }
+            
         }
         OSMTiles = new HashMap<>();
         OSMDownloads = new HashMap<>();

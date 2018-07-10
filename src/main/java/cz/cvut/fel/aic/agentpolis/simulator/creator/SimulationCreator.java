@@ -36,8 +36,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class SimulationCreator {

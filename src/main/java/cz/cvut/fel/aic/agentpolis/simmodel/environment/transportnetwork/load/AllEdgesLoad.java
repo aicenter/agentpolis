@@ -19,7 +19,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.load;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.CollectionUtil;
+import cz.cvut.fel.aic.agentpolis.CollectionUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
