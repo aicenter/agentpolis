@@ -42,6 +42,7 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
 
 import javax.vecmath.Point2d;
 import java.util.HashMap;
@@ -97,7 +98,9 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {
-        return new Point2d(Vis.transX(position.getLongitudeProjected()), Vis.transY(position.getLatitudeProjected()));
+        GPSLocation WGS84position = GPSLocationTools.createGPSLocation(position.getLatitude(), position.getLongitude() ,0, 3857); // 3857 - Web Mercator projection (used by map tiles)
+        return new Point2d(Vis.transX(WGS84position.getLongitudeProjected()), Vis.transY(WGS84position.getLatitudeProjected()));
+        //return new Point2d(Vis.transX(position.getLongitudeProjected()), Vis.transY(position.getLatitudeProjected()));
     }
 
     public Point2d getCanvasPosition(int nodeId) {
