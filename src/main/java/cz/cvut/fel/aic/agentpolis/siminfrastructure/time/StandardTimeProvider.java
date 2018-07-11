@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
-import org.apache.log4j.Logger;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,6 +28,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class provides a simulation time from simulation model and includes method for working with time.
@@ -40,7 +40,7 @@ import java.time.temporal.ChronoUnit;
 @Singleton
 public class StandardTimeProvider implements TimeProvider{
 
-	private static final Logger logger = Logger.getLogger(StandardTimeProvider.class);
+        private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StandardTimeProvider.class);
 
 	private final static long HOUR_24 = Duration.ofHours(24).toMillis();
 	private final static long NEXT_DAY_FLAG = 1;
@@ -58,8 +58,8 @@ public class StandardTimeProvider implements TimeProvider{
 	@Inject
 	public StandardTimeProvider(EventProcessor eventProcessor) {
 		this(eventProcessor, LocalDate.parse("2014-09-08"));
-		logger.warn("Init date was set to default (" + initDate +
-					"). Some features may not work properly - e.g. Public transport");
+		LOGGER.warn("Init date was set to default ({}). "
+                        + "Some features may not work properly - e.g. Public transport", initDate);
 	}
 
 	public StandardTimeProvider(EventProcessor eventProcessor, LocalDate initDate) {
@@ -70,7 +70,7 @@ public class StandardTimeProvider implements TimeProvider{
 		super();
 		this.eventProcessor = eventProcessor;
 		if (initDate.get(ChronoField.MILLI_OF_DAY) != 0) {
-			logger.warn("Init day is not day start (00:00). It will be set to the start of the day.");
+			LOGGER.warn("Init day is not day start (00:00). It will be set to the start of the day.");
 			initDate = initDate.with(ChronoField.MILLI_OF_DAY, 0);
 		}
 		this.initDate = initDate;

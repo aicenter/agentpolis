@@ -30,18 +30,16 @@ import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SimulationCreator {
-    private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationCreator.class);
     private TypedSimulation simulation;
     private final AgentpolisConfig config;
     private final SimulationProvider simulationProvider;
@@ -64,7 +62,7 @@ public class SimulationCreator {
     }
 
     public void prepareSimulation(final MapData osmDTO, final long seed) {
-        LOGGER.debug("Using seed " + seed + ".");
+        LOGGER.debug("Using seed {}.", seed);
 
         initLogger();
         initSimulation();
@@ -86,11 +84,11 @@ public class SimulationCreator {
         if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
-            LOGGER.info(String.format("Simulation initalized. (%s ms)", (System.currentTimeMillis() - simTimeInit)));
+            LOGGER.info("Simulation initalized. ({} ms)", (System.currentTimeMillis() - simTimeInit));
             long simulationStartTime = System.currentTimeMillis();
             timeEventGenerator.start();
             simulation.run();
-            LOGGER.info(String.format("Simulation finished: (%s ms)", (System.currentTimeMillis() - simulationStartTime)));
+            LOGGER.info("Simulation finished: ({} ms)", (System.currentTimeMillis() - simulationStartTime));
         }
     }
 

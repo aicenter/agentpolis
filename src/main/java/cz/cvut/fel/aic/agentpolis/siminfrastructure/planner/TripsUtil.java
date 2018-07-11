@@ -38,8 +38,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -53,6 +52,8 @@ import java.util.logging.Logger;
 @Singleton
 public class TripsUtil {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TripsUtil.class);
+    
     protected static final Set<GraphType> GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
 
 
@@ -88,7 +89,7 @@ public class TripsUtil {
                 try {
                     throw new Exception("There can't be two identical locations in a row");
                 } catch (Exception ex) {
-                    Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(null, ex);
                 }
             }
 
@@ -102,7 +103,7 @@ public class TripsUtil {
                     }
 
                 } catch (TripPlannerException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(null, ex);
                 }
             }
             startNodeId = targetNodeId;
@@ -118,7 +119,7 @@ public class TripsUtil {
             try {
                 throw new Exception("Start node cannot be the same as end node");
             } catch (Exception ex) {
-                Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.error(null, ex);
             }
         }
         ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
@@ -127,7 +128,7 @@ public class TripsUtil {
         try {
             finalTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
         } catch (TripPlannerException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(null, ex);
         }
 
         return finalTrip;
@@ -152,7 +153,7 @@ public class TripsUtil {
             try {
                 throw new Exception("Start node cannot be the same as end node");
             } catch (Exception ex) {
-                Logger.getLogger(TripsUtil.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(null, ex);
             }
         }
         ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(graphTypes);
@@ -161,7 +162,7 @@ public class TripsUtil {
         try {
             finalTrip = pathPlanner.findTrip(startNodeId, targetNodeId);
         } catch (TripPlannerException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(null, ex);
         }
 
         return finalTrip;

@@ -19,17 +19,17 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import com.google.inject.Singleton;
-import org.apache.log4j.Logger;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Zdenek Bousa
  */
 public class Lane {
-    private static final Logger LOGGER = Logger.getLogger(Lane.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Lane.class);
     private final long laneUniqueId;
     private final String parentEdgeUniqueId;
     private List<Integer> heading = new LinkedList<>();
