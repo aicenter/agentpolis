@@ -18,12 +18,11 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection;
 
-import cz.cvut.fel.aic.alite.common.event.EventType;
 
 /**
  *
  * @author fido
  */
-public enum CrossroadEvent implements EventType{
+public enum CrossroadEvent {
     TICK
 }

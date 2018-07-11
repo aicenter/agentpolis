@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
-import cz.cvut.fel.aic.alite.common.event.EventType;
 
 /**
  *
@@ -32,12 +31,12 @@ public abstract class PeriodicTicker extends EventHandlerAdapter{
     
     private final int tickLength;
     
-    private final EventType eventType;
+    private final Enum eventType;
 
     
     
     
-    public PeriodicTicker(SimulationProvider simulationProvider, int tickLength, EventType eventType) {
+    public PeriodicTicker(SimulationProvider simulationProvider, int tickLength, Enum eventType) {
         this.simulationProvider = simulationProvider;
         this.tickLength = tickLength;
         this.eventType = eventType;

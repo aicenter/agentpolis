@@ -18,12 +18,10 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 
-import cz.cvut.fel.aic.alite.common.event.EventType;
-
 /**
  *
  * @author fido
  */
-public enum TimeGeneratorEvent implements EventType{
+public enum TimeGeneratorEvent{
     TICK
 }

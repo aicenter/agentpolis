@@ -18,12 +18,10 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
 
-import cz.cvut.fel.aic.alite.common.event.EventType;
-
 /**
  *
  * @author fido
  */
-public enum DriveEvent implements EventType{
+public enum DriveEvent{
     VEHICLE_ENTERED_EDGE, PEDESTRIAN_ENTERED_EDGE
 }
