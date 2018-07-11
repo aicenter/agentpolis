@@ -22,12 +22,12 @@ public class TestCorrectDistance {
 
         Iterator<SimulationEdge> iter = edges.iterator();
 
-        assertEquals(980.50, iter.next().shape.getShapeLength(), 0.0001 );
-        assertEquals(156.66, iter.next().shape.getShapeLength(), 0.0001 );
-        assertEquals(500.03, iter.next().shape.getShapeLength(),0.0001 );
-        assertEquals(130.58, iter.next().shape.getShapeLength(),0.0001 );
-        assertEquals(1480.26, iter.next().shape.getShapeLength(),0.0001 );
-        assertEquals(285.09, iter.next().shape.getShapeLength(),0.0001 );
+        assertEquals(503.7, iter.next().shape.getShapeLength(), 2 );
+        assertEquals(213.0, iter.next().shape.getShapeLength(), 0.5 );
+        assertEquals(259.1, iter.next().shape.getShapeLength(),1 );
+        assertEquals(167.9, iter.next().shape.getShapeLength(),0.5 );
+        assertEquals(759.9, iter.next().shape.getShapeLength(),3 );
+        assertEquals(372.0, iter.next().shape.getShapeLength(),0.75 );
 
 
         Log.close();

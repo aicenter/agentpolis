@@ -19,8 +19,8 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
-import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.common.FpsLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
@@ -32,8 +32,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
-import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
+
 import javax.vecmath.Point2d;
 
 public class DefaultVisioInitializer implements VisioInitializer{
@@ -45,12 +45,13 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	private final MetrowayNetwork metrowayNetwork;
 	private final RailwayNetwork railwayNetwork;
     private final SimulationControlLayer simulationControlLayer;
+    private final AgentpolisConfig config;
     protected final GridLayer gridLayer;
 
 	@Inject
-	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork, 
-			HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork, 
-			RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer) {
+	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+                                   HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
+                                   RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, AgentpolisConfig config) {
 		this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
@@ -58,7 +59,9 @@ public class DefaultVisioInitializer implements VisioInitializer{
 		this.metrowayNetwork = metrowayNetwork;
 		this.railwayNetwork = railwayNetwork;
         this.simulationControlLayer = simulationControlLayer;
+        this.config = config;
         this.gridLayer = gridLayer;
+
 	}
 
 	@Override
@@ -105,8 +108,10 @@ public class DefaultVisioInitializer implements VisioInitializer{
             @Override
             public Point2d getDefaultLookAt() {
                 GPSLocation centroid = Utils2D.getGraphCentroid(highwayNetwork.getNetwork());
-                Point2d centerPoint = new Point2d(centroid.getLongitudeProjected(), 
-                        centroid.getLatitudeProjected());
+                int centroidProjectionSRID = config.srid;
+                GPSLocation centroidWGS84 = PositionUtil.getWGS84PositionFromCustomProjection(centroid.getLatitudeProjected1E2(), centroid.getLongitudeProjected1E2(), centroidProjectionSRID);
+                Point2d centerPoint = new Point2d(centroidWGS84.getLongitudeProjected(),
+                        centroidWGS84.getLatitudeProjected());
                 return centerPoint;
             }
 

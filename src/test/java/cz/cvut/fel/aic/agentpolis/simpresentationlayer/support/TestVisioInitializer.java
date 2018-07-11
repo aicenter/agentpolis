@@ -1,6 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.simpresentationlayer.support;
 
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.*;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.*;
 import cz.cvut.fel.aic.alite.vis.VisManager;
@@ -23,9 +24,9 @@ public class TestVisioInitializer extends DefaultVisioInitializer {
     public TestVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                 HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
                                 RailwayNetwork railwayNetwork, NodeIdLayer nodeIdLayer, HighwayLayer highwayLayer,
-                                SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles) {
+                                SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles, AgentpolisConfig config) {
         super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-                simulationControlLayer, gridLayer);
+                simulationControlLayer, gridLayer, config);
         this.nodeIdLayer = nodeIdLayer;
         this.highwayLayer = highwayLayer;
         this.backgroundLayer = ColorLayer.create(Color.white);

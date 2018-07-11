@@ -8,17 +8,13 @@ public class TestModule extends StandardAgentPolisModule {
     public TestModule() {
         super();
 
-//        if(System.getProperty("test") == null){
-//            agentpolisConfig.showVisio = false;
-//        }
-
         agentpolisConfig.showVisio = true; //VisualTests.SHOW_VISIO;
-
-        agentpolisConfig.congestionModel.batchSize = 1;
-        agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
-        agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
+        agentpolisConfig.srid = testSRID();
     }
 
+    static int testSRID() {
+        return 32650; // SRID used for both tests - changing this should give various distance results, but shouldn't break the visualization
+    }
 
 
     @Override

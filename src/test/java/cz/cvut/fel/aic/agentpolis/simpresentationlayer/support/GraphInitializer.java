@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class GraphInitializer {
 
-    static int SRID = 5940; //3857;
+    private static int SRID = TestModule.testSRID();
 
     public static Graph<SimulationNode, SimulationEdge> getGraphForTest() {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
@@ -46,9 +46,7 @@ public class GraphInitializer {
         graphBuilder.addEdge(edge4);
         graphBuilder.addEdge(edge5);
 
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-
-        return graph;
+        return graphBuilder.createGraph();
     }
 
 }
