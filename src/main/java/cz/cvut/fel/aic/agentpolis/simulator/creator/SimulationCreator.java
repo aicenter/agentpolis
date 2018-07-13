@@ -18,6 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.creator;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -64,7 +66,6 @@ public class SimulationCreator {
     public void prepareSimulation(final MapData osmDTO, final long seed) {
         LOGGER.debug("Using seed {}.", seed);
 
-        initLogger();
         initSimulation();
 
         LOGGER.info(">>> CREATING MAP");
@@ -103,44 +104,6 @@ public class SimulationCreator {
         allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
         graphs.setGraphs(osmDTO.graphByType);
         LOGGER.info("Done.");
-    }
-
-    private void initLogger() {
-        LOGGER.info("Loading log4j properties");
-
-        if (new File(config.log4jXmlDir).exists()) {
-            try {
-                DOMConfigurator.configure(config.log4jXmlDir);
-                LOGGER.info("Loaded log4j properties");
-                return;
-            } catch (Exception ignored) {
-                LOGGER.warn("Ignoring logger configuration exception.");
-            }
-        }
-
-        URL pathToResource = ResourceReader.getPathToResource("/log4j/log4j.properties");
-        if (pathToResource != null) {
-            try {
-                PropertyConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties.");
-                return;
-            } catch (Exception ignored) {
-            }
-        }
-
-        pathToResource = ResourceReader.getPathToResource("/log4j/log4j.xml");
-
-        if (pathToResource != null) {
-            try {
-                DOMConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties.");
-                return;
-            } catch (Exception ignored) {
-
-            }
-        }
-
-        LOGGER.info("Failed to load log4j properties.");
     }
 
     private void initVisio() {
