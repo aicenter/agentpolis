@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.mapInitializatiron;
+package cz.cvut.fel.aic.agentpolis.simmodel.mapInitialization;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -8,8 +8,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphTyp
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
-import cz.cvut.fel.aic.agentpolis.simmodel.mapInitializatiron.SimulationEdgeFactory;
-import cz.cvut.fel.aic.agentpolis.simmodel.mapInitializatiron.SimulationNodeFactory;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.TransportMode;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
@@ -21,7 +19,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 public class MapInitializer {
 

@@ -35,9 +35,9 @@ public class NearestEntityComparator<E extends AgentPolisEntity>
 	protected final EntityLayer<E> entityLayer;
 
 	
-	public NearestEntityComparator(EntityLayer<E> entittyLayer, Point2d from) {
+	public NearestEntityComparator(EntityLayer<E> entityLayer, Point2d from) {
 		this.from = from;
-		this.entityLayer = entittyLayer;
+		this.entityLayer = entityLayer;
 	}
 	
 	
