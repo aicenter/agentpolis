@@ -5,9 +5,6 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.alite.vis.layer.VisLayer;
-import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
-import cz.cvut.fel.aic.alite.vis.layer.toggle.ToggleLayer;
-import sun.print.PathGraphics;
 
 import javax.vecmath.Point2d;
 import java.awt.*;
@@ -78,7 +75,15 @@ public class LayerManagementLayer extends AbstractLayer {
             } else {
                 canvas.drawRect(1602,921 - 25*i, 18, 18);
             }
-            paintLayerOrderArrows(canvas, 921-25*i);
+            if (i == 0) {
+                paintLayerOrderUpArrow(canvas, 921);
+                continue;
+            }
+            if (i == manageableLayers.size() - 1) {
+                paintLayerOrderDownArrow(canvas, 921-25*i);
+                continue;
+            }
+            paintLayerOrderBothArrows(canvas, 921-25*i);
         }
         canvas.setFont(oldFont);
 
@@ -96,11 +101,23 @@ public class LayerManagementLayer extends AbstractLayer {
         canvas.fillPolygon(xPoints, yPoints, 3);
     }
 
-    public void paintLayerOrderArrows(Graphics2D canvas, int ypos) {
+    public void paintLayerOrderBothArrows(Graphics2D canvas, int ypos) {
         int[] xPoints = {1585, 1591, 1597};
         int[] yPointsUp = {ypos+8, ypos, ypos+8};
         int[] yPointsDown = {ypos+10, ypos+18, ypos+10};
         canvas.fillPolygon(xPoints, yPointsUp, 3);
+        canvas.fillPolygon(xPoints, yPointsDown, 3);
+    }
+
+    public void paintLayerOrderUpArrow(Graphics2D canvas, int ypos) {
+        int[] xPoints = {1585, 1591, 1597};
+        int[] yPointsUp = {ypos+8, ypos, ypos+8};
+        canvas.fillPolygon(xPoints, yPointsUp, 3);
+    }
+
+    public void paintLayerOrderDownArrow(Graphics2D canvas, int ypos) {
+        int[] xPoints = {1585, 1591, 1597};
+        int[] yPointsDown = {ypos+10, ypos+18, ypos+10};
         canvas.fillPolygon(xPoints, yPointsDown, 3);
     }
 
