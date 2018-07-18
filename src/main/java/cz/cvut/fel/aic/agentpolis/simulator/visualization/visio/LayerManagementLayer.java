@@ -13,10 +13,8 @@ import javax.vecmath.Point2d;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 @Singleton
@@ -136,7 +134,9 @@ public class LayerManagementLayer extends AbstractLayer {
         if (click.getX() > 1585 && click.getX() < 1597 && click.getY() > 921 - 25*manageableLayers.size() && click.getY() < 939 ) {
             for (int i = 0; i < manageableLayers.size(); i++) {
                 if (click.getY() > 921 - 25*i && click.getY() < 929 - 25*i ) {
-                    System.out.println("Move Up: " +  i);
+                    if (i != manageableLayers.size() - 1) {
+                        swapLayers(i, i+1);
+                    }
                     return true;
                 }
             }
@@ -148,13 +148,21 @@ public class LayerManagementLayer extends AbstractLayer {
         if (click.getX() > 1585 && click.getX() < 1597 && click.getY() > 921 - 25*manageableLayers.size() && click.getY() < 939 ) {
             for (int i = 0; i < manageableLayers.size(); i++) {
                 if (click.getY() > 931 - 25*i && click.getY() < 939 - 25*i ) {
-                    System.out.println("Move Down: " +  i);
+                    if (i != 0) {
+                        swapLayers(i, i-1);
+                    }
                     return true;
                 }
             }
         }
         return false;
     }
+
+    private void swapLayers(int x, int y) {
+        VisManager.swapLayers((VisLayer) manageableLayers.get(x), (VisLayer)manageableLayers.get(y));
+        Collections.swap(manageableLayers, x, y);
+    }
+
 
     public void init(Vis vis) {
         super.init(vis);
