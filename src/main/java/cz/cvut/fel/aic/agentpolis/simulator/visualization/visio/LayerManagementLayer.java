@@ -21,10 +21,13 @@ public class LayerManagementLayer extends AbstractLayer {
     private Color backgroundColor;
     private Color textColor;
     private List<ManageableLayer> manageableLayers;
+    private int uixposition;
+    private int uiyposition;
 
     public LayerManagementLayer() {
         isVisible = false;
         setDefaultColors();
+        setDefaultUIposition();
         manageableLayers = new ArrayList<>();
     }
 
@@ -49,12 +52,12 @@ public class LayerManagementLayer extends AbstractLayer {
 
     public void paintBottomRectangle(Graphics2D canvas, String message) {
         canvas.setColor(backgroundColor);
-        canvas.fillRect(1580, 955, 300, 30);
+        canvas.fillRect(uixposition, uiyposition, 300, 30);
 
         Font oldFont = canvas.getFont();
         canvas.setFont(new Font("Arial", 1, 14));
         canvas.setColor(textColor);
-        canvas.drawString(message, 1630, 975);
+        canvas.drawString(message, uixposition+50, uiyposition+20);
 
         canvas.setFont(oldFont);
     }
@@ -62,47 +65,47 @@ public class LayerManagementLayer extends AbstractLayer {
     public void paintTopRectangle(Graphics2D canvas) {
         canvas.setColor(backgroundColor);
         int height = manageableLayers.size() * 25 + 5;
-        canvas.fillRect(1580, 945 - height, 300, height);
+        canvas.fillRect(uixposition, uiyposition - 10 - height, 300, height);
 
         Font oldFont = canvas.getFont();
         canvas.setFont(new Font("Arial", 1, 14));
         canvas.setColor(textColor);
         for( int i = 0; i < manageableLayers.size(); i++ ) {
-            canvas.drawString(manageableLayers.get(i).getName(), 1630, 935 - 25*i);
+            canvas.drawString(manageableLayers.get(i).getName(), uixposition + 50, uiyposition - 20 - 25*i);
             if (manageableLayers.get(i).isVisible()){
-                canvas.fillRect(1602,921 - 25*i, 18, 18);
+                canvas.fillRect(uixposition + 22,uiyposition - 34 - 25*i, 18, 18);
 
             } else {
-                canvas.drawRect(1602,921 - 25*i, 18, 18);
+                canvas.drawRect(uixposition + 22,uiyposition - 34 - 25*i, 18, 18);
             }
             if (i == 0) {
-                paintLayerOrderUpArrow(canvas, 921);
+                paintLayerOrderUpArrow(canvas, uiyposition - 34);
                 continue;
             }
             if (i == manageableLayers.size() - 1) {
-                paintLayerOrderDownArrow(canvas, 921-25*i);
+                paintLayerOrderDownArrow(canvas, uiyposition - 34 - 25*i);
                 continue;
             }
-            paintLayerOrderBothArrows(canvas, 921-25*i);
+            paintLayerOrderBothArrows(canvas, uiyposition - 34 - 25*i);
         }
         canvas.setFont(oldFont);
 
     }
 
     public void paintArrowUpwards(Graphics2D canvas) {
-        int[] xPoints = {1595, 1605, 1615};
-        int[] yPoints = {977, 963, 977};
+        int[] xPoints = {uixposition+15, uixposition+25, uixposition+35};
+        int[] yPoints = {uiyposition+22, uiyposition+8, uiyposition+22};
         canvas.fillPolygon(xPoints, yPoints, 3);
     }
 
     public void paintArrowDownwards(Graphics2D canvas) {
-        int[] xPoints = {1595, 1605, 1615};
-        int[] yPoints = {963, 977, 963};
+        int[] xPoints = {uixposition+15, uixposition+25, uixposition+35};
+        int[] yPoints = {uiyposition+8, uiyposition+22, uiyposition+8};
         canvas.fillPolygon(xPoints, yPoints, 3);
     }
 
     public void paintLayerOrderBothArrows(Graphics2D canvas, int ypos) {
-        int[] xPoints = {1585, 1591, 1597};
+        int[] xPoints = {uixposition+5, uixposition+11, uixposition+17};
         int[] yPointsUp = {ypos+8, ypos, ypos+8};
         int[] yPointsDown = {ypos+10, ypos+18, ypos+10};
         canvas.fillPolygon(xPoints, yPointsUp, 3);
@@ -110,13 +113,13 @@ public class LayerManagementLayer extends AbstractLayer {
     }
 
     public void paintLayerOrderUpArrow(Graphics2D canvas, int ypos) {
-        int[] xPoints = {1585, 1591, 1597};
+        int[] xPoints = {uixposition+5, uixposition+11, uixposition+17};
         int[] yPointsUp = {ypos+8, ypos, ypos+8};
         canvas.fillPolygon(xPoints, yPointsUp, 3);
     }
 
     public void paintLayerOrderDownArrow(Graphics2D canvas, int ypos) {
-        int[] xPoints = {1585, 1591, 1597};
+        int[] xPoints = {uixposition+5, uixposition+11, uixposition+17};
         int[] yPointsDown = {ypos+10, ypos+18, ypos+10};
         canvas.fillPolygon(xPoints, yPointsDown, 3);
     }
@@ -127,8 +130,13 @@ public class LayerManagementLayer extends AbstractLayer {
         textColor = new Color(255, 255, 255, 255);
     }
 
+    private void setDefaultUIposition() {
+        uixposition = 1580;
+        uiyposition = 955;
+    }
+
     private boolean validateLayersManagementToggleClick(Point2d click) {
-        if (click.getX() > 1580 && click.getX() < 1880 && click.getY() > 955 && click.getY() < 985 ) {
+        if (click.getX() > uixposition && click.getX() < uixposition+300 && click.getY() > uiyposition && click.getY() < uiyposition+30 ) {
             isVisible = !isVisible;
             return true;
         }
@@ -136,9 +144,9 @@ public class LayerManagementLayer extends AbstractLayer {
     }
 
     private boolean validateLayerToggleClick(Point2d click) {
-        if (click.getX() > 1602 && click.getX() < 1620 && click.getY() > 921 - 25*manageableLayers.size() && click.getY() < 939 ) {
+        if (click.getX() > uixposition+22 && click.getX() < uixposition+40 && click.getY() > uiyposition - 34 - 25*manageableLayers.size() && click.getY() < uiyposition - 16 ) {
             for (int i = 0; i < manageableLayers.size(); i++) {
-                if (click.getY() > 921 - 25*i && click.getY() < 939 - 25*i ) {
+                if (click.getY() > uiyposition - 34 - 25*i && click.getY() < uiyposition - 16 - 25*i ) {
                     manageableLayers.get(i).toggle();
                     return true;
                 }
@@ -148,9 +156,9 @@ public class LayerManagementLayer extends AbstractLayer {
     }
 
     private boolean validateLayerMoveUpClick(Point2d click) {
-        if (click.getX() > 1585 && click.getX() < 1597 && click.getY() > 921 - 25*manageableLayers.size() && click.getY() < 939 ) {
+        if (click.getX() > uixposition + 5 && click.getX() < uixposition + 17 && click.getY() > uiyposition - 34 - 25*manageableLayers.size() && click.getY() < uiyposition - 16 ) {
             for (int i = 0; i < manageableLayers.size(); i++) {
-                if (click.getY() > 921 - 25*i && click.getY() < 929 - 25*i ) {
+                if (click.getY() > uiyposition - 34 - 25*i && click.getY() < uiyposition - 26 - 25*i ) {
                     if (i != manageableLayers.size() - 1) {
                         swapLayers(i, i+1);
                     }
@@ -162,9 +170,9 @@ public class LayerManagementLayer extends AbstractLayer {
     }
 
     private boolean validateLayerMoveDownClick(Point2d click) {
-        if (click.getX() > 1585 && click.getX() < 1597 && click.getY() > 921 - 25*manageableLayers.size() && click.getY() < 939 ) {
+        if (click.getX() > uixposition + 5 && click.getX() < uixposition + 17 && click.getY() > uiyposition - 34 - 25*manageableLayers.size() && click.getY() < uiyposition - 16 ) {
             for (int i = 0; i < manageableLayers.size(); i++) {
-                if (click.getY() > 931 - 25*i && click.getY() < 939 - 25*i ) {
+                if (click.getY() > uiyposition - 24 - 25*i && click.getY() < uiyposition - 16 - 25*i ) {
                     if (i != 0) {
                         swapLayers(i, i-1);
                     }
