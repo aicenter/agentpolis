@@ -18,7 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
@@ -55,7 +54,5 @@ public class TestTwoNodesBothDirections {
 
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
-
-        Log.close();
     }
 }

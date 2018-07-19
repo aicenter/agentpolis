@@ -18,7 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
@@ -30,12 +29,15 @@ import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 
 import java.util.LinkedList;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author fido
  */
 public class Lane extends EventHandlerAdapter {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Lane.class);
+    
     private static final int MIN_LINK_CAPACITY_IN_METERS = 5;
 
 
@@ -232,7 +234,7 @@ public class Lane extends EventHandlerAdapter {
         } else {
             congestedSpeed = freeFlowVelocity * calculateSpeedCoefficient(carsPerKilometer);
         }
-        Log.info(this, "Congested speed: " + carsPerKilometer + "cars / km -> " + congestedSpeed + "m / s");
+        LOGGER.info("Congested speed: {}cars / km -> {}m / s", carsPerKilometer, congestedSpeed);
 
         return congestedSpeed;
     }

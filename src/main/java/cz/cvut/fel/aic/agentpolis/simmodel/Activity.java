@@ -18,10 +18,9 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.typed.AliteEntity;
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represent agent's activity. 
@@ -30,6 +29,8 @@ import java.util.logging.Level;
  */
 public abstract class Activity<A extends Agent> extends AliteEntity{
 	
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Activity.class);
+    
 	/**
 	 * Agent who performs this activity.
 	 */
@@ -123,8 +124,8 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 * This method is called when child activity is finished.
 	 * @param activity Child activity.
 	 */
-	protected void onChildActivityFinish(Activity activity) {
-        Log.log(this, Level.FINEST, "{0}: Child action finished: {1}", this.getClass(), childActivity);
+    protected void onChildActivityFinish(Activity activity) {
+        LOGGER.trace("{}: Child action finished: {}", this.getClass(), childActivity);
     }
 	
 	/**
@@ -142,10 +143,10 @@ public abstract class Activity<A extends Agent> extends AliteEntity{
 	 * Main activity method. This method is called automaticaly by framework.
 	 */   
     public final void run(){
-        Log.log(this, Level.FINEST, "{0}: run() START", this.getClass());
+        LOGGER.trace("{}: run() START", this.getClass());
         agent.currentActivity = this;
-        runActityLogic();
-        Log.log(this, Level.FINEST, "{0}: run() END", this.getClass());
+        runActityLogic();   
+        LOGGER.trace("{}: run() END", this.getClass());
     }
 
     void runActityLogic() {

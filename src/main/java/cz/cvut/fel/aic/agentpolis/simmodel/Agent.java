@@ -18,13 +18,12 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.alite.common.event.Event;
 
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 
 /**
  * The agents in a simulation model are extended by this an abstract
@@ -36,7 +35,8 @@ import java.util.logging.Level;
  */
 public abstract class Agent extends AgentPolisEntity {
 
-
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Agent.class);
+    
     /**
      * Current chosen activity.
      */
@@ -80,7 +80,7 @@ public abstract class Agent extends AgentPolisEntity {
      * @param activity Activity that just finished.
      */
     protected void onActivityFinish(Activity activity) {
-        Log.log(this, Level.FINER, "Activity finished: {0}", currentActivity);
+        LOGGER.debug("Activity finished: {}", currentActivity);
     }
 
     /**
@@ -90,12 +90,12 @@ public abstract class Agent extends AgentPolisEntity {
      * @param reason   Reason of the failure.
      */
     protected void onActionFailed(Activity activity, String reason) {
-        Log.log(this, Level.SEVERE, "Activity {0} failed: {1}", currentActivity, reason);
+        LOGGER.error("Activity {} failed: {}", currentActivity, reason);
     }
 
     public void processMessage(Message message) {
         if (currentActivity == null) {
-            Log.warn(this, "Unprocessed message: " + message + ", agent has no current activity to process it!");
+            LOGGER.warn("Unprocessed message: {}, agent has no current activity to process it!", message);
         } else {
             currentActivity.processMessage(message);
         }

@@ -22,7 +22,6 @@ import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
@@ -48,7 +47,6 @@ import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.io.File;
 import java.time.ZonedDateTime;
 
-import java.util.logging.Level;
 import ninja.fido.config.Configuration;
 import ninja.fido.config.GeneratedConfig;
 
@@ -71,7 +69,6 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	public StandardAgentPolisModule(GeneratedConfig generatedConfig, File clientLocalConfigFile, String keyinClient) {
         agentpolisConfig = new AgentpolisConfig();
         Configuration.load(agentpolisConfig, generatedConfig, clientLocalConfigFile, keyinClient);
-        Log.init("AgentPolis logger", Level.FINE, "log.txt");
 	}
 
 	@Override

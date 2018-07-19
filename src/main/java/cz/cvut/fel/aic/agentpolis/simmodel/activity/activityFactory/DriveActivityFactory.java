@@ -20,7 +20,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
@@ -34,6 +33,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author fido
@@ -41,6 +41,8 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 @Singleton
 public class DriveActivityFactory extends ActivityFactory {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DriveActivityFactory.class);
+    
     private final TransportNetworks transportNetworks;
 
     private final VehicleMoveActivityFactory moveActivityFactory;
@@ -76,7 +78,7 @@ public class DriveActivityFactory extends ActivityFactory {
     private void vehicleCheck(Vehicle vehicle) {
         if (vehicle instanceof TransportableEntity) {
             if (((TransportableEntity) vehicle).getTransportingEntity() != null) {
-                Log.warn(this, "Trying to drive vehicle that is being transported by other vehicle!");
+                LOGGER.warn("Trying to drive vehicle that is being transported by other vehicle!");
             }
         }
     }

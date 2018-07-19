@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
@@ -30,13 +29,15 @@ import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author fido
  */
 public class Connection extends EventHandlerAdapter {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Connection.class);
+    
     protected final CongestionModel congestionModel;
 
     protected final SimulationProvider simulationProvider;
@@ -125,7 +126,7 @@ public class Connection extends EventHandlerAdapter {
         } 
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINE, "Connection {0}: No space in queue to {1}!", node.id, 
+            LOGGER.debug("Connection {}: No space in queue to {}!", node.id, 
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
             return false;

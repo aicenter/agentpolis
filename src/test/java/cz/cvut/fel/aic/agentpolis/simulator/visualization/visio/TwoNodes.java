@@ -18,7 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -52,7 +51,5 @@ public class TwoNodes {
         
         VisioTest visioTest = new VisioTest();
         visioTest.run(graph);
-        
-        Log.close();
     }
 }
