@@ -191,7 +191,17 @@ public class LayerManagementLayer extends AbstractLayer {
 
     public void init(Vis vis) {
         super.init(vis);
-        this.mouseListener = new MouseListener() {
+        this.mouseListener = getMouseListener();
+        vis.addMouseListener(this.mouseListener);
+    }
+
+    public void deinit(Vis vis) {
+        super.deinit(vis);
+        vis.removeMouseListener(this.mouseListener);
+    }
+
+    public MouseListener getMouseListener() {
+        return new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
@@ -230,13 +240,5 @@ public class LayerManagementLayer extends AbstractLayer {
 
             }
         };
-        vis.addMouseListener(this.mouseListener);
     }
-
-    public void deinit(Vis vis) {
-        super.deinit(vis);
-        vis.removeMouseListener(this.mouseListener);
-    }
-
-
 }
