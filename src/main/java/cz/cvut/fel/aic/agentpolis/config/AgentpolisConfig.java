@@ -7,6 +7,8 @@ import java.util.Map;
 import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
+  public Boolean showStackedEntities;
+
   public String pathToEdges;
 
   public CongestionModel congestionModel;
@@ -33,6 +35,7 @@ public class AgentpolisConfig implements GeneratedConfig {
   }
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
+    this.showStackedEntities = (Boolean) agentpolisConfig.get("show_stacked_entities");
     this.pathToEdges = (String) agentpolisConfig.get("path_to_edges");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
     this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");

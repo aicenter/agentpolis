@@ -20,6 +20,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
@@ -50,8 +51,8 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
     
 	
 	@Inject
-    public CarLayer(DriveAgentStorage driveAgentStorage) {
-        super(driveAgentStorage);
+    public CarLayer(DriveAgentStorage driveAgentStorage, AgentpolisConfig agentpolisConfig) {
+        super(driveAgentStorage, agentpolisConfig);
     }
 
     @Override

@@ -20,6 +20,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.s
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
@@ -35,8 +36,8 @@ import javax.vecmath.Point2d;
 public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 
     @Inject
-    public TestVehicleLayer(DriveAgentStorage driveAgentStorage) {
-        super(driveAgentStorage);
+    public TestVehicleLayer(DriveAgentStorage driveAgentStorage, AgentpolisConfig agentpolisConfig) {
+        super(driveAgentStorage, agentpolisConfig);
     }
 
     @Override

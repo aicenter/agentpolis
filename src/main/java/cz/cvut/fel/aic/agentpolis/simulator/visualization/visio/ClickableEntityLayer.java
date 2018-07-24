@@ -18,6 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
+import com.google.inject.Inject;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
@@ -35,9 +37,10 @@ import javax.vecmath.Point2d;
 public abstract class ClickableEntityLayer<E extends AgentPolisEntity> extends EntityLayer<E> implements MouseListener{
 	
 	public static final int DEFAULT_MAX_CLICK_ERROR = 15;
-	
-	public ClickableEntityLayer(EntityStorage<E> entityStorage) {
-		super(entityStorage);
+
+	@Inject
+	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
+		super(entityStorage, agentpolisConfig);
 	}
 	
 	public ClickableEntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {

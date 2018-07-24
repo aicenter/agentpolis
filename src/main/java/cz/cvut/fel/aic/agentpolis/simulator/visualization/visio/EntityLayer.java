@@ -19,6 +19,7 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.alite.vis.Vis;
@@ -49,7 +50,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected final EntityStorage<E> entityStorage;
     
     private final boolean showStackedEntitiesCount;
-    
+    ;
     
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
     
@@ -61,9 +62,9 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	
 	
-	
-    public EntityLayer(EntityStorage<E> entityStorage) {
-        this(entityStorage, true, true);
+	@Inject
+    public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
+        this(entityStorage, agentpolisConfig.showStackedEntities, true);
     }
     
     public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
@@ -126,7 +127,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		
         double radius = getRadius(entity);
 		
-        int width = (int) Math.round(radius * 2);
+        int width = Math.max(2, (int) Math.round(radius * 2));
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
