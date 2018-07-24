@@ -7,7 +7,7 @@ import java.util.Map;
 import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
-  public String pathToEdges;
+  public String mapNodesFilepath;
 
   public CongestionModel congestionModel;
 
@@ -23,7 +23,7 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public String log4jXmlDir;
 
-  public String pathToNodes;
+  public String mapEdgesFilepath;
 
   public Boolean skipSimulation;
 
@@ -33,7 +33,7 @@ public class AgentpolisConfig implements GeneratedConfig {
   }
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
-    this.pathToEdges = (String) agentpolisConfig.get("path_to_edges");
+    this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
     this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
     this.simulationDurationInMillis = (Integer) agentpolisConfig.get("simulation_duration_in_millis");
@@ -41,7 +41,7 @@ public class AgentpolisConfig implements GeneratedConfig {
     this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
     this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
-    this.pathToNodes = (String) agentpolisConfig.get("path_to_nodes");
+    this.mapEdgesFilepath = (String) agentpolisConfig.get("map_edges_filepath");
     this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
     this.srid = (Integer) agentpolisConfig.get("srid");
     return this;

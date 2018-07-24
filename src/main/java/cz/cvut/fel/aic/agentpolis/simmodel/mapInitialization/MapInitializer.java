@@ -1,7 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.mapInitialization;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
@@ -9,35 +8,26 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.TransportMode;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.graphimporter.GraphCreator;
 import cz.cvut.fel.aic.graphimporter.geojson.GeoJSONReader;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MapInitializer {
 
     private static final Logger LOGGER = Logger.getLogger(MapInitializer.class);
 
-    private final File mapFile;
-
     private final Transformer projection;
-
-    private final Set<TransportMode> allowedOsmModes;
 
     private final AgentpolisConfig config;
 
 
     @Inject
-    public MapInitializer(Transformer projection, @Named("osm File") File mapFile, Set<TransportMode> allowedOsmModes, AgentpolisConfig config) {
-        this.mapFile = mapFile;
+    public MapInitializer(Transformer projection, AgentpolisConfig config) {
         this.projection = projection;
-        this.allowedOsmModes = allowedOsmModes;
         this.config = config;
     }
 
@@ -50,8 +40,8 @@ public class MapInitializer {
     public MapData getMap() {
         Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
 //        OsmImporter importer = new OsmImporter(mapFile, allowedOsmModes, projection); // OSM importer is not used yet
-        String nodeFile = config.pathToNodes;
-        String edgeFile = config.pathToEdges;
+        String nodeFile = config.mapNodesFilepath;
+        String edgeFile = config.mapEdgesFilepath;
         String serializedGraphFile = config.pathToSerializedGraph;
         GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
 
