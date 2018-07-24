@@ -42,6 +42,7 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
 
 import javax.vecmath.Point2d;
 import java.util.HashMap;
@@ -97,7 +98,8 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {
-        return new Point2d(Vis.transX(position.getLongitudeProjected()), Vis.transY(position.getLatitudeProjected()));
+        GPSLocation WGS84position = getWGS84Position(position);
+        return new Point2d(Vis.transX(WGS84position.getLongitudeProjected()), Vis.transY(WGS84position.getLatitudeProjected()));
     }
 
     public Point2d getCanvasPosition(int nodeId) {
@@ -110,6 +112,16 @@ public class PositionUtil {
 
     public Point2d getCanvasPosition(Point2d position) {
         return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
+    }
+
+    public static GPSLocation getWGS84Position(GPSLocation position) {
+        return GPSLocationTools.createGPSLocation(position.getLatitude(), position.getLongitude() ,0, 3857); // 3857 - Web Mercator projection
+    }
+
+    public static GPSLocation getWGS84PositionFromCustomProjection(int projectedlatitude1E2, int projectedlongitude1E2, int customprojectionSRID) {
+        GPSLocation customProjection = GPSLocationTools.createGPSLocationFromProjected(projectedlatitude1E2, projectedlongitude1E2, 0, customprojectionSRID);
+        GPSLocation webMercator = GPSLocationTools.createGPSLocation(customProjection.getLatitude(), customProjection.getLongitude(), 0, 3857); // 3857 - Web Mercator
+        return webMercator;
     }
 
     private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {

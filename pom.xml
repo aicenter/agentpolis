@@ -55,6 +55,10 @@
             <artifactId>geographtools</artifactId>
 			<version>1.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.fel.aic</groupId>
+            <artifactId>graph-importer</artifactId>
+        </dependency>
 
 		<!-- External lib -->
         <dependency>
@@ -110,4 +114,17 @@
     <properties>
         <netbeans.hint.license>lgpl21</netbeans.hint.license>
     </properties>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases />
+            <id>atg-repo</id>
+            <name>atg-repo</name>
+            <url>http://jones.felk.cvut.cz/artifactory/repo</url>
+        </repository>
+    </repositories>
+
 </project>
