@@ -7,7 +7,11 @@ import java.util.Map;
 import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
+  public String pathToEdges;
+
   public CongestionModel congestionModel;
+
+  public String pathToSerializedGraph;
 
   public Integer simulationDurationInMillis;
 
@@ -19,6 +23,8 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public String log4jXmlDir;
 
+  public String pathToNodes;
+
   public Boolean skipSimulation;
 
   public Integer srid;
@@ -27,12 +33,15 @@ public class AgentpolisConfig implements GeneratedConfig {
   }
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
+    this.pathToEdges = (String) agentpolisConfig.get("path_to_edges");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
+    this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
     this.simulationDurationInMillis = (Integer) agentpolisConfig.get("simulation_duration_in_millis");
     this.showVisio = (Boolean) agentpolisConfig.get("show_visio");
     this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
     this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
+    this.pathToNodes = (String) agentpolisConfig.get("path_to_nodes");
     this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
     this.srid = (Integer) agentpolisConfig.get("srid");
     return this;
