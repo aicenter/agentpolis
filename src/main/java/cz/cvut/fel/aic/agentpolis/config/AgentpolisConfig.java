@@ -8,6 +8,8 @@ import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
   public String mapNodesFilepath;
+  public Boolean showStackedEntities;
+
 
   public CongestionModel congestionModel;
 
@@ -34,6 +36,7 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
     this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
+    this.showStackedEntities = (Boolean) agentpolisConfig.get("show_stacked_entities");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
     this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
     this.simulationDurationInMillis = (Integer) agentpolisConfig.get("simulation_duration_in_millis");
