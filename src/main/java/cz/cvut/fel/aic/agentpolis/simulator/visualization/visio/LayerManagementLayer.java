@@ -131,8 +131,10 @@ public class LayerManagementLayer extends AbstractLayer {
     }
 
     private void setDefaultUIposition() {
-        uixposition = 1580;
-        uiyposition = 955;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        uixposition = screenSize.width - 340;
+        uiyposition = screenSize.height - 90;
     }
 
     private boolean validateLayersManagementToggleClick(Point2d click) {
