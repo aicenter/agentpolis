@@ -133,7 +133,7 @@ public class LayerManagementLayer extends AbstractLayer {
     private void setDefaultUIposition() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        uixposition = screenSize.width - 340;
+        uixposition = screenSize.width - 330;
         uiyposition = screenSize.height - 90;
     }
 
