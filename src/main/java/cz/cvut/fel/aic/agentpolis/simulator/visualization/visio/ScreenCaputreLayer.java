@@ -24,25 +24,16 @@ public class ScreenCaputreLayer extends AbstractLayer {
     private static final int HEIGHT = 30;
 
     public ScreenCaputreLayer(){
-        setDefaultColors();
-        setDefaultPosition();
-    }
-
-    private void setDefaultColors() {
         backgroundColor = new Color(0, 0, 0, 170);
         textColor = new Color(255, 255, 255, 255);
-    }
-
-    private void setDefaultPosition(){
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        uixposition = screenSize.width - WIDTH - 348;
-        uiyposition = screenSize.height - HEIGHT - 60;
     }
 
     @Override
     public void paint(Graphics2D canvas) {
         lastCanvas = canvas;
+
+        uixposition = Vis.getDrawingDimension().width - WIDTH - 345;
+        uiyposition = Vis.getDrawingDimension().height - HEIGHT - 30;
 
         if(isPressed){
             if(System.currentTimeMillis() - lastPressed > 500){
