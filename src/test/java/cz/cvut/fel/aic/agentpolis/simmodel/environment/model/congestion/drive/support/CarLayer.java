@@ -65,6 +65,15 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
     }
 
     @Override
+    protected Point2d getEntityPositionInTime(DriveAgent entity, long time) {
+        Vehicle vehicle = entity.getVehicle();
+        if(vehicle == null){
+            return positionUtil.getCanvasPosition(entity);
+        }
+        return positionUtil.getCanvasPositionInterpolatedForVehicleInTime(vehicle, time);
+    }
+
+    @Override
     protected Color getEntityDrawColor(DriveAgent driveAgent) {
         return Color.CYAN;
     }

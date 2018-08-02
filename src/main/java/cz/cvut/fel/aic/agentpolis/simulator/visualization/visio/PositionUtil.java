@@ -194,6 +194,33 @@ public class PositionUtil {
 
     }
 
+    public Point2d getCanvasPositionInterpolatedForVehicleInTime(Vehicle vehicle, long time){
+        // if the vehicle itself is being transported
+        if (vehicle instanceof TransportableEntity && ((TransportableEntity) vehicle).getTransportingEntity() != null) {
+            return getCanvasPositionInterpolatedForTransportable((TransportableEntity) vehicle);
+        }
+
+        Driver driver = vehicle.getDriver();
+        if (driver == null) {
+            return getCanvasPosition(vehicle);
+        }
+
+        Node currentNode = vehicle.getDriver().getPosition();
+        Node targetNode = vehicle.getDriver().getTargetNode();
+
+        /* driver is in the car but he does not drive */
+        if (targetNode == null) return getCanvasPosition(vehicle);
+        if (targetNode == currentNode) return getCanvasPosition(currentNode);
+
+        // edge length
+        SimulationEdge edge = getEdge(currentNode.id, targetNode.id, EGraphType.HIGHWAY);
+        if (edge == null) {
+            Log.error(this, "Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
+        }
+
+        return getCanvasPositionInterpolatedInTime(edge, vehicle.getDriver(), time);
+    }
+
     public Point2d getCanvasPositionInterpolated(MovingAgent entity, EGraphType type) {
 
         // if the entity is transported
@@ -215,8 +242,12 @@ public class PositionUtil {
     }
 
     public GPSLocation getPositionInterpolated(SimulationEdge edge, MovingAgent agent) {
+        return getPositionInterpolatedInTime(edge, agent, timeProvider.getCurrentSimTime());
+    }
+
+    public GPSLocation getPositionInterpolatedInTime(SimulationEdge edge, MovingAgent agent, long time) {
         DelayData delayData = agent.getDelayData();
-        double portionCompleted = (double) (timeProvider.getCurrentSimTime() - delayData.getDelayStartTime())
+        double portionCompleted = (double) (time - delayData.getDelayStartTime())
                 / delayData.getDelay();
         if (portionCompleted > 1) portionCompleted = 1;
 
@@ -230,6 +261,10 @@ public class PositionUtil {
 
     public Point2d getCanvasPositionInterpolated(SimulationEdge edge, MovingAgent agent) {
         return getCanvasPosition(getPositionInterpolated(edge, agent));
+    }
+
+    public Point2d getCanvasPositionInterpolatedInTime(SimulationEdge edge, MovingAgent agent, long time){
+        return getCanvasPosition(getPositionInterpolatedInTime(edge, agent, time));
     }
 
     public double getAngle(MovingAgent agent) {

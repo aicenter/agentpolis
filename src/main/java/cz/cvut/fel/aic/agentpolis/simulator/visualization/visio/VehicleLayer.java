@@ -57,7 +57,12 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     protected Point2d getEntityPosition(V vehicle) {
         return positionUtil.getCanvasPositionInterpolatedForVehicle(vehicle);
     }
-    
+
+    @Override
+    protected Point2d getEntityPositionInTime(V vehicle, long time) {
+        return positionUtil.getCanvasPositionInterpolatedForVehicleInTime(vehicle, time);
+    }
+
     //not used
     @Override
     protected int getEntityTransformableRadius(V vehicle) {

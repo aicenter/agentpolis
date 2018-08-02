@@ -20,7 +20,9 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
@@ -55,6 +57,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
     
     protected PositionUtil positionUtil;
+
+    protected TimeProvider timeProvider;
     
     protected Dimension dim;
 	
@@ -78,8 +82,9 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     }
     
     @Inject
-    public void init(PositionUtil positionUtil){
+    public void init(PositionUtil positionUtil, TimeProvider timeProvider){
         this.positionUtil = positionUtil;
+        this.timeProvider = timeProvider;
     }
     
     
@@ -90,6 +95,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
         EntityStorage<E>.EntityIterator entityIterator = entityStorage.new EntityIterator();
         E entity;
+        long time = timeProvider.getCurrentSimTime();
         if(showStackedEntitiesCount){
             entityPositionMap = new HashMap<>();
         }
@@ -97,9 +103,9 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
             if(skipDrawing(entity)){
                 continue;
             }
-            Point2d entityPosition = getEntityPosition(entity);
+            Point2d entityPosition = getEntityPositionInTime(entity, time);
             
-            if(showStackedEntitiesCount){
+            if(showStackedEntitiesCount && !(entity instanceof Vehicle) && Vis.getZoomFactor() > 1){
                 if(!entityPositionMap.containsKey(entityPosition)){
                     entityPositionMap.put(entityPosition, new ArrayList<>());
                 }
@@ -120,6 +126,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     }
 
     protected abstract Point2d getEntityPosition(E entity);
+
+	protected abstract Point2d getEntityPositionInTime(E entity, long time);
     
     protected void drawEntity(E entity, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entity);
