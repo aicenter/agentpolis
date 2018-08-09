@@ -1,5 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simpresentationlayer.support;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.*;
@@ -9,7 +10,6 @@ import cz.cvut.fel.aic.alite.vis.layer.VisLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
 import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
 
-import javax.inject.Inject;
 import java.awt.*;
 
 @Singleton
