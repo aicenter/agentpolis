@@ -11,14 +11,16 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.graphimporter.GraphCreator;
 import cz.cvut.fel.aic.graphimporter.geojson.GeoJSONReader;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapInitializer {
 
-    private static final Logger LOGGER = Logger.getLogger(MapInitializer.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapInitializer.class);
+	
 
     private final Transformer projection;
 
@@ -52,7 +54,7 @@ public class MapInitializer {
 
         Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
-        LOGGER.info("Graphs imported, highway graph details: " + graphs.get(EGraphType.HIGHWAY));
+        LOGGER.info("Graphs imported, highway graph details: {}", graphs.get(EGraphType.HIGHWAY));
         return new MapData(graphs, nodes);
     }
 
