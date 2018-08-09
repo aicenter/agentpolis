@@ -20,7 +20,6 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.GraphTrip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
@@ -48,11 +47,14 @@ import javax.vecmath.Point2d;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 
 @Singleton
 public class PositionUtil {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PositionUtil.class);
+    
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
     private final Graph<SimulationNode, SimulationEdge> highwayNetwork;
@@ -187,7 +189,7 @@ public class PositionUtil {
         // edge length
         SimulationEdge edge = getEdge(currentNode.id, targetNode.id, EGraphType.HIGHWAY);
         if (edge == null) {
-            Log.error(this, "Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
+            LOGGER.error("Invalid edge: from: {}, to: {}", currentNode.id, targetNode.id);
         }
 
         return getCanvasPositionInterpolated(edge, vehicle.getDriver());

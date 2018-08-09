@@ -25,6 +25,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.geographtools.Graph;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO add support for other modes of transport
@@ -32,6 +33,8 @@ import java.util.Map;
  */
 public class MapDataGenerator {
    
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapDataGenerator.class);
+    
     /**
      * init map
      *

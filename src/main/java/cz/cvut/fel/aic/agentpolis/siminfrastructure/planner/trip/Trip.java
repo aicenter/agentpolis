@@ -18,14 +18,13 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.Arrays;
 
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +32,10 @@ import java.util.stream.Collectors;
  * @author F.I.D.O.
  */
 public class Trip<L> {
+    
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Trip.class);
+    
     protected final LinkedList<L> locations;
-
 
     public LinkedList<L> getLocations() {
         return locations;
@@ -48,7 +49,7 @@ public class Trip<L> {
         try {
             checkLocations(locations);
         } catch (TripException ex) {
-            Log.log(this, Level.SEVERE, ex.getMessage());
+            LOGGER.error(ex.getMessage(), ex);
         }
         this.locations = locations;
     }
@@ -58,7 +59,7 @@ public class Trip<L> {
             try {
                 throw new TripException();
             } catch (TripException ex) {
-                Log.log(this, Level.SEVERE, ex.getMessage());
+                LOGGER.error(ex.getMessage(), ex);
             }
         }
 
@@ -73,7 +74,7 @@ public class Trip<L> {
             try {
                 throw new TripException();
             } catch (TripException ex) {
-                Log.log(this, Level.SEVERE, ex.getMessage());
+                LOGGER.error(ex.getMessage(), ex);
             }
         }
         locations.addLast(location);

@@ -61,10 +61,16 @@
             <version>2.1-SNAPSHOT</version>
         </dependency>
 
-		<!-- External lib -->
+        <!-- External lib -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.7.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

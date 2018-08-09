@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
 import cz.cvut.fel.aic.agentpolis.VisualTests;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
@@ -71,8 +70,6 @@ public class TestThreeNodes100Cars {
 
         DriveTest driveTest = new DriveTest();
         driveTest.run(graph, trips);
-
-        Log.close();
     }
 
     public static void main(String[] args) {

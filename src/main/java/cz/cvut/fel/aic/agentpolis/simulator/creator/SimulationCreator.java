@@ -18,6 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.creator;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -30,16 +32,14 @@ import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
 import java.net.URL;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SimulationCreator {
-    private static final Logger LOGGER = Logger.getLogger(SimulationCreator.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationCreator.class);
     private TypedSimulation simulation;
     private final AgentpolisConfig config;
     private final SimulationProvider simulationProvider;
@@ -62,9 +62,8 @@ public class SimulationCreator {
     }
 
     public void prepareSimulation(final MapData osmDTO, final long seed) {
-        LOGGER.debug("Using seed " + seed + ".");
+        LOGGER.debug("Using seed {}.", seed);
 
-        initLogger();
         initSimulation();
 
         LOGGER.info(">>> CREATING MAP");
@@ -84,11 +83,11 @@ public class SimulationCreator {
         if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
-            LOGGER.info(String.format("Simulation initalized. (%s ms)", (System.currentTimeMillis() - simTimeInit)));
+            LOGGER.info("Simulation initalized. ({} ms)", (System.currentTimeMillis() - simTimeInit));
             long simulationStartTime = System.currentTimeMillis();
             timeEventGenerator.start();
             simulation.run();
-            LOGGER.info(String.format("Simulation finished: (%s ms)", (System.currentTimeMillis() - simulationStartTime)));
+            LOGGER.info("Simulation finished: ({} ms)", (System.currentTimeMillis() - simulationStartTime));
         }
     }
 
@@ -103,44 +102,6 @@ public class SimulationCreator {
         allNetworkNodes.setAllNetworkNodes(osmDTO.nodesFromAllGraphs);
         graphs.setGraphs(osmDTO.graphByType);
         LOGGER.info("Done.");
-    }
-
-    private void initLogger() {
-        LOGGER.info("Loading log4j properties");
-
-        if (new File(config.log4jXmlDir).exists()) {
-            try {
-                DOMConfigurator.configure(config.log4jXmlDir);
-                LOGGER.info("Loaded log4j properties");
-                return;
-            } catch (Exception ignored) {
-                LOGGER.warn("Ignoring logger configuration exception.");
-            }
-        }
-
-        URL pathToResource = ResourceReader.getPathToResource("/log4j/log4j.properties");
-        if (pathToResource != null) {
-            try {
-                PropertyConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties.");
-                return;
-            } catch (Exception ignored) {
-            }
-        }
-
-        pathToResource = ResourceReader.getPathToResource("/log4j/log4j.xml");
-
-        if (pathToResource != null) {
-            try {
-                DOMConfigurator.configure(pathToResource);
-                LOGGER.info("Loaded log4j properties.");
-                return;
-            } catch (Exception ignored) {
-
-            }
-        }
-
-        LOGGER.info("Failed to load log4j properties.");
     }
 
     private void initVisio() {

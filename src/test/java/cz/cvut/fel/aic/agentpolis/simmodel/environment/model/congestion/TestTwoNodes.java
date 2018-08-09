@@ -18,7 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.ModelConstructionFailedException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
@@ -54,7 +53,5 @@ public class TestTwoNodes {
 
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
-
-        Log.close();
     }
 }

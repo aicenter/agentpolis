@@ -23,8 +23,6 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public String osmTileServer;
 
-  public String log4jXmlDir;
-
   public String mapEdgesFilepath;
 
   public Boolean skipSimulation;
@@ -43,7 +41,6 @@ public class AgentpolisConfig implements GeneratedConfig {
     this.showVisio = (Boolean) agentpolisConfig.get("show_visio");
     this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
     this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
-    this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
     this.mapEdgesFilepath = (String) agentpolisConfig.get("map_edges_filepath");
     this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
     this.srid = (Integer) agentpolisConfig.get("srid");

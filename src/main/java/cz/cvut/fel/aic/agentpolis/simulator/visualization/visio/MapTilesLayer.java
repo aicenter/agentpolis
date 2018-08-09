@@ -20,10 +20,8 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
-import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -42,6 +40,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.slf4j.LoggerFactory;
 
 public class MapTilesLayer extends AbstractLayer {
 
@@ -91,7 +90,7 @@ public class MapTilesLayer extends AbstractLayer {
         }
     }
 
-    private Logger LOGGER = Logger.getLogger(Simulation.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapTilesLayer.class);
 
     private static final double WORLD_X = 4.007501984E7;
     private static final double WORLD_Y = 4.007501668E7;
@@ -122,13 +121,12 @@ public class MapTilesLayer extends AbstractLayer {
                 ex.printStackTrace();
             } finally {
                 if (!successMkdir) {
-                    LOGGER.warn("Cannot create the directory with map tiles: " + config.pathToMapTiles);
+                    LOGGER.warn("Cannot create the directory with map tiles: {}", config.pathToMapTiles);
                     OSMTiles = null;
                     OSMDownloads = null;
                     return;
                 }
-            }
-            
+            }            
         }
         OSMTiles = new HashMap<>();
         OSMDownloads = new HashMap<>();
@@ -156,7 +154,7 @@ public class MapTilesLayer extends AbstractLayer {
             OSMTiles.put(osmKey, img);
             return img;
         } catch (IOException e) {
-            LOGGER.warn("Could not open local file "+p.toString());
+            LOGGER.warn("Could not open local file {}", p.toString());
         }
 
         // download tile if not found on disk

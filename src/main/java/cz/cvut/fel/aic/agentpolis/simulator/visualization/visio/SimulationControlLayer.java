@@ -26,7 +26,6 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
 import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
-import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import org.slf4j.LoggerFactory;
 
 /**
  * The layer shows the status of the simulation and controls it through various key bindings.
@@ -64,8 +64,8 @@ public class SimulationControlLayer extends AbstractLayer {
     private static final Point STRING_POSITION = new Point(15, 20);
     
     private static final Point TIME_POSITION = new Point(180, 22);
-
-	protected static Logger logger = Logger.getLogger(SimulationControlLayer.class);
+    
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationControlLayer.class);
 
     
     
@@ -145,7 +145,7 @@ public class SimulationControlLayer extends AbstractLayer {
 					// if (selected == JOptionPane.YES_OPTION) {
 					// File f = new File(KmlFileGE.TMP_PATH +
 					// GECreateStatic.LINK);
-					// logger.info("Deleting " + f);
+					// LOGGER.info("Deleting " + f);
 					// f.deleteOnExit();
 					// } else if (selected == JOptionPane.NO_OPTION) {
 					// ClearCreator cc = new ClearCreator();

@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.TimeConsumingActivity;
@@ -33,7 +32,7 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.geographtools.Edge;
 
 
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 
 /**
  * @param <A>
@@ -41,6 +40,7 @@ import java.util.logging.Level;
  */
 public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A> {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Move.class);
     protected final EventProcessor eventProcessor;
     protected final SimulationEdge edge;
     protected final SimulationNode from;
@@ -88,9 +88,9 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 
             agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), distance));
         } else {
-            Log.log(this, Level.SEVERE, "The agent with id: {0} is not able to execute movement. Agent will freeze "
-                            + "on the current position. It does not exist the edge from {1} to {2}", agent.getId(), edge.fromId,
-                    edge.toId);
+            LOGGER.error("The agent with id: {} is not able to execute movement. Agent will freeze "
+                            + "on the current position. It does not exist the edge from {} to {}", new Object[]{ 
+                            agent.getId(), edge.fromId, edge.toId});
             fail("It does not exist the edge from: " + edge.fromId + " to: " + edge.toId);
         }
         return duration;

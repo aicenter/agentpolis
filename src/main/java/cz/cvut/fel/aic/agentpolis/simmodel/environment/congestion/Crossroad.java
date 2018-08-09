@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.Log;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 
@@ -27,13 +26,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author fido
  */
 public class Crossroad extends Connection {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Crossroad.class);
+    
     private final int batchSize;
 
     private final List<ChoosingTableData> inputLanesChoosingTable;
@@ -226,7 +227,7 @@ public class Crossroad extends Connection {
         } 
         // next queue is full
         else {
-            Log.log(Connection.class, Level.FINER, "Crossroad {0}: No space in queue to {1}!", node.id, 
+            LOGGER.debug("Crossroad {}: No space in queue to {}!", node.id, 
                     nextLane.link.toNode.id);
             nextLane.setWakeConnectionAfterTransfer(true);
             laneDepleted(chosenLane);
