@@ -27,7 +27,6 @@ public class LayerManagementLayer extends AbstractLayer {
     public LayerManagementLayer() {
         isVisible = false;
         setDefaultColors();
-        setDefaultUIposition();
         manageableLayers = new ArrayList<>();
     }
 
@@ -39,6 +38,8 @@ public class LayerManagementLayer extends AbstractLayer {
 
     @Override
     public void paint(Graphics2D canvas) {
+        uixposition = Vis.getDrawingDimension().width - 330;
+        uiyposition = Vis.getDrawingDimension().height - 60;
         canvas.setStroke(new BasicStroke(1));
         if (isVisible) {
             paintBottomRectangle(canvas, "Hide layers management");
@@ -128,13 +129,6 @@ public class LayerManagementLayer extends AbstractLayer {
     private void setDefaultColors() {
         backgroundColor = new Color(0, 0, 0, 170);
         textColor = new Color(255, 255, 255, 255);
-    }
-
-    private void setDefaultUIposition() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        uixposition = screenSize.width - 330;
-        uiyposition = screenSize.height - 90;
     }
 
     private boolean validateLayersManagementToggleClick(Point2d click) {

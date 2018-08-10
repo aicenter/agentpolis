@@ -46,6 +46,11 @@ public class TestVehicleLayer extends EntityLayer<DriveAgent>{
     }
 
     @Override
+    protected Point2d getEntityPositionInTime(DriveAgent entity, long time) {
+        return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
+    }
+
+    @Override
     protected Color getEntityDrawColor(DriveAgent driveAgent) {
         return Color.CYAN;
     }
