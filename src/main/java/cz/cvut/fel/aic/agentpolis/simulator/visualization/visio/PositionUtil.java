@@ -217,7 +217,7 @@ public class PositionUtil {
         // edge length
         SimulationEdge edge = getEdge(currentNode.id, targetNode.id, EGraphType.HIGHWAY);
         if (edge == null) {
-            Log.error(this, "Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
+            LOGGER.error("Invalid edge: from: {0}, to: {1}", currentNode.id, targetNode.id);
         }
 
         return getCanvasPositionInterpolatedInTime(edge, vehicle.getDriver(), time);
