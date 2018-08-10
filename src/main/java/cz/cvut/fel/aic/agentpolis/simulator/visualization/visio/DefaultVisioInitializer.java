@@ -37,7 +37,8 @@ import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import javax.vecmath.Point2d;
 
 public class DefaultVisioInitializer implements VisioInitializer{
-	
+
+    private final Simulation simulation;
 	private final PedestrianNetwork pedestrianNetwork;
 	private final BikewayNetwork bikewayNetwork;
 	private final HighwayNetwork highwayNetwork;
@@ -49,10 +50,11 @@ public class DefaultVisioInitializer implements VisioInitializer{
     protected final GridLayer gridLayer;
 
 	@Inject
-	public DefaultVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+	public DefaultVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                    HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
                                    RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, AgentpolisConfig config) {
-		this.pedestrianNetwork = pedestrianNetwork;
+		this.simulation = simulation;
+	    this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
 		this.tramwayNetwork = tramwayNetwork;
@@ -117,7 +119,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
 
         });
 
-        VisManager.init();
+        VisManager.init(simulation);
     }
 	
 }

@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.*;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.*;
+import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.VisLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
@@ -21,11 +22,11 @@ public class TestVisioInitializer extends DefaultVisioInitializer {
     private final MapTilesLayer mapTilesLayer;
 
     @Inject
-    public TestVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+    public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                 HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
                                 RailwayNetwork railwayNetwork, NodeIdLayer nodeIdLayer, HighwayLayer highwayLayer,
                                 SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles, AgentpolisConfig config) {
-        super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
+        super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
                 simulationControlLayer, gridLayer, config);
         this.nodeIdLayer = nodeIdLayer;
         this.highwayLayer = highwayLayer;

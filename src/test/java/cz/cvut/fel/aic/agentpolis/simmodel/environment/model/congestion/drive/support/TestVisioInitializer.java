@@ -53,19 +53,19 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     private final CarLayer carLayer;
     
     @Inject
-    public TestVisioInitializer(PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+    public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                 HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
                                 RailwayNetwork railwayNetwork,
                                 SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
                                 TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer, AgentpolisConfig config) {
-        super(pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
+        super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
                 simulationControlLayer, gridLayer, config);
         this.highwayLayer = highwayLayer;
         this.testVehicleLayer = testVehicleLayer;
         this.nodeIdLayer = nodeIdLayer;
         this.carLayer = carLayer;
     }
-    
+
     @Override
     protected void initGraphLayers() {
         VisManager.registerLayer(ColorLayer.create(Color.white));
