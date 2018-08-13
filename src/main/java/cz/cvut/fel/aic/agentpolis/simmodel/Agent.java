@@ -36,25 +36,23 @@ import org.slf4j.LoggerFactory;
 public abstract class Agent extends AgentPolisEntity {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Agent.class);
-    
+
     /**
      * Current chosen activity.
      */
     Activity currentActivity;
 
-
     public Activity getCurrentActivity() {
         return currentActivity;
     }
-	
-	protected Activity getCurrentTopLevelActivity(){
-		Activity activity = getCurrentActivity();
-		while(activity.getParrentActivity() != null){
-			activity = activity.getParrentActivity();
-		}
-		return activity;
-	}
 
+    protected Activity getCurrentTopLevelActivity() {
+        Activity activity = getCurrentActivity();
+        while (activity.getParrentActivity() != null) {
+            activity = activity.getParrentActivity();
+        }
+        return activity;
+    }
 
     public Agent(final String agentId, SimulationNode position) {
         super(agentId, position);
@@ -88,17 +86,22 @@ public abstract class Agent extends AgentPolisEntity {
      * @param activity Activity that just finished.
      */
     protected void onActivityFinish(Activity activity) {
-        LOGGER.debug("Activity finished: {}", currentActivity);
+        LOGGER.trace("Activity finished: {}", activity);
     }
 
     /**
      * Called when current activity fails.
      *
      * @param activity Activity that just failed.
-     * @param reason   Reason of the failure.
+     * @param reason Reason of the failure.
      */
     protected void onActionFailed(Activity activity, String reason) {
-        LOGGER.error("Activity {} failed: {}", currentActivity, reason);
+        try {
+            String message = String.format("Activity % failed: %s", activity, reason);
+            throw new Exception(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void processMessage(Message message) {

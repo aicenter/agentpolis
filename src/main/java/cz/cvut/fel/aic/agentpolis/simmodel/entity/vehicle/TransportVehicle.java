@@ -35,14 +35,17 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
     protected final List<T> transportedEntities;
 
     public void pickUp(T person) {
-        transportedEntities.add(person);
-        person.setTransportingEntity(this);
+        PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
+//        transportedEntities.add(person);
+//        person.setTransportingEntity(this);
     }
 
     public void pickUp(List<T> entitiesToPickup) {
         for (T person : entitiesToPickup) {
-            transportedEntities.add(person);
-            person.setTransportingEntity(this);
+            PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
+//            transportedEntities.add(person);
+//            person.setTransportingEntity(this);
+
         }
     }
 
@@ -56,12 +59,13 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
         transportedEntities = new LinkedList<>();
     }
 
-
     @Override
     public List<T> getTransportedEntities() {
         return transportedEntities;
     }
 
+//    @Override
+//    public abstract int getCapacity();
     public void dropOffAll() {
         Iterator<T> transportedEntitiesIterator = transportedEntities.iterator();
         while (transportedEntitiesIterator.hasNext()) {
@@ -73,8 +77,8 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 
     @Override
     public String toString() {
-        return "TransportVehicle{" +
-                "id=" + super.getId() + ", entitiesOnBoard=" + transportedEntities.size() + "}";
+        return "TransportVehicle{"
+                + "id=" + super.getId() + ", entitiesOnBoard=" + transportedEntities.size() + "}";
     }
 
     private void setDropOffForTransportable(T entityToDropOff) {

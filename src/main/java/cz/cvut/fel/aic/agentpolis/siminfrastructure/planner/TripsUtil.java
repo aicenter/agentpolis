@@ -212,39 +212,39 @@ public class TripsUtil {
         return newTrip;
     }
 
-    private int getEdgeLength(int startNodeId, int targetNodeId) {
-        return network.getEdge(startNodeId, targetNodeId).getLength();
-    }
+//    private int getEdgeLength(int startNodeId, int targetNodeId) {
+//        return network.getEdge(startNodeId, targetNodeId).getLength();
+//    }
 
     private float getEdgeDuration(int startNodeId, int targetNodeId) {
         SimulationEdge edge = network.getEdge(startNodeId, targetNodeId);
         return edge.getLength() / edge.allowedMaxSpeedInMpS;
     }
 
-	public int getTripLengthInMeters(Trip<? extends Node> trip){
-		return getTripLengthInMeters(trip, null);
-	}
-
-    public int getTripLengthInMeters(Trip<? extends Node> trip, Node stopPosition) {
-        int length = 0;
-
-        LinkedList<? extends Node> locations = trip.getLocations();
-        if (locations.size() >= 2) {
-            int startNodeId = locations.getFirst().id;
-            for (int i = 1; i < locations.size(); i++) {
-                int targetNodeId = locations.get(i).id;
-                length += getEdgeLength(startNodeId, targetNodeId);
-				
-				if(stopPosition != null && stopPosition.id == targetNodeId){
-					break;
-				}
-				
-                startNodeId = targetNodeId;
-            }
-        }
-
-        return length;
-    }
+//	public int getTripLengthInMeters(Trip<? extends Node> trip){
+//		return getTripLengthInMeters(trip, null);
+//	}
+//
+//    public int getTripLengthInMeters(Trip<? extends Node> trip, Node stopPosition) {
+//        int length = 0;
+//
+//        LinkedList<? extends Node> locations = trip.getLocations();
+//        if (locations.size() >= 2) {
+//            int startNodeId = locations.getFirst().id;
+//            for (int i = 1; i < locations.size(); i++) {
+//                int targetNodeId = locations.get(i).id;
+//                length += getEdgeLength(startNodeId, targetNodeId);
+//				
+//				if(stopPosition != null && stopPosition.id == targetNodeId){
+//					break;
+//				}
+//				
+//                startNodeId = targetNodeId;
+//            }
+//        }
+//
+//        return length;
+//    }
 
     public float getTripDurationInSeconds(Trip<? extends Node> trip) {
         float duration = 0;
