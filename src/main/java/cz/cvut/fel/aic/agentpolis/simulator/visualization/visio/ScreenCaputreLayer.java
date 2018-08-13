@@ -80,8 +80,8 @@ public class ScreenCaputreLayer extends AbstractLayer {
                     if(click.getX() > uixposition && click.getX() < uixposition + WIDTH &&
                        click.getY() > uiyposition && click.getY() < uiyposition + HEIGHT && !isPressed){
 
-                        Rectangle dimensions = lastCanvas.getDeviceConfiguration().getBounds();
-                        VisManager.saveToFile("screen_cap_" + System.currentTimeMillis(), dimensions.width, dimensions.height);
+                        Dimension dimension = Vis.getDrawingDimension();
+                        VisManager.saveToFile(dimension.width, dimension.height);
 
                         isPressed = true;
                         lastPressed = System.currentTimeMillis();

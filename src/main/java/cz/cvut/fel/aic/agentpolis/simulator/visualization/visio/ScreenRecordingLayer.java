@@ -81,8 +81,7 @@ public class ScreenRecordingLayer extends AbstractLayer {
                         recording = true;
                         int width = Vis.getDrawingDimension().width - Vis.getDrawingDimension().width % 8;
                         int height = Vis.getDrawingDimension().height - Vis.getDrawingDimension().height % 8;
-                        VisManager.startVideoRecording("screen_recording" + System.currentTimeMillis() + ".mp4",
-                                width, height);
+                        VisManager.startVideoRecording(width, height);
                     }
                 }
             }

@@ -96,6 +96,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         EntityStorage<E>.EntityIterator entityIterator = entityStorage.new EntityIterator();
         E entity;
         long time = timeProvider.getCurrentSimTime();
+
         if(showStackedEntitiesCount){
             entityPositionMap = new HashMap<>();
         }
@@ -110,8 +111,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
                     entityPositionMap.put(entityPosition, new ArrayList<>());
                 }
                 entityPositionMap.get(entityPosition).add(entity);
-                }
-            else{
+            } else {
                 drawEntity(entity, entityPosition, canvas, dim);
             }
         }

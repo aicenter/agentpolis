@@ -33,8 +33,7 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
 
-import java.io.File;
-import java.net.URL;
+import cz.cvut.fel.aic.alite.vis.VisManager;
 import org.slf4j.LoggerFactory;
 
 @Singleton
@@ -83,6 +82,7 @@ public class SimulationCreator {
         if (config.skipSimulation) {
             LOGGER.info("Skipping simulation...");
         } else {
+            VisManager.setRecordingFilepath(config.pathToSaveRecordings);
             LOGGER.info("Simulation initalized. ({} ms)", (System.currentTimeMillis() - simTimeInit));
             long simulationStartTime = System.currentTimeMillis();
             timeEventGenerator.start();
