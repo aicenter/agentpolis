@@ -52,7 +52,8 @@ public class DefaultVisioInitializer implements VisioInitializer{
 	@Inject
 	public DefaultVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                    HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-                                   RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, AgentpolisConfig config) {
+                                   RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, 
+								   AgentpolisConfig config) {
 		this.simulation = simulation;
 	    this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
