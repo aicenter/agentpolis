@@ -33,64 +33,51 @@ import java.util.logging.Logger;
  * @author fido
  * @param <T>
  */
-public class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements TransportEntity<T>{
-    
+public class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements TransportEntity<T> {
+
     protected final List<T> transportedEntities;
-	
-	private final int vehiclePassengerCapacity; // number of passenger, including driver
-	
-	
+
+    private final int vehiclePassengerCapacity; // number of passenger, including driver
+
     public int getCapacity() {
         return vehiclePassengerCapacity;
     }
-    
-    public PhysicalTransportVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity, 
+
+    public PhysicalTransportVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity,
             GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
         super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
-		this.vehiclePassengerCapacity = vehiclePassengerCapacity;
+        this.vehiclePassengerCapacity = vehiclePassengerCapacity;
         transportedEntities = new LinkedList<>();
     }
 
     @Override
     public List<T> getTransportedEntities() {
-        return transportedEntities; 
+        return transportedEntities;
     }
-    
+
     public void pickUp(T entity) {
-		if(transportedEntities.size() == vehiclePassengerCapacity){
-			try {
-                throw new Exception(
-						String.format("Cannot pick up entity, the vehicle is full! [%s]", entity));
-            } catch (Exception ex) {
-                Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
-            }
-		}
-        transportedEntities.add(entity);
-        entity.setTransportingEntity(this);
+        PickUp.pickUp(entity, transportedEntities.size() == vehiclePassengerCapacity, this, transportedEntities);
     }
-    
+
     public void dropOff(T entityToDropOff) {
         boolean success = transportedEntities.remove(entityToDropOff);
-		if(!success){
-			try {
+        if (!success) {
+            try {
                 throw new Exception(
-						String.format("Cannot drop off entity, it is not transported! [%s]", entityToDropOff));
+                        String.format("Cannot drop off entity, it is not transported! [%s]", entityToDropOff));
             } catch (Exception ex) {
                 Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
             }
-		}
+        }
         entityToDropOff.setTransportingEntity(null);
     }
 
     @Override
     public void setPosition(SimulationNode position) {
-        super.setPosition(position); 
+        super.setPosition(position);
         for (T transportedEntity : transportedEntities) {
             transportedEntity.setPosition(position);
         }
     }
-    
-    
-    
-    
+
 }
