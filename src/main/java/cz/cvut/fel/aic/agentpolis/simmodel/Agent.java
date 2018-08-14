@@ -97,7 +97,7 @@ public abstract class Agent extends AgentPolisEntity {
      */
     protected void onActionFailed(Activity activity, String reason) {
         try {
-            String message = String.format("Activity % failed: %s", activity, reason);
+            String message = String.format("Activity %s failed: %s", activity, reason);
             throw new Exception(message);
         } catch (Exception e) {
             e.printStackTrace();

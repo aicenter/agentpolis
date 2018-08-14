@@ -36,16 +36,11 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 
     public void pickUp(T person) {
         PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
-//        transportedEntities.add(person);
-//        person.setTransportingEntity(this);
     }
 
     public void pickUp(List<T> entitiesToPickup) {
         for (T person : entitiesToPickup) {
             PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
-//            transportedEntities.add(person);
-//            person.setTransportingEntity(this);
-
         }
     }
 
