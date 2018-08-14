@@ -133,26 +133,20 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
                 angle = positionUtil.getAngle(driver);
             }
             
-            double centerShift = getVehicleWidth(representative) / 2;
-//            double centerShiftTrans = Vis.transW(centerShift)
-
             /* desired order of the transformations */
             
             /* rotate against center of the shape */
-            AffineTransform rotate = AffineTransform.getRotateInstance(-angle, centerShift, centerShift);
+            AffineTransform rotate = AffineTransform.getRotateInstance(-angle, 0, 0);
             
             /* translate the center of the shape to entity position */
             AffineTransform translate = 
-                    AffineTransform.getTranslateInstance(entityPosition.getX() - Vis.transW(centerShift), 
-                            entityPosition.getY() - Vis.transH(centerShift));
+                    AffineTransform.getTranslateInstance(entityPosition.getX(), entityPosition.getY());
             
             /* transformations are applied in inverse order */
 			if(transformSize){
 				
 				/* scale according to zoom factor */
-                //System.out.println("Zoom factor: " + Vis.getZoomFactor());
 				AffineTransform scale = AffineTransform.getScaleInstance(Math.max(1,Vis.getZoomFactor()),Math.max(1,Vis.getZoomFactor()));
-                //AffineTransform scale = AffineTransform.getScaleInstance(Vis.getZoomFactor(),Vis.getZoomFactor());
 
 				scale.concatenate(rotate);
 				translate.concatenate(scale);
@@ -207,26 +201,20 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
                 angle = positionUtil.getAngle(driver);
             }
 
-            double centerShift = getVehicleWidth(representative) / 2;
-//            double centerShiftTrans = Vis.transW(centerShift)
-
             /* desired order of the transformations */
 
             /* rotate against center of the shape */
-            AffineTransform rotate = AffineTransform.getRotateInstance(-angle, centerShift, centerShift);
+            AffineTransform rotate = AffineTransform.getRotateInstance(-angle, 0, 0);
 
             /* translate the center of the shape to entity position */
             AffineTransform translate =
-                    AffineTransform.getTranslateInstance(entityPosition.getX() - Vis.transW(centerShift),
-                            entityPosition.getY() - Vis.transH(centerShift));
+                    AffineTransform.getTranslateInstance(entityPosition.getX(), entityPosition.getY());
 
             /* transformations are applied in inverse order */
             if(transformSize){
 
                 /* scale according to zoom factor */
-                //System.out.println("Zoom factor: " + Vis.getZoomFactor());
                 AffineTransform scale = AffineTransform.getScaleInstance(Math.max(1,Vis.getZoomFactor()),Math.max(1,Vis.getZoomFactor()));
-                //AffineTransform scale = AffineTransform.getScaleInstance(Vis.getZoomFactor(),Vis.getZoomFactor());
 
                 scale.concatenate(rotate);
                 translate.concatenate(scale);
@@ -242,9 +230,9 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     
     private static Path2D createCarShape(final float length, final float width) {
         final GeneralPath p0 = new GeneralPath();
-        p0.moveTo(0,0);
-        p0.lineTo(length, width / 2);
-        p0.lineTo(0, width);
+        p0.moveTo(-length /2, -width / 2);
+        p0.lineTo(length / 2, 0);
+        p0.lineTo(-length / 2, width / 2);
         p0.closePath();
         return p0;
     }
