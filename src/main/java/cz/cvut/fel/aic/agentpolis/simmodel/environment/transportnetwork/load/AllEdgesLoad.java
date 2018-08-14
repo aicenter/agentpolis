@@ -79,7 +79,7 @@ public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends 
             Node currentNode = entity.getPosition();
             Node targetNode = entity.getTargetNode();
             if (targetNode != null && targetNode != currentNode) {
-                int edgeId = network.getEdge(currentNode.id, targetNode.id).getUniqueId();
+                int edgeId = network.getEdge(currentNode, targetNode).getUniqueId();
                 countLoadForPosition(entityId, edgeId);
             }
         }

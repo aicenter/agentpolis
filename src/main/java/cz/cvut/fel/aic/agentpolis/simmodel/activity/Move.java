@@ -89,9 +89,9 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
             agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), distance));
         } else {
             Log.log(this, Level.SEVERE, "The agent with id: {0} is not able to execute movement. Agent will freeze "
-                            + "on the current position. It does not exist the edge from {1} to {2}", agent.getId(), edge.fromId,
-                    edge.toId);
-            fail("It does not exist the edge from: " + edge.fromId + " to: " + edge.toId);
+                            + "on the current position. It does not exist the edge from {1} to {2}", agent.getId(), edge.fromNode.getId(),
+                    edge.toNode.getId());
+            fail("It does not exist the edge from: " + edge.fromNode.getId() + " to: " + edge.toNode.getId());
         }
         return duration;
     }

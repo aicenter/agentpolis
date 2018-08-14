@@ -211,12 +211,12 @@ public class TripsUtil {
         return newTrip;
     }
 
-    private int getEdgeLength(int startNodeId, int targetNodeId) {
-        return network.getEdge(startNodeId, targetNodeId).getLength();
+    private int getEdgeLength(Node startNode, Node targetNode) {
+        return network.getEdge(startNode, targetNode).getLength();
     }
 
-    private float getEdgeDuration(int startNodeId, int targetNodeId) {
-        SimulationEdge edge = network.getEdge(startNodeId, targetNodeId);
+    private float getEdgeDuration(Node startNode, Node targetNode) {
+        SimulationEdge edge = network.getEdge(startNode, targetNode);
         return edge.getLength() / edge.allowedMaxSpeedInMpS;
     }
 
@@ -229,16 +229,16 @@ public class TripsUtil {
 
         LinkedList<? extends Node> locations = trip.getLocations();
         if (locations.size() >= 2) {
-            int startNodeId = locations.getFirst().id;
+            Node startNode = locations.getFirst();
             for (int i = 1; i < locations.size(); i++) {
-                int targetNodeId = locations.get(i).id;
-                length += getEdgeLength(startNodeId, targetNodeId);
+                Node targetNode = locations.get(i);
+                length += getEdgeLength(startNode, targetNode);
 				
-				if(stopPosition != null && stopPosition.id == targetNodeId){
+				if(stopPosition != null && stopPosition.equals(targetNode)){
 					break;
 				}
 				
-                startNodeId = targetNodeId;
+                startNode = targetNode;
             }
         }
 
@@ -250,11 +250,11 @@ public class TripsUtil {
 
         LinkedList<? extends Node> locations = trip.getLocations();
         if (locations.size() >= 2) {
-            int startNodeId = locations.getFirst().id;
+            Node startNode = locations.getFirst();
             for (int i = 1; i < locations.size(); i++) {
-                int targetNodeId = locations.get(i).id;
-                duration += getEdgeDuration(startNodeId, targetNodeId);
-                startNodeId = targetNodeId;
+                Node targetNode = locations.get(i);
+                duration += getEdgeDuration(startNode, targetNode);
+                startNode = targetNode;
             }
         }
 
