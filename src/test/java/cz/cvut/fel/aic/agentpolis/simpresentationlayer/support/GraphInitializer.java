@@ -31,12 +31,12 @@ public class GraphInitializer {
         graphBuilder.addNode(node4);
         graphBuilder.addNode(node5);
 
-        SimulationEdge edge0 = new SimulationEdge(0, 1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
-        SimulationEdge edge1 = new SimulationEdge(1, 2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
-        SimulationEdge edge2 = new SimulationEdge(2, 3, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node3)));
-        SimulationEdge edge3 = new SimulationEdge(3, 4, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node4)));
-        SimulationEdge edge4 = new SimulationEdge(4, 5, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node4, node5)));
-        SimulationEdge edge5 = new SimulationEdge(5, 0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node5, node0)));
+        SimulationEdge edge0 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
+        SimulationEdge edge1 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+        SimulationEdge edge2 = new SimulationEdge(node2, node3, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node3)));
+        SimulationEdge edge3 = new SimulationEdge(node3, node4, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node4)));
+        SimulationEdge edge4 = new SimulationEdge(node4, node5, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node4, node5)));
+        SimulationEdge edge5 = new SimulationEdge(node5, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node5, node0)));
 
 
         graphBuilder.addEdge(edge0);

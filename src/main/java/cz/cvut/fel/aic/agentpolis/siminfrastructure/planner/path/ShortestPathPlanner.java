@@ -76,7 +76,7 @@ public class ShortestPathPlanner {
                 }
 
                 for (SimulationEdge edge : graph.getOutEdges(node.id)) {
-                    Integer toPositionByNodeId = edge.toId;
+                    Integer toPositionByNodeId = edge.toNode.getId();
                     if (!addedNodes.contains(toPositionByNodeId)) {
                         addedNodes.add(toPositionByNodeId);
                         plannerGraph.addVertex(toPositionByNodeId);

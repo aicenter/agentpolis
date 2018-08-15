@@ -19,6 +19,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import cz.cvut.fel.aic.geographtools.Edge;
+import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author Zdenek Bousa
  */
-public class SimulationEdge extends Edge {
+public class SimulationEdge extends Edge<SimulationNode> {
     /**
      * unique ID for each edge, also recognize directions
      */
@@ -62,8 +63,8 @@ public class SimulationEdge extends Edge {
 
 
     /**
-     * @param fromId               sourceId
-     * @param toId                 destinationId
+     * @param fromNode             source node
+     * @param toNode               destination node
      * @param osmWayID             osm id of this edge
      * @param uniqueWayId
      * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
@@ -73,8 +74,8 @@ public class SimulationEdge extends Edge {
      * @param lanesCount           total number of lanes for ModeOfTransport-car
      * @param edgeShape            instance of EdgeShape representing the shape of the road edge
      */
-    public SimulationEdge(int fromId,
-                          int toId,
+    public SimulationEdge(SimulationNode fromNode,
+                          SimulationNode toNode,
                           long osmWayID,
                           int uniqueWayId,
                           int oppositeWayId,
@@ -82,7 +83,7 @@ public class SimulationEdge extends Edge {
                           float allowedMaxSpeedInMpS,
                           int lanesCount,
                           EdgeShape edgeShape) {
-        super(fromId, toId, lengthInMetres);
+        super(fromNode, toNode, lengthInMetres);
 
         this.uniqueId = uniqueWayId;
         this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
@@ -131,6 +132,6 @@ public class SimulationEdge extends Edge {
     }
 
     public String getLogInfo() {
-        return fromId + "-" + toId;
+        return fromNode.getId() + "-" + toNode.getId();
     }
 }

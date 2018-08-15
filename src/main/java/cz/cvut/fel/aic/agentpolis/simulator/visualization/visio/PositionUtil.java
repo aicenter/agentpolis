@@ -87,9 +87,9 @@ public class PositionUtil {
     public SimulationEdge getEdge(int fromNodeId, int toNodeId, EGraphType type) {
         switch (type) {
             case HIGHWAY:
-                return highwayNetwork.getEdge(fromNodeId, toNodeId);
+                return highwayNetwork.getEdge(highwayNetwork.getNode(fromNodeId), highwayNetwork.getNode(toNodeId));
             case PEDESTRIAN:
-                return pedestrianNetwork.getEdge(fromNodeId, toNodeId);
+                return pedestrianNetwork.getEdge(pedestrianNetwork.getNode(fromNodeId), pedestrianNetwork.getNode(toNodeId));
             default:
                 throw new IllegalArgumentException();
         }

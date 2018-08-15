@@ -103,11 +103,11 @@ public class CongestionModelTest {
     }
 
     private void checkLaneForEachNextNode(Graph<SimulationNode, SimulationEdge> roadGraph, Link link) {
-        SimulationNode targetNode = roadGraph.getNode(link.getEdge().toId);
+        SimulationNode targetNode = link.getEdge().toNode;
         List<SimulationEdge> outEdges = roadGraph.getOutEdges(targetNode);
         
         for (SimulationEdge outEdge : outEdges) {
-            SimulationNode nextNode = roadGraph.getNode(outEdge.toId);
+            SimulationNode nextNode = outEdge.toNode;
             
             assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
         }

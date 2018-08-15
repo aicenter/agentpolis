@@ -136,8 +136,8 @@ public class CongestionModel {
 
     private void buildLinks(Collection<SimulationEdge> allEdges) {
         for (SimulationEdge edge : allEdges) {
-            SimulationNode fromNode = graph.getNode(edge.fromId);
-            SimulationNode toNode = graph.getNode(edge.toId);
+            SimulationNode fromNode = edge.fromNode;
+            SimulationNode toNode = edge.toNode;
             Link link = new Link(this, edge, fromNode, toNode,
                     connectionsMappedByNodes.get(fromNode), connectionsMappedByNodes.get(toNode));
             links.add(link);
@@ -147,8 +147,8 @@ public class CongestionModel {
 
     private void buildLanes() throws ModelConstructionFailedException {
         for (Link link : links) {
-//			SimulationNode fromNode = graph.getNode(link.getEdge().fromId);
-            SimulationNode toNode = graph.getNode(link.getEdge().toId);
+//			SimulationNode fromNode = link.getEdge().fromNode;
+            SimulationNode toNode = link.getEdge().toNode;
             List<SimulationEdge> nextEdges = graph.getOutEdges(toNode);
 
             //dead end test
@@ -159,7 +159,7 @@ public class CongestionModel {
 //            Connection fromConnection = connectionsMappedByNodes.get(fromNode);
             Connection toConnection = connectionsMappedByNodes.get(toNode);
             for (SimulationEdge outEdge : nextEdges) {
-                SimulationNode nextNode = graph.getNode(outEdge.toId);
+                SimulationNode nextNode = outEdge.toNode;
                 Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider);
                 link.addLane(newLane, nextNode);
                 Link outLink = linksMappedByEdges.get(outEdge);

@@ -85,8 +85,8 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
 
     private void paintBarOnEdge(Graphics2D canvas, Rectangle2D drawingRectangle, SimulationEdge edge, double length, double sumLength, Color color) {
         int edgeLength = edge.getLength();
-        Point2d from = positionUtil.getCanvasPosition(graph.getNode(edge.fromId));
-        Point2d to = positionUtil.getCanvasPosition(graph.getNode(edge.toId));
+        Point2d from = positionUtil.getCanvasPosition(edge.fromNode);
+        Point2d to = positionUtil.getCanvasPosition(edge.toNode);
         Vector2d vector = new Vector2d(to.x - from.x, to.y - from.y);
         vector.scale(length / edgeLength);
 

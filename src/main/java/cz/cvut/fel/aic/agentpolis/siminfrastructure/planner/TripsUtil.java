@@ -213,8 +213,8 @@ public class TripsUtil {
     }
 
 
-    private float getEdgeDuration(int startNodeId, int targetNodeId) {
-        SimulationEdge edge = network.getEdge(startNodeId, targetNodeId);
+    private float getEdgeDuration(Node startNode, Node targetNode) {
+        SimulationEdge edge = network.getEdge(startNode, targetNode);
         return edge.getLength() / edge.allowedMaxSpeedInMpS;
     }
 
@@ -224,11 +224,11 @@ public class TripsUtil {
 
         LinkedList<? extends Node> locations = trip.getLocations();
         if (locations.size() >= 2) {
-            int startNodeId = locations.getFirst().id;
+            Node startNode = locations.getFirst();
             for (int i = 1; i < locations.size(); i++) {
-                int targetNodeId = locations.get(i).id;
-                duration += getEdgeDuration(startNodeId, targetNodeId);
-                startNodeId = targetNodeId;
+                Node targetNode = locations.get(i);
+                duration += getEdgeDuration(startNode, targetNode);
+                startNode = targetNode;
             }
         }
 
