@@ -5,7 +5,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent.SDAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.HighwayStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RadarData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 import org.apache.log4j.Logger;
 
 import javax.vecmath.Point3f;

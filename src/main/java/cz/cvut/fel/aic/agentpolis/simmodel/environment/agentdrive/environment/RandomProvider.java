@@ -1,6 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment;
 
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 import org.apache.log4j.Logger;
 
 import java.util.Random;

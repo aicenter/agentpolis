@@ -6,7 +6,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.ro
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 

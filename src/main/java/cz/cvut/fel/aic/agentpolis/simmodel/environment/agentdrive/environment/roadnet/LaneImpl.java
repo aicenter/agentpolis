@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.r
 
 
 
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector2f;

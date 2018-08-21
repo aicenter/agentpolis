@@ -135,7 +135,7 @@ public class HighwayStorage {
 
     public void updateCars(RadarData object) {
         //   if (!object.getCars().isEmpty()) {
-
+        System.out.println(object.getCars().size());
         getExperimentsData().updateNumberOfCars(object);
 
         forRemoveFromPosscur = new TreeSet<Integer>(posCurr.keySet());
@@ -167,6 +167,7 @@ public class HighwayStorage {
         for (Agent a : this.getAgents().values()) {
             /* get actions that were originally send with NEW_PLAN event */
             /* List<Action> actions = */
+
             List<Action> actions = a.getActuator().act(a.agentReact());
             int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
             if (!getPosCurr().containsKey(id)) continue;
@@ -179,6 +180,7 @@ public class HighwayStorage {
                     //numberOfPlanCalculations++;
                     handler.sendPlans(getPosCurr());
                     currentRadarData = handler.getNewRadarData();
+                    System.out.println("got new radar data");
                     counter++;
                 }
             }
@@ -206,10 +208,12 @@ public class HighwayStorage {
 
     public void recreate(RadarData object) {
         Queue<Pair<Integer, Float>> notInsertedVehicles = new PriorityQueue<Pair<Integer, Float>>(20, comparator);
+        System.out.println(vehiclesForInsert);
         while (vehiclesForInsert.peek() != null) {
             Pair<Integer, Float> vehicle = vehiclesForInsert.poll();
             int id = vehicle.getKey();
             if (posCurr.containsKey(id)) {
+                System.out.println("remove " + id);
                 posCurr.remove(id);
             }
             if (agents.containsKey(id) && Configurator.getParamBool("highway.dashboard.sumoSimulation", true)) continue;

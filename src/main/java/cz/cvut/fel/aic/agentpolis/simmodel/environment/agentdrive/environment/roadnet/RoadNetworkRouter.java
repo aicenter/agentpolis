@@ -2,7 +2,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.r
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.RandomProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

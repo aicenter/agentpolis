@@ -6,7 +6,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadOb
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.PlansOut;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.WPAction;
-import cz.cvut.fel.aic.alite.configurator.Configurator;
+import cz.agents.alite.configurator.Configurator;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
