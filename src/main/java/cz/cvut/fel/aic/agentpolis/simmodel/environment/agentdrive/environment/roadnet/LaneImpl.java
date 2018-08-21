@@ -7,6 +7,7 @@ import cz.agents.alite.configurator.Configurator;
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Structure holding data about a lane loaded from sumo .net.xml file
@@ -126,7 +127,7 @@ public class LaneImpl implements Lane{
     public Lane getNextLane(Edge edge) {
         if(edge == null) return null;
         for (Lane lane: getOutgoingLanes()) {
-            if (lane.getParentEdge().getId() == edge.getId()) {
+            if (Objects.equals(lane.getParentEdge().getId(), edge.getId())) {
                 return lane;
             }
         }

@@ -134,62 +134,61 @@ public class HighwayStorage {
     }
 
     public void updateCars(RadarData object) {
-        //   if (!object.getCars().isEmpty()) {
-        System.out.println(object.getCars().size());
-        getExperimentsData().updateNumberOfCars(object);
+         //  if (!object.getCars().isEmpty()) {
+               getExperimentsData().updateNumberOfCars(object);
 
-        forRemoveFromPosscur = new TreeSet<Integer>(posCurr.keySet());
-        for (RoadObject car : object.getCars()) {
-            updateCar(car);
-            forRemoveFromPosscur.remove(car.getId());
-        }
-        if (!forRemoveFromPosscur.isEmpty()) {
-            for (Integer id : forRemoveFromPosscur) {
-                addForInsert(id);
-                getExperimentsData().updateTimesAndGraphOfArrivals(object, id);
-            }
-        }
-        if (!object.getCars().isEmpty())
-            logger.debug("HighwayStorage updated vehicles: received " + object);
+               forRemoveFromPosscur = new TreeSet<Integer>(posCurr.keySet());
+               for (RoadObject car : object.getCars()) {
+                   updateCar(car);
+                   forRemoveFromPosscur.remove(car.getId());
+               }
+               if (!forRemoveFromPosscur.isEmpty()) {
+                   for (Integer id : forRemoveFromPosscur) {
+                       addForInsert(id);
+                       getExperimentsData().updateTimesAndGraphOfArrivals(object, id);
+                   }
+               }
+               if (!object.getCars().isEmpty())
+                   logger.debug("HighwayStorage updated vehicles: received " + object);
 
-        for (Map.Entry<Integer, RoadObject> entry : posCurr.entrySet()) {
-            getExperimentsData().updateDistances(object, entry);
-        }
-        recreate(object);
-        if (Configurator.getParamBool("highway.dashboard.sumoSimulation", true) &&
-                posCurr.size() == 0 && vehiclesForInsert.isEmpty()) {
-            isFinished = true;
-            getExperimentsData().simulationEnded();
+               for (Map.Entry<Integer, RoadObject> entry : posCurr.entrySet()) {
+                   getExperimentsData().updateDistances(object, entry);
+               }
+               recreate(object);
+               if (Configurator.getParamBool("highway.dashboard.sumoSimulation", true) &&
+                       posCurr.size() == 0 && vehiclesForInsert.isEmpty()) {
+                   isFinished = true;
+                   getExperimentsData().simulationEnded();
 
-        }
+               }
 
-        List<Integer> agentToRemove = new ArrayList<>();
-        for (Agent a : this.getAgents().values()) {
-            /* get actions that were originally send with NEW_PLAN event */
-            /* List<Action> actions = */
+               List<Integer> agentToRemove = new ArrayList<>();
+               for (Agent a : this.getAgents().values()) {
+                   /* get actions that were originally send with NEW_PLAN event */
+                   /* List<Action> actions = */
 
-            List<Action> actions = a.getActuator().act(a.agentReact());
-            int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
-            if (!getPosCurr().containsKey(id)) continue;
-            for (SimulatorHandler handler : highwayEnvironment.getSimulatorHandlers()) {
-                if (handler.hasVehicle(id)) {
-                    handler.addActions(id, actions);
-                }
-                if (handler.isReady()) {
-                    getExperimentsData().calcPlanCalculation(System.currentTimeMillis());
-                    //numberOfPlanCalculations++;
-                    handler.sendPlans(getPosCurr());
-                    currentRadarData = handler.getNewRadarData();
-                    System.out.println("got new radar data");
-                    counter++;
-                }
-            }
-            if (a.getNavigator().isMyLifeEnds()) agentToRemove.add(Integer.parseInt(a.getName()));
-        }
-        for (Integer id : agentToRemove) {
-            getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
-            removeAgent(id);
-        }
+                   List<Action> actions = a.getActuator().act(a.agentReact());
+                   int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
+                   if (!getPosCurr().containsKey(id)) continue;
+                   for (SimulatorHandler handler : highwayEnvironment.getSimulatorHandlers()) {
+                       if (handler.hasVehicle(id)) {
+                           handler.addActions(id, actions);
+                       }
+                       if (handler.isReady()) {
+                           getExperimentsData().calcPlanCalculation(System.currentTimeMillis());
+                           //numberOfPlanCalculations++;
+                           handler.sendPlans(getPosCurr());
+                           currentRadarData = handler.getNewRadarData();
+                           counter++;
+                       }
+                   }
+                   if (a.getNavigator().isMyLifeEnds()) agentToRemove.add(Integer.parseInt(a.getName()));
+               }
+               for (Integer id : agentToRemove) {
+                   getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
+                   removeAgent(id);
+               }
+     //      }
     }
 
 
@@ -208,7 +207,6 @@ public class HighwayStorage {
 
     public void recreate(RadarData object) {
         Queue<Pair<Integer, Float>> notInsertedVehicles = new PriorityQueue<Pair<Integer, Float>>(20, comparator);
-        System.out.println(vehiclesForInsert);
         while (vehiclesForInsert.peek() != null) {
             Pair<Integer, Float> vehicle = vehiclesForInsert.poll();
             int id = vehicle.getKey();

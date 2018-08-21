@@ -8,6 +8,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.AgentdriveActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.VehicleMoveActivityFactory;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.ADMessage;
@@ -24,6 +25,10 @@ import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.geographtools.Graph;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
@@ -65,15 +70,14 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
     @Override
     protected void performAction() {
+       // System.out.println("Agent: " + this.agent.getId() + " Trip: " + getTrip().locationIdsToString());
         agent.startDriving(vehicle);
-        from = trip.getAndRemoveFirstLocation();
+       // from = trip.getAndRemoveFirstLocation();
+       // move();
         eventProcessor.addEvent(AgentdriveEventType.INITIALIZE, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel));
-        start();
     }
 
     protected void start() {
-        agentDriveModel.getHighwayEnvironment().updateCars(new RadarData());
-        eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 1);
     }
 
     @Override
@@ -81,8 +85,7 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
         if (event.isType(AgentdriveEventType.DATA)) {
             RadarData radarData = (RadarData) event.getContent();
             //TODO
-            move();
-            eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 10);
+            eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 10000);
         } else if (event.isType(AgentdriveEventType.FINISH)) {
             agent.endDriving();
             finish();
@@ -118,5 +121,11 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
     public Trip<SimulationNode> getTrip() {
         return trip;
+    }
+
+    protected List<Enum> getEventTypesToHandle() {
+        List<Enum> typesList = new ArrayList<>();
+        typesList.addAll(Arrays.asList(AgentdriveEventType.FINISH, AgentdriveEventType.DATA));
+        return typesList;
     }
 }

@@ -31,21 +31,8 @@ public class RouteNavigator {
     private List<Edge> route;
     private boolean isInitialized = false;
 
-
-//    public RouteNavigator(int id) {
-//        this.id = id;
-//    }
-
     public RouteNavigator(List<Edge> route) {
         this.setRoute(route);
-//        if (!Configurator.getParamBool("highway.dashboard.sumoSimulation",true) && Configurator.getParamBool("highway.rvo.agent.randomRoutes", true).equals(true)) {
-//            setRoute();
-//        }
-//        else
-//        {
-//            setRoute(id);
-//        }
-
     }
 
     private boolean initialize() {
@@ -125,7 +112,7 @@ public class RouteNavigator {
      * if this does not succeed than tries to switch to the another edge.
      */
     public void advanceInRoute() {
-        if(!isInitialized){
+        if (!isInitialized) {
             logger.error("not initialized");
             return;
         }
@@ -152,8 +139,7 @@ public class RouteNavigator {
                     } else {
                         myLifeEnds = true;
                     }
-                }
-                else {
+                } else {
                     pointPtr = desiredPoint;
                     agentLane = nextLane;
                 }
@@ -222,10 +208,10 @@ public class RouteNavigator {
     }
 
     public Point2f getRoutePoint() {
-        if(isInitialized){
-            if(pointPtr >= agentLane.getInnerPoints().size()) pointPtr = agentLane.getInnerPoints().size() - 1;
+        if (isInitialized) {
+            if (pointPtr >= agentLane.getInnerPoints().size()) pointPtr = agentLane.getInnerPoints().size() - 1;
             return agentLane.getInnerPoints().get(pointPtr);
-        }else{
+        } else {
             logger.warn("not initialized!");
             return null;
         }
@@ -293,18 +279,14 @@ public class RouteNavigator {
     }
 
     public void setActualPosition(ActualLanePosition myLanePosition) {
-        if(myLanePosition.getEdge().equals(agentLane.getParentEdge()))
-        {
+        if (myLanePosition.getEdge().equals(agentLane.getParentEdge())) {
             agentLane = myLanePosition.getLane();
             this.pointPtr = myLanePosition.getIndex();
-        }
-        else
-        {
+        } else {
             agentLane = myLanePosition.getLane();
             this.pointPtr = myLanePosition.getIndex();
             routePtr++;
         }
-
     }
 
     public List<Edge> getFollowingEdgesInPlan() {
@@ -314,6 +296,49 @@ public class RouteNavigator {
             rem.add(route.get(i));
         }
         return rem;
+    }
+
+    public List<Edge> getCommitedEdgesInPlan() {
+        return route.subList(0, Math.min(routePtr + 1, route.size()));
+    }
+
+    public Integer getFirstUncommitedEdgeIndex() {
+        return Math.min(routePtr + 2, route.size());
+    }
+
+    public boolean updatePlan(List<Edge> newPlanEdges) {
+        List<Edge> newRoute = new ArrayList<>(route.subList(0, routePtr + 1));
+        int newPlanIndex = 0;
+        int index = getFirstUncommitedEdgeIndex();
+        if (areConnected(route.get(index - 1), newPlanEdges.get(newPlanIndex))) {
+            newRoute.addAll(newPlanEdges.subList(newPlanIndex, newPlanEdges.size()));
+            return true;
+        } else {
+            for (int i = index; i < route.size(); i++) {
+                if (areConnected(route.get(i), newPlanEdges.get(newPlanIndex))) {
+                    if (index == i) {
+                        newRoute.add(route.get(index));
+                    } else {
+                        newRoute.addAll(route.subList(index, i));
+                    }
+                    newRoute.addAll(newPlanEdges);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean areConnected(Edge from, Edge to) {
+        return from.getTo().equals(to.getFrom());
+//        for (Lane l : from.getLanes().values()){
+//            for (Lane incL : l.getOutgoingLanes()){
+//                if (incL.getParentEdge().getId().equals(to.getId())){
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
     }
 
     public List<Edge> getRoute() {

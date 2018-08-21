@@ -49,7 +49,7 @@ public class SDAgent extends RouteAgent {
     public SDAgent(int id, RoadNetwork roadNetwork) {
         super(id);
         this.roadNetwork = roadNetwork;
-        logger.setLevel(Level.DEBUG);
+        logger.setLevel(Level.INFO);
         num_of_lines = navigator.getLane().getParentEdge().getLanes().keySet().size();
     }
 

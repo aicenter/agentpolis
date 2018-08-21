@@ -27,7 +27,7 @@ public class GSDAgent extends SDAgent {
 
     public GSDAgent(int id, RoadNetwork roadNetwork) {
         super(id, roadNetwork);
-        logger.setLevel(Level.DEBUG);
+        logger.setLevel(Level.INFO);
 
     }
 
