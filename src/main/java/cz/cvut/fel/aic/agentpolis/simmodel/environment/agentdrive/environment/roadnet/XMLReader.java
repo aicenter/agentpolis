@@ -55,14 +55,14 @@ public class XMLReader {
     public boolean isNetworkLoaded() {
         return isNetworkLoaded;
     }
-
-    /**
-     * @return map from vehicleID to its route
-     */
-    public HashMap<Integer, List<String>> getRoutes() {
-        checkIfLoaded();
-        return routes;
-    }
+//
+//    /**
+//     * @return map from vehicleID to its route
+//     */
+//    public HashMap<Integer, List<String>> getRoutes() {
+//        checkIfLoaded();
+//        return routes;
+//    }
 
     public Network getNetwork() {
         checkIfLoaded();
@@ -96,8 +96,8 @@ public class XMLReader {
 
         try {
             File networkFile = Utils.getFileWithSuffix(networkFolder, ".net.xml");
-
-            parseNetworkFromFile(networkFile);
+            File plainNodeFile = Utils.getFileWithSuffix(networkFolder, ".nod.xml");
+            parseNetworkFromFile(networkFile, plainNodeFile);
 
             parseMultilevelJunctions();
 
@@ -112,14 +112,14 @@ public class XMLReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            logger.info("Parsing routes...");
-            routes = parseRoutes(Utils.getFileWithSuffix(networkFolder, ".rou.xml"));
-            logger.info("Routes parsed!");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            logger.info("Parsing routes...");
+//            routes = parseRoutes(Utils.getFileWithSuffix(networkFolder, ".rou.xml"));
+//            logger.info("Routes parsed!");
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -185,16 +185,17 @@ public class XMLReader {
     }
 
 
-    private void parseNetworkFromFile(File networkFile) throws ParserConfigurationException, IOException, SAXException {
+    private void parseNetworkFromFile(File networkFile, File plainNodeFile) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(networkFile);
+        Document plainDoc = dbFactory.newDocumentBuilder().parse(plainNodeFile);
 
         networkLocation = parseLocation(doc);
         laneMap = new HashMap<String, LaneImpl>();
         edgeMap = new HashMap<String, Edge>();
         parseEdgesAndLanes(doc);
-        junctionMap = parseJunctions(doc);
+        junctionMap = parseJunctions(doc, plainDoc);
         connectionList = parseConnections(doc);
     }
 
@@ -222,17 +223,20 @@ public class XMLReader {
         return connections;
     }
 
-    private HashMap<String, Junction> parseJunctions(Document doc) {
+    private HashMap<String, Junction> parseJunctions(Document doc, Document plainDoc) {
         NodeList junctionNodeList = doc.getElementsByTagName("junction");
+        NodeList plainNodeList = plainDoc.getElementsByTagName("node");
         HashMap<String, Junction> junctions = new HashMap<String, Junction>();
 
         for (int temp = 0; temp < junctionNodeList.getLength(); temp++) {
             Node jNode = junctionNodeList.item(temp);
-
+            Node plainNode = plainNodeList.item(temp);
             if (jNode.getNodeType() == Node.ELEMENT_NODE) {
-
+                Element p = (Element)plainNode;
                 Element j = (Element) jNode;
 
+                double lon = Double.valueOf(p.getAttribute("x"));
+                double lat = Double.valueOf(p.getAttribute("y"));
                 String id = j.getAttribute("id");
                 String type = j.getAttribute("type");
                 float x = Float.valueOf(j.getAttribute("x"));
@@ -254,7 +258,7 @@ public class XMLReader {
                     requestList.add(request);
                 }
 
-                Junction junction = new Junction(id, type, center, separateStrings(incLanesStr), separateStrings(intLanesStr), parseShape(shapeStr), requestList);
+                Junction junction = new Junction(id, type, center, separateStrings(incLanesStr), separateStrings(intLanesStr), parseShape(shapeStr), requestList, lat, lon);
                 junctions.put(junction.getId(), junction);
             }
         }

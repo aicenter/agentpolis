@@ -14,14 +14,20 @@ public class Junction extends Sector {
     private Point2f center;
     private ArrayList<String> incLanes;
     private ArrayList<String> intLanes;
+    private String agentpolisId;
+    private Double lat;
+    private Double lon;
 
     public Junction(String id, String type, Point2f center, ArrayList<String> incLanes,
-                    ArrayList<String> intLanes, ArrayList<Point2f> shape, ArrayList<Request> requests) {
+                    ArrayList<String> intLanes, ArrayList<Point2f> shape, ArrayList<Request> requests, double lat, double lon) {
         super(id, type, shape);
         this.center = center;
         this.incLanes = incLanes;
         this.intLanes = intLanes;
         this.requests = requests;
+        this.lat = lat;
+        this.lon = lon;
+        this.agentpolisId = computeAgentpolisId();
     }
 
     public Point2f getCenter() {
@@ -36,4 +42,21 @@ public class Junction extends Sector {
         return intLanes;
     }
 
+    private String computeAgentpolisId() {
+        long lon = (long) (this.lon * Math.pow(10,6));
+        long lat = (long) (this.lat * Math.pow(10,6));
+        if (lon < 0 && lat < 0) {
+            return "1" + Long.toString(lon).substring(1) + Long.toString(lat).substring(1);
+        } else if (lon < 0 && lat >= 0) {
+            return "2" + Long.toString(lon).substring(1) + Long.toString(lat);
+        } else if (lon >= 0 && lat < 0) {
+            return "3" + Long.toString(lon) + Long.toString(lat).substring(1);
+        } else {
+            return Long.toString(lon) + Long.toString(lat);
+        }
+    }
+
+    public String getAgentpolsId() {
+        return agentpolisId;
+    }
 }

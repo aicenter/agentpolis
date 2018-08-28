@@ -109,12 +109,12 @@ public class Network implements RoadNetwork {
         this.distanceFunction = new SquareEuclideanDistanceFunction();
 
         for (Map.Entry<String, LaneImpl> entry : lanes.entrySet()) {
-            for(int i =0;i<entry.getValue().getInnerPoints().size();i++){
+            for (int i = 0; i < entry.getValue().getInnerPoints().size(); i++) {
                 Point2f p = entry.getValue().getInnerPoints().get(i);
                 double[] point = new double[2];
                 point[0] = p.x;
                 point[1] = p.y;
-                kdTree.addPoint(point, new ActualLanePosition(entry.getValue(),i));
+                kdTree.addPoint(point, new ActualLanePosition(entry.getValue(), i));
             }
         }
     }
@@ -133,6 +133,7 @@ public class Network implements RoadNetwork {
         MaxHeap<ActualLanePosition> nearestNeighbour = kdTree.findNearestNeighbors(point, 1, distanceFunction);
         return nearestNeighbour.getMax().getLane();
     }
+
     public ActualLanePosition getActualPosition(Point3f position) {
         double[] point = new double[2];
         point[0] = position.x;
@@ -140,6 +141,7 @@ public class Network implements RoadNetwork {
         MaxHeap<ActualLanePosition> nearestNeighbour = kdTree.findNearestNeighbors(point, 1, distanceFunction);
         return nearestNeighbour.getMax();
     }
+
     public ArrayList<ActualLanePosition> getTwoActualLanePositions(Point3f position) {
         ArrayList<ActualLanePosition> kdlanes = new ArrayList<ActualLanePosition>(2);
         double[] point = new double[2];
@@ -150,6 +152,7 @@ public class Network implements RoadNetwork {
         }
         return kdlanes;
     }
+
     /**
      * returns the cars current lane based on its x,y coordinates
      * uses kd-Tree to obtain nearest neighbours of the given point
@@ -161,6 +164,7 @@ public class Network implements RoadNetwork {
         Point2f pos2d = new Point2f(position.x, position.y);
         return getLane(pos2d);
     }
+
     public int getLaneNum(Point3f position) {
         return getClosestLane(position).getIndex();
     }
@@ -190,6 +194,7 @@ public class Network implements RoadNetwork {
         return tunnels;
     }
 
-
-
+    public Junction getOriginOfEdge(Edge e) {
+        return junctions.get(e.getFrom());
+    }
 }
