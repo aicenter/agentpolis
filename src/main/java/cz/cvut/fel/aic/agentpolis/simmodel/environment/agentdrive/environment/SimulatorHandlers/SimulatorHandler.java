@@ -28,6 +28,10 @@ public abstract class SimulatorHandler {
         return plannedVehicles.contains(vehicleID);
     }
 
+    public void addPlannedVehicle(Integer id) {
+        plannedVehicles.add(id);
+    }
+
     @Deprecated
     public void addAction(Action action) {
         plans.addAction(action);

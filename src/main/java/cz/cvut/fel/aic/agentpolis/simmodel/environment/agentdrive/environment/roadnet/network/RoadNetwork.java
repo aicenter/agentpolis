@@ -23,6 +23,12 @@ public interface RoadNetwork {
     Lane getClosestLane(Point3f position);
 
     ActualLanePosition getActualPosition(Point3f position);
+    
+    Edge getEdgeFromJunctions(Junction origin, Junction end);
+
+    Edge getEdgeFromJunctions(String origin, String end);
+
+    Edge getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID);
 }
 
 

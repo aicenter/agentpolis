@@ -7,11 +7,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.Si
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.planning.euclid4d.Region;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Lane;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.RoadNetworkRouter;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.util.ExperimentsData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.util.Pair;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -37,8 +35,8 @@ public class HighwayStorage {
     private final Map<Integer, List<Action>> actions = new LinkedHashMap<Integer, List<Action>>();
     private final float SAVE_DISTANCE = 10;
     private final Map<Integer, Region> trajectories = new LinkedHashMap<Integer, Region>();
-    public Queue<Pair<Integer, Float>> vehiclesForInsert;
-    private Comparator<Pair<Integer, Float>> comparator;
+    public Queue<VehicleInitializationData> vehiclesForInsert;
+    private Comparator<VehicleInitializationData> comparator;
     private RadarData currentRadarData = new RadarData();
     private int counter = 0;
 
@@ -60,7 +58,7 @@ public class HighwayStorage {
         roadNetwork = highwayEnvironment.getRoadNetwork();
         roadDescription = new RoadDescription(roadNetwork);
         comparator = new QueueComparator();
-        vehiclesForInsert = new PriorityQueue<Pair<Integer, Float>>(20, comparator);
+        vehiclesForInsert = new PriorityQueue<VehicleInitializationData>(20, comparator);
         logger.setLevel(Level.DEBUG);
     }
 
@@ -75,6 +73,8 @@ public class HighwayStorage {
 
     public void updateCar(RoadObject carState) {
         int carId = carState.getId();
+
+
         Lane lane = roadNetwork.getClosestLane(carState.getPosition());
         int laneNum = lane.getIndex();
         carState.setLane(laneNum);
@@ -134,61 +134,61 @@ public class HighwayStorage {
     }
 
     public void updateCars(RadarData object) {
-         //  if (!object.getCars().isEmpty()) {
-               getExperimentsData().updateNumberOfCars(object);
+        //  if (!object.getCars().isEmpty()) {
+        getExperimentsData().updateNumberOfCars(object);
 
-               forRemoveFromPosscur = new TreeSet<Integer>(posCurr.keySet());
-               for (RoadObject car : object.getCars()) {
-                   updateCar(car);
-                   forRemoveFromPosscur.remove(car.getId());
-               }
-               if (!forRemoveFromPosscur.isEmpty()) {
-                   for (Integer id : forRemoveFromPosscur) {
-                       addForInsert(id);
-                       getExperimentsData().updateTimesAndGraphOfArrivals(object, id);
-                   }
-               }
-               if (!object.getCars().isEmpty())
-                   logger.debug("HighwayStorage updated vehicles: received " + object);
+        forRemoveFromPosscur = new TreeSet<Integer>(posCurr.keySet());
+        for (RoadObject car : object.getCars()) {
+            updateCar(car);
+            forRemoveFromPosscur.remove(car.getId());
+        }
+//        if (!forRemoveFromPosscur.isEmpty()) {
+//            for (Integer id : forRemoveFromPosscur) {
+//                addForInsert(id);
+//                getExperimentsData().updateTimesAndGraphOfArrivals(object, id);
+//            }
+//        }
+        if (!object.getCars().isEmpty())
+            logger.debug("HighwayStorage updated vehicles: received " + object);
 
-               for (Map.Entry<Integer, RoadObject> entry : posCurr.entrySet()) {
-                   getExperimentsData().updateDistances(object, entry);
-               }
-               recreate(object);
-               if (Configurator.getParamBool("highway.dashboard.sumoSimulation", true) &&
-                       posCurr.size() == 0 && vehiclesForInsert.isEmpty()) {
-                   isFinished = true;
-                   getExperimentsData().simulationEnded();
+        for (Map.Entry<Integer, RoadObject> entry : posCurr.entrySet()) {
+            getExperimentsData().updateDistances(object, entry);
+        }
+        recreate(object);
+//               if (Configurator.getParamBool("highway.dashboard.sumoSimulation", true) &&
+//                       posCurr.size() == 0 && vehiclesForInsert.isEmpty()) {
+//                   isFinished = true;
+//                   getExperimentsData().simulationEnded();
+//
+//               }
 
-               }
+        List<Integer> agentToRemove = new ArrayList<>();
+        for (Agent a : this.getAgents().values()) {
+            /* get actions that were originally send with NEW_PLAN event */
+            /* List<Action> actions = */
 
-               List<Integer> agentToRemove = new ArrayList<>();
-               for (Agent a : this.getAgents().values()) {
-                   /* get actions that were originally send with NEW_PLAN event */
-                   /* List<Action> actions = */
-
-                   List<Action> actions = a.getActuator().act(a.agentReact());
-                   int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
-                   if (!getPosCurr().containsKey(id)) continue;
-                   for (SimulatorHandler handler : highwayEnvironment.getSimulatorHandlers()) {
-                       if (handler.hasVehicle(id)) {
-                           handler.addActions(id, actions);
-                       }
-                       if (handler.isReady()) {
-                           getExperimentsData().calcPlanCalculation(System.currentTimeMillis());
-                           //numberOfPlanCalculations++;
-                           handler.sendPlans(getPosCurr());
-                           currentRadarData = handler.getNewRadarData();
-                           counter++;
-                       }
-                   }
-                   if (a.getNavigator().isMyLifeEnds()) agentToRemove.add(Integer.parseInt(a.getName()));
-               }
-               for (Integer id : agentToRemove) {
-                   getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
-                   removeAgent(id);
-               }
-     //      }
+            List<Action> actions = a.getActuator().act(a.agentReact());
+            int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
+            if (!getPosCurr().containsKey(id)) continue;
+            for (SimulatorHandler handler : highwayEnvironment.getSimulatorHandlers()) {
+                if (handler.hasVehicle(id)) {
+                    handler.addActions(id, actions);
+                }
+                if (handler.isReady()) {
+                    getExperimentsData().calcPlanCalculation(System.currentTimeMillis());
+                    //numberOfPlanCalculations++;
+                    handler.sendPlans(getPosCurr());
+                    currentRadarData = handler.getNewRadarData();
+                    counter++;
+                }
+            }
+            if (a.getNavigator().isMyLifeEnds()) agentToRemove.add(Integer.parseInt(a.getName()));
+        }
+        for (Integer id : agentToRemove) {
+            getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
+            removeAgent(id);
+        }
+        //      }
     }
 
 
@@ -197,28 +197,27 @@ public class HighwayStorage {
         posCurr.remove(carID);
     }
 
-    public void addForInsert(int id) {
-        vehiclesForInsert.add(new Pair<Integer, Float>(id, 0f));
+    public void addForInsert(VehicleInitializationData vid) {
+        vehiclesForInsert.add(vid);
     }
 
-    public void addForInsert(int id, float time) {
-        vehiclesForInsert.add(new Pair<Integer, Float>(id, time));
+    public void addForInsert(String id, float velocity, List<Long> startingNodeId, long departureTime) {
+        vehiclesForInsert.add(new VehicleInitializationData(id, velocity, startingNodeId, departureTime));
     }
 
     public void recreate(RadarData object) {
-        Queue<Pair<Integer, Float>> notInsertedVehicles = new PriorityQueue<Pair<Integer, Float>>(20, comparator);
+        Queue<VehicleInitializationData> notInsertedVehicles = new PriorityQueue<>(20, comparator);
         while (vehiclesForInsert.peek() != null) {
-            Pair<Integer, Float> vehicle = vehiclesForInsert.poll();
-            int id = vehicle.getKey();
+            VehicleInitializationData vehicle = vehiclesForInsert.poll();
+            int id = Integer.parseInt(vehicle.getId());
             if (posCurr.containsKey(id)) {
-                System.out.println("remove " + id);
                 posCurr.remove(id);
             }
             if (agents.containsKey(id) && Configurator.getParamBool("highway.dashboard.sumoSimulation", true)) continue;
             if (!isDeleted(object, id)) {
                 notInsertedVehicles.add(vehicle);
                 continue;
-            }else{
+            } else {
 //                removeAgent(id);
             }
             double updateTime = 0d;
@@ -228,12 +227,14 @@ public class HighwayStorage {
             } else {
                 updateTime = highwayEnvironment.getCurrentTime() - STARTTIME;
             }
-            if (vehicle.getValue() > updateTime / 1000 ||
+            if (vehicle.getDepartureTime() > updateTime ||
                     (posCurr.size() >= Configurator.getParamInt("highway.dashboard.numberOfCarsInSimulation", agents.size()))) {
                 notInsertedVehicles.add(vehicle);
                 continue;
             }
-            RouteNavigator routeNavigator = new RouteNavigator(RoadNetworkRouter.generateRoute(id));
+            long originId = vehicle.getStartingNodeId().get(0);
+            long endId = vehicle.getStartingNodeId().get(1);
+            RouteNavigator routeNavigator = new RouteNavigator(Arrays.asList(highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(originId, endId)));
             routeNavigator.setCheckpoint();
             Point2f position = routeNavigator.next();
             Point3f initialPosition = new Point3f(position.x, position.y, 0);
@@ -241,7 +242,7 @@ public class HighwayStorage {
             routeNavigator.resetToCheckpoint();
             Vector3f initialVelocity = new Vector3f(next.x - position.x, next.y - position.y, 0);
             initialVelocity.normalize();
-            initialVelocity.scale((float) INSERT_SPEED);
+            initialVelocity.scale((float) vehicle.getVelocity());
 
 
             Agent agent;
@@ -341,13 +342,13 @@ public class HighwayStorage {
         return counter;
     }
 
-    private class QueueComparator implements Comparator<Pair<Integer, Float>> {
+    private class QueueComparator implements Comparator<VehicleInitializationData> {
         @Override
-        public int compare(Pair<Integer, Float> o1, Pair<Integer, Float> o2) {
-            if (o1.getValue() < o2.getValue()) {
+        public int compare(VehicleInitializationData o1, VehicleInitializationData o2) {
+            if (o1.getDepartureTime() < o2.getDepartureTime()) {
                 return -1;
             }
-            if (o1.getValue() > o2.getValue()) {
+            if (o1.getDepartureTime() > o2.getDepartureTime()) {
                 return 1;
             }
             return 0;

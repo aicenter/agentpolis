@@ -99,6 +99,14 @@ public class Network implements RoadNetwork {
         return edgeId + "_" + laneIndex;
     }
 
+    private Junction getJunction(long agentpolisID) {
+        for (Junction j : junctions.values()) {
+            if (j.getAgentpolsId() == agentpolisID) {
+                return j;
+            }
+        }
+        return null;
+    }
 
     /**
      * creates a kd-Tree and fills it with point - lane pairs
@@ -196,5 +204,24 @@ public class Network implements RoadNetwork {
 
     public Junction getOriginOfEdge(Edge e) {
         return junctions.get(e.getFrom());
+    }
+
+    public Edge getEdgeFromJunctions(Junction origin, Junction end) {
+        for (Edge e : edges.values()) {
+            if (e.getFrom().equals(origin.getId()) && e.getTo().equals(end.getId())) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public Edge getEdgeFromJunctions(String origin, String end) {
+        return getEdgeFromJunctions(junctions.get(origin), junctions.get(end));
+    }
+
+    public Edge getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) {
+        Junction origin = getJunction(originAgentpolisID);
+        Junction end = getJunction(endAgentpolisID);
+        return getEdgeFromJunctions(origin, end);
     }
 }

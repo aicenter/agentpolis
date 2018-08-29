@@ -6,5 +6,6 @@ public enum AgentdriveEventType implements EventType {
     INITIALIZE,
     UPDATE_PLAN,
     DATA,
+    UPDATE_EDGE,
     FINISH
 }

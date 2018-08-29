@@ -1,20 +1,17 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 
-import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.Activity;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
-import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.AgentdriveActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.activityFactory.VehicleMoveActivityFactory;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.ADMessage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentdriveEventType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RadarData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.EdgeUpdateMessage;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleInitializationData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -70,11 +67,15 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
     @Override
     protected void performAction() {
-       // System.out.println("Agent: " + this.agent.getId() + " Trip: " + getTrip().locationIdsToString());
-        agent.startDriving(vehicle);
-       // from = trip.getAndRemoveFirstLocation();
-       // move();
-        eventProcessor.addEvent(AgentdriveEventType.INITIALIZE, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel));
+        if (getTrip() == null || getTrip().isEmpty()) {
+            finish();
+            return;
+        }
+        System.out.println("Agent: " + this.agent.getId() + " Trip: " + getTrip().locationIdsToString());
+
+        eventProcessor.addEvent(AgentdriveEventType.INITIALIZE, null, null, new VehicleInitializationData(vehicle.getId(), vehicle.getVelocity(), getTripSourceIds(), timeProvider.getCurrentSimTime()));
+        from = trip.getAndRemoveFirstLocation();
+
     }
 
     protected void start() {
@@ -83,12 +84,15 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
     @Override
     public void handleEvent(Event event) {
         if (event.isType(AgentdriveEventType.DATA)) {
-            RadarData radarData = (RadarData) event.getContent();
-            //TODO
-            eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 10000);
+//            RadarData radarData = (RadarData) event.getContent();
+//            //TODO
+//            eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 10000);
         } else if (event.isType(AgentdriveEventType.FINISH)) {
             agent.endDriving();
             finish();
+        } else if (event.isType(AgentdriveEventType.UPDATE_EDGE) && Integer.parseInt(this.getAgent().getId()) == ((EdgeUpdateMessage) event.getContent()).getCarId()) {
+            to = trip.getAndRemoveFirstLocation();
+            agent.setPosition(to);
         }
         super.handleEvent(event);
     }
@@ -116,7 +120,7 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
     private void triggerVehicleEnteredEdgeEvent() {
         SimulationEdge edge = graph.getEdge(from, to);
         Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
-        eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
+        eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit); // post-delayed action
     }
 
     public Trip<SimulationNode> getTrip() {
@@ -125,7 +129,15 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
     protected List<Enum> getEventTypesToHandle() {
         List<Enum> typesList = new ArrayList<>();
-        typesList.addAll(Arrays.asList(AgentdriveEventType.FINISH, AgentdriveEventType.DATA));
+        typesList.addAll(Arrays.asList(AgentdriveEventType.FINISH, AgentdriveEventType.DATA, AgentdriveEventType.UPDATE_EDGE));
         return typesList;
+    }
+
+    private List<Long> getTripSourceIds() {
+        List<Long> ids = new ArrayList<>();
+        for (SimulationNode node : trip.getLocations()) {
+            ids.add(node.getSourceId());
+        }
+        return ids;
     }
 }

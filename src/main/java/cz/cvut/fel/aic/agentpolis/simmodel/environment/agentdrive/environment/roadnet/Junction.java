@@ -1,7 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet;
 
 
-
 import javax.vecmath.Point2f;
 import java.util.ArrayList;
 
@@ -43,8 +42,8 @@ public class Junction extends Sector {
     }
 
     private String computeAgentpolisId() {
-        long lon = (long) (this.lon * Math.pow(10,6));
-        long lat = (long) (this.lat * Math.pow(10,6));
+        long lon = (long) (this.lon * Math.pow(10, 6));
+        long lat = (long) (this.lat * Math.pow(10, 6));
         if (lon < 0 && lat < 0) {
             return "1" + Long.toString(lon).substring(1) + Long.toString(lat).substring(1);
         } else if (lon < 0 && lat >= 0) {
@@ -56,7 +55,7 @@ public class Junction extends Sector {
         }
     }
 
-    public String getAgentpolsId() {
-        return agentpolisId;
+    public long getAgentpolsId() {
+        return Long.parseLong(agentpolisId);
     }
 }

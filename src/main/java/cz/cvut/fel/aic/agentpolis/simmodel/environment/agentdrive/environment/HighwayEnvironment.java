@@ -1,6 +1,8 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment;
 
 import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentdriveEventType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.EdgeUpdateMessage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.PlanCallback;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.SimulatorHandler;
@@ -112,6 +114,7 @@ public class HighwayEnvironment {
                 Collection<Action> plan = plans.getPlan(carID);
                 RoadObject state = currStates.get(carID);
                 Point3f lastPosition = state.getPosition();
+                String previousEdgeId = roadNetwork.getActualPosition(lastPosition).getEdge().getId();
                 Point3f myPosition = state.getPosition();
                 for (Action action : plan) {
                     if (action.getClass().equals(WPAction.class)) {
@@ -161,6 +164,9 @@ public class HighwayEnvironment {
                     state = new RoadObject(carID, getCurrentTime(), lane, myPosition, vel);
                     radarData.add(state);
                     duration = 0;
+                    if (!previousEdgeId.equals(roadNetwork.getActualPosition(state.getPosition()).getEdge().getId())) {
+                        ep.addEvent(AgentdriveEventType.UPDATE_EDGE, null, null, new EdgeUpdateMessage(carID));
+                    }
                 }
             }
             return radarData;
