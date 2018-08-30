@@ -75,7 +75,7 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
         eventProcessor.addEvent(AgentdriveEventType.INITIALIZE, null, null, new VehicleInitializationData(vehicle.getId(), vehicle.getVelocity(), getTripSourceIds(), timeProvider.getCurrentSimTime()));
         from = trip.getAndRemoveFirstLocation();
-       // agent.startDriving(vehicle);
+        //agent.startDriving(vehicle);
     }
 
     protected void start() {
@@ -85,21 +85,21 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
     public void handleEvent(Event event) {
         if (event.isType(AgentdriveEventType.DATA)) {
 //            RadarData radarData = (RadarData) event.getContent();
-//            //TODO
+//            TODO
 //            eventProcessor.addEvent(AgentdriveEventType.UPDATE_PLAN, null, null, new ADMessage(vehicle, trip, graph, tripId, agentDriveModel), 10000);
         } else if (event.isType(AgentdriveEventType.FINISH)) {
             agent.endDriving();
             finish();
         } else if (event.isType(AgentdriveEventType.UPDATE_EDGE) && Integer.parseInt(this.getAgent().getId()) == ((EdgeUpdateMessage) event.getContent()).getCarId()) {
+            EdgeUpdateMessage eum = (EdgeUpdateMessage) event.getContent();
             if (trip.getLocations().isEmpty()) {
                 System.out.println("end for " + this.getAgent().getId());
-                //agent.endDriving();
-                vehicle.setLastFromPosition(from);
 
+                vehicle.setLastFromPosition(from);
+                agent.endDriving();
                 finish();
 
-            } else {
-
+            } else if (eum.getReachedAgentpolisNodeId() == trip.getFirstLocation().getSourceId()) {
                 to = trip.getAndRemoveFirstLocation();
                 agent.setPosition(to);
             }

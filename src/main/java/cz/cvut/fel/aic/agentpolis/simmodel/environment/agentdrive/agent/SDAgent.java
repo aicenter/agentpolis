@@ -477,17 +477,22 @@ public class SDAgent extends RouteAgent {
 
     protected boolean checkCorrectRoute() {
         if (!navigator.getRoute().contains(myActualLanePosition.getEdge())) {
-            logger.warn("Agent " + getName() + " is on a route it should not be!  ");
+            logger.warn("Agent " + getName() + " is on a route it should not be! ");
+//            logger.warn("Route: ");
+//            for (Edge e : navigator.getRoute()) {
+//                logger.warn(e.getId());
+//            }
+            logger.warn("Actual position: " + myActualLanePosition.getEdge().getId());
 
             /*
             This can happen when a car is crossing a junction and method getActualPosition return position
             on a lane it's just crossing, but this lane is not connected to actual edge car is trying to get.
              */
             if (edgeIndex + 1 < navigator.getRoute().size()) {
-                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex + 1).getLaneByIndex(0), myActualLanePosition.getIndex()+1);
+                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex + 1).getLaneByIndex(0), myActualLanePosition.getIndex() + 1);
 
             } else {
-                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex).getLaneByIndex(0), myActualLanePosition.getIndex()+1);
+                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex).getLaneByIndex(0), myActualLanePosition.getIndex() + 1);
             }
             return false;
         }

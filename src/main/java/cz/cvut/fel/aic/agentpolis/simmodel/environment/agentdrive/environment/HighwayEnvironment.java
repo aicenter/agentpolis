@@ -7,6 +7,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.PlanCallback;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.SimulatorHandler;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.ActualLanePosition;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Junction;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.RoadNetworkRouter;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.HighwayStorage;
@@ -169,13 +170,22 @@ public class HighwayEnvironment {
                     if (carID == 1967) {
                         System.out.println("edge change = " + getCurrentTime());
                     }
-                    String a = roadNetwork.getActualPosition(state.getPosition()).getEdge().getId();
+                    ActualLanePosition actualLanePosition = roadNetwork.getActualPosition(state.getPosition());
+                    String a = actualLanePosition.getEdge().getId();
+
                     if (!previousEdgeId.equals(a)) {
-                        ep.addEvent(AgentdriveEventType.UPDATE_EDGE, null, null, new EdgeUpdateMessage(carID));
+                        ep.addEvent(AgentdriveEventType.UPDATE_EDGE, null, null, new EdgeUpdateMessage(carID, roadNetwork.getJunctions().get(actualLanePosition.getEdge().getFrom()).getAgentpolsId()));
+                    }
+                    if (getAgents().get(carID).getNavigator().isMyLifeEnds()) {
                     }
                 }
             }
             return radarData;
         }
+    }
+
+    public void reachedLastJunction(Agent a) {
+        Junction j = roadNetwork.getJunctions().get(a.getNavigator().getLane().getParentEdge().getTo());
+        ep.addEvent(AgentdriveEventType.UPDATE_EDGE, null, null, new EdgeUpdateMessage(Integer.parseInt(a.getName()), j.getAgentpolsId()));
     }
 }

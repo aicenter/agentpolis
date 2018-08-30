@@ -84,6 +84,7 @@ public class GSDAgent extends SDAgent {
             maneuver = dec;
         }
         currentManeuver = maneuver;
+        logger.info(myActualLanePosition.getEdge().getId());
         logger.info("Planned maneuver for carID " + currState.getId() + " " + maneuver);
         return maneuver;
     }
@@ -134,7 +135,7 @@ public class GSDAgent extends SDAgent {
         ActualLanePosition temp = myActualLanePosition;
         myActualLanePosition = roadNetwork.getActualPosition(state.getPosition());
         if (!checkCorrectRoute()) {
-            myActualLanePosition = temp;
+            //myActualLanePosition = temp;
             wrongEdge = true;
         }
 
