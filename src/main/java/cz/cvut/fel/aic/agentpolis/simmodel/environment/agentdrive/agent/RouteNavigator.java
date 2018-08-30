@@ -41,6 +41,7 @@ public class RouteNavigator {
             return false;
         } else {
             routePtr = 0;
+            System.out.println(route);
             agentLane = route.get(0).getLaneByIndex(0);
             initialPosition = agentLane.getInnerPoints().get(0);
             myLifeEnds = false;

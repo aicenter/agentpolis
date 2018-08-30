@@ -73,7 +73,7 @@ public class AgentDriveModel extends AliteEntity {
         if (event.isType(AgentdriveEventType.INITIALIZE)) {
             if (!initialPlansReceived) {
                 initialPlansReceived = true;
-                highwayEnvironment.getStorage().setSTARTTIME(0); //TODO: this is not correct STARTIME
+                highwayEnvironment.getStorage().setSTARTTIME(timeProvider.getCurrentSimTime()); //TODO: this is not correct STARTIME
             }
             VehicleInitializationData vid = (VehicleInitializationData) event.getContent();
             initVehicle(vid);
@@ -89,7 +89,7 @@ public class AgentDriveModel extends AliteEntity {
                 getEventProcessor().addEvent(AgentdriveEventType.FINISH, null, null, null);
             } else {
                 highwayEnvironment.updateCars((RadarData) event.getContent());
-                getEventProcessor().addEvent(AgentdriveEventType.DATA, null, null, highwayEnvironment.getStorage().getCurrentRadarData(), 1000);
+                getEventProcessor().addEvent(AgentdriveEventType.DATA, null, null, highwayEnvironment.getStorage().getCurrentRadarData(), 1500);
             }
         }
     }

@@ -5,13 +5,12 @@ import ags.utils.dataStructures.KdTree;
 import ags.utils.dataStructures.SquareEuclideanDistanceFunction;
 import ags.utils.dataStructures.utils.MaxHeap;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.NetworkLocation;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.PathNotFoundException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Singleton class holding the network data
@@ -206,22 +205,60 @@ public class Network implements RoadNetwork {
         return junctions.get(e.getFrom());
     }
 
-    public Edge getEdgeFromJunctions(Junction origin, Junction end) {
-        for (Edge e : edges.values()) {
-            if (e.getFrom().equals(origin.getId()) && e.getTo().equals(end.getId())) {
-                return e;
+//    public List<Edge> getEdgeFromJunctions(Junction origin, Junction end) {
+//        for (Edge e : edges.values()) {
+//            if (e.getFrom().equals(origin.getId()) && e.getTo().equals(end.getId())) {
+//                return e;
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    public List<Edge> getEdgeFromJunctions(String origin, String end) {
+//        return getEdgeFromJunctions(junctions.get(origin), junctions.get(end));
+//    }
+
+    public List<Edge> getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) throws PathNotFoundException{
+        Junction origin = getJunction(originAgentpolisID);
+        Junction end = getJunction(endAgentpolisID);
+        return constructPath(origin, end);  //return getEdgeFromJunctions(origin, end);
+    }
+
+    private List<Edge> constructPath(Junction from, Junction to) throws PathNotFoundException {
+        List<Edge> path = new ArrayList<>();
+        for (int i = 1; i < edges.size(); i++) {
+            path = constructPathDFS(from, to, i, new ArrayList<Edge>());
+            if (path != null && !path.isEmpty()) {
+                Collections.reverse(path);
+                return path;
             }
+        }
+        if (path == null || path.isEmpty()) throw new PathNotFoundException();
+        return null;
+    }
+
+    private List<Edge> constructPathDFS(Junction from, Junction to, int depth, List<Edge> path) {
+        if (from.getAgentpolsId() == to.getAgentpolsId()) return path;
+        if (depth == 0) {
+            return null;
+        }
+        for (Edge e : getOutgoingEdges(to)) {
+            path.add(e);
+            Junction next = junctions.get(e.getFrom());
+            List<Edge> result = constructPathDFS(from, next, depth - 1, path);
+            if (result != null) return result;
+            path.remove(e);
         }
         return null;
     }
 
-    public Edge getEdgeFromJunctions(String origin, String end) {
-        return getEdgeFromJunctions(junctions.get(origin), junctions.get(end));
+    private List<Edge> getOutgoingEdges(Junction node) {
+        List<Edge> edges = new ArrayList<>();
+        for (String lane : node.getIncLanes()) {
+            edges.add(getLanes().get(lane).getParentEdge());
+        }
+        return edges;
     }
 
-    public Edge getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) {
-        Junction origin = getJunction(originAgentpolisID);
-        Junction end = getJunction(endAgentpolisID);
-        return getEdgeFromJunctions(origin, end);
-    }
 }

@@ -22,10 +22,9 @@ public abstract class Agent extends Entity {
     protected RouteNavigator navigator;
 
 
-    public Agent(int id) {
+    public Agent(int id, List<Edge> route) {
         super("" + id);
         this.id = id;
-        List<Edge> route = RoadNetworkRouter.generateRoute(id);
         navigator = new RouteNavigator(route);
         logger.info("Agent " + id + " created");
     }

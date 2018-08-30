@@ -46,8 +46,8 @@ public class SDAgent extends RouteAgent {
 
     protected RoadNetwork roadNetwork;
 
-    public SDAgent(int id, RoadNetwork roadNetwork) {
-        super(id);
+    public SDAgent(int id, List<Edge> route, RoadNetwork roadNetwork) {
+        super(id, route);
         this.roadNetwork = roadNetwork;
         logger.setLevel(Level.INFO);
         num_of_lines = navigator.getLane().getParentEdge().getLanes().keySet().size();
@@ -398,6 +398,7 @@ public class SDAgent extends RouteAgent {
         logger.debug("GenerateSS for " + state.getId());
         ActualLanePosition temp = myActualLanePosition;
         myActualLanePosition = roadNetwork.getActualPosition(state.getPosition());
+
         if (!checkCorrectRoute()) {
             myActualLanePosition = temp;
         }

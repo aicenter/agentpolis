@@ -75,7 +75,7 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
 
         eventProcessor.addEvent(AgentdriveEventType.INITIALIZE, null, null, new VehicleInitializationData(vehicle.getId(), vehicle.getVelocity(), getTripSourceIds(), timeProvider.getCurrentSimTime()));
         from = trip.getAndRemoveFirstLocation();
-
+       // agent.startDriving(vehicle);
     }
 
     protected void start() {
@@ -91,8 +91,18 @@ public class AgentdriveDrive<A extends Agent & Driver> extends PhysicalVehicleDr
             agent.endDriving();
             finish();
         } else if (event.isType(AgentdriveEventType.UPDATE_EDGE) && Integer.parseInt(this.getAgent().getId()) == ((EdgeUpdateMessage) event.getContent()).getCarId()) {
-            to = trip.getAndRemoveFirstLocation();
-            agent.setPosition(to);
+            if (trip.getLocations().isEmpty()) {
+                System.out.println("end for " + this.getAgent().getId());
+                //agent.endDriving();
+                vehicle.setLastFromPosition(from);
+
+                finish();
+
+            } else {
+
+                to = trip.getAndRemoveFirstLocation();
+                agent.setPosition(to);
+            }
         }
         super.handleEvent(event);
     }

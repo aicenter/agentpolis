@@ -7,6 +7,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.Si
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.planning.euclid4d.Region;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Lane;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.PathNotFoundException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.util.ExperimentsData;
@@ -52,6 +53,8 @@ public class HighwayStorage {
     private static final double INSERT_SPEED = Configurator.getParamDouble("highway.storage.insertSpeed", 0.5d);
 
 
+    private boolean t = true;
+
     public HighwayStorage(HighwayEnvironment environment) {
         this.highwayEnvironment = environment;
         experimentsData = new ExperimentsData(this);
@@ -83,15 +86,15 @@ public class HighwayStorage {
 
     }
 
-    public Agent createAgent(final int id) {
+    public Agent createAgent(final int id, List<Edge> route) {
         String agentClassName = Configurator.getParamString("highway.agent", "RouteAgent");
         Agent agent = null;
         if (agentClassName.equals("RouteAgent")) {
-            agent = new RouteAgent(id);
+            agent = new RouteAgent(id, route);
         } else if (agentClassName.equals("SDAgent")) {
-            agent = new SDAgent(id, highwayEnvironment.getRoadNetwork());
+            agent = new SDAgent(id, route, highwayEnvironment.getRoadNetwork());
         } else if (agentClassName.equals("GSDAgent")) {
-            agent = new GSDAgent(id, highwayEnvironment.getRoadNetwork());
+            agent = new GSDAgent(id, route, highwayEnvironment.getRoadNetwork());
         } else {
             try {
                 throw new Exception("Agent class: " + agentClassName + " not supported!");
@@ -134,6 +137,7 @@ public class HighwayStorage {
     }
 
     public void updateCars(RadarData object) {
+
         //  if (!object.getCars().isEmpty()) {
         getExperimentsData().updateNumberOfCars(object);
 
@@ -188,7 +192,7 @@ public class HighwayStorage {
             getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
             removeAgent(id);
         }
-        //      }
+
     }
 
 
@@ -234,7 +238,11 @@ public class HighwayStorage {
             }
             long originId = vehicle.getStartingNodeId().get(0);
             long endId = vehicle.getStartingNodeId().get(1);
-            RouteNavigator routeNavigator = new RouteNavigator(Arrays.asList(highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(originId, endId)));
+            RouteNavigator routeNavigator = new RouteNavigator(convertNodeRouteToEdgeRoute(vehicle.getStartingNodeId()));
+            if (routeNavigator.getRoute() == null || routeNavigator.getRoute().isEmpty()) {
+                System.out.println("x");
+                return;
+            }
             routeNavigator.setCheckpoint();
             Point2f position = routeNavigator.next();
             Point3f initialPosition = new Point3f(position.x, position.y, 0);
@@ -242,14 +250,14 @@ public class HighwayStorage {
             routeNavigator.resetToCheckpoint();
             Vector3f initialVelocity = new Vector3f(next.x - position.x, next.y - position.y, 0);
             initialVelocity.normalize();
-            initialVelocity.scale((float) vehicle.getVelocity());
+            initialVelocity.scale((float)INSERT_SPEED);
 
 
             Agent agent;
             if (agents.containsKey(id)) {
                 agent = agents.get(id);
             } else {
-                agent = createAgent(id);
+                agent = createAgent(id, routeNavigator.getRoute());
             }
 
             RoadObject newRoadObject = new RoadObject(id, updateTime, agent.getNavigator().getLane().getIndex(), initialPosition, initialVelocity);
@@ -300,6 +308,7 @@ public class HighwayStorage {
     public boolean isSafe(RoadObject newRoadObject, RouteNavigator stateNavigator) {
         for (Map.Entry<Integer, RoadObject> obj : posCurr.entrySet()) {
             RoadObject entry = obj.getValue();
+            if (!agents.containsKey(entry.getId())) return true;
             double distanceToSecondCar = Utils.getDistanceBetweenTwoRoadObjects(newRoadObject, roadNetwork.getActualPosition(newRoadObject.getPosition()), entry, roadNetwork.getActualPosition(entry.getPosition()), agents.get(entry.getId()).getNavigator().getFollowingEdgesInPlan());//entry.getPosition().distance(newRoadObject.getPosition());
             if (distanceToSecondCar < CHECKING_DISTANCE) {
                 if (newRoadObject.getPosition().distance(entry.getPosition()) < SAFETY_RESERVE) return false;
@@ -357,5 +366,23 @@ public class HighwayStorage {
 
     public HighwayEnvironment getHighwayEnvironment() {
         return highwayEnvironment;
+    }
+
+    public List<Edge> convertNodeRouteToEdgeRoute(List<Long> nodeRoute) {
+        Iterator<Long> nodeIter = nodeRoute.iterator();
+        List<Edge> edgeRoute = new ArrayList<>();
+        long previousNodeId = 0;
+        if (nodeIter.hasNext()) previousNodeId = nodeIter.next();
+        while (nodeIter.hasNext()) {
+            long nodeId = nodeIter.next();
+            try {
+                edgeRoute.addAll(highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(previousNodeId, nodeId));
+            } catch (PathNotFoundException e) {
+                e.printStackTrace();
+                return edgeRoute;
+            }
+            previousNodeId = nodeId;
+        }
+        return edgeRoute;
     }
 }

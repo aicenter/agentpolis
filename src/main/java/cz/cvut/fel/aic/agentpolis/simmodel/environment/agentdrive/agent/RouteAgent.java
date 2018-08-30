@@ -1,5 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver.CarManeuver;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleSensor;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
@@ -24,8 +25,8 @@ public class RouteAgent extends Agent {
         return new Point3f(p.x, p.y, 0);
     }
 
-    public RouteAgent(int id) {
-        super(id);
+    public RouteAgent(int id, List<Edge> route) {
+        super(id, route);
         maneuverTranslator = new ManeuverTranslator(id, navigator);
     }
 

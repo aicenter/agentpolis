@@ -6,6 +6,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.EdgeUpdateMess
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.PlanCallback;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.SimulatorHandler;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.ActualLanePosition;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.RoadNetworkRouter;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.HighwayStorage;
@@ -17,6 +18,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.W
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import org.apache.log4j.Logger;
 
+import javax.measure.unit.SystemOfUnits;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import java.util.Collection;
@@ -164,7 +166,11 @@ public class HighwayEnvironment {
                     state = new RoadObject(carID, getCurrentTime(), lane, myPosition, vel);
                     radarData.add(state);
                     duration = 0;
-                    if (!previousEdgeId.equals(roadNetwork.getActualPosition(state.getPosition()).getEdge().getId())) {
+                    if (carID == 1967) {
+                        System.out.println("edge change = " + getCurrentTime());
+                    }
+                    String a = roadNetwork.getActualPosition(state.getPosition()).getEdge().getId();
+                    if (!previousEdgeId.equals(a)) {
                         ep.addEvent(AgentdriveEventType.UPDATE_EDGE, null, null, new EdgeUpdateMessage(carID));
                     }
                 }

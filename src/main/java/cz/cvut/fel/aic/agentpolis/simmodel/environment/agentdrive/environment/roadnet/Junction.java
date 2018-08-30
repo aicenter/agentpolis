@@ -27,6 +27,7 @@ public class Junction extends Sector {
         this.lat = lat;
         this.lon = lon;
         this.agentpolisId = computeAgentpolisId();
+        System.out.println("x: " + agentpolisId);
     }
 
     public Point2f getCenter() {

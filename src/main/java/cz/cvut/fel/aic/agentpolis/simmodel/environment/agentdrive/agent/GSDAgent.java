@@ -25,13 +25,14 @@ public class GSDAgent extends SDAgent {
 
     private boolean junctionMode = false;
 
-    public GSDAgent(int id, RoadNetwork roadNetwork) {
-        super(id, roadNetwork);
+    public GSDAgent(int id, List<Edge> route, RoadNetwork roadNetwork) {
+        super(id, route, roadNetwork);
         logger.setLevel(Level.INFO);
 
     }
 
     private boolean wrongEdge = false;
+
     public CarManeuver plan() {
 
         CarManeuver maneuver = null;
@@ -43,6 +44,7 @@ public class GSDAgent extends SDAgent {
         if (navigator.getLane() == null) {
             return null;
         }
+
         logger.debug("Startnode: " + currState);
         HighwaySituation situationPrediction = (HighwaySituation) getStateSpace(currState);
         logger.debug("SS: " + situationPrediction);
@@ -82,7 +84,6 @@ public class GSDAgent extends SDAgent {
             maneuver = dec;
         }
         currentManeuver = maneuver;
-        logger.debug(maneuver);
         logger.info("Planned maneuver for carID " + currState.getId() + " " + maneuver);
         return maneuver;
     }
@@ -133,7 +134,7 @@ public class GSDAgent extends SDAgent {
         ActualLanePosition temp = myActualLanePosition;
         myActualLanePosition = roadNetwork.getActualPosition(state.getPosition());
         if (!checkCorrectRoute()) {
-           myActualLanePosition = temp;
+            myActualLanePosition = temp;
             wrongEdge = true;
         }
 
