@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Czech Technical University in Prague.
  *
  * This library is free software; you can redistribute it and/or
@@ -41,54 +41,54 @@ import javax.vecmath.Point2d;
  * @param <E>
  */
 public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLayer{
-    
+
     public static final Double DEFAULT_TEXT_MARGIN_BOTTOM = 5.0;
-    
+
     public static final Color DEFAULT_TEXT_BACKGROUND_COLOR = Color.WHITE;
 
-    
-    
-    
+
+
+
     protected final EntityStorage<E> entityStorage;
-    
+
     private final boolean showStackedEntitiesCount;
     ;
-    
+
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
-    
+
     protected PositionUtil positionUtil;
 
     protected TimeProvider timeProvider;
-    
+
     protected Dimension dim;
-	
+
 	protected boolean transformSize;
 
-	
-	
+
+
 	@Inject
     public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
         this(entityStorage, agentpolisConfig.showStackedEntities, true);
     }
-    
+
     public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
         this(entityStorage, showStackedEntitiesCount, true);
     }
-	
+
 	public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
 		this.entityStorage = entityStorage;
         this.showStackedEntitiesCount = showStackedEntitiesCount;
 		this.transformSize = transformSize;
     }
-    
+
     @Inject
     public void init(PositionUtil positionUtil, TimeProvider timeProvider){
         this.positionUtil = positionUtil;
         this.timeProvider = timeProvider;
     }
-    
-    
-    
+
+
+
     @Override
     public void paint(Graphics2D canvas) {
         dim = Vis.getDrawingDimension();
@@ -105,8 +105,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
                 continue;
             }
             Point2d entityPosition = getEntityPositionInTime(entity, time);
-            
-            if(showStackedEntitiesCount && !(entity instanceof Vehicle) && Vis.getZoomFactor() > 1){
+
+            if(showStackedEntitiesCount && !(entity instanceof Vehicle) && Vis.getZoomFactor() > 999){
                 if(!entityPositionMap.containsKey(entityPosition)){
                     entityPositionMap.put(entityPosition, new ArrayList<>());
                 }
@@ -115,7 +115,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
                 drawEntity(entity, entityPosition, canvas, dim);
             }
         }
-        
+
         if(showStackedEntitiesCount){
             for (Map.Entry<Point2d, ArrayList<E>> entry : entityPositionMap.entrySet()) {
                 Point2d entityPosition = entry.getKey();
@@ -128,13 +128,13 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected abstract Point2d getEntityPosition(E entity);
 
 	protected abstract Point2d getEntityPositionInTime(E entity, long time);
-    
+
     protected void drawEntity(E entity, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entity);
         canvas.setColor(color);
-		
+
         double radius = getRadius(entity);
-		
+
         int width = Math.max(2, (int) Math.round(radius * 2));
 
         int x1 = (int) (entityPosition.getX() - radius);
@@ -145,7 +145,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
             canvas.fillOval(x1, y1, width, width);
         }
     }
-    
+
     protected void drawEntities(ArrayList<E> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         Color color = getEntityDrawColor(entities.get(0));
         canvas.setColor(color);
@@ -158,10 +158,10 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
         int y2 = (int) (entityPosition.getY() + radius);
         if (x2 > 0 && x1 < dim.width && y2 > 0 && y1 < dim.height) {
             canvas.fillOval(x1, y1, width, width);
-            
+
             if(entities.size() > 1){
-                VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()), 
-                    new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color, 
+                VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()),
+                    new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color,
                     getTextBackgroundColor());
             }
         }
@@ -170,30 +170,30 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected abstract Color getEntityDrawColor(E entity);
 
     protected abstract int getEntityTransformableRadius(E entity);
-	
+
 	protected abstract double getEntityStaticRadius(E entity);
 
     protected boolean skipDrawing(E entity) {
         return false;
     }
-    
+
     protected Color getTextBackgroundColor(){
         return DEFAULT_TEXT_BACKGROUND_COLOR;
     }
-    
+
     protected double getTextMargin(){
         return DEFAULT_TEXT_MARGIN_BOTTOM;
     }
-    
+
     protected double getTextMarginTransX(){
         return Vis.transW(getTextMargin());
     }
-    
+
     protected double getTextMarginTransY(){
         return Vis.transH(getTextMargin());
     }
-	
-	
+
+
 
 	protected double getRadius(E entity) {
 		if(transformSize){

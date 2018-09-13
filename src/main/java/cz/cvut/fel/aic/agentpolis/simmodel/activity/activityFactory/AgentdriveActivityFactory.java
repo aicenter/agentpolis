@@ -4,20 +4,24 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripsUtil;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
+import cz.cvut.fel.aic.agentpolis.simmodel.ADAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.IdGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.AgentdriveDrive;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.PhysicalVehicleDrive;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.ADDriver;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.ADPhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
+import cz.cvut.fel.aic.apdemo.ADDriveAgent;
 import org.slf4j.LoggerFactory;
 
-public class AgentdriveActivityFactory extends ActivityFactory implements PhysicalVehicleDriveFactory {
+public class AgentdriveActivityFactory extends ActivityFactory implements ADVehicleDriveFactory {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AgentdriveActivityFactory.class);
 
@@ -49,21 +53,22 @@ public class AgentdriveActivityFactory extends ActivityFactory implements Physic
     }
 
     @Override
-    public <A extends Agent & Driver> void runActivity(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
+    public <A extends ADAgent & ADDriver> void runActivity(A agent, ADPhysicalVehicle vehicle, Trip<SimulationNode> trip) {
         create(agent, vehicle, trip).run();
     }
 
     @Override
-    public <A extends Agent & Driver> AgentdriveDrive create(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
+    public <A extends ADAgent & ADDriver> AgentdriveDrive create(A agent, ADPhysicalVehicle vehicle, Trip<SimulationNode> trip) {
         return new AgentdriveDrive(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor,
                 timeProvider, agent, vehicle, trip, tripIdGenerator.getId(), agentDriveModel);
     }
 
     @Override
-    public <A extends Agent & Driver> AgentdriveDrive create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
+    public <A extends ADAgent & ADDriver> AgentdriveDrive create(A agent, ADPhysicalVehicle vehicle, SimulationNode target) {
         Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
 
         return new AgentdriveDrive(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
                 agent, vehicle, trip, tripIdGenerator.getId(), agentDriveModel);
     }
+
 }

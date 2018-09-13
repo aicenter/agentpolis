@@ -1,6 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment;
 
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import org.apache.log4j.Logger;
 
 import java.util.Random;
@@ -17,7 +17,7 @@ public final class RandomProvider {
 
     public static void init() {
         // Setting seed of random generator
-        long seed = Configurator.getParamInt("simulator.lite.seed", -1);
+        long seed = AgentDriveModel.adConfig.ADSeed;
         random = new Random(seed);
     }
 

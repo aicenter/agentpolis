@@ -1,8 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet;
 
-
-
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector2f;
@@ -14,7 +12,7 @@ import java.util.Objects;
  * Created by pavel on 19.6.14.
  */
 public class LaneImpl implements Lane{
-    public static final float INNER_POINTS_STEP_SIZE = Configurator.getParamDouble("simulator.net.lane.stepSize", 1d).floatValue();
+    public static final float INNER_POINTS_STEP_SIZE = AgentDriveModel.adConfig.stepSize;
     private final String laneId;
     private final int index;
     private final float speed;

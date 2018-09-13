@@ -27,7 +27,6 @@ public class Junction extends Sector {
         this.lat = lat;
         this.lon = lon;
         this.agentpolisId = computeAgentpolisId();
-        System.out.println("x: " + agentpolisId);
     }
 
     public Point2f getCenter() {
@@ -45,6 +44,7 @@ public class Junction extends Sector {
     private String computeAgentpolisId() {
         long lon = (long) (this.lon * Math.pow(10, 6));
         long lat = (long) (this.lat * Math.pow(10, 6));
+
         if (lon < 0 && lat < 0) {
             return "1" + Long.toString(lon).substring(1) + Long.toString(lat).substring(1);
         } else if (lon < 0 && lat >= 0) {

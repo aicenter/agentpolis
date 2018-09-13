@@ -1,12 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.RandomProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
-import cz.agents.alite.configurator.Configurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -21,12 +21,12 @@ public class SDAgent extends RouteAgent {
 
     protected static final Logger logger = Logger.getLogger(SDAgent.class);
 
-    private final static double DISTANCE_TO_ACTIVATE_NM = Configurator.getParamDouble("highway.safeDistanceAgent.distanceToActivateNM", 300.0);
-    private final static double SAFETY_RESERVE = Configurator.getParamDouble("highway.safeDistanceAgent.safetyReserveDistance", 4.0);
-    private final static double MAX_SPEED = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.maximalSpeed", 70.0);
-    private final static double MAX_SPEED_VARIANCE = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.maxSpeedVariance", 0.8);
-    protected final static int CHECKING_DISTANCE = 500;
-    private final static double LANE_SPEED_RATIO = Configurator.getParamDouble("highway.safeDistanceAgent.laneSpeedRatio", 0.1);
+    private final static double DISTANCE_TO_ACTIVATE_NM = AgentDriveModel.adConfig.distanceToActivateNM;
+    private final static double SAFETY_RESERVE = AgentDriveModel.adConfig.safetyReserveDistance;
+    private final static double MAX_SPEED = AgentDriveModel.adConfig.maximalSpeed;
+    private final static double MAX_SPEED_VARIANCE = AgentDriveModel.adConfig.maxSpeedVariance;
+    protected final static int CHECKING_DISTANCE = AgentDriveModel.adConfig.checkingDistance;
+    private final static double LANE_SPEED_RATIO = 0.1;
     private final static long PLANNING_TIME = 1000;
     protected int numberOfCollisions = 0;
     protected int num_of_lines;
@@ -38,7 +38,7 @@ public class SDAgent extends RouteAgent {
     // maximal speed after variance application
     private final double initialMaximalSpeed = (RandomProvider.getRandom().nextDouble() - 0.5) * 2 * MAX_SPEED_VARIANCE * MAX_SPEED + MAX_SPEED;
     protected double maximalSpeed = initialMaximalSpeed;
-    protected double acceleration = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.deacceleration", -6.0);
+    protected double acceleration = AgentDriveModel.adConfig.deacceleration;
 
     public List<Action> agentReact() {
         return super.agentReact(plan());
@@ -49,7 +49,7 @@ public class SDAgent extends RouteAgent {
     public SDAgent(int id, List<Edge> route, RoadNetwork roadNetwork) {
         super(id, route);
         this.roadNetwork = roadNetwork;
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.WARN);
         num_of_lines = navigator.getLane().getParentEdge().getLanes().keySet().size();
     }
 
@@ -167,7 +167,7 @@ public class SDAgent extends RouteAgent {
     }
 
     private boolean isNarrowingMode(RoadObject state) {
-        if (Configurator.getParamBool("highway.safeDistanceAgent.narrowingModeActive", false).equals(false)) {
+        if (!AgentDriveModel.adConfig.narrowingMode) {
             return false;
         }
         Junction myNearestJunction = roadNetwork.getJunctions().get(myActualLanePosition.getEdge().getTo());
@@ -193,18 +193,18 @@ public class SDAgent extends RouteAgent {
         boolean narrowingMode = isNarrowingMode(state);
 
         if (isHighwayCollision(state, man)) {
-            logger.info(state + " Highway Collision detected!" + man);
+            //logger.info(state + " Highway Collision detected!" + man);
             return false;
         }
         if (isRulesCollision(man)) {
-            logger.info("Rules Collision detected! " + man);
+            //logger.info("Rules Collision detected! " + man);
             return false;
 
         }
         HighwaySituation emptySituation = new HighwaySituation();
         emptySituation.clear();
         if (!isSafe(man, emptySituation)) {
-            logger.info("Empty situation is not safe");
+            //logger.info("Empty situation is not safe");
             return false;
         }
         if (man.getClass().equals(AccelerationManeuver.class)
@@ -220,11 +220,11 @@ public class SDAgent extends RouteAgent {
                     .getCarRightAheadMan().getVelocityOut() == 0.0))));
 
         } else if (man.getClass().equals(LaneLeftManeuver.class)) {
-            logger.info("Is in safe distance if LaneLeftManeuver: " + isInSafeDistance(situation.getCarLeftAheadMan(), man) + " " + isInSafeDistance(man, situation.getCarLeftMan()));
+            //logger.info("Is in safe distance if LaneLeftManeuver: " + isInSafeDistance(situation.getCarLeftAheadMan(), man) + " " + isInSafeDistance(man, situation.getCarLeftMan()));
             return isInSafeDistance(situation.getCarLeftAheadMan(), man)
                     && isInSafeDistance(man, situation.getCarLeftMan());
         } else if (man.getClass().equals(LaneRightManeuver.class)) {
-            logger.info("Is in safe distance if LaneRightManeuver: " + isInSafeDistance(situation.getCarRightAheadMan(), man) + " " + isInSafeDistance(man, situation.getCarRightMan()));
+            //logger.info("Is in safe distance if LaneRightManeuver: " + isInSafeDistance(situation.getCarRightAheadMan(), man) + " " + isInSafeDistance(man, situation.getCarRightMan()));
             return isInSafeDistance(situation.getCarRightAheadMan(), man)
                     && isInSafeDistance(man, situation.getCarRightMan());
         } else {
@@ -361,7 +361,7 @@ public class SDAgent extends RouteAgent {
             }
         }
         double laneMaxSpeed = maximalSpeed + carManeuver.getLaneIn() * LANE_SPEED_RATIO * maximalSpeed;
-        logger.info("laneMasSpeed= " + laneMaxSpeed + " maximalSpeed=" + maximalSpeed + " speedVariance=" + MAX_SPEED_VARIANCE + " MAX_SPEED conf = " + MAX_SPEED);
+        //logger.info("laneMasSpeed= " + laneMaxSpeed + " maximalSpeed=" + maximalSpeed + " speedVariance=" + MAX_SPEED_VARIANCE + " MAX_SPEED conf = " + MAX_SPEED);
         return carManeuver.getVelocityOut() > laneMaxSpeed;
     }
 
@@ -477,23 +477,11 @@ public class SDAgent extends RouteAgent {
 
     protected boolean checkCorrectRoute() {
         if (!navigator.getRoute().contains(myActualLanePosition.getEdge())) {
-            logger.warn("Agent " + getName() + " is on a route it should not be! ");
-//            logger.warn("Route: ");
-//            for (Edge e : navigator.getRoute()) {
-//                logger.warn(e.getId());
-//            }
-            logger.warn("Actual position: " + myActualLanePosition.getEdge().getId());
-
+            logger.info("Agent " + getName() + " is on a route it should not be!  ");
             /*
             This can happen when a car is crossing a junction and method getActualPosition return position
             on a lane it's just crossing, but this lane is not connected to actual edge car is trying to get.
              */
-            if (edgeIndex + 1 < navigator.getRoute().size()) {
-                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex + 1).getLaneByIndex(0), myActualLanePosition.getIndex() + 1);
-
-            } else {
-                myActualLanePosition = new ActualLanePosition(navigator.getRoute().get(edgeIndex).getLaneByIndex(0), myActualLanePosition.getIndex() + 1);
-            }
             return false;
         }
         return true;

@@ -4,52 +4,56 @@ import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.Map;
+
 import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
-  public Boolean showStackedEntities;
+    public Boolean showStackedEntities;
 
-  public CongestionModel congestionModel;
+    public CongestionModel congestionModel;
 
-  public String log4jXmlDir;
+    public ADModel adModel;
 
-  public Integer srid;
+    public String log4jXmlDir;
 
-  public String pathToSaveRecordings;
+    public Integer srid;
 
-  public String mapNodesFilepath;
+    public String pathToSaveRecordings;
 
-  public String pathToSerializedGraph;
+    public String mapNodesFilepath;
 
-  public Integer simulationDurationInMillis;
+    public String pathToSerializedGraph;
 
-  public Boolean showVisio;
+    public Integer simulationDurationInMillis;
 
-  public String pathToMapTiles;
+    public Boolean showVisio;
 
-  public String osmTileServer;
+    public String pathToMapTiles;
 
-  public String mapEdgesFilepath;
+    public String osmTileServer;
 
-  public Boolean skipSimulation;
+    public String mapEdgesFilepath;
 
-  public AgentpolisConfig() {
-  }
+    public Boolean skipSimulation;
 
-  public AgentpolisConfig fill(Map agentpolisConfig) {
-    this.showStackedEntities = (Boolean) agentpolisConfig.get("show_stacked_entities");
-    this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
-    this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
-    this.srid = (Integer) agentpolisConfig.get("srid");
-    this.pathToSaveRecordings = (String) agentpolisConfig.get("path_to_save_recordings");
-    this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
-    this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
-    this.simulationDurationInMillis = (Integer) agentpolisConfig.get("simulation_duration_in_millis");
-    this.showVisio = (Boolean) agentpolisConfig.get("show_visio");
-    this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
-    this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
-    this.mapEdgesFilepath = (String) agentpolisConfig.get("map_edges_filepath");
-    this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
-    return this;
-  }
+    public AgentpolisConfig() {
+    }
+
+    public AgentpolisConfig fill(Map agentpolisConfig) {
+        this.showStackedEntities = (Boolean) agentpolisConfig.get("show_stacked_entities");
+        this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
+        this.adModel = new ADModel((Map) agentpolisConfig.get("agentdrive"));
+        this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
+        this.srid = (Integer) agentpolisConfig.get("srid");
+        this.pathToSaveRecordings = (String) agentpolisConfig.get("path_to_save_recordings");
+        this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
+        this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
+        this.simulationDurationInMillis = (Integer) agentpolisConfig.get("simulation_duration_in_millis");
+        this.showVisio = (Boolean) agentpolisConfig.get("show_visio");
+        this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
+        this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
+        this.mapEdgesFilepath = (String) agentpolisConfig.get("map_edges_filepath");
+        this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
+        return this;
+    }
 }

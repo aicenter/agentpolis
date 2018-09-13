@@ -1,7 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver;
 
-import cz.agents.alite.configurator.Configurator;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 
 public class StraightManeuver extends CarManeuver {
 	public StraightManeuver(int laneIn, double velocityIn, double positionIn,
@@ -9,7 +9,7 @@ public class StraightManeuver extends CarManeuver {
 		super(laneIn, velocityIn, positionIn, startTime);
 		laneOut = laneIn;
 		expectedLaneOut = laneIn;
-		duration = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.straightManeuverDuration", 1.0);;
+		duration = AgentDriveModel.adConfig.straightManeuverDuration;
 		velocityOut = velocityIn;
 		acceleration = 0;
 		positionOut = positionIn + velocityIn * duration;

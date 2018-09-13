@@ -25,12 +25,10 @@ public interface RoadNetwork {
     Lane getClosestLane(Point3f position);
 
     ActualLanePosition getActualPosition(Point3f position);
-    
-//    List<Edge> getEdgeFromJunctions(Junction origin, Junction end);
-//
-//    List<Edge> getEdgeFromJunctions(String origin, String end);
 
     List<Edge> getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) throws PathNotFoundException;
+
+    boolean junctionExists(long agentpolisId);
 }
 
 

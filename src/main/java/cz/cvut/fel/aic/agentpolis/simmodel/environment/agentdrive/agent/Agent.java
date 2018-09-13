@@ -1,15 +1,18 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.RoadNetworkRouter;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleActuator;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleSensor;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.alite.common.entity.Entity;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Agent extends Entity {
@@ -21,9 +24,11 @@ public abstract class Agent extends Entity {
     protected VehicleActuator actuator;
     protected RouteNavigator navigator;
 
+    public List<Action> notAppliedActionsInJunction = new ArrayList<>();
 
     public Agent(int id, List<Edge> route) {
         super("" + id);
+        logger.setLevel(Level.WARN);
         this.id = id;
         navigator = new RouteNavigator(route);
         logger.info("Agent " + id + " created");
@@ -63,5 +68,17 @@ public abstract class Agent extends Entity {
 
     public VehicleActuator getActuator() {
         return actuator;
+    }
+
+    public boolean updatePlan(List<Edge> route) {
+        return navigator.updateRoute(route);
+    }
+
+    public Lane getCurrentLane() {
+        return navigator.getLane();
+    }
+
+    public boolean isLifeEnd() {
+        return navigator.isMyLifeEnds();
     }
 }

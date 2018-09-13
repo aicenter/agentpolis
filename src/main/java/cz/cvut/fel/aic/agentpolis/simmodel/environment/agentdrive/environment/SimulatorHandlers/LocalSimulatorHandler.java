@@ -1,12 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.HighwayEnvironment;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RadarData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.PlansOut;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.WPAction;
-import cz.agents.alite.configurator.Configurator;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class LocalSimulatorHandler extends SimulatorHandler {
 
     public LocalSimulatorHandler(HighwayEnvironment highwayEnvironment, Set<Integer> plannedVehicles) {
-        super(highwayEnvironment,plannedVehicles);
+        super(highwayEnvironment, plannedVehicles);
     }
 
     @Override
@@ -39,12 +39,13 @@ public class LocalSimulatorHandler extends SimulatorHandler {
         newRadarData = executePlans(plans);
         plans.clear();
     }
+
     private RadarData executePlans(PlansOut plans) {
         Map<Integer, RoadObject> currStates = highwayEnvironment.getStorage().getPosCurr();
         RadarData radarData = new RadarData();
         float duration = 0;
         float lastDuration = 0;
-        double timest = Configurator.getParamDouble("highway.SimulatorLocal.timestep", 1.0);
+        double timest = AgentDriveModel.adConfig.timestep;
         float timestep = (float) timest;
 
         boolean removeCar = false;
@@ -85,9 +86,7 @@ public class LocalSimulatorHandler extends SimulatorHandler {
                 }
             }
             if (removeCar) {
-                if (Configurator.getParamBool("highway.dashboard.sumoSimulation", true)) {
-                    plannedVehicles.remove(carID);
-                }
+                plannedVehicles.remove(carID);
                 removeCar = false;
             } else {
                 Vector3f vel = new Vector3f(state.getPosition());

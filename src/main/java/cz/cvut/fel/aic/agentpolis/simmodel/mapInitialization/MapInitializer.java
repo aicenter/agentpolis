@@ -20,7 +20,7 @@ import java.util.Map;
 public class MapInitializer {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapInitializer.class);
-	
+
 
     private final Transformer projection;
 
@@ -48,7 +48,7 @@ public class MapInitializer {
         GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
 
         GraphCreator<SimulationNode, SimulationEdge> graphCreator = new GraphCreator(
-                true, true, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
+                true, false, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
 
         graphs.put(EGraphType.HIGHWAY, graphCreator.getMap());
 
@@ -70,9 +70,7 @@ public class MapInitializer {
             for (SimulationNode node : graphStorageTmp.getAllNodes()) {
                 nodesFromAllGraphs.put(node.getId(), node);
             }
-
         }
-
         return nodesFromAllGraphs;
 
     }

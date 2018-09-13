@@ -1,11 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage;
 
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.HighwayEnvironment;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.SimulatorHandlers.SimulatorHandler;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.planning.euclid4d.Region;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Junction;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.PathNotFoundException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
@@ -27,7 +28,7 @@ public class HighwayStorage {
 
 
     private HighwayEnvironment highwayEnvironment;
-    protected double acceleration = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.deacceleration", -6.0);
+    protected double acceleration = AgentDriveModel.adConfig.deacceleration;
     private final RoadDescription roadDescription;
     private final RoadNetwork roadNetwork;
     private final Map<Integer, Agent> agents = new LinkedHashMap<Integer, Agent>();
@@ -47,13 +48,11 @@ public class HighwayStorage {
 
     private long STARTTIME;
 
-    private static final double CHECKING_DISTANCE = Configurator.getParamDouble("highway.storage.checkingDistance", 500d);
+    private static final double CHECKING_DISTANCE = AgentDriveModel.adConfig.checkingDistance;
 
-    private static final double SAFETY_RESERVE = Configurator.getParamDouble("highway.storage.safetyReserve", 10d);
-    private static final double INSERT_SPEED = Configurator.getParamDouble("highway.storage.insertSpeed", 0.5d);
+    private static final double SAFETY_RESERVE =AgentDriveModel.adConfig.insertSafetyReserve;
+    private static final double INSERT_SPEED = AgentDriveModel.adConfig.insertSpeed;
 
-
-    private boolean t = true;
 
     public HighwayStorage(HighwayEnvironment environment) {
         this.highwayEnvironment = environment;
@@ -76,8 +75,6 @@ public class HighwayStorage {
 
     public void updateCar(RoadObject carState) {
         int carId = carState.getId();
-
-
         Lane lane = roadNetwork.getClosestLane(carState.getPosition());
         int laneNum = lane.getIndex();
         carState.setLane(laneNum);
@@ -87,7 +84,7 @@ public class HighwayStorage {
     }
 
     public Agent createAgent(final int id, List<Edge> route) {
-        String agentClassName = Configurator.getParamString("highway.agent", "RouteAgent");
+        String agentClassName = AgentDriveModel.adConfig.agentType;
         Agent agent = null;
         if (agentClassName.equals("RouteAgent")) {
             agent = new RouteAgent(id, route);
@@ -152,8 +149,8 @@ public class HighwayStorage {
 //                getExperimentsData().updateTimesAndGraphOfArrivals(object, id);
 //            }
 //        }
-        if (!object.getCars().isEmpty())
-            logger.debug("HighwayStorage updated vehicles: received " + object);
+//        if (!object.getCars().isEmpty())
+//            logger.debug("HighwayStorage updated vehicles: received " + object);
 
         for (Map.Entry<Integer, RoadObject> entry : posCurr.entrySet()) {
             getExperimentsData().updateDistances(object, entry);
@@ -171,9 +168,12 @@ public class HighwayStorage {
             /* get actions that were originally send with NEW_PLAN event */
             /* List<Action> actions = */
 
-            List<Action> actions = a.getActuator().act(a.agentReact());
+            List<Action> actions = new ArrayList<>();
+
+
             int id = Integer.parseInt(a.getName());//actions.get(0).getCarId();
-            if (!getPosCurr().containsKey(id)) continue;
+                actions = a.getActuator().act(a.agentReact());
+
             for (SimulatorHandler handler : highwayEnvironment.getSimulatorHandlers()) {
                 if (handler.hasVehicle(id)) {
                     handler.addActions(id, actions);
@@ -186,7 +186,11 @@ public class HighwayStorage {
                     counter++;
                 }
             }
-            if (a.getNavigator().isMyLifeEnds()) agentToRemove.add(Integer.parseInt(a.getName()));
+            if (a.getNavigator().isMyLifeEnds()) {
+               // a.getNavigator().setMyLifeEnds(false);
+                agentToRemove.add(Integer.parseInt(a.getName()));
+                highwayEnvironment.reachedLastJunction(a);
+            }
         }
         for (Integer id : agentToRemove) {
             getExperimentsData().updateTimesAndGraphOfArrivals(null, id);
@@ -199,6 +203,7 @@ public class HighwayStorage {
     public void removeAgent(Integer carID) {
         agents.remove(carID);
         posCurr.remove(carID);
+        //vehiclesForInsert.remove(carID);
     }
 
     public void addForInsert(VehicleInitializationData vid) {
@@ -217,22 +222,18 @@ public class HighwayStorage {
             if (posCurr.containsKey(id)) {
                 posCurr.remove(id);
             }
-            if (agents.containsKey(id) && Configurator.getParamBool("highway.dashboard.sumoSimulation", true)) continue;
+            if (agents.containsKey(id)) continue;
             if (!isDeleted(object, id)) {
                 notInsertedVehicles.add(vehicle);
                 continue;
             } else {
-//                removeAgent(id);
+                //removeAgent(id);
             }
             double updateTime = 0d;
             double randomUpdateTime = 0d;
-            if (Configurator.getParamBool("highway.dashboard.systemTime", false)) {
-                updateTime = (System.currentTimeMillis() - STARTTIME); //getEventProcessor().getCurrentTime();
-            } else {
                 updateTime = highwayEnvironment.getCurrentTime() - STARTTIME;
-            }
-            if (vehicle.getDepartureTime() > updateTime ||
-                    (posCurr.size() >= Configurator.getParamInt("highway.dashboard.numberOfCarsInSimulation", agents.size()))) {
+
+            if (vehicle.getDepartureTime() > updateTime) {
                 notInsertedVehicles.add(vehicle);
                 continue;
             }
@@ -240,7 +241,7 @@ public class HighwayStorage {
             long endId = vehicle.getStartingNodeId().get(1);
             RouteNavigator routeNavigator = new RouteNavigator(convertNodeRouteToEdgeRoute(vehicle.getStartingNodeId()));
             if (routeNavigator.getRoute() == null || routeNavigator.getRoute().isEmpty()) {
-                System.out.println("x");
+                logger.warn("Vehicle " + vehicle.getId() + " will not be added to the network. Route cannot be generated.");
                 return;
             }
             routeNavigator.setCheckpoint();
@@ -250,8 +251,7 @@ public class HighwayStorage {
             routeNavigator.resetToCheckpoint();
             Vector3f initialVelocity = new Vector3f(next.x - position.x, next.y - position.y, 0);
             initialVelocity.normalize();
-            initialVelocity.scale((float)INSERT_SPEED);
-
+            initialVelocity.scale((float) INSERT_SPEED);
 
             Agent agent;
             if (agents.containsKey(id)) {
@@ -262,7 +262,6 @@ public class HighwayStorage {
 
             RoadObject newRoadObject = new RoadObject(id, updateTime, agent.getNavigator().getLane().getIndex(), initialPosition, initialVelocity);
             agent.getNavigator().setMyLifeEnds(false);
-
 
             boolean isSafe = false;
             while (true) {
@@ -327,7 +326,7 @@ public class HighwayStorage {
                     if (stateNavigator.getLane().getParentEdge().equals(e)) {
                         double safedist = safeDistance(acceleration, entry.getVelocity().length(), INSERT_SPEED);
                         if (safedist + SAFETY_RESERVE >= distanceToSecondCar || newRoadObject.getPosition().distance(entry.getPosition()) < SAFETY_RESERVE) {
-                            logger.warn("Vehicle could not be added to traffic at given time, because it was not safe. Vehicle will be added as soon as it is safe!");
+                            logger.warn("Vehicle " + newRoadObject.getId() + " could not be added to traffic at given time, because it was not safe. Vehicle will be added as soon as it is safe!");
                             return false;
                         }
                     }
@@ -368,6 +367,39 @@ public class HighwayStorage {
         return highwayEnvironment;
     }
 
+    public boolean updateRoute(Integer id, List<Long> newRoute) {
+        Agent agent = agents.get(id);
+        if (agent == null) {
+            return false;
+        }
+        return agent.updatePlan(convertNodeRouteToEdgeRoute2(agent, newRoute));
+    }
+
+    public List<Edge> convertNodeRouteToEdgeRoute2(Agent agent, List<Long> nodeRoute) {
+        Iterator<Long> nodeIter = nodeRoute.iterator();
+        List<Edge> edgeRoute = new ArrayList<>();
+
+        Junction tmp = roadNetwork.getJunctions().get(agent.getNavigator().getLane().getParentEdge().getFrom());
+        long previousNodeId = tmp.getAgentpolsId();
+        while (nodeIter.hasNext()) {
+            long nodeId = nodeIter.next();
+            if (!highwayEnvironment.getRoadNetwork().junctionExists(nodeId)) {
+                logger.warn("Node " + nodeId + " was skipped during construction of route " + Arrays.toString(nodeRoute.toArray()) + ". Corresponding edge does not exist!");
+                continue;
+            }
+            try {
+                List<Edge> route = highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(previousNodeId, nodeId);
+                if (route == null || route.isEmpty()) return null;
+                edgeRoute.addAll(route);
+            } catch (PathNotFoundException e) {
+                e.printStackTrace();
+                return edgeRoute;
+            }
+            previousNodeId = nodeId;
+        }
+        return edgeRoute;
+    }
+
     public List<Edge> convertNodeRouteToEdgeRoute(List<Long> nodeRoute) {
         Iterator<Long> nodeIter = nodeRoute.iterator();
         List<Edge> edgeRoute = new ArrayList<>();
@@ -375,8 +407,14 @@ public class HighwayStorage {
         if (nodeIter.hasNext()) previousNodeId = nodeIter.next();
         while (nodeIter.hasNext()) {
             long nodeId = nodeIter.next();
+            if (!highwayEnvironment.getRoadNetwork().junctionExists(nodeId)) {
+                logger.warn("Node " + nodeId + " was skipped during construction of route " + Arrays.toString(nodeRoute.toArray()) + ". Corresponding edge does not exist!");
+                continue;
+            }
             try {
-                edgeRoute.addAll(highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(previousNodeId, nodeId));
+                List<Edge> route = highwayEnvironment.getRoadNetwork().getEdgeFromJunctions(previousNodeId, nodeId);
+                if (route == null || route.isEmpty()) return null;
+                edgeRoute.addAll(route);
             } catch (PathNotFoundException e) {
                 e.printStackTrace();
                 return edgeRoute;

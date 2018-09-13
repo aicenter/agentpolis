@@ -1,12 +1,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleSensor;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.ManeuverAction;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.WPAction;
-import cz.agents.alite.configurator.Configurator;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
@@ -30,8 +30,8 @@ public class ManeuverTranslator {
     private static final double RADIUS = 1f;
     private static final double MAX_ANGLE = Math.PI / 3;
     private static final float EPSILON = 0.01f;
-    public static final float INNER_POINTS_STEP_SIZE = Configurator.getParamDouble("highway.net.lane.stepSize", 1d).floatValue();
-    private final static double MAX_SPEED = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.maximalSpeed", 70.0);
+    public static final float INNER_POINTS_STEP_SIZE = AgentDriveModel.adConfig.stepSize;
+    private final static double MAX_SPEED = AgentDriveModel.adConfig.maximalSpeed;
     private static final float CIRCLE_AROUND = 3.0f;  // Does not exactly correspond to the actual wayPoint distance, used to make circle around the car
 
 
@@ -204,7 +204,7 @@ public class ManeuverTranslator {
         //how many waiponts ahead will be chcecked depending on the update time
         maxMove = (int) (((me.getUpdateTime() - lastUpateTime) * MAX_SPEED) / 1000) + 5;
         if (maxMove < TRY_COUNT) maxMove = TRY_COUNT;
-        if (Configurator.getParamList("highway.dashboard.simulatorsToRun", String.class).isEmpty()) { //Simulator dependent code.
+        if (true) { //Simulator dependent code.
             //The difference is in switching between lanes or edges.
             String uniqueIndex = navigator.getUniqueLaneIndex();
             while (!navigator.isMyLifeEnds() && maxMove-- > 0 && navigator.getRoutePoint().distance(position2D) > CIRCLE_AROUND && navigator.getUniqueLaneIndex().equals(uniqueIndex)) {

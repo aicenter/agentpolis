@@ -1,7 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.planning.euclid4d;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.planning.euclid3d.SpeedPoint;
-import tt.euclid2d.Point;
 
 import javax.vecmath.Point2d;
 
@@ -24,10 +23,6 @@ public class Point4d extends javax.vecmath.Point4d {
 
     public SpeedPoint getSpeedPoint() {
         return new SpeedPoint(x,y,z);
-    }
-
-    public Point getPosition() {
-        return new Point(x,y);
     }
 
     public double getSpeed() {

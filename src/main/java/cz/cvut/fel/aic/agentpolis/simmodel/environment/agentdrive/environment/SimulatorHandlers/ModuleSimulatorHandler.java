@@ -27,7 +27,7 @@ public class ModuleSimulatorHandler extends SimulatorHandler {
 
         planCallback.getPlannedVehiclesToRemove().clear();
         notPlanned.removeAll(plannedVehicles);
-        planCallback.clearPlannedVehicles();
+        // planCallback.clearPlannedVehicles();
         for (int id : notPlanned) {
             radarData.add(vehicleStates.get(id));
         }

@@ -258,6 +258,7 @@ public class PositionUtil {
         portionOfEdgeDistance = Math.min(Math.max(0.0, portionOfEdgeDistance), 1.0);
         ShapeUtils.PositionAndAngle positionAndAngleOnPath = shapeUtils.getPositionAndAngleOnPath(edge.shape, portionOfEdgeDistance);
         movingAgentAngle.put(agent, positionAndAngleOnPath.angle);
+
         return positionAndAngleOnPath.point;
     }
 

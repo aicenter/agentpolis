@@ -1,7 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet;
 
 
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.NetworkLocation;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.util.Utils;
@@ -11,13 +11,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import tt.euclid2d.Point;
-import tt.euclid2d.region.Rectangle;
 
 import javax.vecmath.Point2f;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class XMLReader {
     private final static Logger logger = Logger.getLogger(XMLReader.class);
-
+    public static String NETOFFSET;
     private NetworkLocation networkLocation;
     private HashMap<String, Edge> edgeMap;
     private HashMap<String, Junction> junctionMap;
@@ -232,7 +233,7 @@ public class XMLReader {
             Node jNode = junctionNodeList.item(temp);
             Node plainNode = plainNodeList.item(temp);
             if (jNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element p = (Element)plainNode;
+                Element p = (Element) plainNode;
                 Element j = (Element) jNode;
 
                 double lon = Double.valueOf(p.getAttribute("x"));
@@ -301,6 +302,7 @@ public class XMLReader {
         }
         Element locationElement = (Element) locationNodeList.item(0);
         String netOffset = locationElement.getAttribute("netOffset");
+        NETOFFSET = netOffset;
         String convBoundary = locationElement.getAttribute("convBoundary");
         String origBoundary = locationElement.getAttribute("origBoundary");
         String projParameter = locationElement.getAttribute("projParameter");
@@ -340,11 +342,8 @@ public class XMLReader {
     }
 
 
-
-
-
     private void parseMultilevelJunctions() {
-        String folderPath = Configurator.getParamString("simulator.net.folder", "nets/junction-big");
+        String folderPath = AgentDriveModel.adConfig.netFolderPath;
         tunnels = new ArrayList<String>();
         bridges = new ArrayList<String>();
         try {
@@ -444,17 +443,17 @@ public class XMLReader {
         tunnels, bridges
     }
 
-    private Rectangle parseBoundary(String boundaryString) {
+    private Rectangle2D parseBoundary(String boundaryString) {
         String[] strings = boundaryString.split(",");
         float x1 = Float.parseFloat(strings[0]);
         float y1 = Float.parseFloat(strings[1]);
         float x2 = Float.parseFloat(strings[2]);
         float y2 = Float.parseFloat(strings[3]);
 
-        Point corner1 = new Point(x1, y1);
-        Point corner2 = new Point(x2, y2);
-
-        Rectangle rectangle = new Rectangle(corner1, corner2);
+        Point2D.Double corner1 = new Point2D.Double(x1, y1);
+        Point2D.Double corner2 = new Point2D.Double(x2, y2);
+        Line2D line2D = new Line2D.Double(corner1, corner2);
+        Rectangle2D rectangle = line2D.getBounds2D();
 
         return rectangle;
     }
@@ -484,7 +483,6 @@ public class XMLReader {
         Point2f point = Utils.transSUMO2Alite(x, y);
         return point;
     }
-
 
 
 }

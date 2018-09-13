@@ -42,7 +42,7 @@ public abstract class SimulatorHandler {
     }
 
     public boolean isReady() {
-        return plans.getCarIds().size() >= highwayEnvironment.getStorage().getPosCurr().size();
+        return plans.getCarIds().size() >= highwayEnvironment.getAgents().size();
     }
 
     public int numberOfVehicles() {

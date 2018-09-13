@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 public abstract class Action {
 
     private final int carId;
-    private final double timeStamp;
+    private double timeStamp;
     
     public Action(int carId, double timeStamp) {
         this.carId = carId;
@@ -21,7 +21,10 @@ public abstract class Action {
     public double getTimeStamp() {
         return timeStamp;
     }
-   
+
+    public void setTimeStamp(double timeStamp){
+        this.timeStamp = timeStamp;
+    }
 
     @Override
     public String toString() {

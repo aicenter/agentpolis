@@ -1,5 +1,8 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.WPAction;
+
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 

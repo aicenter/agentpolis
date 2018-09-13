@@ -37,6 +37,8 @@ public class Network implements RoadNetwork {
 //        return instance;
 //    }
 
+        public static double OFFSET_X;
+        public static double OFFSET_Y;
 
     /**
      * call this method to initialize the network structure
@@ -59,6 +61,8 @@ public class Network implements RoadNetwork {
         tunnels = createTunnelsAndBridges(tunnelsRaw);
         bridges = createTunnelsAndBridges(bridgesRaw);
 
+        OFFSET_X = networkLocation.getOffset().getX();
+        OFFSET_Y = networkLocation.getOffset().getY();
 
         connectLanes();
         fillKdTree();
@@ -219,10 +223,16 @@ public class Network implements RoadNetwork {
 //        return getEdgeFromJunctions(junctions.get(origin), junctions.get(end));
 //    }
 
-    public List<Edge> getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) throws PathNotFoundException{
+    public List<Edge> getEdgeFromJunctions(long originAgentpolisID, long endAgentpolisID) throws PathNotFoundException {
         Junction origin = getJunction(originAgentpolisID);
         Junction end = getJunction(endAgentpolisID);
+        if (origin == null || end == null) return null;
         return constructPath(origin, end);  //return getEdgeFromJunctions(origin, end);
+    }
+
+    @Override
+    public boolean junctionExists(long agentpolisId) {
+        return getJunction(agentpolisId) != null;
     }
 
     private List<Edge> constructPath(Junction from, Junction to) throws PathNotFoundException {
@@ -239,13 +249,14 @@ public class Network implements RoadNetwork {
     }
 
     private List<Edge> constructPathDFS(Junction from, Junction to, int depth, List<Edge> path) {
-        if (from.getAgentpolsId() == to.getAgentpolsId()) return path;
-        if (depth == 0) {
+        if (from != null && from.getAgentpolsId() == to.getAgentpolsId()) return path;
+        if (depth == 0 || from == null) {
             return null;
         }
-        for (Edge e : getOutgoingEdges(to)) {
+        for (Edge e : getIncomingEdges(to)) {
             path.add(e);
             Junction next = junctions.get(e.getFrom());
+            if (next == null) return path;
             List<Edge> result = constructPathDFS(from, next, depth - 1, path);
             if (result != null) return result;
             path.remove(e);
@@ -253,7 +264,7 @@ public class Network implements RoadNetwork {
         return null;
     }
 
-    private List<Edge> getOutgoingEdges(Junction node) {
+    private List<Edge> getIncomingEdges(Junction node) {
         List<Edge> edges = new ArrayList<>();
         for (String lane : node.getIncLanes()) {
             edges.add(getLanes().get(lane).getParentEdge());

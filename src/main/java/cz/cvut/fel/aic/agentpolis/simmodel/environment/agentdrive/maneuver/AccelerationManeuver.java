@@ -1,9 +1,9 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver;
 
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 
 public class AccelerationManeuver extends CarManeuver {
-    double maximalSpeed = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.maximalSpeed", 20.0);
+    double maximalSpeed = AgentDriveModel.adConfig.maximalSpeed;
     
 	public AccelerationManeuver(CarManeuver pred) {
 		this(pred.getLaneOut(), pred.getVelocityOut(), pred.getPositionOut(), pred.getEndTime());
@@ -13,8 +13,8 @@ public class AccelerationManeuver extends CarManeuver {
 		super(laneIn, velocityIn, positionIn, startTime);
 		laneOut = laneIn;
 		expectedLaneOut = laneIn;
-		duration = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.accelerationManeuverDuration", 1.0);
-		acceleration = Configurator.getParamDouble("highway.safeDistanceAgent.maneuvers.acceleration", 3.0);
+		duration = AgentDriveModel.adConfig.accelerationManeuverDuration;
+		acceleration = AgentDriveModel.adConfig.acceleration;
 		velocityOut = velocityIn + (acceleration * duration);
 
 		if (velocityOut > maximalSpeed){

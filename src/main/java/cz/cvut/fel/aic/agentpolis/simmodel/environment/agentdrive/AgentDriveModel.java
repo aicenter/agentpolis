@@ -3,8 +3,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.agents.alite.configreader.ConfigReader;
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.config.ADModel;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.HighwayEnvironment;
@@ -16,7 +15,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RadarD
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.VehicleInitializationData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.ModelConstructionFailedException;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
@@ -25,11 +23,8 @@ import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.alite.common.event.typed.AliteEntity;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import org.apache.log4j.PropertyConfigurator;
 
 
-import javax.vecmath.Point2f;
 import java.security.ProviderException;
 import java.util.*;
 
@@ -38,6 +33,7 @@ public class AgentDriveModel extends AliteEntity {
 
     private final Graph<SimulationNode, SimulationEdge> graph;
     private final AgentpolisConfig config;
+    public static ADModel adConfig = new ADModel();
     private final SimulationProvider simulationProvider;
     private final TimeProvider timeProvider;
     private HighwayEnvironment highwayEnvironment;
@@ -45,8 +41,7 @@ public class AgentDriveModel extends AliteEntity {
     private boolean initialPlansReceived = false;
     private XMLReader xmlReader;
     private ModuleSimulatorHandler msh;
-
-    private static String CONFIG_FILE = "settings/groovy/highway.groovy";
+    private static String CONFIG_FILE = "settings/groovy/highway.groovyx";
 
     @Inject
     public AgentDriveModel(TransportNetworks transportNetworks, AgentpolisConfig config,
@@ -54,11 +49,10 @@ public class AgentDriveModel extends AliteEntity {
             throws ModelConstructionFailedException, ProviderException {
         this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
         this.config = config;
+        AgentDriveModel.adConfig = config.adModel;
         this.simulationProvider = simulationProvider;
         this.timeProvider = timeProvider;
-        initConfigurator();
         initRoadNetwork();
-
         highwayEnvironment = new HighwayEnvironment(simulationProvider.getSimulation(), roadNetwork);
         // initTraffic();
 
@@ -73,25 +67,26 @@ public class AgentDriveModel extends AliteEntity {
         if (event.isType(AgentdriveEventType.INITIALIZE)) {
             if (!initialPlansReceived) {
                 initialPlansReceived = true;
-                highwayEnvironment.getStorage().setSTARTTIME(0); //TODO: this is not correct STARTIME
+                highwayEnvironment.getStorage().setSTARTTIME(timeProvider.getCurrentSimTime());
             }
-
             VehicleInitializationData vid = (VehicleInitializationData) event.getContent();
             initVehicle(vid);
             getEventProcessor().addEvent(AgentdriveEventType.DATA, null, null, highwayEnvironment.getStorage().getCurrentRadarData());
-
-            //highwayEnvironment.updateCars(ADMessageToRadarData(adMessage));
-        } else if (event.isType(AgentdriveEventType.UPDATE_PLAN)) {
-            ADMessage adMessage = (ADMessage) event.getContent();
-            //highwayEnvironment.getAgents().get(adMessage.getVehicle().getId()).getNavigator().updateRoute();
-            //TODO: change plans, decide until when is agent able to modify its route
+        } else if (event.isType(AgentdriveEventType.UPDATE_TRIP)) {
+            TripUpdateMessage tripUpdateMessage = (TripUpdateMessage) event.getContent();
+            highwayEnvironment.getStorage().updateRoute(Integer.parseInt(tripUpdateMessage.getId()), tripUpdateMessage.getNodeIds());
         } else if (event.isType(AgentdriveEventType.DATA)) {
             if (HighwayStorage.isFinished) {
                 getEventProcessor().addEvent(AgentdriveEventType.FINISH, null, null, null);
             } else {
                 highwayEnvironment.updateCars((RadarData) event.getContent());
-                getEventProcessor().addEvent(AgentdriveEventType.DATA, null, null, highwayEnvironment.getStorage().getCurrentRadarData(), 1500);
+                getEventProcessor().addEvent(AgentdriveEventType.DATA, null, null, highwayEnvironment.getStorage().getCurrentRadarData(), 50);
+                getEventProcessor().addEvent(AgentdriveEventType.UPDATE_POS, null, null, new UpdatePositionMessage((RadarData) event.getContent()));
+                getEventProcessor().addEvent(AgentdriveEventType.UPDATE_NODE_POS, null, null, new EdgeUpdateMessage((RadarData)event.getContent(), roadNetwork));
             }
+        } else if (event.isType(AgentdriveEventType.FINISH)) {
+            int id = Integer.parseInt((String) event.getContent());
+            highwayEnvironment.getStorage().removeAgent(id);
         }
     }
 
@@ -103,11 +98,6 @@ public class AgentDriveModel extends AliteEntity {
         return highwayEnvironment;
     }
 
-    private RadarData ADMessageToRadarData(ADMessage adMessage) {
-        //TODO
-        return new RadarData();
-    }
-
     @Override
     public EventProcessor getEventProcessor() {
         return simulationProvider.getSimulation();
@@ -115,17 +105,8 @@ public class AgentDriveModel extends AliteEntity {
 
     private void initRoadNetwork() {
         xmlReader = new XMLReader();
-        roadNetwork = xmlReader.parseNetwork(Configurator.getParamString("simulator.net.folder", "nets/junction-big/"));
+        roadNetwork = xmlReader.parseNetwork(config.adModel.netFolderPath);
         RoadNetworkRouter.setRoadNet(roadNetwork);
-    }
-
-    private void initConfigurator() {
-        // Configuration loading using alite's Configurator and ConfigReader
-        ConfigReader configReader = new ConfigReader();
-        configReader.loadAndMerge(CONFIG_FILE);
-        Configurator.init(configReader);
-        String logfile = Configurator.getParamString("cz.highway.configurationFile", "settings/log4j/log4j.properties");
-        PropertyConfigurator.configure(logfile);
     }
 
     public void initVehicle(VehicleInitializationData vid) {

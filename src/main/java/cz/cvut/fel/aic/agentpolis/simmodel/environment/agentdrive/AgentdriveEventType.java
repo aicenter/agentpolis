@@ -1,11 +1,11 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive;
 
-import cz.agents.alite.common.event.EventType;
-
-public enum AgentdriveEventType implements EventType {
+public enum AgentdriveEventType {
     INITIALIZE,
-    UPDATE_PLAN,
+    UPDATE_TRIP,
     DATA,
-    UPDATE_EDGE,
+    UPDATE_NODE_POS,
+    UPDATE_DESTINATION,
+    UPDATE_POS,
     FINISH
 }

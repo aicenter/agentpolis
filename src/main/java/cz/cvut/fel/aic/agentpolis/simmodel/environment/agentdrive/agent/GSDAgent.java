@@ -1,6 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.agent;
 
-import cz.agents.alite.configurator.Configurator;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.AgentDriveModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.ActualLanePosition;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Edge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.Junction;
@@ -8,6 +8,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.ro
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.environment.roadnet.network.RoadNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.maneuver.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.RoadObject;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.agentdrive.storage.plan.Action;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -20,21 +21,33 @@ public class GSDAgent extends SDAgent {
     private final static int CIRCLE_AROUND_FOR_SEARCH = 5;
     private final static int ANGLE_TO_JUNCTION = 60;
 
-    private final static int DISTANCE_TO_THE_JUNCTION = Configurator.getParamInt("highway.safeDistanceAgent.distanceToActivateNM", 400);
+    private final static int DISTANCE_TO_THE_JUNCTION = AgentDriveModel.adConfig.distanceToActivateNM;
 
 
     private boolean junctionMode = false;
+    private CarManeuver previousManeuver = null;
 
     public GSDAgent(int id, List<Edge> route, RoadNetwork roadNetwork) {
         super(id, route, roadNetwork);
-        logger.setLevel(Level.INFO);
-
+        logger.setLevel(Level.WARN);
     }
 
-    private boolean wrongEdge = false;
+    public List<Action> test = null;
+
+    @Override
+    public List<Action> agentReact() {
+        if (!notAppliedActionsInJunction.isEmpty()) {
+            List<Action> newActions = new LinkedList<>();
+            newActions.addAll(notAppliedActionsInJunction);
+            notAppliedActionsInJunction.clear();
+            return newActions;
+        }
+        return super.agentReact(plan());
+    }
+
+    public boolean wrongEdge = false;
 
     public CarManeuver plan() {
-
         CarManeuver maneuver = null;
         RoadObject currState = sensor.senseCurrentState();
         // Simulator did not send update yet
@@ -45,12 +58,8 @@ public class GSDAgent extends SDAgent {
             return null;
         }
 
-        logger.debug("Startnode: " + currState);
         HighwaySituation situationPrediction = (HighwaySituation) getStateSpace(currState);
-        logger.debug("SS: " + situationPrediction);
-        logger.debug("Situation: " + situationPrediction);
-        logger.debug("Navigator: " + navigator.getRoutePoint());
-        //HighwaySituation situationPrediction = (HighwaySituation) getStateSpace(currState);
+
         int lane = currState.getLaneIndex();
         double velocity = currState.getVelocity().length();
         long updateTime = (long) (currState.getUpdateTime() * 1000);
@@ -60,7 +69,6 @@ public class GSDAgent extends SDAgent {
         CarManeuver left = new LaneLeftManeuver(lane, velocity, 0, updateTime);
         CarManeuver right = new LaneRightManeuver(lane, velocity, 0, updateTime);
         CarManeuver dec = new DeaccelerationManeuver(lane, velocity, 0, updateTime);
-        if (wrongEdge) return str;
         /*
         Order of maneuvers
         1. try to switch right
@@ -84,8 +92,8 @@ public class GSDAgent extends SDAgent {
             maneuver = dec;
         }
         currentManeuver = maneuver;
-        logger.info(myActualLanePosition.getEdge().getId());
-        logger.info("Planned maneuver for carID " + currState.getId() + " " + maneuver);
+//        logger.info(myActualLanePosition.getEdge().getId());
+//        logger.info("Planned maneuver for carID " + currState.getId() + " " + maneuver);
         return maneuver;
     }
 
@@ -120,6 +128,8 @@ public class GSDAgent extends SDAgent {
      * @param to    Ending time.
      * @return HighwaySituation
      */
+    HighwaySituation last = new HighwaySituation();
+
     public HighwaySituation generateSS(RoadObject state, Collection<RoadObject> cars, long from, long to) {
         wrongEdge = false;
         HighwaySituation situationPrediction = new HighwaySituation();
@@ -137,14 +147,15 @@ public class GSDAgent extends SDAgent {
         if (!checkCorrectRoute()) {
             //myActualLanePosition = temp;
             wrongEdge = true;
+
         }
 
         if (myActualLanePosition == null) {
             logger.info("Car " + getName() + " is set to correct initial position");
-            myActualLanePosition = new ActualLanePosition(navigator.getFollowingEdgesInPlan().get(0).getLaneByIndex(state.getLaneIndex()), 0);// roadNetwork.getActualPosition(state.getPosition());
+            myActualLanePosition = new ActualLanePosition(navigator.getFollowingEdgesInPlan().get(0).getLaneByIndex(0), 0);// roadNetwork.getActualPosition(state.getPosition());
         }
         navigator.setActualPosition(myActualLanePosition);
-
+        //myActualLanePosition = new ActualLanePosition(navigator.getLane(), navigator.getActualPointer());
         Lane myLane = myActualLanePosition.getLane();
         Edge myEdge = myActualLanePosition.getEdge();
 
@@ -154,6 +165,7 @@ public class GSDAgent extends SDAgent {
 
         //removing too far cars and myself from the collection
         for (RoadObject entry : cars) {
+            if (sensor.getAgents().get(entry.getId()) == null) continue;
             float distanceToSecondCar = entry.getPosition().distance(state.getPosition());
             if (!(distanceToSecondCar > CHECKING_DISTANCE) && !state.getPosition().equals(entry.getPosition())) {
                 if (distanceToSecondCar < 2.24) {
@@ -252,6 +264,7 @@ public class GSDAgent extends SDAgent {
                 }
             }
         }
+        last = situationPrediction;
         return situationPrediction;
     }
 
@@ -268,6 +281,7 @@ public class GSDAgent extends SDAgent {
         Point2f intersectionWaypoint = junctionWaypoint;
         Map<Integer, Agent> agents = sensor.getAgents();
         GSDAgent entryAgent = (GSDAgent) agents.get(entry.getId());
+        if (entryAgent == null) return intersectionWaypoint;
         // calculation of optimised intersection point, if not found, other vehicle is ignored.
         if (!entryAgent.navigator.getFollowingEdgesInPlan().isEmpty() && !navigator.getFollowingEdgesInPlan().isEmpty()) {
             Edge entryNextEdge = entryAgent.navigator.getFollowingEdgesInPlan().iterator().next();

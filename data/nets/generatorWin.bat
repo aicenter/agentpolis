@@ -1,4 +1,4 @@
-netconvert   --osm-files "%1\%1.osm" -o "%1\%1.net.xml" --tls.join --no-internal-links --no-turnarounds true --proj "+proj=utm +ellps=bessel +units=m"
-netconvert   --osm-files "%1\%1.osm" --plain-output-prefix "%1\plain" --proj.plain-geo
+netconvert   --osm-files "%1\%1.osm" -o "%1\%1.net.xml" --tls.join --no-internal-links --no-turnarounds true --proj "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs" --precision 7 --precision.geo 7
+netconvert   --osm-files "%1\%1.osm" --plain-output-prefix "%1\plain" --proj.plain-geo --precision 7 --precision.geo 7
 python "%SUMO_HOME%tools/randomTrips.py" -n "%1\%1.net.xml" -e 50 -l -o "%1\%1.trips.xml"
 duarouter --trip-files="%1\%1.trips.xml" --net="%1\%1.net.xml"  --output-file="%1\%1.rou.xml" --ignore-errors --routing-algorithm=astar

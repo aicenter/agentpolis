@@ -41,7 +41,6 @@ public class RouteNavigator {
             return false;
         } else {
             routePtr = 0;
-            System.out.println(route);
             agentLane = route.get(0).getLaneByIndex(0);
             initialPosition = agentLane.getInnerPoints().get(0);
             myLifeEnds = false;
@@ -284,9 +283,12 @@ public class RouteNavigator {
             agentLane = myLanePosition.getLane();
             this.pointPtr = myLanePosition.getIndex();
         } else {
-            agentLane = myLanePosition.getLane();
-            this.pointPtr = myLanePosition.getIndex();
-            routePtr++;
+            if ((routePtr + 1) < route.size() && route.get(routePtr + 1).getId().equals(myLanePosition.getEdge().getId())) {
+                agentLane = myLanePosition.getLane();
+                this.pointPtr = myLanePosition.getIndex();
+                routePtr++;
+            }
+
         }
     }
 
@@ -307,10 +309,10 @@ public class RouteNavigator {
         return Math.min(routePtr + 2, route.size());
     }
 
-    public boolean updatePlan(List<Edge> newPlanEdges) {
-        List<Edge> newRoute = new ArrayList<>(route.subList(0, routePtr + 1));
-        int newPlanIndex = 0;
+    public boolean updateRoute(List<Edge> newPlanEdges) { //finish as much as possible - doesnt make much sense
         int index = getFirstUncommitedEdgeIndex();
+        List<Edge> newRoute = new ArrayList<>(route.subList(0, index));
+        int newPlanIndex = 0;
         if (areConnected(route.get(index - 1), newPlanEdges.get(newPlanIndex))) {
             newRoute.addAll(newPlanEdges.subList(newPlanIndex, newPlanEdges.size()));
             return true;
@@ -332,14 +334,6 @@ public class RouteNavigator {
 
     private boolean areConnected(Edge from, Edge to) {
         return from.getTo().equals(to.getFrom());
-//        for (Lane l : from.getLanes().values()){
-//            for (Lane incL : l.getOutgoingLanes()){
-//                if (incL.getParentEdge().getId().equals(to.getId())){
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
     }
 
     public List<Edge> getRoute() {
