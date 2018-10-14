@@ -18,12 +18,13 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.Utils;
+import com.google.inject.Injector;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 
 import org.junit.Test;
 
@@ -35,11 +36,14 @@ public class TestTenNodesCompleteGraph {
     
     @Test
     public void run() throws Throwable{
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = Utils.getCompleteGraph(10);
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
-        CongestionModelTest congestionModelTest = new CongestionModelTest();
-        congestionModelTest.run(graph);
+		// bootstrap Guice
+		CongestionModelTest scenario = new CongestionModelTest();
+		Injector injector = scenario.getInjector();
+		
+		// set roadgraph
+        Graph<SimulationNode, SimulationEdge> graph = Utils.getCompleteGraph(10, injector.getInstance(Transformer.class));
+		
+        scenario.run(graph);
     }
     
 }

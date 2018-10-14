@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
+import cz.cvut.fel.aic.agentpolis.mock.TestVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.system.StandardAgentPolisModule;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;

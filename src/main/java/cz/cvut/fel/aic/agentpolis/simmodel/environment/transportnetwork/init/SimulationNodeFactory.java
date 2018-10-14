@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.mapInitialization;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.client.NodeFactory;

@@ -20,6 +20,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
 
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Node;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 
 /**
  * For RoadEdgeExtended. Allows full control for AgentPolis needs. Same as RoadNode
@@ -35,4 +36,14 @@ public class SimulationNode extends Node {
     public SimulationNode(int id, long sourceId, GPSLocation location) {
         super(id, sourceId, location);
     }
+	
+	public SimulationNode(int id, long sourceId, double latitude, double longitude, int elevation, 
+			Transformer transformer){
+		super(id, sourceId, latitude, longitude, elevation, transformer);
+	}
+	
+	public SimulationNode(int id, long sourceId, int latitudeProjected, int longitudeProjected, int elevation, 
+			Transformer transformer){
+		super(id, sourceId, latitudeProjected, longitudeProjected, elevation, transformer);
+	}
 }

@@ -16,11 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 
@@ -30,7 +31,7 @@ import java.util.Arrays;
  * @author fido
  */
 public class Utils {
-    public static GraphBuilder<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount) {
+    public static Graph<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount, Transformer projection) {
         GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
         int radius = 1000;
@@ -38,11 +39,11 @@ public class Utils {
         for (int i = 0; i < nodeCount; i++) {
             double angle = 2 * Math.PI / nodeCount * i;
 
-            int x = (int) Math.round(radius * Math.cos(angle));
-            int y = (int) Math.round(radius * Math.sin(angle));
+            int x = 100 * (int) Math.round(radius * Math.cos(angle));
+            int y = 100 * (int) Math.round(radius * Math.sin(angle));
 
 
-            SimulationNode node = new SimulationNode(i, 0, x, y, x, y, 0);
+            SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection);
 
             graphBuilder.addNode(node);
 
@@ -57,6 +58,6 @@ public class Utils {
             }
         }
 
-        return graphBuilder;
+        return graphBuilder.createGraph();
     }
 }

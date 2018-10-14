@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestCongestionModel;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestModule;
 import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
 import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
@@ -33,6 +32,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
 import cz.cvut.fel.aic.geographtools.Graph;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +44,25 @@ import static org.junit.Assert.assertTrue;
  * @author fido
  */
 public class CongestionModelTest {
+	
+	private final Injector injector;
+
+	public Injector getInjector() {
+		return injector;
+	}
+
+	public CongestionModelTest() {
+        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer();
+		agentPolisInitializer.overrideModule(new TestModule());
+        injector = agentPolisInitializer.initialize();
+	}
+	
+	
     
     public void run(Graph<SimulationNode, SimulationEdge> graph) throws Throwable{
         
         Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
         graphs.put(EGraphType.HIGHWAY, graph);
-        
-        // Guice configuration
-        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer();
-        agentPolisInitializer.overrideModule(new TestModule());
-        Injector injector = agentPolisInitializer.initialize();
         
         //map init
         injector.getInstance(Graphs.class).setGraphs(graphs);

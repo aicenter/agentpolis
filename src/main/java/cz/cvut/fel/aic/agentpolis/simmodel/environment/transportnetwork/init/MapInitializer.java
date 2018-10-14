@@ -1,6 +1,7 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.mapInitialization;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
@@ -8,28 +9,22 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
-import cz.cvut.fel.aic.graphimporter.GraphCreator;
-import cz.cvut.fel.aic.graphimporter.geojson.GeoJSONReader;
 import org.slf4j.LoggerFactory;
 
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapInitializer {
+
+public abstract class MapInitializer {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapInitializer.class);
-	
 
-    private final Transformer projection;
-
-    private final AgentpolisConfig config;
+    protected final AgentpolisConfig config;
 
 
-    @Inject
-    public MapInitializer(Transformer projection, AgentpolisConfig config) {
-        this.projection = projection;
+    
+    public MapInitializer(AgentpolisConfig config) {
         this.config = config;
     }
 
@@ -41,22 +36,15 @@ public class MapInitializer {
      */
     public MapData getMap() {
         Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
-//        OsmImporter importer = new OsmImporter(mapFile, allowedOsmModes, projection); // OSM importer is not used yet
-        String nodeFile = config.mapNodesFilepath;
-        String edgeFile = config.mapEdgesFilepath;
-        String serializedGraphFile = config.pathToSerializedGraph;
-        GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
-
-        GraphCreator<SimulationNode, SimulationEdge> graphCreator = new GraphCreator(
-                true, true, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
-
-        graphs.put(EGraphType.HIGHWAY, graphCreator.getMap());
+        graphs.put(EGraphType.HIGHWAY, getGraph());
 
         Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
         LOGGER.info("Graphs imported, highway graph details: {}", graphs.get(EGraphType.HIGHWAY));
         return new MapData(graphs, nodes);
     }
+	
+	protected abstract Graph<SimulationNode, SimulationEdge> getGraph();
 
     /**
      * Build map data

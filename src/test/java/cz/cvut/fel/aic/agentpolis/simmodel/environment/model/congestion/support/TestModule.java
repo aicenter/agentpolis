@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
 import com.google.inject.AbstractModule;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;

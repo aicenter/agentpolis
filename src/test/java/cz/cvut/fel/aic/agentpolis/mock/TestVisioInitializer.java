@@ -16,11 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
+package cz.cvut.fel.aic.agentpolis.mock;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.CarLayer;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestVehicleLayer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.MetrowayNetwork;
@@ -35,6 +37,7 @@ import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.GridLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.LayerManagementLayer;
 import java.awt.Color;
 
 /**
@@ -43,6 +46,8 @@ import java.awt.Color;
  */
 @Singleton
 public class TestVisioInitializer extends DefaultVisioInitializer{
+	
+	protected final LayerManagementLayer layerManagementLayer;
     
     private final HighwayLayer highwayLayer;
     
@@ -51,15 +56,19 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     private final NodeIdLayer nodeIdLayer;
     
     private final CarLayer carLayer;
+	
+	
+	
     
     @Inject
     public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
                                 HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-                                RailwayNetwork railwayNetwork,
+                                RailwayNetwork railwayNetwork, LayerManagementLayer layerManagementLayer,
                                 SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
                                 TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer, AgentpolisConfig config) {
         super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
                 simulationControlLayer, gridLayer, config);
+		this.layerManagementLayer = layerManagementLayer;
         this.highwayLayer = highwayLayer;
         this.testVehicleLayer = testVehicleLayer;
         this.nodeIdLayer = nodeIdLayer;
@@ -70,18 +79,19 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
     protected void initGraphLayers() {
         VisManager.registerLayer(ColorLayer.create(Color.white));
         super.initGraphLayers();
-        VisManager.registerLayer(highwayLayer);
+        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Road network", highwayLayer));
     }
 
     @Override
     protected void initEntityLayers(Simulation simulation) {
 //        super.initEntityLayers(simulation, projection); 
-        VisManager.registerLayer(carLayer); 
+        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Cars", carLayer));
     }
     
     @Override
     protected void initLayersAfterEntityLayers() {
-        VisManager.registerLayer(nodeIdLayer);
+        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Node ids", nodeIdLayer));
+		VisManager.registerLayer(layerManagementLayer);
     }
     
     

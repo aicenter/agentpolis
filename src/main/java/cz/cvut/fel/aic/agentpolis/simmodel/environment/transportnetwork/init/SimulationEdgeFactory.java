@@ -1,4 +1,4 @@
-package cz.cvut.fel.aic.agentpolis.simmodel.mapInitialization;
+package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;

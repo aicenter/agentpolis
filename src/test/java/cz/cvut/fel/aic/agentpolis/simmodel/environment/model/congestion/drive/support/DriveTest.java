@@ -46,7 +46,23 @@ public class DriveTest {
     private static final int TRIP_MAX_DURATION = 2400000;
     
     private static final int START_TIME_MILIS = 25200000;
+	
+	
+	private final Injector injector;
+
+	public Injector getInjector() {
+		return injector;
+	}
+
+	public DriveTest() {
+		AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
+        injector = agentPolisInitializer.initialize();
+	}
     
+	
+	
+	
+	
     
     public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
         
@@ -59,11 +75,6 @@ public class DriveTest {
 //        config.agentpolis.showVisio = true;
 //        Common.setTestResultsDir(config, "test");
         
-        // Guice configuration
-        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
-//        agentPolisInitializer.overrideModule(new TestModule());
-        Injector injector = agentPolisInitializer.initialize();
-
         SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
         // prepare map, entity storages...

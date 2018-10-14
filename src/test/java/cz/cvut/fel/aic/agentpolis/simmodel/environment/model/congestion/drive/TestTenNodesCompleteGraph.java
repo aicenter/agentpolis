@@ -18,15 +18,16 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 
+import com.google.inject.Injector;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.Utils;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
+import cz.cvut.fel.aic.geographtools.util.Transformer;
 import org.junit.Test;
 
 /**
@@ -37,8 +38,13 @@ public class TestTenNodesCompleteGraph {
     
     @Test 
     public void run() throws Throwable{
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = Utils.getCompleteGraph(10);
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
+		
+		// bootstrap Guice
+		DriveTest scenario = new DriveTest();
+		Injector injector = scenario.getInjector();
+		
+		// set roadgraph
+        Graph<SimulationNode, SimulationEdge> graph = Utils.getCompleteGraph(10, injector.getInstance(Transformer.class));
         
         CongestionModelTest congestionModelTest = new CongestionModelTest();
         congestionModelTest.run(graph);
@@ -46,8 +52,7 @@ public class TestTenNodesCompleteGraph {
         Trip<SimulationNode> trip = new Trip<>(graph.getNode(0), graph.getNode(5), graph.getNode(9), graph.getNode(3),
         graph.getNode(1), graph.getNode(2), graph.getNode(4), graph.getNode(8), graph.getNode(7), graph.getNode(6));
         
-        DriveTest driveTest = new DriveTest();
-        driveTest.run(graph, trip);
+        scenario.run(graph, trip);
     }
     
     public static void main(String[] args) {

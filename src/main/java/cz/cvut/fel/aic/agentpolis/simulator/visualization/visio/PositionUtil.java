@@ -100,7 +100,7 @@ public class PositionUtil {
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {
-        GPSLocation WGS84position = getWGS84Position(position);
+        GPSLocation WGS84position = getWebMercatorPosition(position);
         return new Point2d(Vis.transX(WGS84position.getLongitudeProjected()), Vis.transY(WGS84position.getLatitudeProjected()));
     }
 
@@ -116,7 +116,7 @@ public class PositionUtil {
         return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
     }
 
-    public static GPSLocation getWGS84Position(GPSLocation position) {
+    public static GPSLocation getWebMercatorPosition(GPSLocation position) {
         return GPSLocationTools.createGPSLocation(position.getLatitude(), position.getLongitude() ,0, 3857); // 3857 - Web Mercator projection
     }
 
