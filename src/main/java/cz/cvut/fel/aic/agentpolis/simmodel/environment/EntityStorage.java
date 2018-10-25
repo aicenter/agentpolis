@@ -158,4 +158,7 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
         return entities.values();
     }
 
+	public int size(){
+		return entities.size();
+	}
 }
