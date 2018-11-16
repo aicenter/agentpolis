@@ -34,7 +34,7 @@ import java.util.Map;
  * @author fido
  */
 @Singleton
-public abstract class PeriodicTicker extends EventHandlerAdapter{
+public class PeriodicTicker extends EventHandlerAdapter{
     private final TypedSimulation simulation;
 	
 	private final Map<Integer, List<Routine>> routineMap;
