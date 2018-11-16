@@ -18,6 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -50,4 +52,11 @@ public class CollectionUtil {
         Object randomEntry = entries[randomGenerator.nextInt(entries.length)];
         return (Map.Entry<K,V>) randomEntry;
     }
+	
+	public static <K,V> void addToListInMap(Map<K,List<V>> map, K key, V value){
+		if(!map.containsKey(key)){
+			map.put(key, new LinkedList<>());
+		}
+		map.get(key).add(value);
+	}
 }
