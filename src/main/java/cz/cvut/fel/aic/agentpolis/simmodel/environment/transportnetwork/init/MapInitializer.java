@@ -1,7 +1,5 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;

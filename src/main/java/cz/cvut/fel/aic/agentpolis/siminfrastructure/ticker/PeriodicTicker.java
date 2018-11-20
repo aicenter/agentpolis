@@ -73,6 +73,7 @@ public class PeriodicTicker extends EventHandlerAdapter{
 			}
 		}
 		
+		nextTickTime += tickLength;
         createTick(tickLength);
     }
 
