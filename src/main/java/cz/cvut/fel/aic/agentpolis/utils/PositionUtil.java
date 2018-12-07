@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2017 Czech Technical University in Prague.
+/*
+ * Copyright (C) 2018 Czech Technical University in Prague.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,22 +16,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
-import com.google.inject.AbstractModule;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioPositionUtil;
+package cz.cvut.fel.aic.agentpolis.utils;
+
+import com.google.inject.Singleton;
+import cz.cvut.fel.aic.geographtools.GPSLocation;
+import javax.vecmath.Point2d;
 
 /**
  *
- * @author fido
+ * @author F.I.D.O.
  */
-public class TestModule extends AbstractModule{
-
-    @Override
-    protected void configure() {
-        bind(TimeProvider.class).to(TestTimeProvider.class);
-        bind(VisioPositionUtil.class).to(TestPositionUtil.class);
+@Singleton
+public class PositionUtil {
+	
+	/**
+	 * Returns the projected position as Point2D
+	 * @param position
+	 * @return projected position as @Point2d
+	 */
+	public Point2d getPosition(GPSLocation position) {
+        return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
     }
-    
 }

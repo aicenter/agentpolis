@@ -43,11 +43,11 @@ import java.awt.geom.Rectangle2D;
 public class CongestionModelQueuesLayer extends AbstractLayer {
     private static final float EDGE_WIDTH = 8;
     private final Graph<SimulationNode, SimulationEdge> graph;
-    private PositionUtil positionUtil;
+    private VisioPositionUtil positionUtil;
     private CongestionModel congestionModel;
 
     @Inject
-    public CongestionModelQueuesLayer(PositionUtil positionUtil, CongestionModel congestionModel, HighwayNetwork network) {
+    public CongestionModelQueuesLayer(VisioPositionUtil positionUtil, CongestionModel congestionModel, HighwayNetwork network) {
 
         this.positionUtil = positionUtil;
         this.congestionModel = congestionModel;

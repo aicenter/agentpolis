@@ -41,7 +41,7 @@ public class NodeIdLayer extends AbstractLayer{
     private static final int UI_WIDTH = 300;
     private static final int UI_HEIGHT = 120;
 
-    private final PositionUtil positionUtil;
+    private final VisioPositionUtil positionUtil;
     private final HighwayNetwork highwayNetwork;
     private final LinkedList<Integer> highLightedNodes;
 
@@ -61,7 +61,7 @@ public class NodeIdLayer extends AbstractLayer{
 
 
     @Inject
-    public NodeIdLayer(HighwayNetwork highwayNetwork, PositionUtil positionUtil) {
+    public NodeIdLayer(HighwayNetwork highwayNetwork, VisioPositionUtil positionUtil) {
         this.highwayNetwork = highwayNetwork;
         this.positionUtil = positionUtil;
 

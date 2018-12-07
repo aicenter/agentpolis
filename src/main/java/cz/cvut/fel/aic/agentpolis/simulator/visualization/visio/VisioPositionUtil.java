@@ -51,9 +51,9 @@ import org.slf4j.LoggerFactory;
 
 
 @Singleton
-public class PositionUtil {
+public class VisioPositionUtil {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PositionUtil.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(VisioPositionUtil.class);
     
     private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
@@ -68,7 +68,7 @@ public class PositionUtil {
     private HashMap<MovingAgent, Double> movingAgentAngle = new HashMap<>();
 
     @Inject
-    public PositionUtil(AllNetworkNodes allNetworkNodes,
+    public VisioPositionUtil(AllNetworkNodes allNetworkNodes,
                         HighwayNetwork highwayNetwork,
                         PedestrianNetwork pedestrianNetwork,
                         TimeProvider timeProvider, ShapeUtils shapeUtils) {
@@ -93,10 +93,6 @@ public class PositionUtil {
             default:
                 throw new IllegalArgumentException();
         }
-    }
-
-    public Point2d getPosition(GPSLocation position) {
-        return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
     }
 
     public Point2d getCanvasPosition(GPSLocation position) {

@@ -56,7 +56,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
     
-    protected PositionUtil positionUtil;
+    protected VisioPositionUtil positionUtil;
 
     protected TimeProvider timeProvider;
     
@@ -82,7 +82,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     }
     
     @Inject
-    public void init(PositionUtil positionUtil, TimeProvider timeProvider){
+    public void init(VisioPositionUtil positionUtil, TimeProvider timeProvider){
         this.positionUtil = positionUtil;
         this.timeProvider = timeProvider;
     }

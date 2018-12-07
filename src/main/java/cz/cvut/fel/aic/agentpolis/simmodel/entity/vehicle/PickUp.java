@@ -42,6 +42,14 @@ public final class PickUp<T extends TransportableEntity, E extends TransportEnti
                 Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+		if(entity.getTransportingEntity() != null){
+			try {
+                throw new Exception(
+                        String.format("Cannot pick up entity, it's already being transported! [%s]", entity));
+            } catch (Exception ex) {
+                Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		}
 		else{
 			transportedEntities.add(entity);
 			entity.setTransportingEntity(transportingEntity);
