@@ -92,7 +92,7 @@ public class SimulationCreator {
     }
 
     private void initSimulation() {
-        simulation = new TypedSimulation(config.simulationDurationInS * 1000);
+        simulation = new TypedSimulation(config.simulationDurationInHours * 60 * 24* 1000L);
         simulation.setPrintouts(10000000);
         simulationProvider.setSimulation(simulation);
     }

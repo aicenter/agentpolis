@@ -17,6 +17,8 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public String pathToSaveRecordings;
 
+  public Integer simulationDurationInHours;
+
   public String mapNodesFilepath;
 
   public String pathToSerializedGraph;
@@ -26,8 +28,6 @@ public class AgentpolisConfig implements GeneratedConfig {
   public String pathToMapTiles;
 
   public String osmTileServer;
-
-  public Integer simulationDurationInS;
 
   public String mapEdgesFilepath;
 
@@ -42,12 +42,12 @@ public class AgentpolisConfig implements GeneratedConfig {
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
     this.srid = (Integer) agentpolisConfig.get("srid");
     this.pathToSaveRecordings = (String) agentpolisConfig.get("path_to_save_recordings");
+    this.simulationDurationInHours = (Integer) agentpolisConfig.get("simulation_duration_in_hours");
     this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
     this.pathToSerializedGraph = (String) agentpolisConfig.get("path_to_serialized_graph");
     this.showVisio = (Boolean) agentpolisConfig.get("show_visio");
     this.pathToMapTiles = (String) agentpolisConfig.get("path_to_map_tiles");
     this.osmTileServer = (String) agentpolisConfig.get("osm_tile_server");
-    this.simulationDurationInS = (Integer) agentpolisConfig.get("simulation_duration_in_s");
     this.mapEdgesFilepath = (String) agentpolisConfig.get("map_edges_filepath");
     this.skipSimulation = (Boolean) agentpolisConfig.get("skip_simulation");
     return this;
