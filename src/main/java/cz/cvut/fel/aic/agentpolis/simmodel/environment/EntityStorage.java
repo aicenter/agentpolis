@@ -33,6 +33,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -122,7 +124,29 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
         return new EntityIterator();
     }
 
-    public class EntityIterator implements Iterator<TEntity> {
+	@Override
+	public Spliterator<TEntity> spliterator() {
+		return Spliterators.spliterator(iterator(), entities.size(), 0);
+	}
+
+    
+
+    public boolean isEmpty() {
+        return entities.isEmpty();
+    }
+
+    public Collection<TEntity> getEntities() {
+        return entities.values();
+    }
+
+	public int size(){
+		return entities.size();
+	}
+	
+	
+	
+	
+	public class EntityIterator implements Iterator<TEntity> {
 
         private final Iterator<TEntity> iterator;
 
@@ -149,16 +173,4 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
         }
 
     }
-
-    public boolean isEmpty() {
-        return entities.isEmpty();
-    }
-
-    public Collection<TEntity> getEntities() {
-        return entities.values();
-    }
-
-	public int size(){
-		return entities.size();
-	}
 }
