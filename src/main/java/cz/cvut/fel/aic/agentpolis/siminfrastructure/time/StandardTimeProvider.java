@@ -171,6 +171,7 @@ public class StandardTimeProvider implements TimeProvider{
 		return departureTimeInDayRange + shiftTime - simTimeInDayRange;
 	}
 
+	@Override
 	public long getCurrentSimTime() {
 		return eventProcessor.getCurrentTime();
 	}
