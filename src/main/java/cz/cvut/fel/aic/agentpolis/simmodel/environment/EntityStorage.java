@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * The general storage for entity in a simulation model (e.g. for vehicle,
@@ -143,7 +144,9 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
 		return entities.size();
 	}
 	
-	
+	public Stream<TEntity> stream(){
+		return entities.values().stream();
+	}
 	
 	
 	public class EntityIterator implements Iterator<TEntity> {
