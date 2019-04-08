@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,4 +60,6 @@ public class CollectionUtil {
 		}
 		map.get(key).add(value);
 	}
+	
+	
 }

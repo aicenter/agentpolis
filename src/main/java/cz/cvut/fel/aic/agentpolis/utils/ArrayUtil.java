@@ -32,7 +32,14 @@ public class ArrayUtil {
 	}
 	
 	public static int[] addArraysInPlace(int[] a, int[] b){
-		Arrays.setAll(a, i -> a[i] + b[i]);
+		if(a.length == b.length){
+			Arrays.setAll(a, i -> a[i] + b[i]);
+		}
+		else{
+			for (int i = 0; i < b.length; i++) {
+				a[i] += b[i];
+			}
+		}
 		return a;
 	}
 }
