@@ -52,7 +52,9 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
     protected final EntityStorage<E> entityStorage;
     
     private final boolean showStackedEntitiesCount;
-    ;
+	
+	protected final AgentpolisConfig agentpolisConfig;
+    
     
     private HashMap<Point2d,ArrayList<E>> entityPositionMap;
     
@@ -68,17 +70,20 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	
 	@Inject
     public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
-        this(entityStorage, agentpolisConfig.showStackedEntities, true);
+        this(entityStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
     }
     
-    public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
-        this(entityStorage, showStackedEntitiesCount, true);
+    public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount) {
+        this(entityStorage, agentpolisConfig, showStackedEntitiesCount, true);
     }
 	
-	public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
+	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount, boolean transformSize) {
 		this.entityStorage = entityStorage;
         this.showStackedEntitiesCount = showStackedEntitiesCount;
 		this.transformSize = transformSize;
+		this.agentpolisConfig = agentpolisConfig;
     }
     
     @Inject
@@ -135,7 +140,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		
         double radius = getRadius(entity);
 		
-        int width = Math.max(2, (int) Math.round(radius * 2));
+        int width = (int) Math.round(radius * 2);
 
         int x1 = (int) (entityPosition.getX() - radius);
         int y1 = (int) (entityPosition.getY() - radius);
@@ -197,7 +202,9 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	protected double getRadius(E entity) {
 		if(transformSize){
-			return Vis.transW(getEntityTransformableRadius(entity));
+			double radius = Vis.transW(getEntityTransformableRadius(entity), 
+					Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom));
+			return radius;
 		}
 		else{
 			return getEntityStaticRadius(entity);

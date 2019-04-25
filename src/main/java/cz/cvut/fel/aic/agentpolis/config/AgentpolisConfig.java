@@ -1,6 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.config;
 
 import java.lang.Boolean;
+import java.lang.Double;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.Map;
@@ -8,6 +9,8 @@ import ninja.fido.config.GeneratedConfig;
 
 public class AgentpolisConfig implements GeneratedConfig {
   public Boolean showStackedEntities;
+
+  public Double minEntityZoom;
 
   public CongestionModel congestionModel;
 
@@ -38,6 +41,7 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
     this.showStackedEntities = (Boolean) agentpolisConfig.get("show_stacked_entities");
+    this.minEntityZoom = (Double) agentpolisConfig.get("min_entity_zoom");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
     this.srid = (Integer) agentpolisConfig.get("srid");

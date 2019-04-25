@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Collections;
@@ -43,12 +42,14 @@ public abstract class ClickableEntityLayer<E extends AgentPolisEntity> extends E
 		super(entityStorage, agentpolisConfig);
 	}
 	
-	public ClickableEntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
-        super(entityStorage, showStackedEntitiesCount);
+	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig,
+			boolean showStackedEntitiesCount) {
+        super(entityStorage, agentpolisConfig, showStackedEntitiesCount);
     }
 	
-	public ClickableEntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
-		super(entityStorage, showStackedEntitiesCount, transformSize);
+	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount, boolean transformSize) {
+		super(entityStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
     }
 	
 	@Override

@@ -39,6 +39,7 @@ import javax.vecmath.Point2d;
 /**
  *
  * @author F-I-D-O
+ * @param <V> Vehicle type
  */
 public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     
@@ -46,11 +47,12 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
     
    
     public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig) {
-        this(driverStorage, agentpolisConfig.showStackedEntities, true);
+        this(driverStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
     }
 	
-    public VehicleLayer(EntityStorage<V> driverStorage, boolean showStackedEntitiesCount, boolean transformSize) {
-        super(driverStorage, showStackedEntitiesCount, transformSize);
+    public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig,
+			boolean showStackedEntitiesCount, boolean transformSize) {
+        super(driverStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
     }
 
     @Override
@@ -212,9 +214,10 @@ public abstract class VehicleLayer<V extends Vehicle>  extends EntityLayer<V>{
 
             /* transformations are applied in inverse order */
             if(transformSize){
+				double zoomFactor = Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom);
 
                 /* scale according to zoom factor */
-                AffineTransform scale = AffineTransform.getScaleInstance(Math.max(1,Vis.getZoomFactor()),Math.max(1,Vis.getZoomFactor()));
+                AffineTransform scale = AffineTransform.getScaleInstance(zoomFactor, zoomFactor);
 
                 scale.concatenate(rotate);
                 translate.concatenate(scale);
