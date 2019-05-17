@@ -27,14 +27,14 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.PedestrianNetwork;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioPositionUtil;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 
 /**
  * @author fido
  */
 @Singleton
-public class TestPositionUtil extends PositionUtil {
+public class TestPositionUtil extends VisioPositionUtil {
 
     @Inject
     public TestPositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,

@@ -22,7 +22,8 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
@@ -47,10 +48,13 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	protected final EntityStorage<E> entityStorage;
 
 	private final boolean showStackedEntitiesCount;
+	
+	protected final AgentpolisConfig agentpolisConfig;
+    
 
 	private final Map<Point2d, List<E>> entityPositionMap;
 
-	protected PositionUtil positionUtil;
+    protected VisioPositionUtil positionUtil;
 
 	protected TimeProvider timeProvider;
 
@@ -58,17 +62,20 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	@Inject
 	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
-		this(entityStorage, agentpolisConfig.showStackedEntities, true);
+        this(entityStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
 	}
 
-	public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
-		this(entityStorage, showStackedEntitiesCount, true);
+    public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount) {
+        this(entityStorage, agentpolisConfig, showStackedEntitiesCount, true);
 	}
 
-	public EntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
+	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount, boolean transformSize) {
 		this.entityStorage = entityStorage;
 		this.showStackedEntitiesCount = showStackedEntitiesCount;
 		this.transformSize = transformSize;
+		this.agentpolisConfig = agentpolisConfig;
 		if (showStackedEntitiesCount) {
 			entityPositionMap = new HashMap<>();
 		} else {
@@ -77,7 +84,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	}
 
 	@Inject
-	public void init(PositionUtil positionUtil, TimeProvider timeProvider) {
+    public void init(VisioPositionUtil positionUtil, TimeProvider timeProvider){
 		this.positionUtil = positionUtil;
 		this.timeProvider = timeProvider;
 	}
@@ -96,7 +103,8 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 			}
 			Point2d entityPosition = getEntityPositionInTime(entity, time);
 
-			if (showStackedEntitiesCount && !(entity instanceof Vehicle) && Vis.getZoomFactor() > 1) {
+			if (showStackedEntitiesCount && !(entity instanceof MovingEntity || entity instanceof TransportableEntity) 
+					&& Vis.getZoomFactor() > 1) {
 				entityPositionMap.computeIfAbsent(entityPosition, k -> new ArrayList<>()).add(entity);
 			} else {
 				drawEntity(entity, entityPosition, canvas, dim);
@@ -169,8 +177,11 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	protected double getRadius(E entity) {
 		if (transformSize) {
-			return Vis.transW(getEntityTransformableRadius(entity));
-		} else {
+			double radius = Vis.transW(getEntityTransformableRadius(entity), 
+					Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom));
+			return radius;
+		}
+		else{
 			return getEntityStaticRadius(entity);
 		}
 	}

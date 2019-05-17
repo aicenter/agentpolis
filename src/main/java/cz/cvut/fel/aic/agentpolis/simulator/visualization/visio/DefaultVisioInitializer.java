@@ -112,7 +112,7 @@ public class DefaultVisioInitializer implements VisioInitializer{
             public Point2d getDefaultLookAt() {
                 GPSLocation centroid = Utils2D.getGraphCentroid(highwayNetwork.getNetwork());
                 int centroidProjectionSRID = config.srid;
-                GPSLocation centroidWGS84 = PositionUtil.getWGS84PositionFromCustomProjection(centroid.getLatitudeProjected1E2(), centroid.getLongitudeProjected1E2(), centroidProjectionSRID);
+                GPSLocation centroidWGS84 = VisioPositionUtil.getWGS84PositionFromCustomProjection(centroid.getLatitudeProjected1E2(), centroid.getLongitudeProjected1E2(), centroidProjectionSRID);
                 Point2d centerPoint = new Point2d(centroidWGS84.getLongitudeProjected(),
                         centroidWGS84.getLatitudeProjected());
                 return centerPoint;

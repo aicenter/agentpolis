@@ -42,12 +42,14 @@ public abstract class ClickableEntityLayer<E extends AgentPolisEntity> extends E
 		super(entityStorage, agentpolisConfig);
 	}
 	
-	public ClickableEntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount) {
-        super(entityStorage, showStackedEntitiesCount);
+	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig,
+			boolean showStackedEntitiesCount) {
+        super(entityStorage, agentpolisConfig, showStackedEntitiesCount);
     }
 	
-	public ClickableEntityLayer(EntityStorage<E> entityStorage, boolean showStackedEntitiesCount, boolean transformSize) {
-		super(entityStorage, showStackedEntitiesCount, transformSize);
+	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+			boolean showStackedEntitiesCount, boolean transformSize) {
+		super(entityStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
     }
 	
 	@Override

@@ -38,17 +38,19 @@ import cz.cvut.fel.aic.alite.vis.Vis;
  * //TODO: maybe rename to MovingEntityLayer + rename *vehicle* methods
  *
  * @author F-I-D-O
+ * @param <V> Vehicle type
  */
 public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> extends EntityLayer<V> {
 
 	private Path2D representativeShape;
 
 	public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig) {
-		this(driverStorage, agentpolisConfig.showStackedEntities, true);
+        this(driverStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
 	}
 
-	public VehicleLayer(EntityStorage<V> driverStorage, boolean showStackedEntitiesCount, boolean transformSize) {
-		super(driverStorage, showStackedEntitiesCount, transformSize);
+    public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig,
+			boolean showStackedEntitiesCount, boolean transformSize) {
+        super(driverStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
 	}
 
 	@Override
@@ -115,10 +117,9 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 
 		/* transformations are applied in inverse order */
 		if (transformSize) {
-
+			double zoomFactor = Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom);
 			/* scale according to zoom factor */
-			AffineTransform scale = AffineTransform.getScaleInstance(Math.max(1, Vis.getZoomFactor()),
-					Math.max(1, Vis.getZoomFactor()));
+			AffineTransform scale = AffineTransform.getScaleInstance(zoomFactor, zoomFactor);
 
 			scale.concatenate(rotate);
 			translate.concatenate(scale);

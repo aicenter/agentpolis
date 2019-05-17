@@ -52,9 +52,9 @@ import cz.cvut.fel.aic.geographtools.Node;
 import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
 
 @Singleton
-public class PositionUtil {
+public class VisioPositionUtil {
 
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PositionUtil.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(VisioPositionUtil.class);
 
 	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
@@ -69,7 +69,7 @@ public class PositionUtil {
 	private Map<MovingEntity, Double> movingAgentAngle = new HashMap<>();
 
 	@Inject
-	public PositionUtil(AllNetworkNodes allNetworkNodes, HighwayNetwork highwayNetwork,
+	public VisioPositionUtil(AllNetworkNodes allNetworkNodes, HighwayNetwork highwayNetwork,
 			PedestrianNetwork pedestrianNetwork, TimeProvider timeProvider, ShapeUtils shapeUtils) {
 		this.nodesFromAllGraphs = allNetworkNodes.getAllNetworkNodes();
 		this.highwayNetwork = highwayNetwork.getNetwork();

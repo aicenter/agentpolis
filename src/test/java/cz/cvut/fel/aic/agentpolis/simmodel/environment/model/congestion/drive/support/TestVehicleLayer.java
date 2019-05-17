@@ -23,7 +23,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioPositionUtil;
 
 import java.awt.Color;
 import javax.vecmath.Point2d;

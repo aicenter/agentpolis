@@ -42,7 +42,7 @@ public class HighwayLayer extends AbstractLayer {
     private static final int DEFAULT_EDGE_WIDTH = 8;
 
 
-    protected final PositionUtil positionUtil;
+    protected final VisioPositionUtil positionUtil;
 
     protected final Graph<SimulationNode, SimulationEdge> graph;
 
@@ -57,7 +57,7 @@ public class HighwayLayer extends AbstractLayer {
 
 
     @Inject
-    public HighwayLayer(HighwayNetwork highwayNetwork, PositionUtil positionUtil) {
+    public HighwayLayer(HighwayNetwork highwayNetwork, VisioPositionUtil positionUtil) {
         this.positionUtil = positionUtil;
         graph = highwayNetwork.getNetwork();
     }

@@ -28,6 +28,7 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -35,6 +36,9 @@ import java.util.Map;
  */
 @Singleton
 public class PeriodicTicker extends EventHandlerAdapter{
+	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PeriodicTicker.class);
+	
     private final TypedSimulation simulation;
 	
 	private final Map<Integer, List<Routine>> routineMap;
@@ -56,6 +60,7 @@ public class PeriodicTicker extends EventHandlerAdapter{
 	public void registerRoutine(Routine routine, int period){
 		CollectionUtil.addToListInMap(routineMap, period, routine);
 		updateTick();
+		LOGGER.info("{} registered to run with period of {} ms", routine.getClass(), period);
 	}
 
     @Override
