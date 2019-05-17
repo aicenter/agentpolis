@@ -94,10 +94,6 @@ public class VisioPositionUtil {
 		}
 	}
 
-	public Point2d getPosition(GPSLocation position) {
-		return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
-	}
-
 	public Point2d getCanvasPosition(GPSLocation position) {
 		GPSLocation WGS84position = getWebMercatorPosition(position);
 		return new Point2d(Vis.transX(WGS84position.getLongitudeProjected()),
