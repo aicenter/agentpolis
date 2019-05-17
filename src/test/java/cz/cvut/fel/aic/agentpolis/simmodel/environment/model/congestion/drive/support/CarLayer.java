@@ -18,26 +18,22 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
-import com.google.inject.Inject;
-
-import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.alite.vis.Vis;
-import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.PositionUtil;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioUtils;
-
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 import javax.vecmath.Point2d;
+
+import com.google.inject.Inject;
+
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.EntityLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioUtils;
+import cz.cvut.fel.aic.alite.vis.Vis;
 
 /**
  *
@@ -48,8 +44,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
     private Path2D CAR_REPRESENTATION_SHAPE;
     
     
-    
-	
+
 	@Inject
     public CarLayer(DriveAgentStorage driveAgentStorage, AgentpolisConfig agentpolisConfig) {
         super(driveAgentStorage, agentpolisConfig);
@@ -85,7 +80,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
     }
 
     @Override
-    protected void drawEntities(ArrayList<DriveAgent> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
+    protected void drawEntities(List<DriveAgent> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
         DriveAgent representative = entities.get(0);
         
         if(CAR_REPRESENTATION_SHAPE == null){
