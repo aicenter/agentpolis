@@ -2,6 +2,7 @@ package cz.cvut.fel.aic.agentpolis.simpresentationlayer;
 
 import com.google.inject.Injector;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
@@ -26,6 +27,8 @@ public class TestPresentation {
         AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
         Injector injector = agentPolisInitializer.initialize();
 
+		injector.getInstance(AgentpolisConfig.class).showVisio = VisualTests.SHOW_VISIO;
+		
         SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
         creator.prepareSimulation(getMapData(graph));
