@@ -30,15 +30,15 @@ import java.net.URL;
  */
 public final class ResourceReader {
 
-    private ResourceReader() {
-    }
+	private ResourceReader() {
+	}
 
-    public static final InputStream getResourceAsStream(String relativePath) {
+	public static final InputStream getResourceAsStream(String relativePath) {
 	return ResourceReader.class.getResourceAsStream(relativePath);
-    }
+	}
 
-    public static final URL getPathToResource(String relativePath) {
+	public static final URL getPathToResource(String relativePath) {
 	return ResourceReader.class.getResource(relativePath);
-    }
+	}
 
 }

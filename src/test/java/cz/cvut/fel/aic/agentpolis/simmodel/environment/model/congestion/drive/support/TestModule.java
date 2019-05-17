@@ -29,25 +29,25 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer
  */
 public class TestModule extends StandardAgentPolisModule{
 
-    public TestModule() {
-        super();      
-        
-//        if(System.getProperty("test") == null){
-//            agentpolisConfig.showVisio = false;
-//        }
+	public TestModule() {
+		super();	  
+		
+//		if(System.getProperty("test") == null){
+//			agentpolisConfig.showVisio = false;
+//		}
 
-        agentpolisConfig.visio.showVisio = VisualTests.SHOW_VISIO;
-        
-        agentpolisConfig.congestionModel.batchSize = 1;
-        agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
-        agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
-    }
-    
-    
+		agentpolisConfig.visio.showVisio = VisualTests.SHOW_VISIO;
+		
+		agentpolisConfig.congestionModel.batchSize = 1;
+		agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
+		agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
+	}
+	
+	
 
-    @Override
-    protected void bindVisioInitializer() {
-        bind(VisioInitializer.class).to(TestVisioInitializer.class);
-    }
-    
+	@Override
+	protected void bindVisioInitializer() {
+		bind(VisioInitializer.class).to(TestVisioInitializer.class);
+	}
+	
 }

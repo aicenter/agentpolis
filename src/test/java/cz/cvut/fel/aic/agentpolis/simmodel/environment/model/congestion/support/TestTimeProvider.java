@@ -26,9 +26,9 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
  */
 public class TestTimeProvider implements TimeProvider{
 
-    @Override
-    public long getCurrentSimTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+	@Override
+	public long getCurrentSimTime() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
 }

@@ -26,13 +26,13 @@ import com.google.inject.Inject;
  */
 
 public abstract class ActivityFactory {
-    
-    protected ActivityInitializer activityInitializer;
-    
-    @Inject
-    public void init(ActivityInitializer activityInitializer){
-        this.activityInitializer = activityInitializer;
-    }
-    
-    
+	
+	protected ActivityInitializer activityInitializer;
+	
+	@Inject
+	public void init(ActivityInitializer activityInitializer){
+		this.activityInitializer = activityInitializer;
+	}
+	
+	
 }

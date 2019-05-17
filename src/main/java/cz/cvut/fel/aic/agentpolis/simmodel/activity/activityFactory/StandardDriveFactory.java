@@ -39,54 +39,54 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 @Singleton
 public class StandardDriveFactory extends ActivityFactory implements PhysicalVehicleDriveFactory {
 
-    private final TransportNetworks transportNetworks;
+	private final TransportNetworks transportNetworks;
 
-    private final VehicleMoveActivityFactory moveActivityFactory;
+	private final VehicleMoveActivityFactory moveActivityFactory;
 
-    private final TypedSimulation eventProcessor;
+	private final TypedSimulation eventProcessor;
 
-    private final StandardTimeProvider timeProvider;
+	private final StandardTimeProvider timeProvider;
 
-    private final IdGenerator tripIdGenerator;
+	private final IdGenerator tripIdGenerator;
 
-    private final TripsUtil tripsUtil;
-
-
-    @Inject
-    public StandardDriveFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
-                                TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
-                                TripsUtil tripsUtil) {
-        this.transportNetworks = transportNetworks;
-        this.moveActivityFactory = moveActivityFactory;
-        this.eventProcessor = eventProcessor;
-        this.timeProvider = timeProvider;
-        this.tripIdGenerator = tripIdGenerator;
-        this.tripsUtil = tripsUtil;
-    }
+	private final TripsUtil tripsUtil;
 
 
-    @Override
-    public <A extends Agent & Driver> void runActivity(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
-        create(agent, vehicle, trip).run();
-    }
+	@Inject
+	public StandardDriveFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
+								TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
+								TripsUtil tripsUtil) {
+		this.transportNetworks = transportNetworks;
+		this.moveActivityFactory = moveActivityFactory;
+		this.eventProcessor = eventProcessor;
+		this.timeProvider = timeProvider;
+		this.tripIdGenerator = tripIdGenerator;
+		this.tripsUtil = tripsUtil;
+	}
 
 
-    public <A extends Agent & Driver> Drive<A> create(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
-        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor,
-                timeProvider, agent, vehicle, trip, tripIdGenerator.getId());
-    }
+	@Override
+	public <A extends Agent & Driver> void runActivity(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
+		create(agent, vehicle, trip).run();
+	}
 
-    @Override
-    public <A extends Agent & Driver> Drive<A> create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
-        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
 
-        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
-                agent, vehicle, trip, tripIdGenerator.getId());
-    }
+	public <A extends Agent & Driver> Drive<A> create(A agent, PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
+		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor,
+				timeProvider, agent, vehicle, trip, tripIdGenerator.getId());
+	}
 
-//    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
-//        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
-//        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
-//                agent, vehicle, trip, tripIdGenerator.getId());
-//    }
+	@Override
+	public <A extends Agent & Driver> Drive<A> create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
+		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
+
+		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
+				agent, vehicle, trip, tripIdGenerator.getId());
+	}
+
+//	public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Node targetPosition) {
+//		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), targetPosition.getId());
+//		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
+//				agent, vehicle, trip, tripIdGenerator.getId());
+//	}
 }

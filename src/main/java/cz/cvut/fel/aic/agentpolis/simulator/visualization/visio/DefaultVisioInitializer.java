@@ -38,89 +38,89 @@ import javax.vecmath.Point2d;
 
 public class DefaultVisioInitializer implements VisioInitializer{
 
-    private final Simulation simulation;
+	private final Simulation simulation;
 	private final PedestrianNetwork pedestrianNetwork;
 	private final BikewayNetwork bikewayNetwork;
 	private final HighwayNetwork highwayNetwork;
 	private final TramwayNetwork tramwayNetwork;
 	private final MetrowayNetwork metrowayNetwork;
 	private final RailwayNetwork railwayNetwork;
-    private final SimulationControlLayer simulationControlLayer;
-    private final AgentpolisConfig config;
-    protected final GridLayer gridLayer;
+	private final SimulationControlLayer simulationControlLayer;
+	private final AgentpolisConfig config;
+	protected final GridLayer gridLayer;
 
 	@Inject
 	public DefaultVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
-                                   HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-                                   RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, 
+								   HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
+								   RailwayNetwork railwayNetwork, SimulationControlLayer simulationControlLayer, GridLayer gridLayer, 
 								   AgentpolisConfig config) {
 		this.simulation = simulation;
-	    this.pedestrianNetwork = pedestrianNetwork;
+		this.pedestrianNetwork = pedestrianNetwork;
 		this.bikewayNetwork = bikewayNetwork;
 		this.highwayNetwork = highwayNetwork;
 		this.tramwayNetwork = tramwayNetwork;
 		this.metrowayNetwork = metrowayNetwork;
 		this.railwayNetwork = railwayNetwork;
-        this.simulationControlLayer = simulationControlLayer;
-        this.config = config;
-        this.gridLayer = gridLayer;
+		this.simulationControlLayer = simulationControlLayer;
+		this.config = config;
+		this.gridLayer = gridLayer;
 
 	}
 
 	@Override
 	public void initialize(Simulation simulation) {
-        initWindow();
-        initGraphLayers();
-        initLayersBeforeEntityLayers();
-        initEntityLayers(simulation);
+		initWindow();
+		initGraphLayers();
+		initLayersBeforeEntityLayers();
+		initEntityLayers(simulation);
 		initLayersAfterEntityLayers();
-        initInfoLayers();
+		initInfoLayers();
 	}
 
-    protected void initGraphLayers() {
-        VisManager.registerLayer(gridLayer);
-    }
+	protected void initGraphLayers() {
+		VisManager.registerLayer(gridLayer);
+	}
 
-    protected void initEntityLayers(Simulation simulation) { }
+	protected void initEntityLayers(Simulation simulation) { }
 
-    protected void initLayersAfterEntityLayers() {}
+	protected void initLayersAfterEntityLayers() {}
 
-    protected void initLayersBeforeEntityLayers() {}
+	protected void initLayersBeforeEntityLayers() {}
 
-    protected void initInfoLayers() {
-        VisManager.registerLayer(HelpLayer.create());
-        VisManager.registerLayer(FpsLayer.create());
-        VisManager.registerLayer(VisInfoLayer.create());
-        VisManager.registerLayer(simulationControlLayer);
-    }
+	protected void initInfoLayers() {
+		VisManager.registerLayer(HelpLayer.create());
+		VisManager.registerLayer(FpsLayer.create());
+		VisManager.registerLayer(VisInfoLayer.create());
+		VisManager.registerLayer(simulationControlLayer);
+	}
 
-    private void initWindow() {
-        final int windowHight = 1000;
-        final int windowWidth = 1900;
-        
-        VisManager.setInvertYAxis(true);
-        VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
+	private void initWindow() {
+		final int windowHight = 1000;
+		final int windowWidth = 1900;
+		
+		VisManager.setInvertYAxis(true);
+		VisManager.setInitParam("Agentpolis operator", windowWidth, windowHight);
 
-        VisManager.setSceneParam(new VisManager.SceneParams() {
+		VisManager.setSceneParam(new VisManager.SceneParams() {
 
-            @Override
-            public double getDefaultZoomFactor() {
-                return (double) 1900 / Utils2D.getGraphWidth(highwayNetwork.getNetwork());
-            }
+			@Override
+			public double getDefaultZoomFactor() {
+				return (double) 1900 / Utils2D.getGraphWidth(highwayNetwork.getNetwork());
+			}
 
-            @Override
-            public Point2d getDefaultLookAt() {
-                GPSLocation centroid = Utils2D.getGraphCentroid(highwayNetwork.getNetwork());
-                int centroidProjectionSRID = config.srid;
-                GPSLocation centroidWGS84 = VisioPositionUtil.getWGS84PositionFromCustomProjection(centroid.getLatitudeProjected1E2(), centroid.getLongitudeProjected1E2(), centroidProjectionSRID);
-                Point2d centerPoint = new Point2d(centroidWGS84.getLongitudeProjected(),
-                        centroidWGS84.getLatitudeProjected());
-                return centerPoint;
-            }
+			@Override
+			public Point2d getDefaultLookAt() {
+				GPSLocation centroid = Utils2D.getGraphCentroid(highwayNetwork.getNetwork());
+				int centroidProjectionSRID = config.srid;
+				GPSLocation centroidWGS84 = VisioPositionUtil.getWGS84PositionFromCustomProjection(centroid.getLatitudeProjected1E2(), centroid.getLongitudeProjected1E2(), centroidProjectionSRID);
+				Point2d centerPoint = new Point2d(centroidWGS84.getLongitudeProjected(),
+						centroidWGS84.getLatitudeProjected());
+				return centerPoint;
+			}
 
-        });
+		});
 
-        VisManager.init(simulation);
-    }
+		VisManager.init(simulation);
+	}
 	
 }

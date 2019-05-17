@@ -24,7 +24,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
 
 public class HighwayNetwork extends Network<SimulationNode, SimulationEdge> {
 
-    public HighwayNetwork(Graph<SimulationNode, SimulationEdge> network) {
-        super(network);
-    }
+	public HighwayNetwork(Graph<SimulationNode, SimulationEdge> network) {
+		super(network);
+	}
 }

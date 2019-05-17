@@ -33,22 +33,22 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class NodeCoordinateInformation implements Serializable {
 
-    private static final long serialVersionUID = -8889069232786102814L;
-    
-    // long = node id, coordinate = in cartesian
-    private final ImmutableMap<Long, Coordinate> nodesInCartesian;
+	private static final long serialVersionUID = -8889069232786102814L;
+	
+	// long = node id, coordinate = in cartesian
+	private final ImmutableMap<Long, Coordinate> nodesInCartesian;
 
-    public NodeCoordinateInformation(ImmutableMap<Long, Coordinate> nodesInCartesian) {
-        super();
-        this.nodesInCartesian = nodesInCartesian;
-    }
+	public NodeCoordinateInformation(ImmutableMap<Long, Coordinate> nodesInCartesian) {
+		super();
+		this.nodesInCartesian = nodesInCartesian;
+	}
 
-    public Coordinate getNodeInCartesian(long nodeId) {
-        return nodesInCartesian.get(nodeId);
-    }
+	public Coordinate getNodeInCartesian(long nodeId) {
+		return nodesInCartesian.get(nodeId);
+	}
 
-    public double getDistanceInMeters(long currentNodeId, long goalNodeId) {
-        return nodesInCartesian.get(currentNodeId).distance(nodesInCartesian.get(goalNodeId));
-    }
+	public double getDistanceInMeters(long currentNodeId, long goalNodeId) {
+		return nodesInCartesian.get(currentNodeId).distance(nodesInCartesian.get(goalNodeId));
+	}
 
 }

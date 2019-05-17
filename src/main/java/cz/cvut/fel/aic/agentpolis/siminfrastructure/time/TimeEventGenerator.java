@@ -30,23 +30,23 @@ import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
  */
 @Singleton
 public class TimeEventGenerator extends EventHandlerAdapter{
-    private final SimulationProvider simulationProvider;
-    
-    private static final int DEFAULT_TICK_LENTH = 40;
+	private final SimulationProvider simulationProvider;
+	
+	private static final int DEFAULT_TICK_LENTH = 40;
 
-    @Inject
-    public TimeEventGenerator(SimulationProvider simulationProvider) {
-        this.simulationProvider = simulationProvider;
-    }
-    
-    public void start(){
-        simulationProvider.getSimulation().addEvent(TimeGeneratorEvent.TICK, this, null, null, DEFAULT_TICK_LENTH);
-    }
+	@Inject
+	public TimeEventGenerator(SimulationProvider simulationProvider) {
+		this.simulationProvider = simulationProvider;
+	}
+	
+	public void start(){
+		simulationProvider.getSimulation().addEvent(TimeGeneratorEvent.TICK, this, null, null, DEFAULT_TICK_LENTH);
+	}
 
-    @Override
-    public void handleEvent(Event event) {
-        simulationProvider.getSimulation().addEvent(TimeGeneratorEvent.TICK, this, null, null, DEFAULT_TICK_LENTH);
-    }
-    
-    
+	@Override
+	public void handleEvent(Event event) {
+		simulationProvider.getSimulation().addEvent(TimeGeneratorEvent.TICK, this, null, null, DEFAULT_TICK_LENTH);
+	}
+	
+	
 }

@@ -39,45 +39,45 @@ import java.util.List;
  */
 @Singleton
 public class NearestElementUtils {
-    private final HashMap<GraphType, NearestElementUtil<SimulationNode>> nearestElementUtilsMappedByGraphType;
-    
-    private final TransportNetworks transportNetworks;
-    
-    private final Transformer transformer;
-    
-//    private final Map<GraphType,Network> networksMappedByGraphType;
+	private final HashMap<GraphType, NearestElementUtil<SimulationNode>> nearestElementUtilsMappedByGraphType;
+	
+	private final TransportNetworks transportNetworks;
+	
+	private final Transformer transformer;
+	
+//	private final Map<GraphType,Network> networksMappedByGraphType;
 
-     //TODO clear constructor usage Tranformer injection or not?
-    @Inject
-    public NearestElementUtils(TransportNetworks transportNetworks, @Named("mapSrid") int srid, Transformer transformer) {
-        this.transportNetworks = transportNetworks;
-        this.transformer = transformer;
-//        this.networksMappedByGraphType = new HashMap<>();
-        this.nearestElementUtilsMappedByGraphType = new HashMap<>();
-    }
-    
-    public SimulationNode getNearestElement(GPSLocation location, GraphType graphType){
-        if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
-            createNearestElementUtil(graphType);
-        }
-        
-        NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
-        
-        return nearestElementUtil.getNearestElement(location);
-    }
-    
-    public SimulationNode[] getNearestElements(GPSLocation location, GraphType graphType, int numberOfNearestElements){
-        if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
-            createNearestElementUtil(graphType);
-        }
-        
-        NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
-        
-        return nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
-    }
+	 //TODO clear constructor usage Tranformer injection or not?
+	@Inject
+	public NearestElementUtils(TransportNetworks transportNetworks, @Named("mapSrid") int srid, Transformer transformer) {
+		this.transportNetworks = transportNetworks;
+		this.transformer = transformer;
+//		this.networksMappedByGraphType = new HashMap<>();
+		this.nearestElementUtilsMappedByGraphType = new HashMap<>();
+	}
+	
+	public SimulationNode getNearestElement(GPSLocation location, GraphType graphType){
+		if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
+			createNearestElementUtil(graphType);
+		}
+		
+		NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
+		
+		return nearestElementUtil.getNearestElement(location);
+	}
+	
+	public SimulationNode[] getNearestElements(GPSLocation location, GraphType graphType, int numberOfNearestElements){
+		if(!nearestElementUtilsMappedByGraphType.containsKey(graphType)){
+			createNearestElementUtil(graphType);
+		}
+		
+		NearestElementUtil<SimulationNode> nearestElementUtil = nearestElementUtilsMappedByGraphType.get(graphType);
+		
+		return nearestElementUtil.getKNearestElements(location, numberOfNearestElements);
+	}
 
-    private void createNearestElementUtil(GraphType graphType) {
-        List<NearestElementUtilPair<Coordinate,SimulationNode>> pairs = new ArrayList<>();
+	private void createNearestElementUtil(GraphType graphType) {
+		List<NearestElementUtilPair<Coordinate,SimulationNode>> pairs = new ArrayList<>();
 		
 		for (SimulationNode node : transportNetworks.getGraph(graphType).getAllNodes()) {
 			pairs.add(new NearestElementUtilPair<>(new Coordinate(node.getLongitude(), node.getLatitude()), node));
@@ -85,19 +85,19 @@ public class NearestElementUtils {
 		
 		NearestElementUtil<SimulationNode> nearestElementUtil = new NearestElementUtil<>(pairs, transformer, 
 				new NodeArrayConstructor());
-        
-        nearestElementUtilsMappedByGraphType.put(graphType, nearestElementUtil);
-    }
-    
-    private static class NodeArrayConstructor implements NearestElementUtil.SerializableIntFunction<SimulationNode[]>{
+		
+		nearestElementUtilsMappedByGraphType.put(graphType, nearestElementUtil);
+	}
+	
+	private static class NodeArrayConstructor implements NearestElementUtil.SerializableIntFunction<SimulationNode[]>{
 
-        @Override
-        public SimulationNode[] apply(int value) {
-            return new SimulationNode[value];
-        }
+		@Override
+		public SimulationNode[] apply(int value) {
+			return new SimulationNode[value];
+		}
 
-    }
-    
-    
-    
+	}
+	
+	
+	
 }

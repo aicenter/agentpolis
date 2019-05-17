@@ -35,32 +35,32 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMode
  * @param <A>
  */
 public class CongestedDrive<A extends Agent & Driver<PhysicalVehicle>> extends PhysicalVehicleDrive<A> {
-    
-    private final CongestionModel congestionModel;
-    
-    private final Trip<SimulationNode> trip;
-    
-    private final PhysicalVehicle vehicle;
+	
+	private final CongestionModel congestionModel;
+	
+	private final Trip<SimulationNode> trip;
+	
+	private final PhysicalVehicle vehicle;
 
-    public CongestedDrive(ActivityInitializer activityInitializer, A agent, CongestionModel congestionModel, 
-            Trip<SimulationNode> trip, PhysicalVehicle vehicle) {
-        super(activityInitializer, agent);
-        this.congestionModel = congestionModel;
-        this.trip = trip;
-        this.vehicle = vehicle;
-    }
+	public CongestedDrive(ActivityInitializer activityInitializer, A agent, CongestionModel congestionModel, 
+			Trip<SimulationNode> trip, PhysicalVehicle vehicle) {
+		super(activityInitializer, agent);
+		this.congestionModel = congestionModel;
+		this.trip = trip;
+		this.vehicle = vehicle;
+	}
 
-    @Override
-    protected void performAction() {
-        agent.startDriving(vehicle);
-        congestionModel.drive(vehicle, trip);
-    }
+	@Override
+	protected void performAction() {
+		agent.startDriving(vehicle);
+		congestionModel.drive(vehicle, trip);
+	}
 
-    @Override
-    public void processMessage(Message message) {
-        if(message.getType() == CongestionMessage.DRIVING_FINISHED){
-            agent.endDriving();
-            finish();
-        }
-    }
+	@Override
+	public void processMessage(Message message) {
+		if(message.getType() == CongestionMessage.DRIVING_FINISHED){
+			agent.endDriving();
+			finish();
+		}
+	}
 }

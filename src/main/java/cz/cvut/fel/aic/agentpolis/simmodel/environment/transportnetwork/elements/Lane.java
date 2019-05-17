@@ -29,44 +29,44 @@ import org.slf4j.LoggerFactory;
  * @author Zdenek Bousa
  */
 public class Lane {
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Lane.class);
-    private final long laneUniqueId;
-    private final String parentEdgeUniqueId;
-    private List<Integer> heading = new LinkedList<>();
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Lane.class);
+	private final long laneUniqueId;
+	private final String parentEdgeUniqueId;
+	private List<Integer> heading = new LinkedList<>();
 
 
-    public Lane(long laneUniqueId, String parentEdgeUniqueId) {
-        LOGGER.warn("NotImplementedException", new NotImplementedException());
-        this.laneUniqueId = laneUniqueId;
-        this.parentEdgeUniqueId = parentEdgeUniqueId;
-    }
+	public Lane(long laneUniqueId, String parentEdgeUniqueId) {
+		LOGGER.warn("NotImplementedException", new NotImplementedException());
+		this.laneUniqueId = laneUniqueId;
+		this.parentEdgeUniqueId = parentEdgeUniqueId;
+	}
 
-    public int[] getHeadingIds() {
-        return null;
-    }
+	public int[] getHeadingIds() {
+		return null;
+	}
 
-    public void addHeadingEdgeId(int headingEdgeID) {
+	public void addHeadingEdgeId(int headingEdgeID) {
 
-    }
+	}
 
-    public long getLaneUniqueId() {
-        return laneUniqueId;
-    }
+	public long getLaneUniqueId() {
+		return laneUniqueId;
+	}
 
-    public String getParentEdgeUniqueId() {
-        return parentEdgeUniqueId;
-    }
+	public String getParentEdgeUniqueId() {
+		return parentEdgeUniqueId;
+	}
 
-    @Singleton
-    public static class LaneBuilder {
-        private long laneCounter = 0;
+	@Singleton
+	public static class LaneBuilder {
+		private long laneCounter = 0;
 
-        public Lane createNewLane(String parent) {
-            return new Lane(0, "");
-        }
+		public Lane createNewLane(String parent) {
+			return new Lane(0, "");
+		}
 
-        public LaneBuilder getBuilder() {
-            return this;
-        }
-    }
+		public LaneBuilder getBuilder() {
+			return this;
+		}
+	}
 }

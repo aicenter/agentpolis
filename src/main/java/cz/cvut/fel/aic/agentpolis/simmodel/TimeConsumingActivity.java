@@ -28,39 +28,39 @@ import cz.cvut.fel.aic.alite.common.event.EventProcessor;
  * @param <A> Agent type
  */
 public abstract class TimeConsumingActivity<A extends Agent> extends Activity<A>{
-    protected long delay;
-    
-    public TimeConsumingActivity(ActivityInitializer activityInitializer, A agent) {
-        super(activityInitializer, agent);
-    }
+	protected long delay;
+	
+	public TimeConsumingActivity(ActivityInitializer activityInitializer, A agent) {
+		super(activityInitializer, agent);
+	}
 
-    @Override
-    void runActityLogic() {
-        this.delay = performPreDelayActions();
-        if(!failed()){
-            getEventProcessor().addEvent(new EventHandler() {
+	@Override
+	void runActityLogic() {
+		this.delay = performPreDelayActions();
+		if(!failed()){
+			getEventProcessor().addEvent(new EventHandler() {
 
-                    @Override
-                    public void handleEvent(Event event) {
-                        performPostDelayActions();
-                    }
+					@Override
+					public void handleEvent(Event event) {
+						performPostDelayActions();
+					}
 
-                    @Override
-                    public EventProcessor getEventProcessor() {
-                        return null;
-                    }
+					@Override
+					public EventProcessor getEventProcessor() {
+						return null;
+					}
 
-            }, delay);
-        }
-    }
+			}, delay);
+		}
+	}
 
-    protected abstract long performPreDelayActions();
+	protected abstract long performPreDelayActions();
 
-    private void performPostDelayActions() {
-        super.runActityLogic();
-    }
-    
-    
-    
-    
+	private void performPostDelayActions() {
+		super.runActityLogic();
+	}
+	
+	
+	
+	
 }

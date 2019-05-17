@@ -45,12 +45,12 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 	private Path2D representativeShape;
 
 	public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig) {
-        this(driverStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
+		this(driverStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
 	}
 
-    public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig,
+	public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig,
 			boolean showStackedEntitiesCount, boolean transformSize) {
-        super(driverStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
+		super(driverStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
 	}
 
 	@Override

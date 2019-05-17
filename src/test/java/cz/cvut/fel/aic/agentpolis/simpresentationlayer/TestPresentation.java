@@ -20,51 +20,51 @@ import java.util.Map;
 
 public class TestPresentation {
 
-    @Test
-    public void run() {
-        Graph<SimulationNode, SimulationEdge> graph = GraphInitializer.getGraphForTest();
+	@Test
+	public void run() {
+		Graph<SimulationNode, SimulationEdge> graph = GraphInitializer.getGraphForTest();
 
-        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
-        Injector injector = agentPolisInitializer.initialize();
+		AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
+		Injector injector = agentPolisInitializer.initialize();
 
 		injector.getInstance(AgentpolisConfig.class).visio.showVisio = VisualTests.SHOW_VISIO;
 		
-        SimulationCreator creator = injector.getInstance(SimulationCreator.class);
+		SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
-        creator.prepareSimulation(getMapData(graph));
+		creator.prepareSimulation(getMapData(graph));
 
-        creator.startSimulation();
-    }
-
-
-
-    private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
-        Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
-        graphs.put(EGraphType.HIGHWAY, graph);
-
-        Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
-
-        return new MapData(graphs, nodes);
-    }
+		creator.startSimulation();
+	}
 
 
-    private Map<Integer, SimulationNode> createAllGraphNodes(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
 
-        Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
+	private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
+		Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
+		graphs.put(EGraphType.HIGHWAY, graph);
 
-        for (GraphType graphType : graphByGraphType.keySet()) {
-            Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
-            for (SimulationNode node : graphStorageTmp.getAllNodes()) {
-                nodesFromAllGraphs.put(node.getId(), node);
-            }
+		Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
-        }
+		return new MapData(graphs, nodes);
+	}
 
-        return nodesFromAllGraphs;
-    }
 
-    public static void main(String[] args) {
-        VisualTests.runVisualTest(TestPresentation.class);
-    }
+	private Map<Integer, SimulationNode> createAllGraphNodes(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
+
+		Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
+
+		for (GraphType graphType : graphByGraphType.keySet()) {
+			Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
+			for (SimulationNode node : graphStorageTmp.getAllNodes()) {
+				nodesFromAllGraphs.put(node.getId(), node);
+			}
+
+		}
+
+		return nodesFromAllGraphs;
+	}
+
+	public static void main(String[] args) {
+		VisualTests.runVisualTest(TestPresentation.class);
+	}
 }
 

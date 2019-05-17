@@ -24,7 +24,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.agent;
  * @author fido
  */
 public interface CargoAgent {
-    public void tripEnded();
+	public void tripEnded();
 
-    public void tripStarted();
+	public void tripStarted();
 }

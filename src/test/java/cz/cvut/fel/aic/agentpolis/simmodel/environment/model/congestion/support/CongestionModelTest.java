@@ -52,81 +52,81 @@ public class CongestionModelTest {
 	}
 
 	public CongestionModelTest() {
-        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer();
+		AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer();
 		agentPolisInitializer.overrideModule(new TestModule());
-        injector = agentPolisInitializer.initialize();
+		injector = agentPolisInitializer.initialize();
 	}
 	
 	
-    
-    public void run(Graph<SimulationNode, SimulationEdge> graph) throws Throwable{
-        
-        Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
-        graphs.put(EGraphType.HIGHWAY, graph);
-        
-        //map init
-        injector.getInstance(Graphs.class).setGraphs(graphs);
-        
-        try{
-            TestCongestionModel congestionModel = injector.getInstance(TestCongestionModel.class);
-            Graph<SimulationNode,SimulationEdge> roadGraph = injector.getInstance(HighwayNetwork.class).getNetwork();
+	
+	public void run(Graph<SimulationNode, SimulationEdge> graph) throws Throwable{
+		
+		Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
+		graphs.put(EGraphType.HIGHWAY, graph);
+		
+		//map init
+		injector.getInstance(Graphs.class).setGraphs(graphs);
+		
+		try{
+			TestCongestionModel congestionModel = injector.getInstance(TestCongestionModel.class);
+			Graph<SimulationNode,SimulationEdge> roadGraph = injector.getInstance(HighwayNetwork.class).getNetwork();
 
-            nodeTest(congestionModel, roadGraph);
-            edgeTest(congestionModel, roadGraph);
-        }
-        catch(ProvisionException e){
-            throw e.getCause();
-        }
-    }
+			nodeTest(congestionModel, roadGraph);
+			edgeTest(congestionModel, roadGraph);
+		}
+		catch(ProvisionException e){
+			throw e.getCause();
+		}
+	}
 
-    private void nodeTest(TestCongestionModel congestionModel, Graph<SimulationNode, SimulationEdge> roadGraph) {
-        for (SimulationNode simulationNode : roadGraph.getAllNodes()) {
-            Connection connection = congestionModel.getConnectionByNode(simulationNode);
-            
-            //each node have a connection test
-            assertNotNull(connection);
-            
-            if(connection instanceof Crossroad){
-                checkCrossroad((Crossroad) connection);
-            }
-            else{
-                checkConnection(connection);
-            }
-        }
-    }
-    
-    private void edgeTest(TestCongestionModel congestionModel, Graph<SimulationNode, SimulationEdge> roadGraph) {
-        for (SimulationEdge simulationEdge : roadGraph.getAllEdges()) {
-            Link link = congestionModel.getLinkByEdge(simulationEdge);
-            
-            // each edge have a link test
-            assertNotNull("Edge " + simulationEdge.getLogInfo()+ " does not have a corresponding link!",link);
-            
-            // no empty links test
-            assertTrue("Link " + simulationEdge.getLogInfo()+ " has no lanes!", 
-                    link.getLaneCount() > 0);
-            
-            // check all next nodes has a lane
-            checkLaneForEachNextNode(roadGraph, link);
-        }
-    }
+	private void nodeTest(TestCongestionModel congestionModel, Graph<SimulationNode, SimulationEdge> roadGraph) {
+		for (SimulationNode simulationNode : roadGraph.getAllNodes()) {
+			Connection connection = congestionModel.getConnectionByNode(simulationNode);
+			
+			//each node have a connection test
+			assertNotNull(connection);
+			
+			if(connection instanceof Crossroad){
+				checkCrossroad((Crossroad) connection);
+			}
+			else{
+				checkConnection(connection);
+			}
+		}
+	}
+	
+	private void edgeTest(TestCongestionModel congestionModel, Graph<SimulationNode, SimulationEdge> roadGraph) {
+		for (SimulationEdge simulationEdge : roadGraph.getAllEdges()) {
+			Link link = congestionModel.getLinkByEdge(simulationEdge);
+			
+			// each edge have a link test
+			assertNotNull("Edge " + simulationEdge.getLogInfo()+ " does not have a corresponding link!",link);
+			
+			// no empty links test
+			assertTrue("Link " + simulationEdge.getLogInfo()+ " has no lanes!", 
+					link.getLaneCount() > 0);
+			
+			// check all next nodes has a lane
+			checkLaneForEachNextNode(roadGraph, link);
+		}
+	}
 
-    private void checkLaneForEachNextNode(Graph<SimulationNode, SimulationEdge> roadGraph, Link link) {
-        SimulationNode targetNode = link.getEdge().toNode;
-        List<SimulationEdge> outEdges = roadGraph.getOutEdges(targetNode);
-        
-        for (SimulationEdge outEdge : outEdges) {
-            SimulationNode nextNode = outEdge.toNode;
-            
-            assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
-        }
-    }
+	private void checkLaneForEachNextNode(Graph<SimulationNode, SimulationEdge> roadGraph, Link link) {
+		SimulationNode targetNode = link.getEdge().toNode;
+		List<SimulationEdge> outEdges = roadGraph.getOutEdges(targetNode);
+		
+		for (SimulationEdge outEdge : outEdges) {
+			SimulationNode nextNode = outEdge.toNode;
+			
+			assertNotNull("No lane for output edge " + outEdge.getLogInfo()+ "!", link.getLaneByNextNode(nextNode));
+		}
+	}
 
-    private void checkConnection(Connection connection) {
-        assertNotNull(connection.getNextLink((Connection) null));
-    }
+	private void checkConnection(Connection connection) {
+		assertNotNull(connection.getNextLink((Connection) null));
+	}
 
-    private void checkCrossroad(Crossroad crossroad) {
-        assertTrue(crossroad.getNumberOfInputLanes() > 0);
-    }
+	private void checkCrossroad(Crossroad crossroad) {
+		assertTrue(crossroad.getNumberOfInputLanes() > 0);
+	}
 }

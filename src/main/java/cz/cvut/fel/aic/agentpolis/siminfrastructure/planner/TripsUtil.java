@@ -52,188 +52,188 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class TripsUtil {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TripsUtil.class);
-    
-    protected static final Set<GraphType> GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TripsUtil.class);
+	
+	protected static final Set<GraphType> GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
 
 
-    protected final ShortestPathPlanners pathPlanners;
+	protected final ShortestPathPlanners pathPlanners;
 
-    private final NearestElementUtils nearestElementUtils;
-    private final Graph<SimulationNode, SimulationEdge> network;
-
-
-    @Inject
-    public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
-        this.pathPlanners = pathPlanners;
-        this.nearestElementUtils = nearestElementUtils;
-        this.network = network.getNetwork();
-    }
+	private final NearestElementUtils nearestElementUtils;
+	private final Graph<SimulationNode, SimulationEdge> network;
 
 
-    public VehicleTrip locationsToVehicleTrip(List<Node> locations, boolean precomputedPaths, PhysicalVehicle vehicle) {
-        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-
-        VehicleTrip finalTrip = null;
-        LinkedList<TripItem> tripItems = new LinkedList<>();
-
-        int startNodeId = locations.get(0).getId();
-
-        if (precomputedPaths) {
-            tripItems.add(new TripItem(startNodeId));
-        }
-
-        for (int i = 1; i < locations.size(); i++) {
-            int targetNodeId = locations.get(i).getId();
-            if (startNodeId == targetNodeId) {
-                try {
-                    throw new Exception("There can't be two identical locations in a row");
-                } catch (Exception ex) {
-                    LOGGER.error(null, ex);
-                }
-            }
-
-            if (precomputedPaths) {
-                tripItems.add(new TripItem(targetNodeId));
-            } else {
-                try {
-                    VehicleTrip partialTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
-                    while (partialTrip.hasNextTripItem()) {
-                        tripItems.add(partialTrip.getAndRemoveFirstTripItem());
-                    }
-
-                } catch (TripPlannerException ex) {
-                    LOGGER.error(null, ex);
-                }
-            }
-            startNodeId = targetNodeId;
-        }
-
-        finalTrip = new VehicleTrip(tripItems, EGraphType.HIGHWAY, vehicle.getId());
-
-        return finalTrip;
-    }
-
-    public VehicleTrip createTrip(int startNodeId, int targetNodeId, PhysicalVehicle vehicle) {
-        if (startNodeId == targetNodeId) {
-            try {
-                throw new Exception("Start node cannot be the same as end node");
-            } catch (Exception ex) {
-               LOGGER.error(null, ex);
-            }
-        }
-        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-
-        VehicleTrip finalTrip = null;
-        try {
-            finalTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
-        } catch (TripPlannerException ex) {
-            LOGGER.error(null, ex);
-        }
-
-        return finalTrip;
-    }
-
-    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId) {
-        return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
-    }
-
-    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
-        return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
-    }
-
-    public Trip<SimulationNode> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
-        int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
-        int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
-        return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
-    }
-
-    public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
-        if (startNodeId == targetNodeId) {
-            try {
-                throw new Exception("Start node cannot be the same as end node");
-            } catch (Exception ex) {
-                LOGGER.error(null, ex);
-            }
-        }
-        ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(graphTypes);
-
-        Trip finalTrip = null;
-        try {
-            finalTrip = pathPlanner.findTrip(startNodeId, targetNodeId);
-        } catch (TripPlannerException ex) {
-            LOGGER.error(null, ex);
-        }
-
-        return finalTrip;
-    }
-
-    public static Trip<SimulationNode> mergeTrips(Trip<SimulationNode>... trips) {
-        int i = 0;
-        Trip<SimulationNode> firstTrip = null;
-        do {
-            firstTrip = trips[i];
-            i++;
-        } while (firstTrip == null);
-
-        Trip<SimulationNode> newTrip = new Trip<SimulationNode>(firstTrip.getLocations());
-
-        for (int j = i; j < trips.length; j++) {
-            Trip<SimulationNode> trip = trips[j];
-            if (trip != null) {
-                for (SimulationNode location : trip.getLocations()) {
-                    if (!newTrip.getLocations().peekLast().equals(location)) {
-                        newTrip.extendTrip(location);
-                    }
-                }
-            }
-        }
-        return newTrip;
-    }
-
-    public static VehicleTrip mergeTripsOld(VehicleTrip<TripItem>... trips) {
-        int i = 0;
-        VehicleTrip firstTrip = null;
-        do {
-            firstTrip = trips[i];
-            i++;
-        } while (firstTrip == null);
-
-        VehicleTrip<TripItem> newTrip = new VehicleTrip<>(new LinkedList<>(), firstTrip.getGraphType(), firstTrip.getVehicleId());
-
-        for (int j = 0; j < trips.length; j++) {
-            VehicleTrip<TripItem> trip = trips[j];
-            if (trip != null) {
-                for (TripItem location : trip.getLocations()) {
-                    newTrip.extendTrip(location);
-                }
-            }
-        }
-        return newTrip;
-    }
+	@Inject
+	public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
+		this.pathPlanners = pathPlanners;
+		this.nearestElementUtils = nearestElementUtils;
+		this.network = network.getNetwork();
+	}
 
 
-    private float getEdgeDuration(Node startNode, Node targetNode) {
-        SimulationEdge edge = network.getEdge(startNode, targetNode);
-        return edge.getLength() / edge.allowedMaxSpeedInMpS;
-    }
+	public VehicleTrip locationsToVehicleTrip(List<Node> locations, boolean precomputedPaths, PhysicalVehicle vehicle) {
+		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
+
+		VehicleTrip finalTrip = null;
+		LinkedList<TripItem> tripItems = new LinkedList<>();
+
+		int startNodeId = locations.get(0).getId();
+
+		if (precomputedPaths) {
+			tripItems.add(new TripItem(startNodeId));
+		}
+
+		for (int i = 1; i < locations.size(); i++) {
+			int targetNodeId = locations.get(i).getId();
+			if (startNodeId == targetNodeId) {
+				try {
+					throw new Exception("There can't be two identical locations in a row");
+				} catch (Exception ex) {
+					LOGGER.error(null, ex);
+				}
+			}
+
+			if (precomputedPaths) {
+				tripItems.add(new TripItem(targetNodeId));
+			} else {
+				try {
+					VehicleTrip partialTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
+					while (partialTrip.hasNextTripItem()) {
+						tripItems.add(partialTrip.getAndRemoveFirstTripItem());
+					}
+
+				} catch (TripPlannerException ex) {
+					LOGGER.error(null, ex);
+				}
+			}
+			startNodeId = targetNodeId;
+		}
+
+		finalTrip = new VehicleTrip(tripItems, EGraphType.HIGHWAY, vehicle.getId());
+
+		return finalTrip;
+	}
+
+	public VehicleTrip createTrip(int startNodeId, int targetNodeId, PhysicalVehicle vehicle) {
+		if (startNodeId == targetNodeId) {
+			try {
+				throw new Exception("Start node cannot be the same as end node");
+			} catch (Exception ex) {
+			   LOGGER.error(null, ex);
+			}
+		}
+		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
+
+		VehicleTrip finalTrip = null;
+		try {
+			finalTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
+		} catch (TripPlannerException ex) {
+			LOGGER.error(null, ex);
+		}
+
+		return finalTrip;
+	}
+
+	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId) {
+		return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
+	}
+
+	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
+		return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
+	}
+
+	public Trip<SimulationNode> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
+		int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
+		int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
+		return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
+	}
+
+	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
+		if (startNodeId == targetNodeId) {
+			try {
+				throw new Exception("Start node cannot be the same as end node");
+			} catch (Exception ex) {
+				LOGGER.error(null, ex);
+			}
+		}
+		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(graphTypes);
+
+		Trip finalTrip = null;
+		try {
+			finalTrip = pathPlanner.findTrip(startNodeId, targetNodeId);
+		} catch (TripPlannerException ex) {
+			LOGGER.error(null, ex);
+		}
+
+		return finalTrip;
+	}
+
+	public static Trip<SimulationNode> mergeTrips(Trip<SimulationNode>... trips) {
+		int i = 0;
+		Trip<SimulationNode> firstTrip = null;
+		do {
+			firstTrip = trips[i];
+			i++;
+		} while (firstTrip == null);
+
+		Trip<SimulationNode> newTrip = new Trip<SimulationNode>(firstTrip.getLocations());
+
+		for (int j = i; j < trips.length; j++) {
+			Trip<SimulationNode> trip = trips[j];
+			if (trip != null) {
+				for (SimulationNode location : trip.getLocations()) {
+					if (!newTrip.getLocations().peekLast().equals(location)) {
+						newTrip.extendTrip(location);
+					}
+				}
+			}
+		}
+		return newTrip;
+	}
+
+	public static VehicleTrip mergeTripsOld(VehicleTrip<TripItem>... trips) {
+		int i = 0;
+		VehicleTrip firstTrip = null;
+		do {
+			firstTrip = trips[i];
+			i++;
+		} while (firstTrip == null);
+
+		VehicleTrip<TripItem> newTrip = new VehicleTrip<>(new LinkedList<>(), firstTrip.getGraphType(), firstTrip.getVehicleId());
+
+		for (int j = 0; j < trips.length; j++) {
+			VehicleTrip<TripItem> trip = trips[j];
+			if (trip != null) {
+				for (TripItem location : trip.getLocations()) {
+					newTrip.extendTrip(location);
+				}
+			}
+		}
+		return newTrip;
+	}
 
 
-    public float getTripDurationInSeconds(Trip<? extends Node> trip) {
-        float duration = 0;
+	private float getEdgeDuration(Node startNode, Node targetNode) {
+		SimulationEdge edge = network.getEdge(startNode, targetNode);
+		return edge.getLength() / edge.allowedMaxSpeedInMpS;
+	}
 
-        LinkedList<? extends Node> locations = trip.getLocations();
-        if (locations.size() >= 2) {
-            Node startNode = locations.getFirst();
-            for (int i = 1; i < locations.size(); i++) {
-                Node targetNode = locations.get(i);
-                duration += getEdgeDuration(startNode, targetNode);
-                startNode = targetNode;
-            }
-        }
 
-        return duration;
-    }
+	public float getTripDurationInSeconds(Trip<? extends Node> trip) {
+		float duration = 0;
+
+		LinkedList<? extends Node> locations = trip.getLocations();
+		if (locations.size() >= 2) {
+			Node startNode = locations.getFirst();
+			for (int i = 1; i < locations.size(); i++) {
+				Node targetNode = locations.get(i);
+				duration += getEdgeDuration(startNode, targetNode);
+				startNode = targetNode;
+			}
+		}
+
+		return duration;
+	}
 
 
 }

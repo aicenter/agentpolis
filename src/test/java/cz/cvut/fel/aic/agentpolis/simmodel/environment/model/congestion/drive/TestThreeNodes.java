@@ -35,39 +35,39 @@ import java.util.Arrays;
  * @author fido
  */
 public class TestThreeNodes {
-    
-    @Test 
-    public void run() throws Throwable{
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
+	
+	@Test 
+	public void run() throws Throwable{
+		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-        SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-        SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
-        SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
-        
-        graphBuilder.addNode(node0);
-        graphBuilder.addNode(node1);
-        graphBuilder.addNode(node2);
+		SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
+		SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0);
+		SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0);
+		
+		graphBuilder.addNode(node0);
+		graphBuilder.addNode(node1);
+		graphBuilder.addNode(node2);
 
-        SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)));
-        SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)));
-        SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)));
-        SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)));
+		SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)));
+		SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)));
+		SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)));
+		SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)));
 
 
-        graphBuilder.addEdge(edge1);
-        graphBuilder.addEdge(edge2);
-        graphBuilder.addEdge(edge3);
-        graphBuilder.addEdge(edge4);
-        
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
-        
-        Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
-        
-        DriveTest driveTest = new DriveTest();
-        driveTest.run(graph, trip);
-    }
-    
-    public static void main(String[] args) {
-        VisualTests.runVisualTest(TestThreeNodes.class);
-    }
+		graphBuilder.addEdge(edge1);
+		graphBuilder.addEdge(edge2);
+		graphBuilder.addEdge(edge3);
+		graphBuilder.addEdge(edge4);
+		
+		Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
+		
+		Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
+		
+		DriveTest driveTest = new DriveTest();
+		driveTest.run(graph, trip);
+	}
+	
+	public static void main(String[] args) {
+		VisualTests.runVisualTest(TestThreeNodes.class);
+	}
 }

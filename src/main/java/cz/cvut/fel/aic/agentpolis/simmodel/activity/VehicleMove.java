@@ -37,32 +37,32 @@ import java.util.List;
  */
 public class VehicleMove<A extends Agent & Driver> extends Move<A> {
 
-    public VehicleMove(ActivityInitializer activityInitializer,
-                       TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-        super(activityInitializer, eventProcessor, agent, edge, from, to);
+	public VehicleMove(ActivityInitializer activityInitializer,
+					   TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+		super(activityInitializer, eventProcessor, agent, edge, from, to);
 
-    }
+	}
 
-    @Override
-    protected void performAction() {
-        if (agent instanceof Driver && agent.getVehicle() != null) {
-            moveVehicle(agent.getVehicle());
-        }
-        super.performAction();
-    }
+	@Override
+	protected void performAction() {
+		if (agent instanceof Driver && agent.getVehicle() != null) {
+			moveVehicle(agent.getVehicle());
+		}
+		super.performAction();
+	}
 
-    private void moveVehicle(Vehicle vehicle) {
-        vehicle.setPosition(to);
-        if (vehicle instanceof TransportEntity && !((TransportEntity) vehicle).getTransportedEntities().isEmpty()) {
-            moveTransportedEntities(((TransportEntity) vehicle).getTransportedEntities());
-        }
-    }
+	private void moveVehicle(Vehicle vehicle) {
+		vehicle.setPosition(to);
+		if (vehicle instanceof TransportEntity && !((TransportEntity) vehicle).getTransportedEntities().isEmpty()) {
+			moveTransportedEntities(((TransportEntity) vehicle).getTransportedEntities());
+		}
+	}
 
-    private void moveTransportedEntities(List<TransportableEntity> transportedEntities) {
-        for (TransportableEntity transportedEntity : transportedEntities) {
-            transportedEntity.setPosition(to);
-        }
-    }
+	private void moveTransportedEntities(List<TransportableEntity> transportedEntities) {
+		for (TransportableEntity transportedEntity : transportedEntities) {
+			transportedEntity.setPosition(to);
+		}
+	}
 
 
 }

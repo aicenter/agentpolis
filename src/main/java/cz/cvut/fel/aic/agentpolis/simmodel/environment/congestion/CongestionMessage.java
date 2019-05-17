@@ -23,5 +23,5 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
  * @author fido
  */
 public enum CongestionMessage {
-    DRIVING_FINISHED
+	DRIVING_FINISHED
 }

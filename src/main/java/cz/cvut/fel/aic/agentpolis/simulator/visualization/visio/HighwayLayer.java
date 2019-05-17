@@ -39,50 +39,50 @@ import java.awt.geom.Rectangle2D;
 @Singleton
 public class HighwayLayer extends AbstractLayer {
 
-    private static final int DEFAULT_EDGE_WIDTH = 8;
+	private static final int DEFAULT_EDGE_WIDTH = 8;
 
 
-    protected final VisioPositionUtil positionUtil;
+	protected final VisioPositionUtil positionUtil;
 
-    protected final Graph<SimulationNode, SimulationEdge> graph;
-
-
-    private int edgeWidth = DEFAULT_EDGE_WIDTH;
+	protected final Graph<SimulationNode, SimulationEdge> graph;
 
 
-    @Inject(optional = true)
-    public void setEdgeWidth(@Named("HighwayLayer edge width") int width) {
-        this.edgeWidth = width;
-    }
+	private int edgeWidth = DEFAULT_EDGE_WIDTH;
 
 
-    @Inject
-    public HighwayLayer(HighwayNetwork highwayNetwork, VisioPositionUtil positionUtil) {
-        this.positionUtil = positionUtil;
-        graph = highwayNetwork.getNetwork();
-    }
+	@Inject(optional = true)
+	public void setEdgeWidth(@Named("HighwayLayer edge width") int width) {
+		this.edgeWidth = width;
+	}
 
 
-    @Override
-    public void paint(Graphics2D canvas) {
-        canvas.setStroke(new BasicStroke(Vis.transW(edgeWidth)));
-        canvas.setColor(Color.BLACK);
+	@Inject
+	public HighwayLayer(HighwayNetwork highwayNetwork, VisioPositionUtil positionUtil) {
+		this.positionUtil = positionUtil;
+		graph = highwayNetwork.getNetwork();
+	}
 
-        Dimension dim = Vis.getDrawingDimension();
-        Rectangle2D drawingRectangle = new Rectangle(dim);
 
-        paintGraph(canvas, drawingRectangle);
-    }
+	@Override
+	public void paint(Graphics2D canvas) {
+		canvas.setStroke(new BasicStroke(Vis.transW(edgeWidth)));
+		canvas.setColor(Color.BLACK);
 
-    protected void paintGraph(Graphics2D canvas, Rectangle2D drawingRectangle) {
-        for (SimulationEdge edge : graph.getAllEdges()) {
-            GeneralPath path = new GeneralPath();
-            Point2d location = positionUtil.getCanvasPosition(edge.shape.from());
-            path.moveTo(location.x, location.y);
-            edge.shape.stream().skip(1).map(positionUtil::getCanvasPosition).forEach(d -> path.lineTo(d.x, d.y));
-            if (path.intersects(drawingRectangle)) {
-                canvas.draw(path);
-            }
-        }
-    }
+		Dimension dim = Vis.getDrawingDimension();
+		Rectangle2D drawingRectangle = new Rectangle(dim);
+
+		paintGraph(canvas, drawingRectangle);
+	}
+
+	protected void paintGraph(Graphics2D canvas, Rectangle2D drawingRectangle) {
+		for (SimulationEdge edge : graph.getAllEdges()) {
+			GeneralPath path = new GeneralPath();
+			Point2d location = positionUtil.getCanvasPosition(edge.shape.from());
+			path.moveTo(location.x, location.y);
+			edge.shape.stream().skip(1).map(positionUtil::getCanvasPosition).forEach(d -> path.lineTo(d.x, d.y));
+			if (path.intersects(drawingRectangle)) {
+				canvas.draw(path);
+			}
+		}
+	}
 }

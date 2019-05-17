@@ -41,65 +41,65 @@ import cz.cvut.fel.aic.geographtools.Graph;
  */
 public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
-    private final Trip<SimulationNode> trip;
+	private final Trip<SimulationNode> trip;
 
-    private final PedestrianMoveActivityFactory moveActivityFactory;
+	private final PedestrianMoveActivityFactory moveActivityFactory;
 
-    private final Graph<SimulationNode, SimulationEdge> graph;
+	private final Graph<SimulationNode, SimulationEdge> graph;
 
-    private final EventProcessor eventProcessor;
+	private final EventProcessor eventProcessor;
 
-    private final StandardTimeProvider timeProvider;
+	private final StandardTimeProvider timeProvider;
 
-    private final int tripId;
-
-
-    private SimulationNode from;
-
-    private SimulationNode to;
-
-    public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
-                A agent, Trip<SimulationNode> trip,
-                int tripId) {
-        super(activityInitializer, agent);
-        this.trip = trip;
-        this.moveActivityFactory = moveActivityFactory;
-        this.eventProcessor = eventProcessor;
-        this.timeProvider = timeProvider;
-        this.tripId = tripId;
-        graph = transportNetworks.getGraph(EGraphType.PEDESTRIAN);
-    }
+	private final int tripId;
 
 
-    @Override
-    protected void performAction() {
-        from = trip.getAndRemoveFirstLocation();
-        move();
+	private SimulationNode from;
 
-    }
+	private SimulationNode to;
 
-    @Override
-    protected void onChildActivityFinish(Activity activity) {
-        if (trip.isEmpty()) {
-            finish();
-        } else {
-            from = to;
-            move();
-        }
-    }
+	public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
+				PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
+				A agent, Trip<SimulationNode> trip,
+				int tripId) {
+		super(activityInitializer, agent);
+		this.trip = trip;
+		this.moveActivityFactory = moveActivityFactory;
+		this.eventProcessor = eventProcessor;
+		this.timeProvider = timeProvider;
+		this.tripId = tripId;
+		graph = transportNetworks.getGraph(EGraphType.PEDESTRIAN);
+	}
 
-    private void move() {
-        to = trip.getAndRemoveFirstLocation();
-        SimulationEdge edge = graph.getEdge(from, to);
 
-        runChildActivity(moveActivityFactory.create(agent, edge, from, to));
-        triggerVehicleEnteredEdgeEvent();
-    }
+	@Override
+	protected void performAction() {
+		from = trip.getAndRemoveFirstLocation();
+		move();
 
-    private void triggerVehicleEnteredEdgeEvent() {
-        SimulationEdge edge = graph.getEdge(from, to);
-        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
-        eventProcessor.addEvent(DriveEvent.PEDESTRIAN_ENTERED_EDGE, null, null, transit);
-    }
+	}
+
+	@Override
+	protected void onChildActivityFinish(Activity activity) {
+		if (trip.isEmpty()) {
+			finish();
+		} else {
+			from = to;
+			move();
+		}
+	}
+
+	private void move() {
+		to = trip.getAndRemoveFirstLocation();
+		SimulationEdge edge = graph.getEdge(from, to);
+
+		runChildActivity(moveActivityFactory.create(agent, edge, from, to));
+		triggerVehicleEnteredEdgeEvent();
+	}
+
+	private void triggerVehicleEnteredEdgeEvent() {
+		SimulationEdge edge = graph.getEdge(from, to);
+		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
+		eventProcessor.addEvent(DriveEvent.PEDESTRIAN_ENTERED_EDGE, null, null, transit);
+	}
 }

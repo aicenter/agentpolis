@@ -24,5 +24,5 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection;
  * @author fido
  */
 public enum CrossroadEvent {
-    TICK
+	TICK
 }

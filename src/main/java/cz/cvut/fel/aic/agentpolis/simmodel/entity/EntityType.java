@@ -27,6 +27,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.entity;
  */
 public interface EntityType {
 
-    public String getDescriptionEntityType();
+	public String getDescriptionEntityType();
    
 }

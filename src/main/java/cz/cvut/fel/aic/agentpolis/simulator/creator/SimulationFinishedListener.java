@@ -25,6 +25,6 @@ package cz.cvut.fel.aic.agentpolis.simulator.creator;
  */
 public interface SimulationFinishedListener {
 
-    void simulationFinished();
+	void simulationFinished();
 
 }

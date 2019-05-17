@@ -34,9 +34,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 @Singleton
 public class VehicleStorage extends EntityStorage<PhysicalVehicle> {
 
-    @Inject
-    public VehicleStorage() {
-        super();
-    }
+	@Inject
+	public VehicleStorage() {
+		super();
+	}
 
 }

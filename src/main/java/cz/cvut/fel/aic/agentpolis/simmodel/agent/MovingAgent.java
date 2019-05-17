@@ -25,8 +25,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  * @author fido
  */
 public interface MovingAgent extends MovingEntity {
-    public void setTargetNode(SimulationNode targetNode);
+	public void setTargetNode(SimulationNode targetNode);
 
-    public void setDelayData(DelayData targetNode);
+	public void setDelayData(DelayData targetNode);
 
 }

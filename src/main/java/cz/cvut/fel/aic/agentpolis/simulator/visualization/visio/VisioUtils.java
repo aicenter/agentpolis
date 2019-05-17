@@ -29,19 +29,19 @@ import java.awt.geom.Rectangle2D;
  * @author fido
  */
 public class VisioUtils {
-    
-    public static void printTextWithBackgroud(Graphics2D canvas, String text, Point position, Color textColor, 
-            Color backgroundColor){
-        
-        // background
-        FontMetrics fm = canvas.getFontMetrics();
-        Rectangle2D rect = fm.getStringBounds(text, canvas);
-        canvas.setColor(backgroundColor);
-        canvas.fillRect(position.x, position.y - fm.getAscent(), (int) rect.getWidth(), 
-                (int) rect.getHeight());
+	
+	public static void printTextWithBackgroud(Graphics2D canvas, String text, Point position, Color textColor, 
+			Color backgroundColor){
+		
+		// background
+		FontMetrics fm = canvas.getFontMetrics();
+		Rectangle2D rect = fm.getStringBounds(text, canvas);
+		canvas.setColor(backgroundColor);
+		canvas.fillRect(position.x, position.y - fm.getAscent(), (int) rect.getWidth(), 
+				(int) rect.getHeight());
 
-        // text
+		// text
 		canvas.setColor(textColor);
 		canvas.drawString(text, position.x, position.y);
-    }
+	}
 }

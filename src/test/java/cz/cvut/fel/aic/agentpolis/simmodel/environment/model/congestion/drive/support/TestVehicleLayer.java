@@ -35,42 +35,42 @@ import javax.vecmath.Point2d;
 @Singleton
 public class TestVehicleLayer extends EntityLayer<DriveAgent>{
 
-    @Inject
-    public TestVehicleLayer(DriveAgentStorage driveAgentStorage, AgentpolisConfig agentpolisConfig) {
-        super(driveAgentStorage, agentpolisConfig);
-    }
+	@Inject
+	public TestVehicleLayer(DriveAgentStorage driveAgentStorage, AgentpolisConfig agentpolisConfig) {
+		super(driveAgentStorage, agentpolisConfig);
+	}
 
-    @Override
-    protected Point2d getEntityPosition(DriveAgent entity) {
-        return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
-    }
+	@Override
+	protected Point2d getEntityPosition(DriveAgent entity) {
+		return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
+	}
 
-    @Override
-    protected Point2d getEntityPositionInTime(DriveAgent entity, long time) {
-        return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
-    }
+	@Override
+	protected Point2d getEntityPositionInTime(DriveAgent entity, long time) {
+		return positionUtil.getCanvasPositionInterpolated(entity, EGraphType.HIGHWAY);
+	}
 
-    @Override
-    protected Color getEntityDrawColor(DriveAgent driveAgent) {
-        return Color.CYAN;
-    }
+	@Override
+	protected Color getEntityDrawColor(DriveAgent driveAgent) {
+		return Color.CYAN;
+	}
 
-    @Override
-    protected int getEntityTransformableRadius(DriveAgent driveAgent) {
-        return (int) driveAgent.getVehicle().getLength() / 2;
-    }
+	@Override
+	protected int getEntityTransformableRadius(DriveAgent driveAgent) {
+		return (int) driveAgent.getVehicle().getLength() / 2;
+	}
 
-//    @Override
-//    protected void drawEntity(DriveAgent entity, Point2d agentPosition, Graphics2D canvas, Dimension dim) {
-//        super.drawEntity(entity, agentPosition, canvas, dim); 
-//        canvas.fillOval(0, 0, 10, 10);
-//    }
+//	@Override
+//	protected void drawEntity(DriveAgent entity, Point2d agentPosition, Graphics2D canvas, Dimension dim) {
+//		super.drawEntity(entity, agentPosition, canvas, dim); 
+//		canvas.fillOval(0, 0, 10, 10);
+//	}
 
 	@Override
 	protected double getEntityStaticRadius(DriveAgent entity) {
 		return  5;
 	}
-    
-    
-    
+	
+	
+	
 }

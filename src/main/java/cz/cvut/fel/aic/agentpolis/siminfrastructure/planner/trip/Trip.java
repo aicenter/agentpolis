@@ -32,80 +32,80 @@ import java.util.stream.Collectors;
  * @author F.I.D.O.
  */
 public class Trip<L> {
-    
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Trip.class);
-    
-    protected final LinkedList<L> locations;
+	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Trip.class);
+	
+	protected final LinkedList<L> locations;
 
-    public LinkedList<L> getLocations() {
-        return locations;
-    }
+	public LinkedList<L> getLocations() {
+		return locations;
+	}
 
-    public Trip(L... locations) {
-        this(new LinkedList<>(Arrays.asList(locations)));
-    }
+	public Trip(L... locations) {
+		this(new LinkedList<>(Arrays.asList(locations)));
+	}
 
-    public Trip(LinkedList<L> locations) {
-        try {
-            checkLocations(locations);
-        } catch (TripException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-        this.locations = locations;
-    }
+	public Trip(LinkedList<L> locations) {
+		try {
+			checkLocations(locations);
+		} catch (TripException ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		this.locations = locations;
+	}
 
-    public Trip(L startLocation, L endLocation) {
-        if (startLocation == null || endLocation == null) {
-            try {
-                throw new TripException();
-            } catch (TripException ex) {
-                LOGGER.error(ex.getMessage(), ex);
-            }
-        }
+	public Trip(L startLocation, L endLocation) {
+		if (startLocation == null || endLocation == null) {
+			try {
+				throw new TripException();
+			} catch (TripException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
 
-        locations = new LinkedList<>();
-        locations.add(startLocation);
-        locations.add(endLocation);
-    }
+		locations = new LinkedList<>();
+		locations.add(startLocation);
+		locations.add(endLocation);
+	}
 
 
-    public void extendTrip(L location) {
-        if (location == null) {
-            try {
-                throw new TripException();
-            } catch (TripException ex) {
-                LOGGER.error(ex.getMessage(), ex);
-            }
-        }
-        locations.addLast(location);
-    }
+	public void extendTrip(L location) {
+		if (location == null) {
+			try {
+				throw new TripException();
+			} catch (TripException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
+		locations.addLast(location);
+	}
 
-    public String locationsToString() {
-        String str = "";
+	public String locationsToString() {
+		String str = "";
 
-        for (L location : locations) {
-            str += location.toString() + System.getProperty("line.separator");
-        }
+		for (L location : locations) {
+			str += location.toString() + System.getProperty("line.separator");
+		}
 
-        return str;
-    }
+		return str;
+	}
 
-    public L getAndRemoveFirstLocation() {
-        return locations.poll();
-    }
-    
-    public L getFirstLocation() {
-        return locations.peek();
-    }
-    
-    public L removeFirstLocation() {
-        return locations.removeFirst();
-    }
-    
+	public L getAndRemoveFirstLocation() {
+		return locations.poll();
+	}
+	
+	public L getFirstLocation() {
+		return locations.peek();
+	}
+	
+	public L removeFirstLocation() {
+		return locations.removeFirst();
+	}
+	
 
-    public boolean isEmpty() {
-        return locations.isEmpty();
-    }
+	public boolean isEmpty() {
+		return locations.isEmpty();
+	}
 
 	@Override
 	public String toString() {
@@ -148,13 +148,13 @@ public class Trip<L> {
 	
 	
 
-    private void checkLocations(LinkedList<L> locations) throws TripException {
-        for (L location : locations) {
-            if (location == null) {
-                throw new TripException();
-            }
-        }
-    }
+	private void checkLocations(LinkedList<L> locations) throws TripException {
+		for (L location : locations) {
+			if (location == null) {
+				throw new TripException();
+			}
+		}
+	}
 // TEMPORARY SOLUTION, should go to node trip class!!
 	public int[] getLoacationIds() {
 		int[] ids = new int[locations.size()];

@@ -40,19 +40,19 @@ import java.security.ProviderException;
 @Singleton
 public class TestCongestionModel extends CongestionModel {
 
-    @Inject
-    public TestCongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
-                               SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
-            ProviderException {
-        super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils);
-    }
+	@Inject
+	public TestCongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
+							   SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils) throws ModelConstructionFailedException,
+			ProviderException {
+		super(transportNetworks, config, simulationProvider, timeProvider, shapeUtils);
+	}
 
-    public Connection getConnectionByNode(SimulationNode node) {
-        return connectionsMappedByNodes.get(node);
-    }
+	public Connection getConnectionByNode(SimulationNode node) {
+		return connectionsMappedByNodes.get(node);
+	}
 
-    public Link getLinkByEdge(SimulationEdge edge) {
-        return linksMappedByEdges.get(edge);
-    }
+	public Link getLinkByEdge(SimulationEdge edge) {
+		return linksMappedByEdges.get(edge);
+	}
 
 }

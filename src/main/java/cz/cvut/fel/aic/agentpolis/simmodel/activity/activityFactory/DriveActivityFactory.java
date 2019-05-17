@@ -41,52 +41,52 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class DriveActivityFactory extends ActivityFactory {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DriveActivityFactory.class);
-    
-    private final TransportNetworks transportNetworks;
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DriveActivityFactory.class);
+	
+	private final TransportNetworks transportNetworks;
 
-    private final VehicleMoveActivityFactory moveActivityFactory;
+	private final VehicleMoveActivityFactory moveActivityFactory;
 
-    private final TypedSimulation eventProcessor;
+	private final TypedSimulation eventProcessor;
 
-    private final StandardTimeProvider timeProvider;
+	private final StandardTimeProvider timeProvider;
 
-    private final IdGenerator tripIdGenerator;
+	private final IdGenerator tripIdGenerator;
 
-    private final TripsUtil tripsUtil;
-
-
-    @Inject
-    public DriveActivityFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
-                                TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
-                                TripsUtil tripsUtil) {
-        this.transportNetworks = transportNetworks;
-        this.moveActivityFactory = moveActivityFactory;
-        this.eventProcessor = eventProcessor;
-        this.timeProvider = timeProvider;
-        this.tripIdGenerator = tripIdGenerator;
-        this.tripsUtil = tripsUtil;
-    }
+	private final TripsUtil tripsUtil;
 
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<SimulationNode> trip) {
-        vehicleCheck(vehicle);
-        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
-                tripIdGenerator.getId());
-    }
+	@Inject
+	public DriveActivityFactory(TransportNetworks transportNetworks, VehicleMoveActivityFactory moveActivityFactory,
+								TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
+								TripsUtil tripsUtil) {
+		this.transportNetworks = transportNetworks;
+		this.moveActivityFactory = moveActivityFactory;
+		this.eventProcessor = eventProcessor;
+		this.timeProvider = timeProvider;
+		this.tripIdGenerator = tripIdGenerator;
+		this.tripsUtil = tripsUtil;
+	}
 
-    private void vehicleCheck(Vehicle vehicle) {
-        if (vehicle instanceof TransportableEntity) {
-            if (((TransportableEntity) vehicle).getTransportingEntity() != null) {
-                LOGGER.warn("Trying to drive vehicle that is being transported by other vehicle!");
-            }
-        }
-    }
 
-    public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
-        vehicleCheck(vehicle);
-        Trip<SimulationNode> trip = tripsUtil.createTrip(vehicle.getPosition().getId(), targetPosition.getId());
-        return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
-                tripIdGenerator.getId());
-    }
+	public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, Trip<SimulationNode> trip) {
+		vehicleCheck(vehicle);
+		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
+				tripIdGenerator.getId());
+	}
+
+	private void vehicleCheck(Vehicle vehicle) {
+		if (vehicle instanceof TransportableEntity) {
+			if (((TransportableEntity) vehicle).getTransportingEntity() != null) {
+				LOGGER.warn("Trying to drive vehicle that is being transported by other vehicle!");
+			}
+		}
+	}
+
+	public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
+		vehicleCheck(vehicle);
+		Trip<SimulationNode> trip = tripsUtil.createTrip(vehicle.getPosition().getId(), targetPosition.getId());
+		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
+				tripIdGenerator.getId());
+	}
 }

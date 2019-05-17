@@ -54,54 +54,54 @@ import ninja.fido.config.Configuration;
 import ninja.fido.config.GeneratedConfig;
 
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
-    
-    protected final AgentpolisConfig agentpolisConfig;
-    
-    public AgentpolisConfig getAgentpolisConfig() {
-        return agentpolisConfig;
-    }
-    
-    public StandardAgentPolisModule() {
-        this(null, null, null);
-    }
-    
-    public StandardAgentPolisModule(GeneratedConfig generatedConfig, String keyinClient) {
-        this(generatedConfig, null, keyinClient);
-    }
+	
+	protected final AgentpolisConfig agentpolisConfig;
+	
+	public AgentpolisConfig getAgentpolisConfig() {
+		return agentpolisConfig;
+	}
+	
+	public StandardAgentPolisModule() {
+		this(null, null, null);
+	}
+	
+	public StandardAgentPolisModule(GeneratedConfig generatedConfig, String keyinClient) {
+		this(generatedConfig, null, keyinClient);
+	}
 
 	public StandardAgentPolisModule(GeneratedConfig generatedConfig, File clientLocalConfigFile, String keyinClient) {
-        agentpolisConfig = new AgentpolisConfig();
-        Configuration.load(agentpolisConfig, generatedConfig, clientLocalConfigFile, keyinClient);
+		agentpolisConfig = new AgentpolisConfig();
+		Configuration.load(agentpolisConfig, generatedConfig, clientLocalConfigFile, keyinClient);
 	}
 
 	@Override
 	protected void configure() {
-        
-        bindConstant().annotatedWith(Names.named("mapSrid")).to(agentpolisConfig.srid);
+		
+		bindConstant().annotatedWith(Names.named("mapSrid")).to(agentpolisConfig.srid);
 
 		bind(Transformer.class).toInstance(new Transformer(agentpolisConfig.srid));
 
 		bind(AgentpolisConfig.class).toInstance(agentpolisConfig);
-        
-        bind(TimeProvider.class).to(StandardTimeProvider.class);
-        
-        install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
-            .build(ShortestPathPlannerFactory.class));
-        
+		
+		bind(TimeProvider.class).to(StandardTimeProvider.class);
+		
+		install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
+			.build(ShortestPathPlannerFactory.class));
+		
 		bindVisioInitializer();
 		configureNext();
 	}
 
 	protected void configureNext() {
 	}
-    
-    
-    @Provides 
+	
+	
+	@Provides 
 	@Singleton
 	public GraphSpec2D getMapSpecification(HighwayNetwork highwayNetwork){
-    	return Utils2D.getGraphSpec(highwayNetwork.getNetwork());
+		return Utils2D.getGraphSpec(highwayNetwork.getNetwork());
 	}
-    
+	
 	@Provides 
 	@Singleton
 	public Simulation getSimulation(SimulationProvider simulationProvider){
@@ -113,8 +113,8 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	public EventProcessor getEventProcessor(SimulationProvider simulationProvider){
 		return simulationProvider.getSimulation();
 	}
-    
-    @Provides 
+	
+	@Provides 
 	@Singleton
 	public TypedSimulation getTypedSimulation(SimulationProvider simulationProvider){
 		return simulationProvider.getSimulation();

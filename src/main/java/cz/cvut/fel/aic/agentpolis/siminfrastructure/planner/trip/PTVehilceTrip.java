@@ -34,52 +34,52 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphTyp
  */
 public class PTVehilceTrip extends GraphTrip<DepartureTripItem> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5087844407678432807L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5087844407678432807L;
 
-    public PTVehilceTrip(LinkedList<DepartureTripItem> trip, GraphType graphType){
-        super(trip, graphType);
-    }
+	public PTVehilceTrip(LinkedList<DepartureTripItem> trip, GraphType graphType){
+		super(trip, graphType);
+	}
 
-    @Override
-    public void visit(TripVisitior tripVisitior) {
-        throw new NotImplementedException();
+	@Override
+	public void visit(TripVisitior tripVisitior) {
+		throw new NotImplementedException();
 
-    }
+	}
 
-    @Override
-    public PTVehilceTrip clone() {
-        LinkedList<DepartureTripItem> clonedTrip = new LinkedList<DepartureTripItem>();
-        DepartureTripItemCloneVisotr cloneVisotr = new DepartureTripItemCloneVisotr();
+	@Override
+	public PTVehilceTrip clone() {
+		LinkedList<DepartureTripItem> clonedTrip = new LinkedList<DepartureTripItem>();
+		DepartureTripItemCloneVisotr cloneVisotr = new DepartureTripItemCloneVisotr();
 
-        for (DepartureTripItem tripItem : locations) {
-            tripItem.visitDepartureTripItem(cloneVisotr);
-            clonedTrip.addLast(cloneVisotr.departureTripItemClone);
+		for (DepartureTripItem tripItem : locations) {
+			tripItem.visitDepartureTripItem(cloneVisotr);
+			clonedTrip.addLast(cloneVisotr.departureTripItemClone);
 
-        }
+		}
 		return new PTVehilceTrip(clonedTrip, graphType);
-    }
+	}
 
-    private static class DepartureTripItemCloneVisotr implements DepartureTripItemVisitor {
+	private static class DepartureTripItemCloneVisotr implements DepartureTripItemVisitor {
 
-        public DepartureTripItem departureTripItemClone;
+		public DepartureTripItem departureTripItemClone;
 
-        @Override
-        public void visitDepartureTripItem(NotWaitingDepartureTripItem notWaitingDepartureTripItem) {
-            departureTripItemClone = new NotWaitingDepartureTripItem(
-                    notWaitingDepartureTripItem.tripPositionByNodeId);
+		@Override
+		public void visitDepartureTripItem(NotWaitingDepartureTripItem notWaitingDepartureTripItem) {
+			departureTripItemClone = new NotWaitingDepartureTripItem(
+					notWaitingDepartureTripItem.tripPositionByNodeId);
 
-        }
+		}
 
-        @Override
-        public void visitDepartureTripItem(WaitingDepartureTripItem waitingDepartureTripItem) {
-            departureTripItemClone = new WaitingDepartureTripItem(
-                    waitingDepartureTripItem.tripPositionByNodeId,
-                    waitingDepartureTripItem.departureTime, waitingDepartureTripItem.overMidnight);
-        }
+		@Override
+		public void visitDepartureTripItem(WaitingDepartureTripItem waitingDepartureTripItem) {
+			departureTripItemClone = new WaitingDepartureTripItem(
+					waitingDepartureTripItem.tripPositionByNodeId,
+					waitingDepartureTripItem.departureTime, waitingDepartureTripItem.overMidnight);
+		}
 
-    }
+	}
 
 }

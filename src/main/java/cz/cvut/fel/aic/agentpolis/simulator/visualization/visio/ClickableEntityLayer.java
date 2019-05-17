@@ -44,18 +44,18 @@ public abstract class ClickableEntityLayer<E extends AgentPolisEntity> extends E
 	
 	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig,
 			boolean showStackedEntitiesCount) {
-        super(entityStorage, agentpolisConfig, showStackedEntitiesCount);
-    }
+		super(entityStorage, agentpolisConfig, showStackedEntitiesCount);
+	}
 	
 	public ClickableEntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
 			boolean showStackedEntitiesCount, boolean transformSize) {
 		super(entityStorage, agentpolisConfig, showStackedEntitiesCount, transformSize);
-    }
+	}
 	
 	@Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            Point2d click = new Point2d(mouseEvent.getX(), mouseEvent.getY());
+	public void mouseClicked(MouseEvent mouseEvent) {
+		if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+			Point2d click = new Point2d(mouseEvent.getX(), mouseEvent.getY());
 			
 			E nearestEntity = getNearestEntity(click);
 			if(nearestEntity != null){
@@ -63,28 +63,28 @@ public abstract class ClickableEntityLayer<E extends AgentPolisEntity> extends E
 					processClick(nearestEntity);
 				}
 			}
-        }
-    }
+		}
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent me) {
+	@Override
+	public void mouseEntered(MouseEvent me) {
 
-    }
+	}
 
-    @Override
-    public void mouseExited(MouseEvent me) {
+	@Override
+	public void mouseExited(MouseEvent me) {
 
-    }
+	}
 
-    @Override
-    public void mousePressed(MouseEvent me) {
+	@Override
+	public void mousePressed(MouseEvent me) {
 
-    }
+	}
 
-    @Override
-    public void mouseReleased(MouseEvent me) {
+	@Override
+	public void mouseReleased(MouseEvent me) {
 
-    }
+	}
 	
 	protected E getNearestEntity(Point2d point){
 		if (entityStorage.isEmpty() == false) {

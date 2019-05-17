@@ -40,34 +40,34 @@ public class Utils {
 		return getCompleteGraph(nodeCount, projection, DEFAULT_RADIUS);
 	}
 	
-    public static Graph<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount, Transformer projection, 
+	public static Graph<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount, Transformer projection, 
 			int radius) {
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
+		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-        for (int i = 0; i < nodeCount; i++) {
-            double angle = 2 * Math.PI / nodeCount * i;
+		for (int i = 0; i < nodeCount; i++) {
+			double angle = 2 * Math.PI / nodeCount * i;
 
-            int x = 100 * (int) Math.round(radius * Math.cos(angle));
-            int y = 100 * (int) Math.round(radius * Math.sin(angle));
+			int x = 100 * (int) Math.round(radius * Math.cos(angle));
+			int y = 100 * (int) Math.round(radius * Math.sin(angle));
 
 
-            SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection);
+			SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection);
 
-            graphBuilder.addNode(node);
+			graphBuilder.addNode(node);
 
-            for (int j = 0; j < i; j++) {
-                SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(i), graphBuilder.getNode(j), 
-                        0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
-                SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(j), graphBuilder.getNode(i), 
-                        0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
+			for (int j = 0; j < i; j++) {
+				SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(i), graphBuilder.getNode(j), 
+						0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
+				SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(j), graphBuilder.getNode(i), 
+						0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
 
-                graphBuilder.addEdge(edge1);
-                graphBuilder.addEdge(edge2);
-            }
-        }
+				graphBuilder.addEdge(edge1);
+				graphBuilder.addEdge(edge2);
+			}
+		}
 
-        return graphBuilder.createGraph();
-    }
+		return graphBuilder.createGraph();
+	}
 	
 	public static Graph<SimulationNode, SimulationEdge> getGridGraph(int width, Transformer projection) {
 		return getGridGraph(width, projection, width);
@@ -75,11 +75,11 @@ public class Utils {
 	
 	public static Graph<SimulationNode, SimulationEdge> getGridGraph(int width, Transformer projection, 
 			int height) {
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
+		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 		
 		int size = DEFAULT_GRID_SIZE;
 
-        for (int i = 0; i < height; i++) {
+		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 
 				int x = 100 * j * size;
@@ -102,10 +102,10 @@ public class Utils {
 				}
 				
 			}
-        }
+		}
 
-        return graphBuilder.createGraph();
-    }
+		return graphBuilder.createGraph();
+	}
 	
 	private static void createEdges(int id1, int id2, GraphBuilder<SimulationNode, SimulationEdge> graphBuilder){
 		SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(id1), graphBuilder.getNode(id2), 0, 0, 0, 100, 

@@ -33,14 +33,14 @@ import java.util.Map;
  */
 public class MapData {
 
-    public final Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByType;
-    public final Map<Integer,SimulationNode> nodesFromAllGraphs;
+	public final Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByType;
+	public final Map<Integer,SimulationNode> nodesFromAllGraphs;
 
-    public MapData(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByType,
-            Map<Integer, SimulationNode> nodesFromAllGraphs) {
-        super();
-        this.graphByType = graphByType;
-        this.nodesFromAllGraphs = nodesFromAllGraphs;
-    }
+	public MapData(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByType,
+			Map<Integer, SimulationNode> nodesFromAllGraphs) {
+		super();
+		this.graphByType = graphByType;
+		this.nodesFromAllGraphs = nodesFromAllGraphs;
+	}
 
 }

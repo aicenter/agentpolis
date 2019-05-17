@@ -28,10 +28,10 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioPositionUti
  */
 public class TestModule extends AbstractModule{
 
-    @Override
-    protected void configure() {
-        bind(TimeProvider.class).to(TestTimeProvider.class);
-        bind(VisioPositionUtil.class).to(TestPositionUtil.class);
-    }
-    
+	@Override
+	protected void configure() {
+		bind(TimeProvider.class).to(TestTimeProvider.class);
+		bind(VisioPositionUtil.class).to(TestPositionUtil.class);
+	}
+	
 }

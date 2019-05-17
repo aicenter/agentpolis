@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class StandardTimeProvider implements TimeProvider{
 
-        private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StandardTimeProvider.class);
+		private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StandardTimeProvider.class);
 
 	private final static long HOUR_24 = Duration.ofHours(24).toMillis();
 	private final static long NEXT_DAY_FLAG = 1;
@@ -59,7 +59,7 @@ public class StandardTimeProvider implements TimeProvider{
 	public StandardTimeProvider(EventProcessor eventProcessor) {
 		this(eventProcessor, LocalDate.parse("2014-09-08"));
 		LOGGER.warn("Init date was set to default ({}). "
-                        + "Some features may not work properly - e.g. Public transport", initDate);
+						+ "Some features may not work properly - e.g. Public transport", initDate);
 	}
 
 	public StandardTimeProvider(EventProcessor eventProcessor, LocalDate initDate) {

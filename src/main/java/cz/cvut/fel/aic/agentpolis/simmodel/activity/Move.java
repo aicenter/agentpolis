@@ -40,61 +40,61 @@ import org.slf4j.LoggerFactory;
  */
 public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A> {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Move.class);
-    protected final EventProcessor eventProcessor;
-    protected final SimulationEdge edge;
-    protected final SimulationNode from;
-    protected final SimulationNode to;
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Move.class);
+	protected final EventProcessor eventProcessor;
+	protected final SimulationEdge edge;
+	protected final SimulationNode from;
+	protected final SimulationNode to;
 
 
-    public Move(ActivityInitializer activityInitializer,
-                TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-        super(activityInitializer, agent);
-        this.eventProcessor = eventProcessor;
-        this.edge = edge;
-        this.from = from;
-        this.to = to;
-    }
+	public Move(ActivityInitializer activityInitializer,
+				TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+		super(activityInitializer, agent);
+		this.eventProcessor = eventProcessor;
+		this.edge = edge;
+		this.from = from;
+		this.to = to;
+	}
 
 
-    @Override
-    protected void performAction() {
-        agent.setTargetNode(null);
-        agent.setPosition(to);
-        finish();
-    }
+	@Override
+	protected void performAction() {
+		agent.setTargetNode(null);
+		agent.setPosition(to);
+		finish();
+	}
 
-    /**
-     * The method ensure that the agent movement is feasible for execution. If
-     * the movement is not feasible then agent will freeze.
-     *
-     * @param edge
-     * @return
-     */
-    protected boolean checkFeasibility(Edge edge) {
-        return edge != null;
+	/**
+	 * The method ensure that the agent movement is feasible for execution. If
+	 * the movement is not feasible then agent will freeze.
+	 *
+	 * @param edge
+	 * @return
+	 */
+	protected boolean checkFeasibility(Edge edge) {
+		return edge != null;
 
-    }
+	}
 
-    @Override
-    protected long performPreDelayActions() {
-        long duration = 0;
-        if (checkFeasibility(edge)) {
+	@Override
+	protected long performPreDelayActions() {
+		long duration = 0;
+		if (checkFeasibility(edge)) {
 
-            agent.setTargetNode(to);
-            double distance = edge.shape.getShapeLength();
-            double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), edge.allowedMaxSpeedInMpS);
-            duration = MoveUtil.computeDuration(velocity, distance);
+			agent.setTargetNode(to);
+			double distance = edge.shape.getShapeLength();
+			double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), edge.allowedMaxSpeedInMpS);
+			duration = MoveUtil.computeDuration(velocity, distance);
 
-            agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), distance));
-        } else {
-            LOGGER.error("The agent with id: {} is not able to execute movement. Agent will freeze "
-                            + "on the current position. It does not exist the edge from {} to {}", new Object[]{ 
-                            agent.getId(), edge.fromNode.getId(), edge.toNode.getId()});
-            fail("It does not exist the edge from: " + edge.fromNode.getId() + " to: " + edge.toNode.getId());
-        }
-        return duration;
-    }
+			agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), distance));
+		} else {
+			LOGGER.error("The agent with id: {} is not able to execute movement. Agent will freeze "
+							+ "on the current position. It does not exist the edge from {} to {}", new Object[]{ 
+							agent.getId(), edge.fromNode.getId(), edge.toNode.getId()});
+			fail("It does not exist the edge from: " + edge.fromNode.getId() + " to: " + edge.toNode.getId());
+		}
+		return duration;
+	}
 
 
 }

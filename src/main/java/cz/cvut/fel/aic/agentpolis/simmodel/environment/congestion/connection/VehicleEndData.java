@@ -26,14 +26,14 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.VehicleTripDat
  * @author fido
  */
 public class VehicleEndData extends VehicleEventData{
-    public final Lane lane;
+	public final Lane lane;
 
-    public final VehicleTripData vehicleTripData;
+	public final VehicleTripData vehicleTripData;
 
 
-    public VehicleEndData(Lane lane, VehicleTripData vehicleTripData, long endingFinishTime) {
-        super(endingFinishTime);
-        this.lane = lane;
-        this.vehicleTripData = vehicleTripData;
-    }
+	public VehicleEndData(Lane lane, VehicleTripData vehicleTripData, long endingFinishTime) {
+		super(endingFinishTime);
+		this.lane = lane;
+		this.vehicleTripData = vehicleTripData;
+	}
 }

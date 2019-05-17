@@ -25,11 +25,11 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
  * @author fido
  */
 public enum CongestionTestType implements EntityType{
-    TEST_VEHICLE,
-    TEST_DRIVER;
+	TEST_VEHICLE,
+	TEST_DRIVER;
 
-    @Override
-    public String getDescriptionEntityType() {
-        return "";
-    }
+	@Override
+	public String getDescriptionEntityType() {
+		return "";
+	}
 }

@@ -27,12 +27,12 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  * @param <V>
  */
 public interface Driver<V extends Vehicle> extends MovingAgent{
-    public V getVehicle();
-    
-    public void startDriving(V vehicle);
-    
-    public void endDriving();
-    
-    public void setPosition(SimulationNode position);
+	public V getVehicle();
+	
+	public void startDriving(V vehicle);
+	
+	public void endDriving();
+	
+	public void setPosition(SimulationNode position);
 
 }

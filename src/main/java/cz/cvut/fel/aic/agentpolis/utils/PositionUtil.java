@@ -36,6 +36,6 @@ public class PositionUtil {
 	 * @return projected position as @Point2d
 	 */
 	public Point2d getPosition(GPSLocation position) {
-        return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
-    }
+		return new Point2d(position.getLongitudeProjected(), position.getLatitudeProjected());
+	}
 }

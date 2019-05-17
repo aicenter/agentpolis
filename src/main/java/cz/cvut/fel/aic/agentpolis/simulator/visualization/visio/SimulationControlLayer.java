@@ -56,42 +56,42 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class SimulationControlLayer extends AbstractLayer {
-    
-    private static final Color BACKGROUND_COLOR = Color.WHITE;
-    
-    private static final Color TEXT_COLOR = Color.BLUE;
-    
-    private static final Point STRING_POSITION = new Point(15, 20);
-    
-    private static final Point TIME_POSITION = new Point(180, 22);
-    
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationControlLayer.class);
+	
+	private static final Color BACKGROUND_COLOR = Color.WHITE;
+	
+	private static final Color TEXT_COLOR = Color.BLUE;
+	
+	private static final Point STRING_POSITION = new Point(15, 20);
+	
+	private static final Point TIME_POSITION = new Point(180, 22);
+	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationControlLayer.class);
 
-    
-    
-    
-    
+	
+	
+	
+	
 	private final Simulation simulation;
-    
-    private final StandardTimeProvider timeProvider;
+	
+	private final StandardTimeProvider timeProvider;
 
-    
-    
+	
+	
 
-    @Inject
+	@Inject
 	private SimulationControlLayer(Simulation simulation, StandardTimeProvider timeProvider) {
 		this.simulation = simulation;
-        this.timeProvider = timeProvider;
-        
-        KeyToggleLayer toggle = KeyToggleLayer.create("s");
+		this.timeProvider = timeProvider;
+		
+		KeyToggleLayer toggle = KeyToggleLayer.create("s");
 		toggle.addSubLayer(this);
 		toggle.setHelpOverrideString(getLayerDescription() + "\n" +
 									 "By pressing 's', the simulation info can be turned off and on.");
 	}
 
-    
-    
-    
+	
+	
+	
 	@Override
 	public void init(Vis vis) {
 		super.init(vis);
@@ -138,9 +138,9 @@ public class SimulationControlLayer extends AbstractLayer {
 					}
 				} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 					javax.swing.JOptionPane.showConfirmDialog(null, "Delete GE files on exit to generate new?\n" +
-																	"      Yes - delete only static.kmz\n" +
-																	"      No - delete all GE files\n" +
-																	"      Cancel - delete nothing", "UrbanSim",
+																	"	  Yes - delete only static.kmz\n" +
+																	"	  No - delete all GE files\n" +
+																	"	  Cancel - delete nothing", "UrbanSim",
 															  JOptionPane.YES_NO_CANCEL_OPTION);
 					// if (selected == JOptionPane.YES_OPTION) {
 					// File f = new File(KmlFileGE.TMP_PATH +
@@ -189,14 +189,14 @@ public class SimulationControlLayer extends AbstractLayer {
 				}
 			}
 		}
-        
-        VisioUtils.printTextWithBackgroud(canvas, label.toString(), STRING_POSITION, TEXT_COLOR, BACKGROUND_COLOR);
+		
+		VisioUtils.printTextWithBackgroud(canvas, label.toString(), STRING_POSITION, TEXT_COLOR, BACKGROUND_COLOR);
 
 		Font font = canvas.getFont();
 		canvas.setFont(new Font(font.getName(), Font.BOLD, 18));
 
-        VisioUtils.printTextWithBackgroud(canvas, converSimTimeForVis(timeProvider), TIME_POSITION, TEXT_COLOR, 
-                BACKGROUND_COLOR);
+		VisioUtils.printTextWithBackgroud(canvas, converSimTimeForVis(timeProvider), TIME_POSITION, TEXT_COLOR, 
+				BACKGROUND_COLOR);
 
 		canvas.setFont(new Font(font.getName(), 0, 12));
 		// canvas.drawString(TimeStorage.printDate(environment.getTimeStorage().getActualTime()),
@@ -208,7 +208,7 @@ public class SimulationControlLayer extends AbstractLayer {
 	private static final long DAY_IN_MILLIS = Duration.ofDays(1).toMillis();
 	private static final long HOUR_IN_MILLIS = Duration.ofHours(1).toMillis();
 	private static final long MIN_IN_MILLIS = Duration.ofMinutes(1).toMillis();
-    private static final long SECONDS_IN_MILLIS = Duration.ofSeconds(1).toMillis();
+	private static final long SECONDS_IN_MILLIS = Duration.ofSeconds(1).toMillis();
 	private static final Format formatter = new SimpleDateFormat("HH:mm:ss");
 	private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd");
 
@@ -219,12 +219,12 @@ public class SimulationControlLayer extends AbstractLayer {
 		long timeInDayRange = timeFromSimulationStart % DAY_IN_MILLIS;
 		long hours = timeInDayRange / HOUR_IN_MILLIS;
 		long min = (timeInDayRange % HOUR_IN_MILLIS) / MIN_IN_MILLIS;
-        long sec = (timeInDayRange % MIN_IN_MILLIS) / SECONDS_IN_MILLIS;
+		long sec = (timeInDayRange % MIN_IN_MILLIS) / SECONDS_IN_MILLIS;
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, (int) hours);
 		calendar.set(Calendar.MINUTE, (int) min);
-        calendar.set(Calendar.SECOND, (int) sec);
+		calendar.set(Calendar.SECOND, (int) sec);
 
 		return formatter.format(calendar.getTime()) + " " + timeProvider.getCurrentDayInWeek().toString() + " " +
 			   fmt.format(timeProvider.getCurrentDate());

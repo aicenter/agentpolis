@@ -24,8 +24,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
  */
 public class ModelConstructionFailedException extends Exception{
 
-    public ModelConstructionFailedException(String message) {
-        super(message);
-    }
-    
+	public ModelConstructionFailedException(String message) {
+		super(message);
+	}
+	
 }

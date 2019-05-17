@@ -33,38 +33,38 @@ import java.util.Set;
  */
 @Singleton
 public class ShortestPathPlanners {
-    private final HashMap<Set<GraphType>, ShortestPathPlanner> shortestPathPlannersMappedByGraphTypes;
-    
-    private final ShortestPathPlannerFactory shortestPathPlannerFactory;
+	private final HashMap<Set<GraphType>, ShortestPathPlanner> shortestPathPlannersMappedByGraphTypes;
+	
+	private final ShortestPathPlannerFactory shortestPathPlannerFactory;
 
-    @Inject
-    public ShortestPathPlanners(ShortestPathPlannerFactory shortestPathPlannerFactory) {
-        this.shortestPathPlannerFactory = shortestPathPlannerFactory;
-        this.shortestPathPlannersMappedByGraphTypes = new HashMap<>();
-    }
-    
-    public VehicleTrip findTrip(String vehicleId, int startNodeById, int destinationNodeById, Set<GraphType> graphTypes) 
-            throws TripPlannerException{
-        if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
-            createShortestPathPlanner(graphTypes);
-        }
-        
-        ShortestPathPlanner planner = shortestPathPlannersMappedByGraphTypes.get(graphTypes);
-        
-        return planner.findTrip(vehicleId, startNodeById, destinationNodeById);
-    }
-    
-    public ShortestPathPlanner getPathPlanner(Set<GraphType> graphTypes){
-        if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
-            createShortestPathPlanner(graphTypes);
-        }
-        return shortestPathPlannersMappedByGraphTypes.get(graphTypes);
-    }
+	@Inject
+	public ShortestPathPlanners(ShortestPathPlannerFactory shortestPathPlannerFactory) {
+		this.shortestPathPlannerFactory = shortestPathPlannerFactory;
+		this.shortestPathPlannersMappedByGraphTypes = new HashMap<>();
+	}
+	
+	public VehicleTrip findTrip(String vehicleId, int startNodeById, int destinationNodeById, Set<GraphType> graphTypes) 
+			throws TripPlannerException{
+		if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
+			createShortestPathPlanner(graphTypes);
+		}
+		
+		ShortestPathPlanner planner = shortestPathPlannersMappedByGraphTypes.get(graphTypes);
+		
+		return planner.findTrip(vehicleId, startNodeById, destinationNodeById);
+	}
+	
+	public ShortestPathPlanner getPathPlanner(Set<GraphType> graphTypes){
+		if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
+			createShortestPathPlanner(graphTypes);
+		}
+		return shortestPathPlannersMappedByGraphTypes.get(graphTypes);
+	}
 
-    private void createShortestPathPlanner(Set<GraphType> graphTypes) {
-        ShortestPathPlanner planner = shortestPathPlannerFactory.create(graphTypes);
-        
-        shortestPathPlannersMappedByGraphTypes.put(graphTypes, planner);
-    }
-    
+	private void createShortestPathPlanner(Set<GraphType> graphTypes) {
+		ShortestPathPlanner planner = shortestPathPlannerFactory.create(graphTypes);
+		
+		shortestPathPlannersMappedByGraphTypes.put(graphTypes, planner);
+	}
+	
 }

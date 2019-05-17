@@ -27,37 +27,37 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  * @author fido
  */
 public class VehicleTripData {
-    private final PhysicalVehicle vehicle;
-    
-    private final Trip<SimulationNode> trip;
-    
-    
-    private boolean tripFinished;
+	private final PhysicalVehicle vehicle;
+	
+	private final Trip<SimulationNode> trip;
+	
+	
+	private boolean tripFinished;
 
-    public PhysicalVehicle getVehicle() {
-        return vehicle;
-    }
+	public PhysicalVehicle getVehicle() {
+		return vehicle;
+	}
 
-    public Trip<SimulationNode> getTrip() {
-        return trip;
-    }
+	public Trip<SimulationNode> getTrip() {
+		return trip;
+	}
 
-    public boolean isTripFinished() {
-        return tripFinished;
-    }
+	public boolean isTripFinished() {
+		return tripFinished;
+	}
 
-    public void setTripFinished(boolean tripFinished) {
-        this.tripFinished = tripFinished;
-    }
-    
-    
+	public void setTripFinished(boolean tripFinished) {
+		this.tripFinished = tripFinished;
+	}
+	
+	
 
-    
-    public VehicleTripData(PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
-        this.vehicle = vehicle;
-        this.trip = trip;
-        tripFinished = false;
-    }
-    
-    
+	
+	public VehicleTripData(PhysicalVehicle vehicle, Trip<SimulationNode> trip) {
+		this.vehicle = vehicle;
+		this.trip = trip;
+		tripFinished = false;
+	}
+	
+	
 }

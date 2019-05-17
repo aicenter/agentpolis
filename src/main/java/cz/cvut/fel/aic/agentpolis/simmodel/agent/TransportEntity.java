@@ -28,11 +28,11 @@ import java.util.List;
  * @param <T>
  */
 public interface TransportEntity<T extends TransportableEntity> extends MovingEntity{
-    
-    public List<T> getTransportedEntities();
-    
-    public int getCapacity();
-    
-    public Driver getDriver();
-    
+	
+	public List<T> getTransportedEntities();
+	
+	public int getCapacity();
+	
+	public Driver getDriver();
+	
 }

@@ -39,13 +39,13 @@ import java.util.Map;
  * @author fido
  */
 public class DriveTest {
-    
-    private static final int TEN_MINUTES_IN_MILIS = 600000;
-    
-    // we expect trips to be no longer then 40 minutes
-    private static final int TRIP_MAX_DURATION = 2400000;
-    
-    private static final int START_TIME_MILIS = 25200000;
+	
+	private static final int TEN_MINUTES_IN_MILIS = 600000;
+	
+	// we expect trips to be no longer then 40 minutes
+	private static final int TRIP_MAX_DURATION = 2400000;
+	
+	private static final int START_TIME_MILIS = 25200000;
 	
 	
 	private final Injector injector;
@@ -56,73 +56,73 @@ public class DriveTest {
 
 	public DriveTest() {
 		AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
-        injector = agentPolisInitializer.initialize();
+		injector = agentPolisInitializer.initialize();
 	}
-    
 	
 	
 	
 	
-    
-    public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
-        
-        
-//        AgentpolisConfig config = Configuration.load(new AgentpolisConfig());
-        
-        //config overwrite
-//        config.agentpolis.simulationDurationInMillis = TEN_MINUTES_IN_MILIS;
-//        config.agentpolis.startTime = START_TIME_MILIS;
-//        config.agentpolis.showVisio = true;
-//        Common.setTestResultsDir(config, "test");
-        
-        SimulationCreator creator = injector.getInstance(SimulationCreator.class);
+	
+	
+	public void run(Graph<SimulationNode, SimulationEdge> graph, Trip<SimulationNode> ... trips) {
+		
+		
+//		AgentpolisConfig config = Configuration.load(new AgentpolisConfig());
+		
+		//config overwrite
+//		config.agentpolis.simulationDurationInMillis = TEN_MINUTES_IN_MILIS;
+//		config.agentpolis.startTime = START_TIME_MILIS;
+//		config.agentpolis.showVisio = true;
+//		Common.setTestResultsDir(config, "test");
+		
+		SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
-        // prepare map, entity storages...
-        creator.prepareSimulation(getMapData(graph));
-        
-        CongestedDriveFactory congestedDriveFactory = injector.getInstance(CongestedDriveFactory.class);
-        DriveAgentStorage driveAgentStorage = injector.getInstance(DriveAgentStorage.class);
-        
-        
-        for (int i = 0; i < trips.length; i++) {
-            Trip<SimulationNode> trip = trips[i];
-            PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle" + i, CongestionTestType.TEST_VEHICLE, 2, 
-               EGraphType.HIGHWAY, graph.getNode(0), 15);
-        
-            DriveAgent driveAgent = new DriveAgent("Test driver" + i, graph.getNode(0));
+		// prepare map, entity storages...
+		creator.prepareSimulation(getMapData(graph));
+		
+		CongestedDriveFactory congestedDriveFactory = injector.getInstance(CongestedDriveFactory.class);
+		DriveAgentStorage driveAgentStorage = injector.getInstance(DriveAgentStorage.class);
+		
+		
+		for (int i = 0; i < trips.length; i++) {
+			Trip<SimulationNode> trip = trips[i];
+			PhysicalVehicle vehicle = new PhysicalVehicle("Test vehicle" + i, CongestionTestType.TEST_VEHICLE, 2, 
+			   EGraphType.HIGHWAY, graph.getNode(0), 15);
+		
+			DriveAgent driveAgent = new DriveAgent("Test driver" + i, graph.getNode(0));
 
-            driveAgentStorage.addEntity(driveAgent);
+			driveAgentStorage.addEntity(driveAgent);
 
-            congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
-        }
-        
-        creator.startSimulation();
-    }
-    
-    private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
-        Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
-        graphs.put(EGraphType.HIGHWAY, graph);
-        
-        Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
+			congestedDriveFactory.runActivity(driveAgent, vehicle, trip);
+		}
+		
+		creator.startSimulation();
+	}
+	
+	private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
+		Map<GraphType,Graph<SimulationNode, SimulationEdge>> graphs = new HashMap<>();
+		graphs.put(EGraphType.HIGHWAY, graph);
+		
+		Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
-        return new MapData(graphs, nodes);
-    }
-    
-    /**
-     * Build map data
-     */
-    private Map<Integer, SimulationNode> createAllGraphNodes(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
+		return new MapData(graphs, nodes);
+	}
+	
+	/**
+	 * Build map data
+	 */
+	private Map<Integer, SimulationNode> createAllGraphNodes(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
 
-        Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
+		Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
 
-        for (GraphType graphType : graphByGraphType.keySet()) {
-            Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
-            for (SimulationNode node : graphStorageTmp.getAllNodes()) {
-                nodesFromAllGraphs.put(node.getId(), node);
-            }
+		for (GraphType graphType : graphByGraphType.keySet()) {
+			Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
+			for (SimulationNode node : graphStorageTmp.getAllNodes()) {
+				nodesFromAllGraphs.put(node.getId(), node);
+			}
 
-        }
+		}
 
-        return nodesFromAllGraphs;
-    }
+		return nodesFromAllGraphs;
+	}
 }

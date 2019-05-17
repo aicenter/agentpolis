@@ -29,38 +29,38 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  */
 public class PhysicalVehicle extends Vehicle {
 
-    private final double lengthInMeters;
-    private final EntityType vehicleType;
-    private final GraphType usingGraphTypeForMoving;
+	private final double lengthInMeters;
+	private final EntityType vehicleType;
+	private final GraphType usingGraphTypeForMoving;
 
-    private final double maxVelocity;
+	private final double maxVelocity;
 
-    public PhysicalVehicle(String vehicleId, EntityType type, double lengthInMeters,
-                           GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
-        super(vehicleId, position);
-        this.lengthInMeters = lengthInMeters;
-        this.vehicleType = type;
-        this.usingGraphTypeForMoving = usingGraphTypeForMoving;
-        this.maxVelocity = maxVelocity;
-    }
+	public PhysicalVehicle(String vehicleId, EntityType type, double lengthInMeters,
+						   GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
+		super(vehicleId, position);
+		this.lengthInMeters = lengthInMeters;
+		this.vehicleType = type;
+		this.usingGraphTypeForMoving = usingGraphTypeForMoving;
+		this.maxVelocity = maxVelocity;
+	}
 
-    @Override
-    public EntityType getType() {
-        return vehicleType;
-    }
+	@Override
+	public EntityType getType() {
+		return vehicleType;
+	}
 
 
-    public double getLength() {
-        return lengthInMeters;
-    }
+	public double getLength() {
+		return lengthInMeters;
+	}
 
-    public GraphType getGraphForMovingBaseOnType() {
-        return usingGraphTypeForMoving;
-    }
+	public GraphType getGraphForMovingBaseOnType() {
+		return usingGraphTypeForMoving;
+	}
 
-    @Override
-    public double getVelocity() {
-        return maxVelocity;
-    }
+	@Override
+	public double getVelocity() {
+		return maxVelocity;
+	}
 
 }

@@ -50,11 +50,11 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	private final boolean showStackedEntitiesCount;
 	
 	protected final AgentpolisConfig agentpolisConfig;
-    
+	
 
 	private Map<Point2d, List<E>> entityPositionMap;
 
-    protected VisioPositionUtil positionUtil;
+	protected VisioPositionUtil positionUtil;
 
 	protected TimeProvider timeProvider;
 
@@ -62,12 +62,12 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	@Inject
 	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
-        this(entityStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
+		this(entityStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
 	}
 
-    public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
+	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
 			boolean showStackedEntitiesCount) {
-        this(entityStorage, agentpolisConfig, showStackedEntitiesCount, true);
+		this(entityStorage, agentpolisConfig, showStackedEntitiesCount, true);
 	}
 
 	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
@@ -79,7 +79,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	}
 
 	@Inject
-    public void init(VisioPositionUtil positionUtil, TimeProvider timeProvider){
+	public void init(VisioPositionUtil positionUtil, TimeProvider timeProvider){
 		this.positionUtil = positionUtil;
 		this.timeProvider = timeProvider;
 	}
@@ -215,13 +215,13 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	 * {@code x1,y1,x2,y2} overlaps the given {@code dimension}
 	 * 
 	 * @param x1
-	 *            x coordinate of one corner
+	 *			x coordinate of one corner
 	 * @param y1
-	 *            y coordinate of one corner
+	 *			y coordinate of one corner
 	 * @param x2
-	 *            x coordinate of the opposite corner
+	 *			x coordinate of the opposite corner
 	 * @param y2
-	 *            y coordinate of the opposite corner
+	 *			y coordinate of the opposite corner
 	 * @param dimension
 	 * @return
 	 */

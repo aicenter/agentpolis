@@ -29,23 +29,23 @@ import cz.cvut.fel.aic.agentpolis.simmodel.TimeConsumingActivity;
  */
 
 public class Wait<A extends Agent> extends TimeConsumingActivity<A>{
-    
-    private final long waitTime;
+	
+	private final long waitTime;
 
-    
-    public Wait(ActivityInitializer activityInitializer, A agent, long waitTime) {
-        super(activityInitializer, agent);
-        this.waitTime = waitTime;
-    }
+	
+	public Wait(ActivityInitializer activityInitializer, A agent, long waitTime) {
+		super(activityInitializer, agent);
+		this.waitTime = waitTime;
+	}
 
-    @Override
-    protected long performPreDelayActions() {
-        return waitTime;
-    }
+	@Override
+	protected long performPreDelayActions() {
+		return waitTime;
+	}
 
-    @Override
-    protected void performAction() {
-        finish();
-    }
-    
+	@Override
+	protected void performAction() {
+		finish();
+	}
+	
 }

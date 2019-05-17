@@ -12,16 +12,16 @@ import java.util.List;
 
 public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,SimulationEdge> {
 
-    @Override
-    public SimulationEdge createEdge(InternalEdge internalEdge, GraphBuilder<SimulationNode,SimulationEdge> graphBuilder) {
-        List<GPSLocation> coordinatesList = internalEdge.get("coordinateList");
-        EdgeShape edgeShape = new EdgeShape(coordinatesList);
+	@Override
+	public SimulationEdge createEdge(InternalEdge internalEdge, GraphBuilder<SimulationNode,SimulationEdge> graphBuilder) {
+		List<GPSLocation> coordinatesList = internalEdge.get("coordinateList");
+		EdgeShape edgeShape = new EdgeShape(coordinatesList);
 		SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
-        SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
-        return new SimulationEdge(fromNode, toNode, internalEdge.get("wayID"),
-                internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLength(),
-                internalEdge.get("allowedMaxSpeedInMpS"),
-                internalEdge.get("lanesCount"), edgeShape);
-    }
+		SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
+		return new SimulationEdge(fromNode, toNode, internalEdge.get("wayID"),
+				internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLength(),
+				internalEdge.get("allowedMaxSpeedInMpS"),
+				internalEdge.get("lanesCount"), edgeShape);
+	}
 
 }

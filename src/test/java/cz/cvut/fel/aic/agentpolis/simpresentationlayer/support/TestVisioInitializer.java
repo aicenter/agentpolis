@@ -16,36 +16,36 @@ import java.awt.*;
 @Singleton
 public class TestVisioInitializer extends DefaultVisioInitializer {
 
-    protected final NodeIdLayer nodeIdLayer;
-    protected final HighwayLayer highwayLayer;
-    private final VisLayer backgroundLayer;
-    private final MapTilesLayer mapTilesLayer;
+	protected final NodeIdLayer nodeIdLayer;
+	protected final HighwayLayer highwayLayer;
+	private final VisLayer backgroundLayer;
+	private final MapTilesLayer mapTilesLayer;
 
-    @Inject
-    public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
-                                HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-                                RailwayNetwork railwayNetwork, NodeIdLayer nodeIdLayer, HighwayLayer highwayLayer,
-                                SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles, AgentpolisConfig config) {
-        super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-                simulationControlLayer, gridLayer, config);
-        this.nodeIdLayer = nodeIdLayer;
-        this.highwayLayer = highwayLayer;
-        this.backgroundLayer = ColorLayer.create(Color.white);
-        this.mapTilesLayer = mapTiles;
-    }
+	@Inject
+	public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+								HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
+								RailwayNetwork railwayNetwork, NodeIdLayer nodeIdLayer, HighwayLayer highwayLayer,
+								SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles, AgentpolisConfig config) {
+		super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
+				simulationControlLayer, gridLayer, config);
+		this.nodeIdLayer = nodeIdLayer;
+		this.highwayLayer = highwayLayer;
+		this.backgroundLayer = ColorLayer.create(Color.white);
+		this.mapTilesLayer = mapTiles;
+	}
 
-    @Override
-    protected void initGraphLayers() {
-        VisManager.registerLayer(backgroundLayer);
-        VisManager.registerLayer(mapTilesLayer);
-        VisManager.registerLayer(KeyToggleLayer.create("h", true, highwayLayer));
-    }
+	@Override
+	protected void initGraphLayers() {
+		VisManager.registerLayer(backgroundLayer);
+		VisManager.registerLayer(mapTilesLayer);
+		VisManager.registerLayer(KeyToggleLayer.create("h", true, highwayLayer));
+	}
 
 
-    @Override
-    protected void initLayersAfterEntityLayers() {
-        VisManager.registerLayer(nodeIdLayer);
-    }
+	@Override
+	protected void initLayersAfterEntityLayers() {
+		VisManager.registerLayer(nodeIdLayer);
+	}
 
 
 }

@@ -46,9 +46,9 @@ import java.util.stream.Stream;
  */
 public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable<TEntity> {
 
-    private final Map<String, TEntity> entities;
+	private final Map<String, TEntity> entities;
 	
-    private final Map<EntityType, Set<String>> entitiesByType;
+	private final Map<EntityType, Set<String>> entitiesByType;
 	
 	
 	private AgentPolisEntity[] entitiesForIteration = new AgentPolisEntity[1];
@@ -70,75 +70,75 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
 	
 	
 	
-    public EntityStorage() {
-        super();
-        this.entities = new ConcurrentHashMap<>();
-        this.entitiesByType = new ConcurrentHashMap<>();
-    }
+	public EntityStorage() {
+		super();
+		this.entities = new ConcurrentHashMap<>();
+		this.entitiesByType = new ConcurrentHashMap<>();
+	}
 	
 	
 	
 
-    /**
-     * Adds entity into the storage, its id has to be unique
-     *
-     * @param entity
-     */
-    public void addEntity(TEntity entity) {
-        checkArgument(entities.containsKey(entity.getId()) == false, "Duplicate entity i storage: "
-                + entity.getId());
+	/**
+	 * Adds entity into the storage, its id has to be unique
+	 *
+	 * @param entity
+	 */
+	public void addEntity(TEntity entity) {
+		checkArgument(entities.containsKey(entity.getId()) == false, "Duplicate entity i storage: "
+				+ entity.getId());
 
-        entities.put(entity.getId(), entity);
+		entities.put(entity.getId(), entity);
 
-        EntityType type = entity.getType();
-        if (!entitiesByType.containsKey(type)) {
-            entitiesByType.put(type, new HashSet<String>());
-        }
+		EntityType type = entity.getType();
+		if (!entitiesByType.containsKey(type)) {
+			entitiesByType.put(type, new HashSet<String>());
+		}
 
-        entitiesByType.get(type).add(entity.getId());
-    }
+		entitiesByType.get(type).add(entity.getId());
+	}
 
-    public void removeEntity(TEntity entity) {
-        entities.remove(entity.getId());
-        entitiesByType.get(entity.getType()).remove(entity.getId());
-    }
+	public void removeEntity(TEntity entity) {
+		entities.remove(entity.getId());
+		entitiesByType.get(entity.getType()).remove(entity.getId());
+	}
 
-    /**
-     * Returns entity base on given id
-     *
-     * @param entityId
-     * @return
-     */
-    public TEntity getEntityById(String entityId) {
-        return entities.get(checkNotNull(entityId));
-    }
+	/**
+	 * Returns entity base on given id
+	 *
+	 * @param entityId
+	 * @return
+	 */
+	public TEntity getEntityById(String entityId) {
+		return entities.get(checkNotNull(entityId));
+	}
 
-    /**
-     * Returns all entity ids
-     */
-    public ImmutableSet<String> getEntityIds() {
-        return ImmutableSet.copyOf(entities.keySet());
-    }
+	/**
+	 * Returns all entity ids
+	 */
+	public ImmutableSet<String> getEntityIds() {
+		return ImmutableSet.copyOf(entities.keySet());
+	}
 
-    @Override
-    public Iterator<TEntity> iterator() {
-        return new EntityIterator();
-    }
+	@Override
+	public Iterator<TEntity> iterator() {
+		return new EntityIterator();
+	}
 
 	@Override
 	public Spliterator<TEntity> spliterator() {
 		return Spliterators.spliterator(iterator(), entities.size(), 0);
 	}
 
-    
+	
 
-    public boolean isEmpty() {
-        return entities.isEmpty();
-    }
+	public boolean isEmpty() {
+		return entities.isEmpty();
+	}
 
-    public Collection<TEntity> getEntities() {
-        return entities.values();
-    }
+	public Collection<TEntity> getEntities() {
+		return entities.values();
+	}
 
 	public int size(){
 		return entities.size();
@@ -151,29 +151,29 @@ public class EntityStorage<TEntity extends AgentPolisEntity> implements Iterable
 	
 	public class EntityIterator implements Iterator<TEntity> {
 
-        private final Iterator<TEntity> iterator;
+		private final Iterator<TEntity> iterator;
 
-        public EntityIterator() {
-            iterator = entities.values().iterator();
-        }
+		public EntityIterator() {
+			iterator = entities.values().iterator();
+		}
 
-        public TEntity getNextEntity() {
-            while (iterator.hasNext()) {
-                TEntity entity = iterator.next();
-                return entity;
-            }
-            return null;
-        }
+		public TEntity getNextEntity() {
+			while (iterator.hasNext()) {
+				TEntity entity = iterator.next();
+				return entity;
+			}
+			return null;
+		}
 
-        @Override
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
+		@Override
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
 
-        @Override
-        public TEntity next() {
-            return iterator.next();
-        }
+		@Override
+		public TEntity next() {
+			return iterator.next();
+		}
 
-    }
+	}
 }

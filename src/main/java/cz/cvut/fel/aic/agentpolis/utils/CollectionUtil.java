@@ -28,8 +28,8 @@ import java.util.Random;
  * @author fido
  */
 public class CollectionUtil {
-    
-    public static <K> void incrementMapValue(Map<K,Integer> map, K key, int increment){
+	
+	public static <K> void incrementMapValue(Map<K,Integer> map, K key, int increment){
 		if(map.containsKey(key)){
 			map.put(key, map.get(key) + increment);
 		}
@@ -46,12 +46,12 @@ public class CollectionUtil {
 			map.put(key, increment);
 		}
 	}
-    
-    public static <K,V> Map.Entry<K,V> getRandomEntryFromMap(Map<K,V> map, Random randomGenerator) {
-        Object[] entries = map.entrySet().toArray();
-        Object randomEntry = entries[randomGenerator.nextInt(entries.length)];
-        return (Map.Entry<K,V>) randomEntry;
-    }
+	
+	public static <K,V> Map.Entry<K,V> getRandomEntryFromMap(Map<K,V> map, Random randomGenerator) {
+		Object[] entries = map.entrySet().toArray();
+		Object randomEntry = entries[randomGenerator.nextInt(entries.length)];
+		return (Map.Entry<K,V>) randomEntry;
+	}
 	
 	public static <K,V> void addToListInMap(Map<K,List<V>> map, K key, V value){
 		if(!map.containsKey(key)){

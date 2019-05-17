@@ -28,14 +28,14 @@ import cz.cvut.fel.aic.geographtools.util.Transformer;
  * @author Zdenek Bousa
  */
 public class SimulationNode extends Node {
-    
-    public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation) {
-        super(id, osmId, latE6, lonE6, projectedLat, projectedLon, elevation);
-    }
+	
+	public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation) {
+		super(id, osmId, latE6, lonE6, projectedLat, projectedLon, elevation);
+	}
 
-    public SimulationNode(int id, long sourceId, GPSLocation location) {
-        super(id, sourceId, location);
-    }
+	public SimulationNode(int id, long sourceId, GPSLocation location) {
+		super(id, sourceId, location);
+	}
 	
 	public SimulationNode(int id, long sourceId, double latitude, double longitude, int elevation, 
 			Transformer transformer){

@@ -27,11 +27,11 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
  */
 public interface TripVisitior {
 
-    public void visitTrip(WalkTrip walkTrip);
+	public void visitTrip(WalkTrip walkTrip);
 
-    public void visitTrip(PTTrip ptTrip);
+	public void visitTrip(PTTrip ptTrip);
 
-    public void visitTrip(VehicleTrip vehicleTrip);
+	public void visitTrip(VehicleTrip vehicleTrip);
 
-    public void visitTrip(TeleportTrip teleportTrip);
+	public void visitTrip(TeleportTrip teleportTrip);
 }

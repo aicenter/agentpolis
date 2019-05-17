@@ -40,40 +40,40 @@ import cz.cvut.fel.aic.geographtools.Node;
 @Singleton
 public class WalkActivityFactory extends ActivityFactory {
 
-    private final TransportNetworks transportNetworks;
+	private final TransportNetworks transportNetworks;
 
-    private final PedestrianMoveActivityFactory moveActivityFactory;
+	private final PedestrianMoveActivityFactory moveActivityFactory;
 
-    private final TypedSimulation eventProcessor;
+	private final TypedSimulation eventProcessor;
 
-    private final StandardTimeProvider timeProvider;
+	private final StandardTimeProvider timeProvider;
 
-    private final IdGenerator tripIdGenerator;
+	private final IdGenerator tripIdGenerator;
 
-    private final TripsUtil tripsUtil;
-
-
-    @Inject
-    public WalkActivityFactory(TransportNetworks transportNetworks, PedestrianMoveActivityFactory moveActivityFactory,
-                               TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
-                               TripsUtil tripsUtil) {
-        this.transportNetworks = transportNetworks;
-        this.moveActivityFactory = moveActivityFactory;
-        this.eventProcessor = eventProcessor;
-        this.timeProvider = timeProvider;
-        this.tripIdGenerator = tripIdGenerator;
-        this.tripsUtil = tripsUtil;
-    }
+	private final TripsUtil tripsUtil;
 
 
-    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<SimulationNode> trip) {
-        return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
-                tripIdGenerator.getId());
-    }
+	@Inject
+	public WalkActivityFactory(TransportNetworks transportNetworks, PedestrianMoveActivityFactory moveActivityFactory,
+							   TypedSimulation eventProcessor, StandardTimeProvider timeProvider, IdGenerator tripIdGenerator,
+							   TripsUtil tripsUtil) {
+		this.transportNetworks = transportNetworks;
+		this.moveActivityFactory = moveActivityFactory;
+		this.eventProcessor = eventProcessor;
+		this.timeProvider = timeProvider;
+		this.tripIdGenerator = tripIdGenerator;
+		this.tripsUtil = tripsUtil;
+	}
 
-    public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Node targetPosition) {
-        Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
-        return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
-                tripIdGenerator.getId());
-    }
+
+	public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Trip<SimulationNode> trip) {
+		return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
+				tripIdGenerator.getId());
+	}
+
+	public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Node targetPosition) {
+		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
+		return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
+				tripIdGenerator.getId());
+	}
 }

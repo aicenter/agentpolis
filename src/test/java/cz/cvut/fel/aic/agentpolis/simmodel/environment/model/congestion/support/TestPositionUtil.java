@@ -36,10 +36,10 @@ import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 @Singleton
 public class TestPositionUtil extends VisioPositionUtil {
 
-    @Inject
-    public TestPositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
-                            HighwayNetwork highwayNetwork, PedestrianNetwork pedestrianNetwork, TimeProvider timeProvider, AgentpolisConfig config, GraphSpec2D mapSpecification, ShapeUtils shapeUtils) {
-        super(allNetworkNodes, highwayNetwork, pedestrianNetwork, timeProvider, shapeUtils);
-    }
+	@Inject
+	public TestPositionUtil(AllNetworkNodes allNetworkNodes, SimulationCreator simulationCreator,
+							HighwayNetwork highwayNetwork, PedestrianNetwork pedestrianNetwork, TimeProvider timeProvider, AgentpolisConfig config, GraphSpec2D mapSpecification, ShapeUtils shapeUtils) {
+		super(allNetworkNodes, highwayNetwork, pedestrianNetwork, timeProvider, shapeUtils);
+	}
 
 }

@@ -43,77 +43,77 @@ import cz.cvut.fel.aic.geographtools.Graph;
  */
 public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
-    private final Vehicle vehicle;
+	private final Vehicle vehicle;
 
-    private final Trip<SimulationNode> trip;
+	private final Trip<SimulationNode> trip;
 
-    private final VehicleMoveActivityFactory moveActivityFactory;
+	private final VehicleMoveActivityFactory moveActivityFactory;
 
-    private final Graph<SimulationNode, SimulationEdge> graph;
+	private final Graph<SimulationNode, SimulationEdge> graph;
 
-    private final EventProcessor eventProcessor;
+	private final EventProcessor eventProcessor;
 
-    private final StandardTimeProvider timeProvider;
+	private final StandardTimeProvider timeProvider;
 
-    private final int tripId;
+	private final int tripId;
 
 
-    private SimulationNode from;
+	private SimulationNode from;
 
-    private SimulationNode to;
+	private SimulationNode to;
 	
 	
 	
 
-    public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
-                 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, 
+	public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
+				 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, 
 				 StandardTimeProvider timeProvider,
-                 A agent, Vehicle vehicle, Trip<SimulationNode> trip,
-                 int tripId) {
-        super(activityInitializer, agent);
-        this.vehicle = vehicle;
-        this.trip = trip;
-        this.moveActivityFactory = moveActivityFactory;
-        this.eventProcessor = eventProcessor;
-        this.timeProvider = timeProvider;
-        this.tripId = tripId;
-        graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
-    }
+				 A agent, Vehicle vehicle, Trip<SimulationNode> trip,
+				 int tripId) {
+		super(activityInitializer, agent);
+		this.vehicle = vehicle;
+		this.trip = trip;
+		this.moveActivityFactory = moveActivityFactory;
+		this.eventProcessor = eventProcessor;
+		this.timeProvider = timeProvider;
+		this.tripId = tripId;
+		graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
+	}
 
-    @Override
-    protected void performAction() {
-        agent.startDriving(vehicle);
-        from = trip.getAndRemoveFirstLocation();
-        move();
-    }
+	@Override
+	protected void performAction() {
+		agent.startDriving(vehicle);
+		from = trip.getAndRemoveFirstLocation();
+		move();
+	}
 
-    @Override
-    protected void onChildActivityFinish(Activity activity) {
-        if (trip.isEmpty() || stoped) {
-            agent.endDriving();
-            vehicle.setLastFromPosition(from);
-            finish();
-        } else {
-            from = to;
-            move();
-        }
-    }
+	@Override
+	protected void onChildActivityFinish(Activity activity) {
+		if (trip.isEmpty() || stoped) {
+			agent.endDriving();
+			vehicle.setLastFromPosition(from);
+			finish();
+		} else {
+			from = to;
+			move();
+		}
+	}
 
-    private void move() {
-        to = trip.getAndRemoveFirstLocation();
-        SimulationEdge edge = graph.getEdge(from, to);
+	private void move() {
+		to = trip.getAndRemoveFirstLocation();
+		SimulationEdge edge = graph.getEdge(from, to);
 
-        runChildActivity(moveActivityFactory.create(agent, edge, from, to));
-        triggerVehicleEnteredEdgeEvent();
-    }
+		runChildActivity(moveActivityFactory.create(agent, edge, from, to));
+		triggerVehicleEnteredEdgeEvent();
+	}
 
-    private void triggerVehicleEnteredEdgeEvent() {
-        SimulationEdge edge = graph.getEdge(from, to);
-        Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
-        eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
-    }
+	private void triggerVehicleEnteredEdgeEvent() {
+		SimulationEdge edge = graph.getEdge(from, to);
+		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.wayID, tripId);
+		eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
+	}
 
-    public Trip<SimulationNode> getTrip() {
-        return trip;
-    }
+	public Trip<SimulationNode> getTrip() {
+		return trip;
+	}
 }

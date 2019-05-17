@@ -23,33 +23,33 @@ package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
  * @author fido
  */
 public class Transit {
-    private final long time;
-    
-    private final long osmId;
-    
-    private final int tripId;
+	private final long time;
+	
+	private final long osmId;
+	
+	private final int tripId;
 
-    public long getTime() {
-        return time;
-    }
+	public long getTime() {
+		return time;
+	}
 
-    public long getId() {
-        return osmId;
-    }
+	public long getId() {
+		return osmId;
+	}
 
-    public int getTripId() {
-        return tripId;
-    }
-    
-    
+	public int getTripId() {
+		return tripId;
+	}
+	
+	
 
-    
-    
-    public Transit(long time, long osmId, int tripId) {
-        this.time = time;
-        this.osmId = osmId;
-        this.tripId = tripId;
-    }
+	
+	
+	public Transit(long time, long osmId, int tripId) {
+		this.time = time;
+		this.osmId = osmId;
+		this.tripId = tripId;
+	}
 
 
 }

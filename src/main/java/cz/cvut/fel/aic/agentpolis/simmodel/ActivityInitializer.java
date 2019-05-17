@@ -28,19 +28,19 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
  */
 @Singleton
 public class ActivityInitializer {
-    
-    private final TypedSimulation simulation;
+	
+	private final TypedSimulation simulation;
 
-    public TypedSimulation getSimulation() {
-        return simulation;
-    }
-    
-    
+	public TypedSimulation getSimulation() {
+		return simulation;
+	}
+	
+	
 
-    @Inject
-    public ActivityInitializer(TypedSimulation simulation) {
-        this.simulation = simulation;
-    }
-    
-    
+	@Inject
+	public ActivityInitializer(TypedSimulation simulation) {
+		this.simulation = simulation;
+	}
+	
+	
 }

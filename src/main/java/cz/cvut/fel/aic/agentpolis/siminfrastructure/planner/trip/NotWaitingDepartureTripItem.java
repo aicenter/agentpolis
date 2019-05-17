@@ -28,15 +28,15 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
  */
 public class NotWaitingDepartureTripItem extends DepartureTripItem {
 
-    public NotWaitingDepartureTripItem(int tripPositionByNodeId) {
-        super(tripPositionByNodeId);
-        // TODO Auto-generated constructor stub
-    }
+	public NotWaitingDepartureTripItem(int tripPositionByNodeId) {
+		super(tripPositionByNodeId);
+		// TODO Auto-generated constructor stub
+	}
 
-    @Override
-    public void visitDepartureTripItem(DepartureTripItemVisitor departureTripItemVisitor) {
-        departureTripItemVisitor.visitDepartureTripItem(this);
+	@Override
+	public void visitDepartureTripItem(DepartureTripItemVisitor departureTripItemVisitor) {
+		departureTripItemVisitor.visitDepartureTripItem(this);
 
-    }
+	}
 
 }

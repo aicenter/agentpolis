@@ -30,108 +30,108 @@ import java.util.List;
  * @author Zdenek Bousa
  */
 public class SimulationEdge extends Edge<SimulationNode> {
-    /**
-     * unique ID for each edge, also recognize directions
-     */
-    private final int uniqueId;
+	/**
+	 * unique ID for each edge, also recognize directions
+	 */
+	private final int uniqueId;
 
-    /**
-     * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
-     */
-    private final int oppositeWayId; // unique edge id that is in opposite direction, otherwise -1 (one-way)
+	/**
+	 * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
+	 */
+	private final int oppositeWayId; // unique edge id that is in opposite direction, otherwise -1 (one-way)
 
-    /**
-     * TODO: lanes
-     * Lanes turn                   lanesTurn{left,through|through,right}
-     * Lanes continues to edges:    lanesContinuesToEdge = {{1,2},{2,3}}
-     * Lanes count                  lanesCount = 2
-     */
-    private final int lanesCount;
-    private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
+	/**
+	 * TODO: lanes
+	 * Lanes turn				   lanesTurn{left,through|through,right}
+	 * Lanes continues to edges:	lanesContinuesToEdge = {{1,2},{2,3}}
+	 * Lanes count				  lanesCount = 2
+	 */
+	private final int lanesCount;
+	private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
 
-    /**
-     * maximal allowed speed in meters per second
-     */
-    public final float allowedMaxSpeedInMpS;
+	/**
+	 * maximal allowed speed in meters per second
+	 */
+	public final float allowedMaxSpeedInMpS;
 
-    /**
-     * osm id of this edge
-     */
-    public final long wayID;
+	/**
+	 * osm id of this edge
+	 */
+	public final long wayID;
 
-    public final EdgeShape shape;
+	public final EdgeShape shape;
 
 
-    /**
-     * @param fromNode             source node
-     * @param toNode               destination node
-     * @param osmWayID             osm id of this edge
-     * @param uniqueWayId
-     * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
-     * @param lengthInMetres       -
-     * @param oppositeWayId        -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
-     *                             Input should be correct, it is not validated!
-     * @param lanesCount           total number of lanes for ModeOfTransport-car
-     * @param edgeShape            instance of EdgeShape representing the shape of the road edge
-     */
-    public SimulationEdge(SimulationNode fromNode,
-                          SimulationNode toNode,
-                          long osmWayID,
-                          int uniqueWayId,
-                          int oppositeWayId,
-                          int lengthInMetres,
-                          float allowedMaxSpeedInMpS,
-                          int lanesCount,
-                          EdgeShape edgeShape) {
-        super(fromNode, toNode, lengthInMetres);
+	/**
+	 * @param fromNode			 source node
+	 * @param toNode			   destination node
+	 * @param osmWayID			 osm id of this edge
+	 * @param uniqueWayId
+	 * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
+	 * @param lengthInMetres	   -
+	 * @param oppositeWayId		-1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
+	 *							 Input should be correct, it is not validated!
+	 * @param lanesCount		   total number of lanes for ModeOfTransport-car
+	 * @param edgeShape			instance of EdgeShape representing the shape of the road edge
+	 */
+	public SimulationEdge(SimulationNode fromNode,
+						  SimulationNode toNode,
+						  long osmWayID,
+						  int uniqueWayId,
+						  int oppositeWayId,
+						  int lengthInMetres,
+						  float allowedMaxSpeedInMpS,
+						  int lanesCount,
+						  EdgeShape edgeShape) {
+		super(fromNode, toNode, lengthInMetres);
 
-        this.uniqueId = uniqueWayId;
-        this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
-        this.wayID = osmWayID;
+		this.uniqueId = uniqueWayId;
+		this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
+		this.wayID = osmWayID;
 
-        if (oppositeWayId >= -1) {
-            this.oppositeWayId = oppositeWayId;
-        } else {
-            this.oppositeWayId = -2;
-        }
+		if (oppositeWayId >= -1) {
+			this.oppositeWayId = oppositeWayId;
+		} else {
+			this.oppositeWayId = -2;
+		}
 
-        if (lanesCount >= 1) {
-            this.lanesCount = lanesCount;
-        } else {
-            this.lanesCount = 1; //minimum
-        }
+		if (lanesCount >= 1) {
+			this.lanesCount = lanesCount;
+		} else {
+			this.lanesCount = 1; //minimum
+		}
 
-        this.shape = edgeShape;
-    }
+		this.shape = edgeShape;
+	}
 
-    /**
-     * ID
-     *
-     * @return unique id of the edge
-     */
-    public int getUniqueId() {
-        return uniqueId;
-    }
+	/**
+	 * ID
+	 *
+	 * @return unique id of the edge
+	 */
+	public int getUniqueId() {
+		return uniqueId;
+	}
 
-    /**
-     * Information about opposite direction on the road.
-     *
-     * @return -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
-     */
-    public int getOppositeWayId() {
-        return oppositeWayId;
-    }
+	/**
+	 * Information about opposite direction on the road.
+	 *
+	 * @return -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
+	 */
+	public int getOppositeWayId() {
+		return oppositeWayId;
+	}
 
-    /**
-     * Information about number of lanes for cars.
-     *
-     * @return total number of lanes (minimum is 1)
-     */
-    public int getLanesCount() {
-        return lanesCount;
-    }
+	/**
+	 * Information about number of lanes for cars.
+	 *
+	 * @return total number of lanes (minimum is 1)
+	 */
+	public int getLanesCount() {
+		return lanesCount;
+	}
 
-    public String getLogInfo() {
-        return fromNode.getId() + "-" + toNode.getId();
-    }
+	public String getLogInfo() {
+		return fromNode.getId() + "-" + toNode.getId();
+	}
 }

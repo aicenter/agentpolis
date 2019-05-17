@@ -37,27 +37,27 @@ import java.util.Map;
  * @author fido
  */
 public class VisioTest {
-    
-    public void run(Graph<SimulationNode, SimulationEdge> graph){
-        
-        // Guice configuration
-        AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(
-                new TestModule());
-//        agentPolisInitializer.overrideModule(new TestModule());
-        Injector injector = agentPolisInitializer.initialize();
+	
+	public void run(Graph<SimulationNode, SimulationEdge> graph){
+		
+		// Guice configuration
+		AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(
+				new TestModule());
+//		agentPolisInitializer.overrideModule(new TestModule());
+		Injector injector = agentPolisInitializer.initialize();
 
-        SimulationCreator creator = injector.getInstance(SimulationCreator.class);
+		SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 
-        // prepare map, entity storages...
-        creator.prepareSimulation(getMapData(graph));
-        
-        creator.startSimulation();
-    }
+		// prepare map, entity storages...
+		creator.prepareSimulation(getMapData(graph));
+		
+		creator.startSimulation();
+	}
 
-    private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
-        Map<GraphType,Graph<SimulationNode,SimulationEdge>> graphs = new HashMap<>();
-        graphs.put(EGraphType.HIGHWAY, graph);
+	private MapData getMapData(Graph<SimulationNode, SimulationEdge> graph){
+		Map<GraphType,Graph<SimulationNode,SimulationEdge>> graphs = new HashMap<>();
+		graphs.put(EGraphType.HIGHWAY, graph);
 
-        return MapDataGenerator.getMap(graphs);
-    }
+		return MapDataGenerator.getMap(graphs);
+	}
 }

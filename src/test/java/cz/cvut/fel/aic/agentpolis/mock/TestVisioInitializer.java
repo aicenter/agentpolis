@@ -48,51 +48,51 @@ import java.awt.Color;
 public class TestVisioInitializer extends DefaultVisioInitializer{
 	
 	protected final LayerManagementLayer layerManagementLayer;
-    
-    private final HighwayLayer highwayLayer;
-    
-    private final TestVehicleLayer testVehicleLayer;
-    
-    private final NodeIdLayer nodeIdLayer;
-    
-    private final CarLayer carLayer;
+	
+	private final HighwayLayer highwayLayer;
+	
+	private final TestVehicleLayer testVehicleLayer;
+	
+	private final NodeIdLayer nodeIdLayer;
+	
+	private final CarLayer carLayer;
 	
 	
 	
-    
-    @Inject
-    public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
-                                HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-                                RailwayNetwork railwayNetwork, LayerManagementLayer layerManagementLayer,
-                                SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
-                                TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer, AgentpolisConfig config) {
-        super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-                simulationControlLayer, gridLayer, config);
+	
+	@Inject
+	public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
+								HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
+								RailwayNetwork railwayNetwork, LayerManagementLayer layerManagementLayer,
+								SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
+								TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer, AgentpolisConfig config) {
+		super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
+				simulationControlLayer, gridLayer, config);
 		this.layerManagementLayer = layerManagementLayer;
-        this.highwayLayer = highwayLayer;
-        this.testVehicleLayer = testVehicleLayer;
-        this.nodeIdLayer = nodeIdLayer;
-        this.carLayer = carLayer;
-    }
+		this.highwayLayer = highwayLayer;
+		this.testVehicleLayer = testVehicleLayer;
+		this.nodeIdLayer = nodeIdLayer;
+		this.carLayer = carLayer;
+	}
 
-    @Override
-    protected void initGraphLayers() {
-        VisManager.registerLayer(ColorLayer.create(Color.white));
-        super.initGraphLayers();
-        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Road network", highwayLayer));
-    }
+	@Override
+	protected void initGraphLayers() {
+		VisManager.registerLayer(ColorLayer.create(Color.white));
+		super.initGraphLayers();
+		VisManager.registerLayer(layerManagementLayer.createManageableLayer("Road network", highwayLayer));
+	}
 
-    @Override
-    protected void initEntityLayers(Simulation simulation) {
-//        super.initEntityLayers(simulation, projection); 
-        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Cars", carLayer));
-    }
-    
-    @Override
-    protected void initLayersAfterEntityLayers() {
-        VisManager.registerLayer(layerManagementLayer.createManageableLayer("Node ids", nodeIdLayer));
+	@Override
+	protected void initEntityLayers(Simulation simulation) {
+//		super.initEntityLayers(simulation, projection); 
+		VisManager.registerLayer(layerManagementLayer.createManageableLayer("Cars", carLayer));
+	}
+	
+	@Override
+	protected void initLayersAfterEntityLayers() {
+		VisManager.registerLayer(layerManagementLayer.createManageableLayer("Node ids", nodeIdLayer));
 		VisManager.registerLayer(layerManagementLayer);
-    }
-    
-    
+	}
+	
+	
 }

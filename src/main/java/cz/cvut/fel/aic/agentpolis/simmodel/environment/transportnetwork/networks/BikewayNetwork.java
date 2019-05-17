@@ -30,7 +30,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
  */
 public class BikewayNetwork extends Network<SimulationNode,SimulationEdge> {
 
-    public BikewayNetwork(Graph<SimulationNode, SimulationEdge> network) {
-        super(network);
-    }
+	public BikewayNetwork(Graph<SimulationNode, SimulationEdge> network) {
+		super(network);
+	}
 }

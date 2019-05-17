@@ -26,17 +26,17 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
  * @author Zbynek Moler
  * */
 public enum VehicleType implements EntityType {
-    CAR("Car"), BICYCLE("Bicycle"), MOTORBIKE("Motorbike"), TAXI("Taxi"), METRO("Metro"), BUS("Bus"), TRAM(
-            "Tram"), TRAIN("Train");
+	CAR("Car"), BICYCLE("Bicycle"), MOTORBIKE("Motorbike"), TAXI("Taxi"), METRO("Metro"), BUS("Bus"), TRAM(
+			"Tram"), TRAIN("Train");
 
-    private final String vehicleName;
+	private final String vehicleName;
 
-    private VehicleType(String vehicleName) {
-        this.vehicleName = vehicleName;
-    }
+	private VehicleType(String vehicleName) {
+		this.vehicleName = vehicleName;
+	}
 
-    public String getDescriptionEntityType() {
-        return vehicleName;
-    }
+	public String getDescriptionEntityType() {
+		return vehicleName;
+	}
 
 }

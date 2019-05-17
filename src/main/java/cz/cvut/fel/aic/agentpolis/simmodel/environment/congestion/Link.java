@@ -33,89 +33,89 @@ import java.util.Map.Entry;
  */
 public class Link {
 
-    final CongestionModel congestionModel;
+	final CongestionModel congestionModel;
 
-    /**
-     * Lanes mapped by next nodes
-     */
-    private final Map<SimulationNode, Lane> lanesMappedByNodes;
+	/**
+	 * Lanes mapped by next nodes
+	 */
+	private final Map<SimulationNode, Lane> lanesMappedByNodes;
 
-    final SimulationEdge edge;
+	final SimulationEdge edge;
 
-    final SimulationNode toNode;
+	final SimulationNode toNode;
 
-    final SimulationNode fromNode;
+	final SimulationNode fromNode;
 
-    final Connection fromConnection;
+	final Connection fromConnection;
 
-    final Connection toConnection;
+	final Connection toConnection;
 
-    public SimulationEdge getEdge() {
-        return edge;
-    }
-
-
-    private Lane laneForTripEnd;
+	public SimulationEdge getEdge() {
+		return edge;
+	}
 
 
-    public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
-                SimulationNode targetNode, Connection fromConnection, Connection toConnection) {
-        this.congestionModel = congestionModel;
-        this.edge = edge;
-        this.toNode = targetNode;
-        this.fromNode = fromNode;
-        this.fromConnection = fromConnection;
-        this.toConnection = toConnection;
-        this.lanesMappedByNodes = new HashMap<>();
-    }
+	private Lane laneForTripEnd;
 
 
-    public int getLaneCount() {
-        return lanesMappedByNodes.size();
-    }
-
-    public double getLength() {
-        return edge.shape.getShapeLength();
-    }
-
-    public Lane getLaneByNextNode(SimulationNode node) {
-        return lanesMappedByNodes.get(node);
-    }
-
-    void startDriving(VehicleTripData vehicleData) {
-        Trip<SimulationNode> trip = vehicleData.getTrip();
-        Lane nextLane = null;
-        if (trip.isEmpty()) {
-            nextLane = getLaneForTripEnd();
-            vehicleData.setTripFinished(true);
-        } else {
-            SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
-            nextLane = getLaneByNextNode(nextLocation);
-        }
-
-        nextLane.startDriving(vehicleData);
-    }
-
-    void addLane(Lane lane, SimulationNode nextNode) {
-        if (laneForTripEnd == null) {
-            laneForTripEnd = lane;
-        }
-        lanesMappedByNodes.put(nextNode, lane);
-    }
-
-    Lane getLaneForTripEnd() {
-        return laneForTripEnd;
-    }
-
-    private Lane getRandomLane() {
-        Entry<SimulationNode, Lane> randomEntry
-                = CollectionUtil.getRandomEntryFromMap(lanesMappedByNodes, congestionModel.getRandom());
-        return randomEntry.getValue();
-    }
+	public Link(CongestionModel congestionModel, SimulationEdge edge, SimulationNode fromNode,
+				SimulationNode targetNode, Connection fromConnection, Connection toConnection) {
+		this.congestionModel = congestionModel;
+		this.edge = edge;
+		this.toNode = targetNode;
+		this.fromNode = fromNode;
+		this.fromConnection = fromConnection;
+		this.toConnection = toConnection;
+		this.lanesMappedByNodes = new HashMap<>();
+	}
 
 
-    public Collection<Lane> getLanes() {
-        return lanesMappedByNodes.values();
-    }
+	public int getLaneCount() {
+		return lanesMappedByNodes.size();
+	}
+
+	public double getLength() {
+		return edge.shape.getShapeLength();
+	}
+
+	public Lane getLaneByNextNode(SimulationNode node) {
+		return lanesMappedByNodes.get(node);
+	}
+
+	void startDriving(VehicleTripData vehicleData) {
+		Trip<SimulationNode> trip = vehicleData.getTrip();
+		Lane nextLane = null;
+		if (trip.isEmpty()) {
+			nextLane = getLaneForTripEnd();
+			vehicleData.setTripFinished(true);
+		} else {
+			SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
+			nextLane = getLaneByNextNode(nextLocation);
+		}
+
+		nextLane.startDriving(vehicleData);
+	}
+
+	void addLane(Lane lane, SimulationNode nextNode) {
+		if (laneForTripEnd == null) {
+			laneForTripEnd = lane;
+		}
+		lanesMappedByNodes.put(nextNode, lane);
+	}
+
+	Lane getLaneForTripEnd() {
+		return laneForTripEnd;
+	}
+
+	private Lane getRandomLane() {
+		Entry<SimulationNode, Lane> randomEntry
+				= CollectionUtil.getRandomEntryFromMap(lanesMappedByNodes, congestionModel.getRandom());
+		return randomEntry.getValue();
+	}
+
+
+	public Collection<Lane> getLanes() {
+		return lanesMappedByNodes.values();
+	}
 
 }

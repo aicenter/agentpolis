@@ -28,11 +28,11 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
  */
 public abstract class DepartureTripItem extends TripItem {
 
-    public DepartureTripItem(int tripPositionByNodeId) {
-        super(tripPositionByNodeId);
-        // TODO Auto-generated constructor stub
-    }
+	public DepartureTripItem(int tripPositionByNodeId) {
+		super(tripPositionByNodeId);
+		// TODO Auto-generated constructor stub
+	}
 
-    public abstract void visitDepartureTripItem(DepartureTripItemVisitor departureTripItemVisitor);
+	public abstract void visitDepartureTripItem(DepartureTripItemVisitor departureTripItemVisitor);
 
 }

@@ -28,5 +28,5 @@ public interface TimeProvider {
 	 * Provides simulation time.
 	 * @return Simulation time in milliseconds.
 	 */
-    public long getCurrentSimTime();
+	public long getCurrentSimTime();
 }

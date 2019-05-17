@@ -34,8 +34,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 @Singleton
 public final class AgentStorage extends EntityStorage<Agent> {
 
-    @Inject
-    public AgentStorage() {
-        super();
-    }
+	@Inject
+	public AgentStorage() {
+		super();
+	}
 }

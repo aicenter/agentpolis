@@ -23,5 +23,5 @@ package cz.cvut.fel.aic.agentpolis.system;
  * @author fido
  */
 public interface AgentPolisMainModule {
-    
+	
 }

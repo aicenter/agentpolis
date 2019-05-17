@@ -28,7 +28,7 @@ import javax.vecmath.Point2d;
  * @param <E> entity type
  */
 public class NearestEntityComparator<E extends AgentPolisEntity> 
-        implements Comparator<E>{
+		implements Comparator<E>{
 	
 	protected final Point2d from;
 	

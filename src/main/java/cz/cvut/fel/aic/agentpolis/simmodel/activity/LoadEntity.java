@@ -34,13 +34,13 @@ package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 // */
 //public class LoadEntity extends Activity<TransportAgent>{
 //
-//    public LoadEntity(TransportAgent agent) {
-//        super(agent);
-//    }
+//	public LoadEntity(TransportAgent agent) {
+//		super(agent);
+//	}
 //
-//    @Override
-//    protected void performAction() {
-//        
-//    }
-//    
+//	@Override
+//	protected void performAction() {
+//		
+//	}
+//	
 //}

@@ -24,8 +24,8 @@ import cz.cvut.fel.aic.geographtools.Graph;
 
 public class PedestrianNetwork extends Network<SimulationNode, SimulationEdge> {
 
-    public PedestrianNetwork(Graph<SimulationNode, SimulationEdge> network) {
-        super(network);
-    }
+	public PedestrianNetwork(Graph<SimulationNode, SimulationEdge> network) {
+		super(network);
+	}
 
 }

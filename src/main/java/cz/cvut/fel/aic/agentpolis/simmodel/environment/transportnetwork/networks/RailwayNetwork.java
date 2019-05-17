@@ -29,8 +29,8 @@ import cz.cvut.fel.aic.geographtools.Graph;
  */
 public class RailwayNetwork extends Network<SimulationNode, SimulationEdge>{
 
-    public RailwayNetwork(Graph<SimulationNode, SimulationEdge> network) {
-        super(network);
-    }
+	public RailwayNetwork(Graph<SimulationNode, SimulationEdge> network) {
+		super(network);
+	}
 
 }

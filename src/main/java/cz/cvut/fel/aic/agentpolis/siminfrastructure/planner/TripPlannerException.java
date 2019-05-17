@@ -28,9 +28,9 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
  */
 public class TripPlannerException extends Exception {
 
-    private static final long serialVersionUID = 3197313361674952603L;
+	private static final long serialVersionUID = 3197313361674952603L;
 
-    private static final String EXCEPTION_MESSAGE = "Trip Planner did not find any way from %s to %s";
+	private static final String EXCEPTION_MESSAGE = "Trip Planner did not find any way from %s to %s";
 	
 	public TripPlannerException(long startNodeById, long destinationNodeById) {
 		super(String.format(EXCEPTION_MESSAGE,startNodeById,destinationNodeById));

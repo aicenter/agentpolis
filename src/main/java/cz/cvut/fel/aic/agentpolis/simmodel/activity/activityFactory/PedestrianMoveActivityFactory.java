@@ -33,15 +33,15 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
  */
 @Singleton
 public class PedestrianMoveActivityFactory extends ActivityFactory {
-    private final TypedSimulation eventProcessor;
+	private final TypedSimulation eventProcessor;
 
-    @Inject
-    public PedestrianMoveActivityFactory(TypedSimulation eventProcessor) {
-        this.eventProcessor = eventProcessor;
-    }
+	@Inject
+	public PedestrianMoveActivityFactory(TypedSimulation eventProcessor) {
+		this.eventProcessor = eventProcessor;
+	}
 
 
-    public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-        return new Move<>(activityInitializer, eventProcessor, agent, edge, from, to);
-    }
+	public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+		return new Move<>(activityInitializer, eventProcessor, agent, edge, from, to);
+	}
 }

@@ -25,20 +25,20 @@ import com.google.inject.Inject;
  * @author fido
  */
 public class IdGenerator {
-    
-    private int currentId;
+	
+	private int currentId;
 
-    
-    
-    @Inject
-    public IdGenerator() {
-        this.currentId = 0;
-    }
-        
+	
+	
+	@Inject
+	public IdGenerator() {
+		this.currentId = 0;
+	}
+		
 
-    public int getId(){
-        int id = currentId;
-        currentId++;
-        return id;
-    }
+	public int getId(){
+		int id = currentId;
+		currentId++;
+		return id;
+	}
 }

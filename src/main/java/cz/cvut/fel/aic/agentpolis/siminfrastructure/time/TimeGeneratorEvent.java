@@ -23,5 +23,5 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
  * @author fido
  */
 public enum TimeGeneratorEvent{
-    TICK
+	TICK
 }

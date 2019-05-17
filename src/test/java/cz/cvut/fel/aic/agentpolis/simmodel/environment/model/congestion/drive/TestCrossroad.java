@@ -35,53 +35,53 @@ import java.util.Arrays;
  */
 public class TestCrossroad {
 
-    @Test
-    public void run() {
-        GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
+	@Test
+	public void run() {
+		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-        SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-        SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0);
-        SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 10000, 10000, 0);
-        SimulationNode node3 = new SimulationNode(3, 0, 0, 0, 0, 20000, 0);
+		SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
+		SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0);
+		SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 10000, 10000, 0);
+		SimulationNode node3 = new SimulationNode(3, 0, 0, 0, 0, 20000, 0);
 
-        graphBuilder.addNode(node0);
-        graphBuilder.addNode(node1);
-        graphBuilder.addNode(node2);
-        graphBuilder.addNode(node3);
+		graphBuilder.addNode(node0);
+		graphBuilder.addNode(node1);
+		graphBuilder.addNode(node2);
+		graphBuilder.addNode(node3);
 
-        SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
-        SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)));
-        SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
-        SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
-        SimulationEdge edge5 = new SimulationEdge(node1, node3, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node3)));
-        SimulationEdge edge6 = new SimulationEdge(node3, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node1)));
+		SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
+		SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)));
+		SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+		SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
+		SimulationEdge edge5 = new SimulationEdge(node1, node3, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node3)));
+		SimulationEdge edge6 = new SimulationEdge(node3, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node1)));
 
-        graphBuilder.addEdge(edge1);
-        graphBuilder.addEdge(edge2);
-        graphBuilder.addEdge(edge3);
-        graphBuilder.addEdge(edge4);
-        graphBuilder.addEdge(edge5);
-        graphBuilder.addEdge(edge6);
+		graphBuilder.addEdge(edge1);
+		graphBuilder.addEdge(edge2);
+		graphBuilder.addEdge(edge3);
+		graphBuilder.addEdge(edge4);
+		graphBuilder.addEdge(edge5);
+		graphBuilder.addEdge(edge6);
 
-        Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
+		Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
 
-        Trip<SimulationNode>[] trips = new Trip[20];
+		Trip<SimulationNode>[] trips = new Trip[20];
 
-        for (int i = 0; i < trips.length / 2; i++) {
-            Trip<SimulationNode> trip = new Trip<>(node0, node1, node3);
-            trips[i] = trip;
-        }
+		for (int i = 0; i < trips.length / 2; i++) {
+			Trip<SimulationNode> trip = new Trip<>(node0, node1, node3);
+			trips[i] = trip;
+		}
 
-        for (int i = trips.length / 2; i < trips.length; i++) {
-            Trip<SimulationNode> trip = new Trip<>(node2, node1, node3);
-            trips[i] = trip;
-        }
+		for (int i = trips.length / 2; i < trips.length; i++) {
+			Trip<SimulationNode> trip = new Trip<>(node2, node1, node3);
+			trips[i] = trip;
+		}
 
-        DriveTest driveTest = new DriveTest();
-        driveTest.run(graph, trips);
-    }
-    
-    public static void main(String[] args) {
-        VisualTests.runVisualTest(TestCrossroad.class);
-    }
+		DriveTest driveTest = new DriveTest();
+		driveTest.run(graph, trips);
+	}
+	
+	public static void main(String[] args) {
+		VisualTests.runVisualTest(TestCrossroad.class);
+	}
 }

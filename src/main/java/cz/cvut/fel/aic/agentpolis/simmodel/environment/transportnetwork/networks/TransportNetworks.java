@@ -36,18 +36,18 @@ import java.util.Map;
 @Singleton
 public class TransportNetworks {
 
-    private final Map<GraphType, Graph<SimulationNode, SimulationEdge>> transportNetworks;
+	private final Map<GraphType, Graph<SimulationNode, SimulationEdge>> transportNetworks;
 
-    public TransportNetworks(Map<GraphType, Graph<SimulationNode, SimulationEdge>> transportNetworks) {
-        super();
-        this.transportNetworks = transportNetworks;
-    }
+	public TransportNetworks(Map<GraphType, Graph<SimulationNode, SimulationEdge>> transportNetworks) {
+		super();
+		this.transportNetworks = transportNetworks;
+	}
 
-    public Map<GraphType, Graph<SimulationNode, SimulationEdge>> getGraphsByType() {
-        return transportNetworks;
-    }
+	public Map<GraphType, Graph<SimulationNode, SimulationEdge>> getGraphsByType() {
+		return transportNetworks;
+	}
 
-    public Graph<SimulationNode, SimulationEdge> getGraph(GraphType graphType) {
-        return transportNetworks.get(graphType);
-    }
+	public Graph<SimulationNode, SimulationEdge> getGraph(GraphType graphType) {
+		return transportNetworks.get(graphType);
+	}
 }

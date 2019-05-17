@@ -29,13 +29,13 @@ import cz.cvut.fel.aic.agentpolis.simmodel.activity.Wait;
  */
 @Singleton
 public class WaitActivityFactory extends ActivityFactory{
-    
-    
-    public <A extends Agent> void runActivity(A agent, long waitTime) {
-        create(agent, waitTime).run();
-    }
-    
-    public <A extends Agent> Wait create(A agent, long waitTime) {
-        return new Wait<>(activityInitializer, agent, waitTime);
-    }
+	
+	
+	public <A extends Agent> void runActivity(A agent, long waitTime) {
+		create(agent, waitTime).run();
+	}
+	
+	public <A extends Agent> Wait create(A agent, long waitTime) {
+		return new Wait<>(activityInitializer, agent, waitTime);
+	}
 }

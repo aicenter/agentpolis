@@ -29,59 +29,59 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  */
 public abstract class Vehicle extends AgentPolisEntity implements MovingEntity {
 
-    private Driver driver;
+	private Driver driver;
 
-    private double queueBeforeVehicleLength;
+	private double queueBeforeVehicleLength;
 
-    private SimulationNode lastFromPosition;
+	private SimulationNode lastFromPosition;
 
-    public SimulationNode getLastFromPosition() {
-        return lastFromPosition;
-    }
+	public SimulationNode getLastFromPosition() {
+		return lastFromPosition;
+	}
 
-    @Override
-    public SimulationNode getTargetNode() {
-        return ((driver != null) ? driver.getTargetNode() : null);
-    }
+	@Override
+	public SimulationNode getTargetNode() {
+		return ((driver != null) ? driver.getTargetNode() : null);
+	}
 
-    @Override
-    public DelayData getDelayData() {
-        return ((driver != null) ? driver.getDelayData() : null);
-    }
+	@Override
+	public DelayData getDelayData() {
+		return ((driver != null) ? driver.getDelayData() : null);
+	}
 
-    public void setLastFromPosition(SimulationNode lastTargetPosition) {
-        this.lastFromPosition = lastTargetPosition;
-    }
-
-
-    public Driver getDriver() {
-        return driver;
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
-    }
-
-    public double getQueueBeforeVehicleLength() {
-        return queueBeforeVehicleLength;
-    }
-
-    public void setQueueBeforeVehicleLength(double queueBeforeVehicleLength) {
-        this.queueBeforeVehicleLength = queueBeforeVehicleLength;
-    }
+	public void setLastFromPosition(SimulationNode lastTargetPosition) {
+		this.lastFromPosition = lastTargetPosition;
+	}
 
 
-    public Vehicle(String id, SimulationNode position) {
-        super(id, position);
-    }
+	public Driver getDriver() {
+		return driver;
+	}
 
-    @Override
-    public void setPosition(SimulationNode position) {
-        super.setPosition(position);
-        if (driver != null) {
-            driver.setPosition(position);
-        }
-    }
+	public void setDriver(Driver driver) {
+		this.driver = driver;
+	}
+
+	public double getQueueBeforeVehicleLength() {
+		return queueBeforeVehicleLength;
+	}
+
+	public void setQueueBeforeVehicleLength(double queueBeforeVehicleLength) {
+		this.queueBeforeVehicleLength = queueBeforeVehicleLength;
+	}
+
+
+	public Vehicle(String id, SimulationNode position) {
+		super(id, position);
+	}
+
+	@Override
+	public void setPosition(SimulationNode position) {
+		super.setPosition(position);
+		if (driver != null) {
+			driver.setPosition(position);
+		}
+	}
 
 
 }

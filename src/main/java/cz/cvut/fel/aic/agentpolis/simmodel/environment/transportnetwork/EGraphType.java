@@ -25,5 +25,5 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
  * 
  */
 public enum EGraphType implements GraphType {
-    PEDESTRIAN, METROWAY, HIGHWAY, TRAMWAY, BUSWAY, TROLLEYBUSWAY, RAILWAY, BIKEWAY;
+	PEDESTRIAN, METROWAY, HIGHWAY, TRAMWAY, BUSWAY, TROLLEYBUSWAY, RAILWAY, BIKEWAY;
 }

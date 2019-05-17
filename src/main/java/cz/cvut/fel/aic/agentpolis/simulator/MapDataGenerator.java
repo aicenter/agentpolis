@@ -33,38 +33,38 @@ import org.slf4j.LoggerFactory;
  */
 public class MapDataGenerator {
    
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapDataGenerator.class);
-    
-    /**
-     * init map
-     *
-     * @param graphs
-     * @return map data with simulation graph
-     */
-    public static MapData getMap(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs) {
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapDataGenerator.class);
+	
+	/**
+	 * init map
+	 *
+	 * @param graphs
+	 * @return map data with simulation graph
+	 */
+	public static MapData getMap(Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphs) {
 
-        Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
+		Map<Integer, SimulationNode> nodes = createAllGraphNodes(graphs);
 
-//        LOGGER.info("Graphs imported, highway graph details: " + graphs.get(EGraphType.HIGHWAY));
-        return new MapData(graphs, nodes);
-    }
-    
-    /**
-     * Build map data
-     */
-    private static Map<Integer, SimulationNode> createAllGraphNodes(
-            Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
+//		LOGGER.info("Graphs imported, highway graph details: " + graphs.get(EGraphType.HIGHWAY));
+		return new MapData(graphs, nodes);
+	}
+	
+	/**
+	 * Build map data
+	 */
+	private static Map<Integer, SimulationNode> createAllGraphNodes(
+			Map<GraphType, Graph<SimulationNode, SimulationEdge>> graphByGraphType) {
 
-        Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
+		Map<Integer, SimulationNode> nodesFromAllGraphs = new HashMap<>();
 
-        for (GraphType graphType : graphByGraphType.keySet()) {
-            Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
-            for (SimulationNode node : graphStorageTmp.getAllNodes()) {
-                nodesFromAllGraphs.put(node.getId(), node);
-            }
+		for (GraphType graphType : graphByGraphType.keySet()) {
+			Graph<SimulationNode, SimulationEdge> graphStorageTmp = graphByGraphType.get(graphType);
+			for (SimulationNode node : graphStorageTmp.getAllNodes()) {
+				nodesFromAllGraphs.put(node.getId(), node);
+			}
 
-        }
+		}
 
-        return nodesFromAllGraphs;
-    }
+		return nodesFromAllGraphs;
+	}
 }

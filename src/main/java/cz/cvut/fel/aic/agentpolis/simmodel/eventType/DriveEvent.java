@@ -23,5 +23,5 @@ package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
  * @author fido
  */
 public enum DriveEvent{
-    VEHICLE_ENTERED_EDGE, PEDESTRIAN_ENTERED_EDGE
+	VEHICLE_ENTERED_EDGE, PEDESTRIAN_ENTERED_EDGE
 }

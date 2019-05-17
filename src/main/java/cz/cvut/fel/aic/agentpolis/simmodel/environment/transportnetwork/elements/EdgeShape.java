@@ -32,85 +32,85 @@ import java.util.stream.Stream;
 
 public class EdgeShape implements Iterable<GPSLocation>, Serializable {
 
-    private static final long serialVersionUID = -837444965512183266L;
+	private static final long serialVersionUID = -837444965512183266L;
 
-    final List<GPSLocation> backingMap;
-    double[] segmentAngles;
-    double[] segmentCumulativeLength;
-    double shapeLength;
+	final List<GPSLocation> backingMap;
+	double[] segmentAngles;
+	double[] segmentCumulativeLength;
+	double shapeLength;
 
-    public EdgeShape(List<GPSLocation> backingMap) {
-        if (backingMap == null || backingMap.size() < 2)
-            throw new IllegalArgumentException();
-        this.backingMap = backingMap;
-        segmentAngles = new double[backingMap.size() - 1];
-        segmentCumulativeLength = new double[backingMap.size() - 1];
-        for (int i = 1; i < backingMap.size(); i++) {
-            GPSLocation a = backingMap.get(i - 1);
-            GPSLocation b = backingMap.get(i);
-            shapeLength += GPSLocationTools.computeDistanceAsDouble(a, b);
-            segmentCumulativeLength[i - 1] = shapeLength;
-            segmentAngles[i - 1] = AngleUtil.computeAngle(a, b);
-        }
-    }
+	public EdgeShape(List<GPSLocation> backingMap) {
+		if (backingMap == null || backingMap.size() < 2)
+			throw new IllegalArgumentException();
+		this.backingMap = backingMap;
+		segmentAngles = new double[backingMap.size() - 1];
+		segmentCumulativeLength = new double[backingMap.size() - 1];
+		for (int i = 1; i < backingMap.size(); i++) {
+			GPSLocation a = backingMap.get(i - 1);
+			GPSLocation b = backingMap.get(i);
+			shapeLength += GPSLocationTools.computeDistanceAsDouble(a, b);
+			segmentCumulativeLength[i - 1] = shapeLength;
+			segmentAngles[i - 1] = AngleUtil.computeAngle(a, b);
+		}
+	}
 
-    public GPSLocation from() {
-        return backingMap.get(0);
-    }
+	public GPSLocation from() {
+		return backingMap.get(0);
+	}
 
-    public GPSLocation to() {
-        return backingMap.get(backingMap.size() - 1);
-    }
+	public GPSLocation to() {
+		return backingMap.get(backingMap.size() - 1);
+	}
 
-    public int size() {
-        return backingMap.size();
-    }
+	public int size() {
+		return backingMap.size();
+	}
 
-    @Override
-    public Iterator<GPSLocation> iterator() {
-        return backingMap.iterator();
-    }
+	@Override
+	public Iterator<GPSLocation> iterator() {
+		return backingMap.iterator();
+	}
 
-    @Override
-    public void forEach(Consumer<? super GPSLocation> consumer) {
-        backingMap.forEach(consumer);
-    }
+	@Override
+	public void forEach(Consumer<? super GPSLocation> consumer) {
+		backingMap.forEach(consumer);
+	}
 
-    @Override
-    public Spliterator<GPSLocation> spliterator() {
-        return backingMap.spliterator();
-    }
+	@Override
+	public Spliterator<GPSLocation> spliterator() {
+		return backingMap.spliterator();
+	}
 
-    public Stream<GPSLocation> stream() {
-        return backingMap.stream();
-    }
+	public Stream<GPSLocation> stream() {
+		return backingMap.stream();
+	}
 
-    public double getShapeLength() {
-        return shapeLength;
-    }
+	public double getShapeLength() {
+		return shapeLength;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EdgeShape)) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof EdgeShape)) return false;
 
-        EdgeShape that = (EdgeShape) o;
+		EdgeShape that = (EdgeShape) o;
 
-        if (Double.compare(that.shapeLength, shapeLength) != 0) return false;
-        if (!backingMap.equals(that.backingMap)) return false;
-        if (!Arrays.equals(segmentAngles, that.segmentAngles)) return false;
-        return Arrays.equals(segmentCumulativeLength, that.segmentCumulativeLength);
-    }
+		if (Double.compare(that.shapeLength, shapeLength) != 0) return false;
+		if (!backingMap.equals(that.backingMap)) return false;
+		if (!Arrays.equals(segmentAngles, that.segmentAngles)) return false;
+		return Arrays.equals(segmentCumulativeLength, that.segmentCumulativeLength);
+	}
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = backingMap.hashCode();
-        result = 31 * result + Arrays.hashCode(segmentAngles);
-        result = 31 * result + Arrays.hashCode(segmentCumulativeLength);
-        temp = Double.doubleToLongBits(shapeLength);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = backingMap.hashCode();
+		result = 31 * result + Arrays.hashCode(segmentAngles);
+		result = 31 * result + Arrays.hashCode(segmentCumulativeLength);
+		temp = Double.doubleToLongBits(shapeLength);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 }

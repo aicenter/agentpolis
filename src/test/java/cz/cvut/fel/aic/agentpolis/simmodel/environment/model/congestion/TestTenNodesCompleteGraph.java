@@ -33,19 +33,19 @@ import org.junit.Test;
  * @author fido
  */
 public class TestTenNodesCompleteGraph {
-    
-    @Test
-    public void run() throws Throwable{
+	
+	@Test
+	public void run() throws Throwable{
 		// bootstrap Guice
 		CongestionModelTest scenario = new CongestionModelTest();
 		Injector injector = scenario.getInjector();
 		
 		// set roadgraph
-        Graph<SimulationNode, SimulationEdge> graph = Utils.getCompleteGraph(10, injector.getInstance(Transformer.class));
+		Graph<SimulationNode, SimulationEdge> graph = Utils.getCompleteGraph(10, injector.getInstance(Transformer.class));
 		
-        scenario.run(graph);
-    }
-    
+		scenario.run(graph);
+	}
+	
 }
 
-    
+	

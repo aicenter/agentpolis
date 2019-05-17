@@ -51,14 +51,14 @@ public class GeojsonMapInitializer extends MapInitializer{
 	@Override
 	protected Graph<SimulationNode, SimulationEdge> getGraph() {
 		String nodeFile = config.mapNodesFilepath;
-        String edgeFile = config.mapEdgesFilepath;
-        String serializedGraphFile = config.pathToSerializedGraph;
-        GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
+		String edgeFile = config.mapEdgesFilepath;
+		String serializedGraphFile = config.pathToSerializedGraph;
+		GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
 
-        GraphCreator<SimulationNode, SimulationEdge> graphCreator = new GraphCreator(
-                true, true, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
+		GraphCreator<SimulationNode, SimulationEdge> graphCreator = new GraphCreator(
+				true, true, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
 
-        return graphCreator.getMap();
+		return graphCreator.getMap();
 	}
 	
 }

@@ -35,80 +35,80 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Agent extends AgentPolisEntity {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Agent.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Agent.class);
 
-    /**
-     * Current chosen activity.
-     */
-    Activity currentActivity;
+	/**
+	 * Current chosen activity.
+	 */
+	Activity currentActivity;
 
-    public Activity getCurrentActivity() {
-        return currentActivity;
-    }
+	public Activity getCurrentActivity() {
+		return currentActivity;
+	}
 
-    protected Activity getCurrentTopLevelActivity() {
-        Activity activity = getCurrentActivity();
-        while (activity.getParrentActivity() != null) {
-            activity = activity.getParrentActivity();
-        }
-        return activity;
-    }
+	protected Activity getCurrentTopLevelActivity() {
+		Activity activity = getCurrentActivity();
+		while (activity.getParrentActivity() != null) {
+			activity = activity.getParrentActivity();
+		}
+		return activity;
+	}
 
-    public Agent(final String agentId, SimulationNode position) {
-        super(agentId, position);
-    }
+	public Agent(final String agentId, SimulationNode position) {
+		super(agentId, position);
+	}
 
-    public void born() {
+	public void born() {
 
-    }
+	}
 
-    public void die() {
+	public void die() {
 
-    }
+	}
 
-    ;
+	;
 
-    public abstract EntityType getType();
+	public abstract EntityType getType();
 
-    @Override
-    public String toString() {
-        return "Agent " + getType().toString() + " " + getId();
-    }
+	@Override
+	public String toString() {
+		return "Agent " + getType().toString() + " " + getId();
+	}
 
-    @Override
-    public void handleEvent(Event event) {
-        currentActivity.handleEvent(event);
-    }
+	@Override
+	public void handleEvent(Event event) {
+		currentActivity.handleEvent(event);
+	}
 
-    /**
-     * Called when current activity finises.
-     *
-     * @param activity Activity that just finished.
-     */
-    protected void onActivityFinish(Activity activity) {
-        LOGGER.trace("Activity finished: {}", activity);
-    }
+	/**
+	 * Called when current activity finises.
+	 *
+	 * @param activity Activity that just finished.
+	 */
+	protected void onActivityFinish(Activity activity) {
+		LOGGER.trace("Activity finished: {}", activity);
+	}
 
-    /**
-     * Called when current activity fails.
-     *
-     * @param activity Activity that just failed.
-     * @param reason Reason of the failure.
-     */
-    protected void onActionFailed(Activity activity, String reason) {
-        try {
-            String message = String.format("Activity %s failed: %s", activity, reason);
-            throw new Exception(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * Called when current activity fails.
+	 *
+	 * @param activity Activity that just failed.
+	 * @param reason Reason of the failure.
+	 */
+	protected void onActionFailed(Activity activity, String reason) {
+		try {
+			String message = String.format("Activity %s failed: %s", activity, reason);
+			throw new Exception(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void processMessage(Message message) {
-        if (currentActivity == null) {
-            LOGGER.warn("Unprocessed message: {}, agent has no current activity to process it!", message);
-        } else {
-            currentActivity.processMessage(message);
-        }
-    }
+	public void processMessage(Message message) {
+		if (currentActivity == null) {
+			LOGGER.warn("Unprocessed message: {}, agent has no current activity to process it!", message);
+		} else {
+			currentActivity.processMessage(message);
+		}
+	}
 }

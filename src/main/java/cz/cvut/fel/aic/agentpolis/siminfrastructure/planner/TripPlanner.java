@@ -33,18 +33,18 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trips;
  */
 public interface TripPlanner {
 
-    /**
-     * 
-     * Returns the representation of journey described as a sequence of
-     * {@code Trip}
-     * 
-     * @param agetnIdId
-     * @param startNodeById
-     * @param destinationNodeById
-     * @return
-     * @throws TripPlannerException
-     */
-    public Trips findTrip(String agetnIdId, long startNodeById, long destinationNodeById)
-            throws TripPlannerException;
+	/**
+	 * 
+	 * Returns the representation of journey described as a sequence of
+	 * {@code Trip}
+	 * 
+	 * @param agetnIdId
+	 * @param startNodeById
+	 * @param destinationNodeById
+	 * @return
+	 * @throws TripPlannerException
+	 */
+	public Trips findTrip(String agetnIdId, long startNodeById, long destinationNodeById)
+			throws TripPlannerException;
 
 }

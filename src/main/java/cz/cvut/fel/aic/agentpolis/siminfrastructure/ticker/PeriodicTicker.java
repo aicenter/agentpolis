@@ -39,32 +39,32 @@ public class PeriodicTicker extends EventHandlerAdapter{
 	
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PeriodicTicker.class);
 	
-    private final TypedSimulation simulation;
+	private final TypedSimulation simulation;
 	
 	private final Map<Integer, List<Routine>> routineMap;
-    
-    private int tickLength;
+	
+	private int tickLength;
 	
 	private long nextTickTime;
 
-    
-    
-    @Inject
-    public PeriodicTicker(TypedSimulation simulation) {
-        this.simulation = simulation;
+	
+	
+	@Inject
+	public PeriodicTicker(TypedSimulation simulation) {
+		this.simulation = simulation;
 		routineMap = new HashMap();
 		tickLength = Integer.MAX_VALUE;
-    }
+	}
 
-    
+	
 	public void registerRoutine(Routine routine, int period){
 		CollectionUtil.addToListInMap(routineMap, period, routine);
 		updateTick();
 		LOGGER.info("{} registered to run with period of {} ms", routine.getClass(), period);
 	}
 
-    @Override
-    public void handleEvent(Event event) {
+	@Override
+	public void handleEvent(Event event) {
 		long simulationTime = simulation.getCurrentTime();
 		
 		// check if tick wasn't updated
@@ -72,15 +72,15 @@ public class PeriodicTicker extends EventHandlerAdapter{
 			return;
 		}
 		
-        for(Map.Entry<Integer,List<Routine>> entry: routineMap.entrySet()){
+		for(Map.Entry<Integer,List<Routine>> entry: routineMap.entrySet()){
 			if(simulationTime % entry.getKey() == 0){
 				executeRoutines(entry.getValue());
 			}
 		}
 		
 		nextTickTime += tickLength;
-        createTick(tickLength);
-    }
+		createTick(tickLength);
+	}
 
 
 	private void updateTick() {

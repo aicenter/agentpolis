@@ -23,30 +23,30 @@ package cz.cvut.fel.aic.agentpolis.simmodel;
  * @author fido
  */
 public class Message {
-    private final Object content;
-    
-    private final Enum type;
+	private final Object content;
+	
+	private final Enum type;
 
-    public Object getContent() {
-        return content;
-    }
+	public Object getContent() {
+		return content;
+	}
 
-    public Enum getType() {
-        return type;
-    }
-    
-    
+	public Enum getType() {
+		return type;
+	}
+	
+	
 
-    public Message(Enum type, Object content) {
-        this.content = content;
-        this.type = type;
-    }
+	public Message(Enum type, Object content) {
+		this.content = content;
+		this.type = type;
+	}
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "type=" + type +
-                ", content=" + content +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Message{" +
+				"type=" + type +
+				", content=" + content +
+				'}';
+	}
 }

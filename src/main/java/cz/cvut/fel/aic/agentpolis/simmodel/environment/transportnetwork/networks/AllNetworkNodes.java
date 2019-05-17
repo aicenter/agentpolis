@@ -30,10 +30,10 @@ import java.util.Map;
 @Singleton
 public class AllNetworkNodes {
 
-    private Map<Integer, SimulationNode> allNetworkNodes;
+	private Map<Integer, SimulationNode> allNetworkNodes;
 	public Map<Integer, SimulationNode> getAllNetworkNodes() {
-        return allNetworkNodes;
-    }
+		return allNetworkNodes;
+	}
 
 	public void setAllNetworkNodes(Map<Integer, SimulationNode> allNetworkNodes) {
 		this.allNetworkNodes = allNetworkNodes;
@@ -43,12 +43,12 @@ public class AllNetworkNodes {
 	public AllNetworkNodes() {
 	}
 
-    public AllNetworkNodes(Map<Integer, SimulationNode> allNetworkNodes) {
-        super();
-        this.allNetworkNodes = allNetworkNodes;
-    }
+	public AllNetworkNodes(Map<Integer, SimulationNode> allNetworkNodes) {
+		super();
+		this.allNetworkNodes = allNetworkNodes;
+	}
 
-    public SimulationNode getNode(int nodeId) {
-        return allNetworkNodes.get(nodeId);
-    }
+	public SimulationNode getNode(int nodeId) {
+		return allNetworkNodes.get(nodeId);
+	}
 }

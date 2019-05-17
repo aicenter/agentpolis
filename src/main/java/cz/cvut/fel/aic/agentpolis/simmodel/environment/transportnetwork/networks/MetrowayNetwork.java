@@ -24,7 +24,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
 
 public class MetrowayNetwork extends Network<SimulationNode, SimulationEdge> {
 
-    public MetrowayNetwork(Graph<SimulationNode, SimulationEdge> network) {
-        super(network);
-    }
+	public MetrowayNetwork(Graph<SimulationNode, SimulationEdge> network) {
+		super(network);
+	}
 }

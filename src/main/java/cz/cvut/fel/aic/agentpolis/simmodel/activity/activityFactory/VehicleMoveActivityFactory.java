@@ -34,16 +34,16 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
  */
 @Singleton
 public class VehicleMoveActivityFactory extends ActivityFactory {
-    private final TypedSimulation eventProcessor;
+	private final TypedSimulation eventProcessor;
 
-    @Inject
-    public VehicleMoveActivityFactory(TypedSimulation eventProcessor) {
-        this.eventProcessor = eventProcessor;
-    }
+	@Inject
+	public VehicleMoveActivityFactory(TypedSimulation eventProcessor) {
+		this.eventProcessor = eventProcessor;
+	}
 
 
-    public <AG extends Agent & Driver> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-        return new VehicleMove<>(activityInitializer,
-                eventProcessor, agent, edge, from, to);
-    }
+	public <AG extends Agent & Driver> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+		return new VehicleMove<>(activityInitializer,
+				eventProcessor, agent, edge, from, to);
+	}
 }

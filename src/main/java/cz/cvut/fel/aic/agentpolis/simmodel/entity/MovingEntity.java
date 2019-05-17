@@ -27,10 +27,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  * @author fido
  */
 public interface MovingEntity {
-    public double getVelocity();
-    public SimulationNode getTargetNode();
+	public double getVelocity();
+	public SimulationNode getTargetNode();
 
-    public DelayData getDelayData();
+	public DelayData getDelayData();
 
-    public SimulationNode getPosition();
+	public SimulationNode getPosition();
 }

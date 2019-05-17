@@ -23,11 +23,11 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection;
  * @author fido
  */
 public class VehicleEventData {
-    public final long transferFinishTime;
+	public final long transferFinishTime;
 
-    public VehicleEventData(long transferFinishTime) {
-        this.transferFinishTime = transferFinishTime;
-    }
-    
-    
+	public VehicleEventData(long transferFinishTime) {
+		this.transferFinishTime = transferFinishTime;
+	}
+	
+	
 }

@@ -57,7 +57,7 @@ public class SimpleMapInitializer extends MapInitializer{
 	
 	
 //	public interface SimpleMapInitializerFactory {
-//        public SimpleMapInitializer create(Graph<SimulationNode, SimulationEdge> graph);
-//    }
+//		public SimpleMapInitializer create(Graph<SimulationNode, SimulationEdge> graph);
+//	}
 	
 }

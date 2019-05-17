@@ -27,8 +27,8 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
  */
 public interface DepartureTripItemVisitor {
 
-    public void visitDepartureTripItem(NotWaitingDepartureTripItem notWaitingDepartureTripItem);
+	public void visitDepartureTripItem(NotWaitingDepartureTripItem notWaitingDepartureTripItem);
 
-    public void visitDepartureTripItem(WaitingDepartureTripItem waitingDepartureTripItem);
+	public void visitDepartureTripItem(WaitingDepartureTripItem waitingDepartureTripItem);
 
 }
