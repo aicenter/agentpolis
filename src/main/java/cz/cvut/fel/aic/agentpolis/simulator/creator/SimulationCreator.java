@@ -18,8 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.creator;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -29,9 +27,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
+import cz.cvut.fel.aic.agentpolis.simulator.SimulationUtils;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
-import cz.cvut.fel.aic.agentpolis.utils.ResourceReader;
 
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import org.slf4j.LoggerFactory;
@@ -46,18 +44,21 @@ public class SimulationCreator {
     private final Graphs graphs;
     private final Provider<VisioInitializer> visioInitializerProvider;
     private final TimeEventGenerator timeEventGenerator;
+	
+	private final SimulationUtils simulationUtils;
 
     @Inject
     public SimulationCreator(final AgentpolisConfig config, SimulationProvider simulationProvider,
                              AllNetworkNodes allNetworkNodes, Graphs graphs,
                              Provider<VisioInitializer> visioInitializerProvider,
-                             TimeEventGenerator timeEventGenerator) {
+                             TimeEventGenerator timeEventGenerator, SimulationUtils simulationUtils) {
         this.config = config;
         this.simulationProvider = simulationProvider;
         this.allNetworkNodes = allNetworkNodes;
         this.graphs = graphs;
         this.visioInitializerProvider = visioInitializerProvider;
         this.timeEventGenerator = timeEventGenerator;
+		this.simulationUtils = simulationUtils;
     }
 
     public void prepareSimulation(final MapData osmDTO, final long seed) {
@@ -92,7 +93,7 @@ public class SimulationCreator {
     }
 
     private void initSimulation() {
-        simulation = new TypedSimulation(config.simulationDurationInHours * 60 * 60 * 1000L);
+        simulation = new TypedSimulation(simulationUtils.computeSimulationDuration());
         simulation.setPrintouts(10000000);
         simulationProvider.setSimulation(simulation);
     }
