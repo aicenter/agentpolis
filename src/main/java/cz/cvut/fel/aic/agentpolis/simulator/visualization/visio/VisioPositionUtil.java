@@ -66,7 +66,7 @@ public class VisioPositionUtil {
 
 	private final ShapeUtils shapeUtils;
 
-	private Map<MovingEntity, Double> movingAgentAngle = new HashMap<>();
+	private final Map<MovingEntity, Double> movingAgentAngle = new HashMap<>();
 
 	@Inject
 	public VisioPositionUtil(AllNetworkNodes allNetworkNodes, HighwayNetwork highwayNetwork,

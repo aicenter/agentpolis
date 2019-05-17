@@ -36,7 +36,7 @@ public class TestModule extends StandardAgentPolisModule{
 //            agentpolisConfig.showVisio = false;
 //        }
 
-        agentpolisConfig.showVisio = VisualTests.SHOW_VISIO;
+        agentpolisConfig.visio.showVisio = VisualTests.SHOW_VISIO;
         
         agentpolisConfig.congestionModel.batchSize = 1;
         agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;

@@ -22,8 +22,8 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
@@ -52,7 +52,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	protected final AgentpolisConfig agentpolisConfig;
     
 
-	private final Map<Point2d, List<E>> entityPositionMap;
+	private Map<Point2d, List<E>> entityPositionMap;
 
     protected VisioPositionUtil positionUtil;
 
@@ -62,7 +62,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	@Inject
 	public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig) {
-        this(entityStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
+        this(entityStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
 	}
 
     public EntityLayer(EntityStorage<E> entityStorage, AgentpolisConfig agentpolisConfig, 
@@ -76,11 +76,6 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		this.showStackedEntitiesCount = showStackedEntitiesCount;
 		this.transformSize = transformSize;
 		this.agentpolisConfig = agentpolisConfig;
-		if (showStackedEntitiesCount) {
-			entityPositionMap = new HashMap<>();
-		} else {
-			entityPositionMap = null;
-		}
 	}
 
 	@Inject
@@ -96,6 +91,10 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		EntityStorage<E>.EntityIterator entityIterator = entityStorage.new EntityIterator();
 		E entity;
 		long time = timeProvider.getCurrentSimTime();
+		
+		if (showStackedEntitiesCount) {
+			entityPositionMap = new HashMap<>();
+		}
 
 		while ((entity = entityIterator.getNextEntity()) != null) {
 			if (skipDrawing(entity)) {
@@ -103,8 +102,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 			}
 			Point2d entityPosition = getEntityPositionInTime(entity, time);
 
-			if (showStackedEntitiesCount && !(entity instanceof MovingEntity || entity instanceof TransportableEntity) 
-					&& Vis.getZoomFactor() > 1) {
+			if (showStackedEntitiesCount && !(entity instanceof Vehicle)) {
 				entityPositionMap.computeIfAbsent(entityPosition, k -> new ArrayList<>()).add(entity);
 			} else {
 				drawEntity(entity, entityPosition, canvas, dim);
@@ -142,7 +140,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		if (rectangleOverlaps(x1, y1, x2, y2, dim)) {
 			canvas.fillOval(x1, y1, width, width);
 
-			if (entities.size() > 1) {
+			if (entities.size() > 1 && Vis.getZoomFactor() > agentpolisConfig.visio.minZoomToShowStackEntitiesCount) {
 				VisioUtils.printTextWithBackgroud(canvas, Integer.toString(entities.size()),
 						new Point((int) (x1 - getTextMargin()), y1 - (y2 - y1) / 2), color, getTextBackgroundColor());
 			}
@@ -178,7 +176,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	protected double getRadius(E entity) {
 		if (transformSize) {
 			double radius = Vis.transW(getEntityTransformableRadius(entity), 
-					Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom));
+					Math.max(Vis.getZoomFactor(), agentpolisConfig.visio.minEntityZoom));
 			return radius;
 		}
 		else{

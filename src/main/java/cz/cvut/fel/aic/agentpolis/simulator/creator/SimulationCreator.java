@@ -106,7 +106,7 @@ public class SimulationCreator {
     }
 
     private void initVisio() {
-        if (config.showVisio) {
+        if (config.visio.showVisio) {
             LOGGER.info("Initializing Visio");
             visioInitializerProvider.get().initialize(simulation);
             simulation.setSimulationSpeed(1);

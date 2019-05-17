@@ -27,7 +27,7 @@ public class TestPresentation {
         AgentPolisInitializer agentPolisInitializer = new AgentPolisInitializer(new TestModule());
         Injector injector = agentPolisInitializer.initialize();
 
-		injector.getInstance(AgentpolisConfig.class).showVisio = VisualTests.SHOW_VISIO;
+		injector.getInstance(AgentpolisConfig.class).visio.showVisio = VisualTests.SHOW_VISIO;
 		
         SimulationCreator creator = injector.getInstance(SimulationCreator.class);
 

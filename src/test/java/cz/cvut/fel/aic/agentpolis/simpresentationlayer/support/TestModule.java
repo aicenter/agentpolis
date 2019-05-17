@@ -8,7 +8,7 @@ public class TestModule extends StandardAgentPolisModule {
     public TestModule() {
         super();
 
-        agentpolisConfig.showVisio = true; //VisualTests.SHOW_VISIO;
+        agentpolisConfig.visio.showVisio = true; //VisualTests.SHOW_VISIO;
         agentpolisConfig.srid = testSRID();
     }
 

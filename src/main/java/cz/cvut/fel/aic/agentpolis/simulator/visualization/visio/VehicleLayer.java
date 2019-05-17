@@ -45,7 +45,7 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 	private Path2D representativeShape;
 
 	public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig) {
-        this(driverStorage, agentpolisConfig, agentpolisConfig.showStackedEntities, true);
+        this(driverStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
 	}
 
     public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig,
@@ -117,7 +117,7 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 
 		/* transformations are applied in inverse order */
 		if (transformSize) {
-			double zoomFactor = Math.max(Vis.getZoomFactor(), agentpolisConfig.minEntityZoom);
+			double zoomFactor = Math.max(Vis.getZoomFactor(), agentpolisConfig.visio.minEntityZoom);
 			/* scale according to zoom factor */
 			AffineTransform scale = AffineTransform.getScaleInstance(zoomFactor, zoomFactor);
 
