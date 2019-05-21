@@ -120,8 +120,9 @@
 			<version>0.8.2</version>
 		</dependency>
 		<dependency>
-			<groupId>java3d</groupId>
+			<groupId>javax.vecmath</groupId>
 			<artifactId>vecmath</artifactId>
+			<version>1.5.2</version>
 		</dependency>
 	</dependencies>
 
