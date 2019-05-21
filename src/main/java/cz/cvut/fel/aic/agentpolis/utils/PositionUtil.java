@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2018 Czech Technical University in Prague.
+/* 
+ * Copyright (C) 2019 Czech Technical University in Prague.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package cz.cvut.fel.aic.agentpolis.utils;
 
 import com.google.inject.Singleton;

@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2019 Czech Technical University in Prague.
  *
  * This library is free software; you can redistribute it and/or
