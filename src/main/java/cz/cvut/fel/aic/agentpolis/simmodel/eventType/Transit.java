@@ -18,16 +18,22 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
+
 /**
  *
  * @author fido
+ * @param <A> DRiver agent
  */
-public class Transit {
+public class Transit<A extends Agent & Driver> {
 	private final long time;
 	
 	private final long osmId;
 	
 	private final int tripId;
+	
+	private final A agent;
 
 	public long getTime() {
 		return time;
@@ -40,15 +46,22 @@ public class Transit {
 	public int getTripId() {
 		return tripId;
 	}
+
+	public A getAgent() {
+		return agent;
+	}
+
+
 	
 	
 
 	
 	
-	public Transit(long time, long osmId, int tripId) {
+	public Transit(long time, long osmId, int tripId, A agent) {
 		this.time = time;
 		this.osmId = osmId;
 		this.tripId = tripId;
+		this.agent = agent;
 	}
 
 
