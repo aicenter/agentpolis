@@ -21,7 +21,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 import java.io.Serializable;
 
 import com.google.common.collect.ImmutableMap;
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 /**
  * 

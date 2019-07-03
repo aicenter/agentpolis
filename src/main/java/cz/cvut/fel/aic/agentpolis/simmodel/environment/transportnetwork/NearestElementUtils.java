@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.vividsolutions.jts.geom.Coordinate;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
@@ -32,6 +31,7 @@ import cz.cvut.fel.aic.geographtools.util.Transformer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.locationtech.jts.geom.Coordinate;
 
 /**
  *
