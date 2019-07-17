@@ -29,21 +29,35 @@ import cz.cvut.fel.aic.geographtools.util.Transformer;
  */
 public class SimulationNode extends Node {
 	
-	public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation) {
+	/**
+	 * Index for node matrices, like distance matrix
+	 */
+	private final int index;
+
+	public int getIndex() {
+		return index;
+	}
+	
+	public SimulationNode(int id, long osmId, int latE6, int lonE6, int projectedLat, int projectedLon, int elevation,
+			int index) {
 		super(id, osmId, latE6, lonE6, projectedLat, projectedLon, elevation);
+		this.index = index;
 	}
 
-	public SimulationNode(int id, long sourceId, GPSLocation location) {
+	public SimulationNode(int id, long sourceId, GPSLocation location, int index) {
 		super(id, sourceId, location);
+		this.index = index;
 	}
 	
 	public SimulationNode(int id, long sourceId, double latitude, double longitude, int elevation, 
-			Transformer transformer){
+			Transformer transformer, int index){
 		super(id, sourceId, latitude, longitude, elevation, transformer);
+		this.index = index;
 	}
 	
 	public SimulationNode(int id, long sourceId, int latitudeProjected, int longitudeProjected, int elevation, 
-			Transformer transformer){
+			Transformer transformer, int index){
 		super(id, sourceId, latitudeProjected, longitudeProjected, elevation, transformer);
+		this.index = index;
 	}
 }

@@ -39,22 +39,22 @@ public class TestCrossroad {
 	public void run() {
 		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-		SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-		SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0);
-		SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 10000, 10000, 0);
-		SimulationNode node3 = new SimulationNode(3, 0, 0, 0, 0, 20000, 0);
+		SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0, 0);
+		SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 0, 10000, 0, 0);
+		SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 10000, 10000, 0, 0);
+		SimulationNode node3 = new SimulationNode(3, 0, 0, 0, 0, 20000, 0, 0);
 
 		graphBuilder.addNode(node0);
 		graphBuilder.addNode(node1);
 		graphBuilder.addNode(node2);
 		graphBuilder.addNode(node3);
 
-		SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
-		SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)));
-		SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
-		SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
-		SimulationEdge edge5 = new SimulationEdge(node1, node3, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node3)));
-		SimulationEdge edge6 = new SimulationEdge(node3, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node1)));
+		SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0, node1)));
+		SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node0)));
+		SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+		SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
+		SimulationEdge edge5 = new SimulationEdge(node1, node3, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node3)));
+		SimulationEdge edge6 = new SimulationEdge(node3, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node3, node1)));
 
 		graphBuilder.addEdge(edge1);
 		graphBuilder.addEdge(edge2);

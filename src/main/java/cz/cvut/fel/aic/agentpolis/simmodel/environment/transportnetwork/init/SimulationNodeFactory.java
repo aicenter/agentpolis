@@ -32,7 +32,8 @@ public class SimulationNodeFactory implements NodeFactory<SimulationNode>{
 	public SimulationNode createNode(InternalNode internalNode) {
 
 		return new SimulationNode(internalNode.id, internalNode.sourceId, internalNode.latE6, internalNode.lonE6,
-				internalNode.getLatitudeProjected1E2(), internalNode.getLongitudeProjected1E2(), internalNode.elevation);
+				internalNode.getLatitudeProjected1E2(), internalNode.getLongitudeProjected1E2(), internalNode.elevation,
+				((Long) internalNode.get("index")).intValue());
 	}
 
 }
