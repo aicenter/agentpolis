@@ -38,14 +38,14 @@ public class TestTwoNodesBothDirections {
 	public void run() throws Throwable {
 		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
 
-		SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0);
-		SimulationNode node2 = new SimulationNode(1, 0, 100, 0, 0, 0, 0);
+		SimulationNode node1 = new SimulationNode(0, 0, 0, 0, 0, 0, 0, 0);
+		SimulationNode node2 = new SimulationNode(1, 0, 100, 0, 0, 0, 0, 0);
 
 		graphBuilder.addNode(node1);
 		graphBuilder.addNode(node2);
 
-		SimulationEdge edge1 = new SimulationEdge(node1, node2, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
-		SimulationEdge edge2 = new SimulationEdge(node2, node1, 0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
+		SimulationEdge edge1 = new SimulationEdge(node1, node2, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1, node2)));
+		SimulationEdge edge2 = new SimulationEdge(node2, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2, node1)));
 
 		graphBuilder.addEdge(edge1);
 		graphBuilder.addEdge(edge2);

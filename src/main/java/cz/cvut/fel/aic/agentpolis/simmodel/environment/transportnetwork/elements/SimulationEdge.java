@@ -19,7 +19,7 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import cz.cvut.fel.aic.geographtools.Edge;
-import cz.cvut.fel.aic.geographtools.Node;
+import java.math.BigInteger;
 
 import java.util.List;
 
@@ -33,7 +33,12 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	/**
 	 * unique ID for each edge, also recognize directions
 	 */
-	private final int uniqueId;
+	private final int id;
+	
+	/**
+	 * Static id of this edge. It should be consistent, even if the edge is loaded from a different map/file.
+	 */
+	public final BigInteger staticId;
 
 	/**
 	 * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
@@ -54,19 +59,25 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	 */
 	public final float allowedMaxSpeedInMpS;
 
-	/**
-	 * osm id of this edge
-	 */
-	public final long wayID;
-
 	public final EdgeShape shape;
 
 
+	public SimulationEdge(SimulationNode fromNode,
+						  SimulationNode toNode,
+						  int id,
+						  int oppositeWayId,
+						  int lengthInMetres,
+						  float allowedMaxSpeedInMpS,
+						  int lanesCount,
+						  EdgeShape edgeShape) {
+		this(fromNode, toNode, null, id, oppositeWayId, lengthInMetres, allowedMaxSpeedInMpS, lanesCount, edgeShape);
+	}
+	
 	/**
 	 * @param fromNode			 source node
 	 * @param toNode			   destination node
-	 * @param osmWayID			 osm id of this edge
-	 * @param uniqueWayId
+	 * @param staticId			 osm id of this edge
+	 * @param id
 	 * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
 	 * @param lengthInMetres	   -
 	 * @param oppositeWayId		-1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
@@ -76,8 +87,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	 */
 	public SimulationEdge(SimulationNode fromNode,
 						  SimulationNode toNode,
-						  long osmWayID,
-						  int uniqueWayId,
+						  BigInteger staticId,
+						  int id,
 						  int oppositeWayId,
 						  int lengthInMetres,
 						  float allowedMaxSpeedInMpS,
@@ -85,9 +96,9 @@ public class SimulationEdge extends Edge<SimulationNode> {
 						  EdgeShape edgeShape) {
 		super(fromNode, toNode, lengthInMetres);
 
-		this.uniqueId = uniqueWayId;
+		this.id = id;
 		this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
-		this.wayID = osmWayID;
+		this.staticId = staticId;
 
 		if (oppositeWayId >= -1) {
 			this.oppositeWayId = oppositeWayId;
@@ -110,7 +121,7 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	 * @return unique id of the edge
 	 */
 	public int getUniqueId() {
-		return uniqueId;
+		return id;
 	}
 
 	/**

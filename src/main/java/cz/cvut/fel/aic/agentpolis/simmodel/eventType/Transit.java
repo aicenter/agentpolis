@@ -20,6 +20,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.eventType;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
+import java.math.BigInteger;
 
 /**
  *
@@ -29,7 +30,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 public class Transit<A extends Agent & Driver> {
 	private final long time;
 	
-	private final long osmId;
+	private final BigInteger staticEdgeId;
 	
 	private final int tripId;
 	
@@ -39,8 +40,8 @@ public class Transit<A extends Agent & Driver> {
 		return time;
 	}
 
-	public long getId() {
-		return osmId;
+	public BigInteger getId() {
+		return staticEdgeId;
 	}
 
 	public int getTripId() {
@@ -57,9 +58,9 @@ public class Transit<A extends Agent & Driver> {
 
 	
 	
-	public Transit(long time, long osmId, int tripId, A agent) {
+	public Transit(long time, BigInteger staticEdgeId, int tripId, A agent) {
 		this.time = time;
-		this.osmId = osmId;
+		this.staticEdgeId = staticEdgeId;
 		this.tripId = tripId;
 		this.agent = agent;
 	}

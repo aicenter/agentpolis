@@ -51,15 +51,15 @@ public class Utils {
 			int y = 100 * (int) Math.round(radius * Math.sin(angle));
 
 
-			SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection);
+			SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection, 0);
 
 			graphBuilder.addNode(node);
 
 			for (int j = 0; j < i; j++) {
 				SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(i), graphBuilder.getNode(j), 
-						0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
+						0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
 				SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(j), graphBuilder.getNode(i), 
-						0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
+						0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
 
 				graphBuilder.addEdge(edge1);
 				graphBuilder.addEdge(edge2);
@@ -86,7 +86,7 @@ public class Utils {
 				int y = 100 * i * size;
 				int nodeId = i * width + j;
 
-				SimulationNode node = new SimulationNode(nodeId, 0, y, x, 0, projection);
+				SimulationNode node = new SimulationNode(nodeId, 0, y, x, 0, projection, 0);
 				graphBuilder.addNode(node);
 				
 				// bottom edges
@@ -108,9 +108,9 @@ public class Utils {
 	}
 	
 	private static void createEdges(int id1, int id2, GraphBuilder<SimulationNode, SimulationEdge> graphBuilder){
-		SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(id1), graphBuilder.getNode(id2), 0, 0, 0, 100, 
+		SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(id1), graphBuilder.getNode(id2), 0, 0, 100, 
 				40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(id1), graphBuilder.getNode(id2))));
-		SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(id2), graphBuilder.getNode(id1), 0, 0, 0, 100, 
+		SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(id2), graphBuilder.getNode(id1), 0, 0, 100, 
 				40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(id2), graphBuilder.getNode(id1))));
 
 		graphBuilder.addEdge(edge1);

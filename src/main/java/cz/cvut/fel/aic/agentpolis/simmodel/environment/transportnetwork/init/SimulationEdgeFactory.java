@@ -25,6 +25,7 @@ import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.client.EdgeFactory;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.internal.InternalEdge;
+import java.math.BigInteger;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,Simulat
 		EdgeShape edgeShape = new EdgeShape(coordinatesList);
 		SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
 		SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
-		return new SimulationEdge(fromNode, toNode, internalEdge.get("wayID"),
+		return new SimulationEdge(fromNode, toNode, new BigInteger(((String) internalEdge.get("id"))),
 				internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLength(),
 				internalEdge.get("allowedMaxSpeedInMpS"),
 				internalEdge.get("lanesCount"), edgeShape);
