@@ -23,6 +23,9 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,6 +33,8 @@ import java.util.Map;
  */
 @Singleton
 public class NodesMappedByIndex {
+	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(NodesMappedByIndex.class);
 	
 	private final Map<Integer,SimulationNode> nodesMappedByIndex;
 
@@ -42,7 +47,18 @@ public class NodesMappedByIndex {
 	}
 	
 	public SimulationNode getNodeByIndex(int index){
-		return nodesMappedByIndex.get(index);
+		try{
+			SimulationNode node = nodesMappedByIndex.get(index);
+			if(node == null){
+				throw new Exception(String.format("Node with index %s does not exist", index));
+			}
+			return nodesMappedByIndex.get(index);
+		}
+		catch(Exception ex){
+			Logger.getLogger(NodesMappedByIndex.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
+		}
+			
 	}
 	
 }
