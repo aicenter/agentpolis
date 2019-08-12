@@ -61,13 +61,15 @@ public final class MoveUtil {
 	}
 	
 	public static long computeDuration(MovingEntity entity, SimulationEdge edge){
-		double distance = edge.shape.getShapeLength();
+//		double distance = edge.shape.getShapeLength();
+		double distance = edge.length;
 		double velocity = computeAgentOnEdgeVelocity(entity.getVelocity(), edge.allowedMaxSpeedInMpS);
 		return computeDuration(velocity, distance);
 	}
 	
 	public static long computeMinDuration(SimulationEdge edge){
-		double distance = edge.shape.getShapeLength();
+//		double distance = edge.shape.getShapeLength();
+		double distance = edge.length;
 		return computeDuration(edge.allowedMaxSpeedInMpS, distance);
 	}
 }
