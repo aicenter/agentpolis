@@ -82,7 +82,8 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 		if (checkFeasibility(edge)) {
 
 			agent.setTargetNode(to);
-			double distance = edge.shape.getShapeLength();
+//			double distance = edge.shape.getShapeLength();
+			double distance = edge.length;
 			double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), edge.allowedMaxSpeedInMpS);
 			duration = MoveUtil.computeDuration(velocity, distance);
 
