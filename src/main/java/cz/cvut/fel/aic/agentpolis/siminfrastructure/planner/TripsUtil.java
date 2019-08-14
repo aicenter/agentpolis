@@ -39,6 +39,7 @@ import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
 
 /*
@@ -230,5 +231,22 @@ public class TripsUtil {
 		return duration;
 	}
 
-
+	public int[] getLocationIndexes(Trip<SimulationNode> trip){
+		int[] indexes = new int[trip.getLocations().size()];
+		int i = 0;
+		for(SimulationNode location: trip.getLocations()){
+			indexes[i] = location.getIndex();
+			i++;
+		}
+		return indexes;
+	}
+	
+	public String printLocationIndexes(Trip<SimulationNode> trip){
+		int[] indexes = getLocationIndexes(trip);
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		String locString = Arrays.stream(indexes).mapToObj(String::valueOf).collect(Collectors.joining(", "));
+		sb.append(locString).append(")");
+		return sb.toString();
+	}
 }
