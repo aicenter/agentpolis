@@ -57,20 +57,32 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	/**
 	 * maximal allowed speed in meters per second
 	 */
-	public final float allowedMaxSpeedInMpS;
+	private final int allowedMaxSpeedInKmh;
 
 	public final EdgeShape shape;
+
+	
+	
+	public int getAllowedMaxSpeedInKmh() {
+		return allowedMaxSpeedInKmh;
+	}
+	
+	public int getAllowedMaxSpeedInCmPerSecond(){
+		return (int) Math.round((double) getAllowedMaxSpeedInKmh() / 3.6 * 1E2);
+	}
+	
+	
 
 
 	public SimulationEdge(SimulationNode fromNode,
 						  SimulationNode toNode,
 						  int id,
 						  int oppositeWayId,
-						  int lengthInMetres,
-						  float allowedMaxSpeedInMpS,
+						  int lengthInCentimeters,
+						  int allowedMaxSpeedInKmh,
 						  int lanesCount,
 						  EdgeShape edgeShape) {
-		this(fromNode, toNode, null, id, oppositeWayId, lengthInMetres, allowedMaxSpeedInMpS, lanesCount, edgeShape);
+		this(fromNode, toNode, null, id, oppositeWayId, lengthInCentimeters, allowedMaxSpeedInKmh, lanesCount, edgeShape);
 	}
 	
 	/**
@@ -78,8 +90,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	 * @param toNode			   destination node
 	 * @param staticId			 osm id of this edge
 	 * @param id
-	 * @param allowedMaxSpeedInMpS maximal allowed speed in meters per second
-	 * @param lengthInMetres	   -
+	 * @param allowedMaxSpeedInKmh maximal allowed speed in kilometers per hour
+	 * @param lengthInCentimeters	   -
 	 * @param oppositeWayId		-1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway).
 	 *							 Input should be correct, it is not validated!
 	 * @param lanesCount		   total number of lanes for ModeOfTransport-car
@@ -90,14 +102,14 @@ public class SimulationEdge extends Edge<SimulationNode> {
 						  BigInteger staticId,
 						  int id,
 						  int oppositeWayId,
-						  int lengthInMetres,
-						  float allowedMaxSpeedInMpS,
+						  int lengthInCentimeters,
+						  int allowedMaxSpeedInKmh,
 						  int lanesCount,
 						  EdgeShape edgeShape) {
-		super(fromNode, toNode, lengthInMetres);
+		super(fromNode, toNode, lengthInCentimeters);
 
 		this.id = id;
-		this.allowedMaxSpeedInMpS = allowedMaxSpeedInMpS;
+		this.allowedMaxSpeedInKmh = allowedMaxSpeedInKmh;
 		this.staticId = staticId;
 
 		if (oppositeWayId >= -1) {

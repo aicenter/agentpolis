@@ -6,7 +6,7 @@ import roadmaptools.clean_geojson
 import roadmaptools.simplify_graph
 import roadmaptools.sanitize
 import roadmaptools.inout
-import roadmaptools.estimate_speed_from_osm
+import roadmaptools.compute_edge_parameters
 import roadmaptools.export_nodes_and_id_maker
 import roadmaptools.prepare_geojson_to_agentpolisdemo
 
@@ -51,8 +51,9 @@ def _save_map_for_ap():
 # # 4 reduction to single component
 # roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
 
-# # 5 compute edge parameters
-# _compute_edge_parameters()
+# 5 compute edge parameters
+roadmaptools.compute_edge_parameters.compute_edge_parameters(
+	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
 
-# # 6 finalization: split to node and edges, node id and index generation
-# _save_map_for_ap()
+# 6 finalization: split to node and edges, node id and index generation
+_save_map_for_ap()

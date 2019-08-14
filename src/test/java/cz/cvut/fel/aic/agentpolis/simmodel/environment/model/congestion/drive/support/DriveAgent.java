@@ -89,7 +89,7 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
 
 
 	@Override
-	public double getVelocity() {
+	public int getVelocity() {
 		return 15;
 	}
 	

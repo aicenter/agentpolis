@@ -74,8 +74,8 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
 			for (Lane lane : link.getLanes()) {
 				length = Math.max(length, lane.getQueueLength());
 				sumLength += lane.getQueueLength();
-				usedCapacity = Math.max(usedCapacity, lane.getUsedLaneCapacityInMeters());
-				sumUsedCapacity += lane.getUsedLaneCapacityInMeters();
+				usedCapacity = Math.max(usedCapacity, lane.getUsedLaneCapacityInCm());
+				sumUsedCapacity += lane.getUsedLaneCapacityInCm();
 			}
 			paintBarOnEdge(canvas, drawingRectangle, edge, usedCapacity, sumUsedCapacity, Color.LIGHT_GRAY);
 			paintBarOnEdge(canvas, drawingRectangle, edge, length, sumLength, Color.RED);
@@ -84,7 +84,7 @@ public class CongestionModelQueuesLayer extends AbstractLayer {
 	}
 
 	private void paintBarOnEdge(Graphics2D canvas, Rectangle2D drawingRectangle, SimulationEdge edge, double length, double sumLength, Color color) {
-		int edgeLength = edge.getLength();
+		int edgeLength = edge.getLengthCm();
 		Point2d from = positionUtil.getCanvasPosition(edge.fromNode);
 		Point2d to = positionUtil.getCanvasPosition(edge.toNode);
 		Vector2d vector = new Vector2d(to.x - from.x, to.y - from.y);

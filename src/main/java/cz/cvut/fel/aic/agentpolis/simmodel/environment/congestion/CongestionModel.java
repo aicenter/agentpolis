@@ -195,9 +195,9 @@ public class CongestionModel {
 		PhysicalVehicle vehicle = vehicleData.getVehicle();
 
 		vehicle.setPosition(nextLink.fromNode);
-		vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInMeters() - vehicle.getLength());
+		vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInCm() - vehicle.getLength());
 
-		double distance = nextLink.edge.shape.getShapeLength() - vehicle.getQueueBeforeVehicleLength();
+		int distance = nextLink.edge.getLengthCm()- vehicle.getQueueBeforeVehicleLength();
 
 		long delay = nextLane.computeDelay(vehicleData.getVehicle(), distance);
 		DelayData delayData = new DelayData(delay, getTimeProvider().getCurrentSimTime(), distance);

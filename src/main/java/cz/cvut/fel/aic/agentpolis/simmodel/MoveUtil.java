@@ -35,19 +35,16 @@ public final class MoveUtil {
 	/**
 	 * Returns the time required for traveling for the given distance
 	 * with specified velocity.
-	 *
-	 * @param velocityInmps Velocity in metres per second.
-	 * @param lengthInMeter Distance in metres per second.
+	 * @param velocityInCmPerSecond Velocity in centimeters per second.
+	 * @param lengthInCm Distance in centimeters per second.
 	 * @return Required time in milliseconds.
-	 * @note (FIXME) The result is in different units (milliseconds) than inputs
-	 * (metres per second and metres); this method should be deprecated.
 	 */
-	public static long computeDuration(double velocityInmps, double lengthInMeter) {
+	public static long computeDuration(int velocityInCmPerSecond, int lengthInCm) {
 
 		// Compute duration on edge (in miliseconds)
-		long duration = Math.round(lengthInMeter / velocityInmps * 1000);
+		long duration = Math.round((double) lengthInCm / velocityInCmPerSecond * 1000);
 
-		// Minimal duration
+		// Minimal duration is 1 millisecond
 		if (duration < 1) {
 			duration = 1;
 		}
@@ -56,20 +53,21 @@ public final class MoveUtil {
 
 	}
 
-	public static double computeAgentOnEdgeVelocity(double driverMaximalVelocity, float allowedMaxSpeedOnRoad) {
-		return Double.min(driverMaximalVelocity, allowedMaxSpeedOnRoad);
+	public static int computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
+		int postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		int driverMaximalVelocityCmPerSecond = entity.getVelocity() * 100;
+		return Integer.min(driverMaximalVelocityCmPerSecond, postedSpeedCmPerSecond);
 	}
 	
 	public static long computeDuration(MovingEntity entity, SimulationEdge edge){
-//		double distance = edge.shape.getShapeLength();
-		double distance = edge.length;
-		double velocity = computeAgentOnEdgeVelocity(entity.getVelocity(), edge.allowedMaxSpeedInMpS);
+		int distance = edge.getLengthCm();
+		int velocity = computeAgentOnEdgeVelocity(entity, edge);
 		return computeDuration(velocity, distance);
 	}
 	
 	public static long computeMinDuration(SimulationEdge edge){
-//		double distance = edge.shape.getShapeLength();
-		double distance = edge.length;
-		return computeDuration(edge.allowedMaxSpeedInMpS, distance);
+		int distanceCm = edge.getLengthCm();
+		int velocityCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		return computeDuration(velocityCmPerSecond, distanceCm);
 	}
 }

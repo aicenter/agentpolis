@@ -29,16 +29,16 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  */
 public class PhysicalVehicle extends Vehicle {
 
-	private final double lengthInMeters;
+	private final int lengthInCm;
 	private final EntityType vehicleType;
 	private final GraphType usingGraphTypeForMoving;
 
-	private final double maxVelocity;
+	private final int maxVelocity;
 
-	public PhysicalVehicle(String vehicleId, EntityType type, double lengthInMeters,
-						   GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
+	public PhysicalVehicle(String vehicleId, EntityType type, float lengthInMeters,
+						   GraphType usingGraphTypeForMoving, SimulationNode position, int maxVelocity) {
 		super(vehicleId, position);
-		this.lengthInMeters = lengthInMeters;
+		this.lengthInCm = Math.round(lengthInMeters * 100);
 		this.vehicleType = type;
 		this.usingGraphTypeForMoving = usingGraphTypeForMoving;
 		this.maxVelocity = maxVelocity;
@@ -50,8 +50,8 @@ public class PhysicalVehicle extends Vehicle {
 	}
 
 
-	public double getLength() {
-		return lengthInMeters;
+	public int getLength() {
+		return lengthInCm;
 	}
 
 	public GraphType getGraphForMovingBaseOnType() {
@@ -59,7 +59,7 @@ public class PhysicalVehicle extends Vehicle {
 	}
 
 	@Override
-	public double getVelocity() {
+	public int getVelocity() {
 		return maxVelocity;
 	}
 

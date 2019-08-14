@@ -55,7 +55,7 @@ public class Lane extends EventHandlerAdapter {
 
 	private Link nextLink;
 
-	private double currentlyUsedCapacityInMeters;
+	private int currentlyUsedCapacityInCm;
 
 	private double waitingQueueInMeters;
 
@@ -94,7 +94,7 @@ public class Lane extends EventHandlerAdapter {
 
 
 	void removeFromQueue(VehicleTripData vehicleData) {
-		currentlyUsedCapacityInMeters -= vehicleData.getVehicle().getLength();
+		currentlyUsedCapacityInCm -= vehicleData.getVehicle().getLength();
 		waitingQueueInMeters -= vehicleData.getVehicle().getLength();
 		waitingQueue.remove();
 
@@ -143,7 +143,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	void prepareAddingToqueue(VehicleTripData vehicleTripData) {
-		currentlyUsedCapacityInMeters += vehicleTripData.getVehicle().getLength();
+		currentlyUsedCapacityInCm += vehicleTripData.getVehicle().getLength();
 	}
 
 	void addToQue(VehicleTripData vehicleTripData) {
@@ -161,7 +161,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
-		double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInMeters;
+		double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInCm;
 		return freeCapacity > vehicle.getLength();
 	}
 
@@ -176,8 +176,8 @@ public class Lane extends EventHandlerAdapter {
 		return waitingQueueInMeters;
 	}
 
-	public double getUsedLaneCapacityInMeters() {
-		return currentlyUsedCapacityInMeters;
+	public int getUsedLaneCapacityInCm() {
+		return currentlyUsedCapacityInCm;
 	}
 
 	long computeDelay(PhysicalVehicle vehicle, double distance) {
@@ -201,9 +201,10 @@ public class Lane extends EventHandlerAdapter {
 		double completionRatioOfPreviousDelay = (currentSimTime - previousDelayData.getDelayStartTime()) / (double) previousDelayData.getDelay();
 		if (completionRatioOfPreviousDelay > 1.0) completionRatioOfPreviousDelay = 1.0;
 
-		double startDistanceOffset = previousDelayData.getStartDistanceOffset() + completionRatioOfPreviousDelay * previousDelayData.getDelayDistance();
+		int startDistanceOffset = (int) Math.round(previousDelayData.getStartDistanceOffset() 
+				+ completionRatioOfPreviousDelay * previousDelayData.getDelayDistance());
 
-		double distance = edge.shape.getShapeLength() - startDistanceOffset - vehicle.getQueueBeforeVehicleLength();
+		int distance = edge.getLengthCm() - startDistanceOffset - vehicle.getQueueBeforeVehicleLength();
 		assert distance >= 0.0;
 
 		long durationInMs = computeDelay(vehicle, distance);
@@ -212,8 +213,7 @@ public class Lane extends EventHandlerAdapter {
 
 	double computeSpeed(PhysicalVehicle vehicle) {
 		SimulationEdge edge = link.edge;
-		double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle.getVelocity(),
-				edge.allowedMaxSpeedInMpS);
+		double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle, edge);
 
 		double speed = freeFlowVelocity;
 		if (link.congestionModel.addFundamentalDiagramDelay) {
@@ -253,7 +253,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 
-	private void updateVehiclesInQueue(double transferredVehicleLength) {
+	private void updateVehiclesInQueue(int transferredVehicleLength) {
 		for (VehicleQueueData vehicleQueueData : waitingQueue) {
 			updateVehicle(vehicleQueueData, transferredVehicleLength);
 		}
@@ -263,7 +263,7 @@ public class Lane extends EventHandlerAdapter {
 		}
 	}
 
-	private void updateVehicle(VehicleQueueData vehicleQueueData, double transferredVehicleLength) {
+	private void updateVehicle(VehicleQueueData vehicleQueueData, int transferredVehicleLength) {
 		PhysicalVehicle vehicle = vehicleQueueData.getVehicleTripData().getVehicle();
 		CongestionModel congestionModel = link.congestionModel;
 

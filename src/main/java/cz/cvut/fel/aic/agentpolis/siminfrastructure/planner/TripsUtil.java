@@ -26,6 +26,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPla
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
@@ -212,13 +213,6 @@ public class TripsUtil {
 		return newTrip;
 	}
 
-
-	private float getEdgeDuration(Node startNode, Node targetNode) {
-		SimulationEdge edge = network.getEdge(startNode, targetNode);
-		return edge.getLength() / edge.allowedMaxSpeedInMpS;
-	}
-
-
 	public float getTripDurationInSeconds(Trip<? extends Node> trip) {
 		float duration = 0;
 
@@ -227,7 +221,8 @@ public class TripsUtil {
 			Node startNode = locations.getFirst();
 			for (int i = 1; i < locations.size(); i++) {
 				Node targetNode = locations.get(i);
-				duration += getEdgeDuration(startNode, targetNode);
+				SimulationEdge edge = network.getEdge(startNode, targetNode);
+				duration += MoveUtil.computeMinDuration(edge);
 				startNode = targetNode;
 			}
 		}

@@ -129,7 +129,7 @@ public class VisioPositionUtil {
 	}
 
 	private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
-		return getEdge(entityPositionNodeId, targetNodeId, EGraphType.HIGHWAY).getLength();
+		return getEdge(entityPositionNodeId, targetNodeId, EGraphType.HIGHWAY).getLengthCm();
 	}
 
 	public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip) {

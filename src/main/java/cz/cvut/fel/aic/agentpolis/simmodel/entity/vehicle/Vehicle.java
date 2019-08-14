@@ -31,7 +31,7 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity {
 
 	private Driver driver;
 
-	private double queueBeforeVehicleLength;
+	private int queueBeforeVehicleLength;
 
 	private SimulationNode lastFromPosition;
 
@@ -62,11 +62,11 @@ public abstract class Vehicle extends AgentPolisEntity implements MovingEntity {
 		this.driver = driver;
 	}
 
-	public double getQueueBeforeVehicleLength() {
+	public int getQueueBeforeVehicleLength() {
 		return queueBeforeVehicleLength;
 	}
 
-	public void setQueueBeforeVehicleLength(double queueBeforeVehicleLength) {
+	public void setQueueBeforeVehicleLength(int queueBeforeVehicleLength) {
 		this.queueBeforeVehicleLength = queueBeforeVehicleLength;
 	}
 

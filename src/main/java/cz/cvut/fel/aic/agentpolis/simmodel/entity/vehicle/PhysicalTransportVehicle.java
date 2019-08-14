@@ -43,8 +43,8 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
 		return vehiclePassengerCapacity;
 	}
 
-	public PhysicalTransportVehicle(String vehicleId, EntityType type, double lengthInMeters, int vehiclePassengerCapacity,
-			GraphType usingGraphTypeForMoving, SimulationNode position, double maxVelocity) {
+	public PhysicalTransportVehicle(String vehicleId, EntityType type, float lengthInMeters, int vehiclePassengerCapacity,
+			GraphType usingGraphTypeForMoving, SimulationNode position, int maxVelocity) {
 		super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
 		this.vehiclePassengerCapacity = vehiclePassengerCapacity;
 		transportedEntities = new LinkedList<>();

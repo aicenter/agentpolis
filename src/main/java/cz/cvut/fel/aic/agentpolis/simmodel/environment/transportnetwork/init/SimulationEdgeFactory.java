@@ -38,7 +38,7 @@ public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,Simulat
 		SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
 		SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
 		return new SimulationEdge(fromNode, toNode, new BigInteger(((String) internalEdge.get("id"))),
-				internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLength(),
+				internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLengthCm(),
 				internalEdge.get("allowedMaxSpeedInMpS"),
 				internalEdge.get("lanesCount"), edgeShape);
 	}

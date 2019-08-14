@@ -80,14 +80,9 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 	protected long performPreDelayActions() {
 		long duration = 0;
 		if (checkFeasibility(edge)) {
-
 			agent.setTargetNode(to);
-//			double distance = edge.shape.getShapeLength();
-			double distance = edge.length;
-			double velocity = MoveUtil.computeAgentOnEdgeVelocity(agent.getVelocity(), edge.allowedMaxSpeedInMpS);
-			duration = MoveUtil.computeDuration(velocity, distance);
-
-			agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), distance));
+			duration = MoveUtil.computeDuration(agent, edge);
+			agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), edge.getLengthCm()));
 		} else {
 			LOGGER.error("The agent with id: {} is not able to execute movement. Agent will freeze "
 							+ "on the current position. It does not exist the edge from {} to {}", new Object[]{ 
