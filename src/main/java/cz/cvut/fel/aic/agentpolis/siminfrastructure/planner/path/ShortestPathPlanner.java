@@ -84,7 +84,8 @@ public class ShortestPathPlanner {
 
 					PlannerEdge plannerEdge = new PlannerEdge(graphType, fromPositionByNodeId, toPositionByNodeId);
 					plannerGraph.addEdge(fromPositionByNodeId, toPositionByNodeId, plannerEdge);
-					plannerGraph.setEdgeWeight(plannerEdge, edge.getLengthCm()/ edge.getAllowedMaxSpeedInCmPerSecond());
+					plannerGraph.setEdgeWeight(plannerEdge, 
+							(double) edge.getLengthCm() / edge.getAllowedMaxSpeedInCmPerSecond());
 				}
 
 			}
