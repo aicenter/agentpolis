@@ -50,8 +50,12 @@ public class PhysicalVehicle extends Vehicle {
 	}
 
 
-	public int getLength() {
+	public int getLengthCm() {
 		return lengthInCm;
+	}
+	
+	public double getLengthM() {
+		return lengthInCm / 1E2;
 	}
 
 	public GraphType getGraphForMovingBaseOnType() {

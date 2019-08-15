@@ -84,7 +84,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 		DriveAgent representative = entities.get(0);
 		
 		if(CAR_REPRESENTATION_SHAPE == null){
-			CAR_REPRESENTATION_SHAPE = createCarShape((float) representative.getVehicle().getLength());
+			CAR_REPRESENTATION_SHAPE = createCarShape((float) representative.getVehicle().getLengthCm());
 		}
 		
 		Color color = getEntityDrawColor(entities.get(0));

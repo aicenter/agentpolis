@@ -195,7 +195,7 @@ public class CongestionModel {
 		PhysicalVehicle vehicle = vehicleData.getVehicle();
 
 		vehicle.setPosition(nextLink.fromNode);
-		vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInCm() - vehicle.getLength());
+		vehicle.setQueueBeforeVehicleLength(nextLane.getUsedLaneCapacityInCm() - vehicle.getLengthCm());
 
 		int distance = nextLink.edge.getLengthCm()- vehicle.getQueueBeforeVehicleLength();
 
@@ -217,6 +217,6 @@ public class CongestionModel {
 	}
 
 	public static long computeFreeflowTransferDelay(PhysicalVehicle vehicle) {
-		return Math.round(vehicle.getLength() * 1E3 / vehicle.getVelocity());
+		return Math.round(vehicle.getLengthCm() * 1E3 / vehicle.getVelocity());
 	}
 }

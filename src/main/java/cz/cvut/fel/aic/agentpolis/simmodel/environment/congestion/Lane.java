@@ -94,11 +94,11 @@ public class Lane extends EventHandlerAdapter {
 
 
 	void removeFromQueue(VehicleTripData vehicleData) {
-		currentlyUsedCapacityInCm -= vehicleData.getVehicle().getLength();
-		waitingQueueInMeters -= vehicleData.getVehicle().getLength();
+		currentlyUsedCapacityInCm -= vehicleData.getVehicle().getLengthCm();
+		waitingQueueInMeters -= vehicleData.getVehicle().getLengthCm();
 		waitingQueue.remove();
 
-		updateVehiclesInQueue(vehicleData.getVehicle().getLength());
+		updateVehiclesInQueue(vehicleData.getVehicle().getLengthCm());
 
 		// wake previous connection and start que processing
 		if (wakeConnectionAfterTransfer) {
@@ -133,7 +133,7 @@ public class Lane extends EventHandlerAdapter {
 			VehicleQueueData vehicleQueueData = drivingQueue.pollFirst();
 			VehicleTripData vehicleTripData = vehicleQueueData.getVehicleTripData();
 			waitingQueue.addLast(vehicleQueueData);
-			waitingQueueInMeters += vehicleTripData.getVehicle().getLength();
+			waitingQueueInMeters += vehicleTripData.getVehicle().getLengthCm();
 		}
 	}
 
@@ -143,7 +143,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	void prepareAddingToqueue(VehicleTripData vehicleTripData) {
-		currentlyUsedCapacityInCm += vehicleTripData.getVehicle().getLength();
+		currentlyUsedCapacityInCm += vehicleTripData.getVehicle().getLengthCm();
 	}
 
 	void addToQue(VehicleTripData vehicleTripData) {
@@ -162,7 +162,7 @@ public class Lane extends EventHandlerAdapter {
 
 	boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
 		double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInCm;
-		return freeCapacity > vehicle.getLength();
+		return freeCapacity > vehicle.getLengthCm();
 	}
 
 	private void addToStartHereQueue(VehicleTripData vehicleTripData) {

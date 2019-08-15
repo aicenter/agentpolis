@@ -200,7 +200,7 @@ public class Crossroad extends Connection {
 		// first vehicle
 		VehicleTripData vehicleTripData = chosenLane.getFirstWaitingVehicle();
 		
-		double vehicleLength = vehicleTripData.getVehicle().getLength();
+		double vehicleLength = vehicleTripData.getVehicle().getLengthCm();
 		
 		// vehicle ends on this node
 		if (vehicleTripData.isTripFinished()) {
@@ -237,7 +237,7 @@ public class Crossroad extends Connection {
 	
 	@Override
 	protected long computeTransferDelay(VehicleTripData vehicleTripData) {
-		return Math.round(vehicleTripData.getVehicle().getLength() * 1E3 / maxFlow);
+		return Math.round(vehicleTripData.getVehicle().getLengthCm() * 1E3 / maxFlow);
 	}
 	
 
