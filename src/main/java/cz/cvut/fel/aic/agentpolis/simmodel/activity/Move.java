@@ -60,6 +60,7 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 	@Override
 	protected void performAction() {
 		agent.setTargetNode(null);
+		agent.setDelayData(null);
 		agent.setPosition(to);
 		finish();
 	}

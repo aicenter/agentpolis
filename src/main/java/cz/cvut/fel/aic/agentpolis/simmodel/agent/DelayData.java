@@ -54,4 +54,8 @@ public class DelayData {
 	public int getDelayDistance() {
 		return delayDistance;
 	}
+	
+	public long getRemainingTime(long currentTime){
+		return delay - (currentTime - delayStartTime);
+	}
 }
