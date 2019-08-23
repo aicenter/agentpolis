@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.utils;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -29,28 +30,31 @@ public class Benchmark {
 	private static final int MILLION = 1000000;
 	
 	
-	public static long durationNano;
+	public long durationNano;
 	
-	public static long getDurationMs(){
+	public long getDurationMs(){
 		return durationNano / MILLION;
 	}
 	
-	public static int getDurationMsInt(){
+	public int getDurationMsInt(){
 		return (int) (durationNano / MILLION);
 	}
 	
-	public static <T> T measureTime(Supplier<T> measuredMethod){
+
+	
+	public <P,R> R measureTime(Function<P,R> measuredMethod, P param){
 		long startTimeNano = System.nanoTime();
-		T returnValue = measuredMethod.get();
+		R returnValue = measuredMethod.apply(param);
 		durationNano = System.nanoTime() - startTimeNano;
 		return returnValue;
 	}
 	
-	public static void measureTime(Runnable measuredMethod){
-		measureTime(() -> {measuredMethod.run();return null;});
+	public <R> R measureTime(Supplier<R> measuredMethod){
+		return measureTime((Object dummyIn) -> {return measuredMethod.get();}, null);
 	}
 	
-//	public interface MeasuredMethod{
-//		public Object call();
-//	}
+	public void measureTime(Runnable measuredMethod){
+		measureTime(() -> {measuredMethod.run();return null;});
+	}
+
 }

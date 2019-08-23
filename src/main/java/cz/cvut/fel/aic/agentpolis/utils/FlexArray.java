@@ -38,29 +38,29 @@ public class FlexArray {
 	
 	
 	
-	public void increment(int index){
+	public synchronized void increment(int index){
 		increment(index, 1);
 	}
 	
-	public void increment(int index, int increment){
+	public synchronized void increment(int index, int increment){
 		if(index >= array.length){
 			enlarge();
 		}
 		array[index] += increment;
 	}
 	
-	public int[] addArrayInPlace(FlexArray b){
+	public synchronized int[] addArrayInPlace(FlexArray b){
 		if(b.array.length > array.length){
 			enlarge(b.array.length);
 		}
 		return ArrayUtil.addArraysInPlace(array, b.array);
 	}
 	
-	public int size(){
+	public synchronized int size(){
 		return array.length;
 	}
 	
-	public int get(int index){
+	public synchronized int get(int index){
 		return array[index];
 	}
 	
