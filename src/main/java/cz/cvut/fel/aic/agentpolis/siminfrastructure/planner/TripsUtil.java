@@ -214,8 +214,13 @@ public class TripsUtil {
 		return newTrip;
 	}
 
-	public float getTripDurationInSeconds(Trip<? extends Node> trip) {
-		float duration = 0;
+	/**
+	 * Computes trip minimum duration in milliseconds.
+	 * @param trip Trip
+	 * @return Trip duration in milliseconds.
+	 */
+	public long getTripDuration(Trip<? extends Node> trip) {
+		long duration = 0;
 
 		LinkedList<? extends Node> locations = trip.getLocations();
 		if (locations.size() >= 2) {
