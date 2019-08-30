@@ -38,7 +38,7 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	/**
 	 * Static id of this edge. It should be consistent, even if the edge is loaded from a different map/file.
 	 */
-	public final BigInteger staticId;
+	private final BigInteger staticId;
 
 	/**
 	 * -1 if it is oneway, -2 for unknown or ID of the opposite direction edge (twoway)
@@ -63,6 +63,11 @@ public class SimulationEdge extends Edge<SimulationNode> {
 
 	
 	
+	
+	public BigInteger getStaticId() {
+		return staticId;
+	}
+	
 	public int getAllowedMaxSpeedInKmh() {
 		return allowedMaxSpeedInKmh;
 	}
@@ -70,7 +75,6 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	public int getAllowedMaxSpeedInCmPerSecond(){
 		return (int) Math.round((double) getAllowedMaxSpeedInKmh() / 3.6 * 1E2);
 	}
-	
 	
 
 

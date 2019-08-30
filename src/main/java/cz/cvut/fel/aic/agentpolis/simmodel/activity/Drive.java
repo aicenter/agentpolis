@@ -109,7 +109,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
 	private void triggerVehicleEnteredEdgeEvent() {
 		SimulationEdge edge = graph.getEdge(from, to);
-		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.staticId, tripId, agent);
+		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getStaticId(), tripId, agent);
 		eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
 	}
 
