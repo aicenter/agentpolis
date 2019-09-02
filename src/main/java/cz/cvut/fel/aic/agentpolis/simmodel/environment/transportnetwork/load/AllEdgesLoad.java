@@ -30,6 +30,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -40,11 +41,11 @@ import java.util.Map.Entry;
  * @author fido
  */
 public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends EntityStorage<E>>
-		implements Iterable<Entry<Integer, Integer>> {
+		implements Iterable<Entry<BigInteger, Integer>> {
 
 	protected final ES entityStorage;
 
-	private final HashMap<Integer, Integer> loadPerEdge;
+	private final HashMap<BigInteger, Integer> loadPerEdge;
 
 	protected final Graph<SimulationNode, SimulationEdge> network;
 
@@ -59,7 +60,7 @@ public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends 
 //	public ArrayList<Integer> test;
 
 
-	public HashMap<Integer, Integer> getLoadPerEdge() {
+	public HashMap<BigInteger, Integer> getLoadPerEdge() {
 		return loadPerEdge;
 	}
 
@@ -79,15 +80,15 @@ public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends 
 			Node currentNode = entity.getPosition();
 			Node targetNode = entity.getTargetNode();
 			if (targetNode != null && targetNode != currentNode) {
-				int edgeId = network.getEdge(currentNode, targetNode).getUniqueId();
+				BigInteger edgeId = network.getEdge(currentNode, targetNode).getStaticId();
 				countLoadForPosition(entityId, edgeId);
 			}
 		}
 	}
 
-	public int getLoadPerEdge(Integer uniqueID) {
-		if (loadPerEdge.containsKey(uniqueID)) {
-			return loadPerEdge.get(uniqueID);
+	public int getLoadPerEdge(BigInteger staticID) {
+		if (loadPerEdge.containsKey(staticID)) {
+			return loadPerEdge.get(staticID);
 		}
 		return 0;
 	}
@@ -98,12 +99,12 @@ public class AllEdgesLoad<E extends AgentPolisEntity & MovingEntity, ES extends 
 
 
 	@Override
-	public Iterator<Entry<Integer, Integer>> iterator() {
+	public Iterator<Entry<BigInteger, Integer>> iterator() {
 		return loadPerEdge.entrySet().iterator();
 	}
 
 
-	protected void countLoadForPosition(String entityId, int edgeId) {
+	protected void countLoadForPosition(String entityId, BigInteger edgeId) {
 		CollectionUtil.incrementMapValue(loadPerEdge, edgeId, 1);
 	}
 
