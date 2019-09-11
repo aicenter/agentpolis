@@ -44,7 +44,7 @@ public class FlexArray {
 	
 	public void increment(int index, int increment){
 		if(index >= array.length){
-			enlarge();
+			enlarge(index + 1);
 		}
 		array[index] += increment;
 	}
