@@ -9,6 +9,6 @@ setup(
 	author_email='david.fido.fiedler@gmail.com',
 	license='MIT',
 	packages=setuptools.find_packages(),
-	install_requires=['roadmaptools','fconfig', 'tqdm', 'typing'],
+	install_requires=['roadmaptools==2.0.1','fconfig', 'tqdm', 'typing'],
 	python_requires='>=3.6'
 )
