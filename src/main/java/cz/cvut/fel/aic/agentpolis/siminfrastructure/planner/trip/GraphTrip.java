@@ -109,8 +109,6 @@ public abstract class GraphTrip<TTripItem extends TripItem> extends Trip<TTripIt
 		return stringBuilder.toString();
 	}
 
-	public abstract void visit(TripVisitior tripVisitior);
-
 	public abstract GraphTrip<TTripItem> clone();
 
 }

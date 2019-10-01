@@ -20,7 +20,7 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.specific;
 
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.traverse.CrossComponentIterator;
 
 /**
@@ -29,14 +29,14 @@ import org.jgrapht.traverse.CrossComponentIterator;
 public class DirectedSpecifics<VV, EE>
 	extends Specifics<VV, EE>
 {
-	private DirectedGraph<VV, EE> graph;
+	private Graph<VV, EE> graph;
 
 	/**
 	 * Creates a new DirectedSpecifics object.
 	 *
 	 * @param g the graph for which this specifics object to be created.
 	 */
-	public DirectedSpecifics(DirectedGraph<VV, EE> g)
+	public DirectedSpecifics(Graph<VV, EE> g)
 	{
 		graph = g;
 	}

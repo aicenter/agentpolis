@@ -29,10 +29,11 @@ import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.graph.GraphPathImpl;
+
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.specific.Specifics;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.specific.SpecificsFactory;
+import org.jgrapht.graph.GraphWalk;
 
 /**
  * An implementation of <a href="http://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm</a>.
@@ -114,7 +115,7 @@ public final class AStarShortestPath<V, E> {
 					length += graph.getEdgeWeight(edge);
 				}
 
-				path = new GraphPathImpl<>(graph, startVertex, endVertex, edgeList, length);
+				path = new GraphWalk<>(graph, startVertex, endVertex, edgeList, length);
 
 				return;
 			}

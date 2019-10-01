@@ -51,11 +51,6 @@ public class VehicleTrip<T extends TripItem> extends GraphTrip<T> {
 	}
 
 	@Override
-	public void visit(TripVisitior tripVisitior) {
-		tripVisitior.visitTrip(this);
-	}
-
-	@Override
 	public VehicleTrip clone() {
 		LinkedList<TripItem> clonedTrip = new LinkedList<TripItem>();
 		for (TripItem node : locations) {
