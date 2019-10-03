@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis;
+package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import cz.cvut.fel.aic.agentpolis.system.LiteModule;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPath.Heuristic;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -118,11 +118,11 @@ public class AStarBenchmark {
 				benchmarkJGraphT(sampleCount, fromNodes, toNodes, jGraphTFinder));
 		int jGraphTTime = jGraphTBenchmark.getDurationMsInt();
 		
-		LOGGER.info("Benchmarking MC AStar");
-		Benchmark mcBenchmark = new Benchmark();
-		mcBenchmark.measureTime(() ->
-				benchmarkMC(sampleCount, fromNodes, toNodes, jGraphTGraph, (Heuristic) heuristic));
-		int mcTime = mcBenchmark.getDurationMsInt();
+//		LOGGER.info("Benchmarking MC AStar");
+//		Benchmark mcBenchmark = new Benchmark();
+//		mcBenchmark.measureTime(() ->
+//				benchmarkMC(sampleCount, fromNodes, toNodes, jGraphTGraph, (Heuristic) heuristic));
+//		int mcTime = mcBenchmark.getDurationMsInt();
 		
 		LOGGER.info("Benchmarking Dijkstra");
 		Benchmark currentBenchmark = new Benchmark();
@@ -158,7 +158,7 @@ public class AStarBenchmark {
 //			currentTotalTime += currentTime;
 //		}
 		System.out.println(String.format("Total time JGraphT: %s ms", jGraphTTime));
-		System.out.println(String.format("Total time MC Astar: %s ms", mcTime));
+//		System.out.println(String.format("Total time MC Astar: %s ms", mcTime));
 		System.out.println(String.format("Total time current solution: %s ms", currentTime));
 	}
 	
@@ -172,15 +172,15 @@ public class AStarBenchmark {
 		}
 	}
 	
-	public static void benchmarkMC(int sampleCount, List<SimulationNode> fromNodes, List<SimulationNode> toNodes,
-			DefaultDirectedWeightedGraph<SimulationNode,DefaultWeightedEdge> jGraphTGraph, Heuristic heuristic){
-		for (int i = 0; i < sampleCount; i++) {
-			SimulationNode origin = fromNodes.get(i);
-			SimulationNode destination = toNodes.get(i);
-			
-			int mclength = computeShortestPathUsingMC(jGraphTGraph, origin, destination, heuristic);
-		}
-	}
+//	public static void benchmarkMC(int sampleCount, List<SimulationNode> fromNodes, List<SimulationNode> toNodes,
+//			DefaultDirectedWeightedGraph<SimulationNode,DefaultWeightedEdge> jGraphTGraph, Heuristic heuristic){
+//		for (int i = 0; i < sampleCount; i++) {
+//			SimulationNode origin = fromNodes.get(i);
+//			SimulationNode destination = toNodes.get(i);
+//			
+//			int mclength = computeShortestPathUsingMC(jGraphTGraph, origin, destination, heuristic);
+//		}
+//	}
 	
 	public static void benchmarkDijkstra(int sampleCount, List<SimulationNode> fromNodes, List<SimulationNode> toNodes,
 			DijkstraShortestPath<SimulationNode,DefaultWeightedEdge> dijkstraFinder){
@@ -192,14 +192,14 @@ public class AStarBenchmark {
 		}
 	}
 	
-	public static int computeShortestPathUsingMC(
-			DefaultDirectedWeightedGraph<SimulationNode,DefaultWeightedEdge> jGraphTGraph, SimulationNode origin, 
-			SimulationNode destination, Heuristic heuristic){
-		cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPath sPath = 
-				new cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPath(
-						jGraphTGraph, origin, destination, heuristic);
-		return (int) sPath.getPathLength();
-	}
+//	public static int computeShortestPathUsingMC(
+//			DefaultDirectedWeightedGraph<SimulationNode,DefaultWeightedEdge> jGraphTGraph, SimulationNode origin, 
+//			SimulationNode destination, Heuristic heuristic){
+//		cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPathMC sPath = 
+//				new cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPathMC(
+//						jGraphTGraph, origin, destination, heuristic);
+//		return (int) sPath.getPathLength();
+//	}
 	
 	public static int computeShortestPathUsingJgraphT(AStarShortestPath jGraphTFinder, SimulationNode origin, 
 			SimulationNode destination){

@@ -107,7 +107,7 @@ public class CongestionModel {
 //			startQueeHandling();
 //		}
 		VehicleTripData vehicleData = new VehicleTripData(vehicle, trip);
-		SimulationNode startLocation = trip.getAndRemoveFirstLocation();
+		SimulationNode startLocation = trip.removeFirstLocation();
 		Connection startConnection = connectionsMappedByNodes.get(startLocation);
 		startConnection.startDriving(vehicleData);
 	}

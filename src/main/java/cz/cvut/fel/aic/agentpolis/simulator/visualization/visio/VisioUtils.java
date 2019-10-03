@@ -19,6 +19,7 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -43,5 +44,25 @@ public class VisioUtils {
 		// text
 		canvas.setColor(textColor);
 		canvas.drawString(text, position.x, position.y);
+	}
+	
+	/**
+	 * Returns {@code true} iff the rectangle represented by given coordinates
+	 * {@code x1,y1,x2,y2} overlaps the given {@code dimension}
+	 * 
+	 * @param x1
+	 *			x coordinate of one corner
+	 * @param y1
+	 *			y coordinate of one corner
+	 * @param x2
+	 *			x coordinate of the opposite corner
+	 * @param y2
+	 *			y coordinate of the opposite corner
+	 * @param dimension
+	 * @return
+	 */
+	public static boolean rectangleOverlaps(int x1, int y1, int x2, int y2, Dimension dimension) {
+		assert x1 <= x2 && y1 <= y2;
+		return x2 > 0 && x1 < dimension.width && y2 > 0 && y1 < dimension.height;
 	}
 }

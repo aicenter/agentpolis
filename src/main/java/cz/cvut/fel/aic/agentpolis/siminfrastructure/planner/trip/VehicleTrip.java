@@ -19,70 +19,24 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 
-import java.util.LinkedList;
-
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import static com.google.common.base.Preconditions.checkNotNull;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 
 /**
- * 
- * The class represents a locations which relating with traveling as passenger or
- driver of a vehicle
- * 
- * @author Zbynek Moler
+ *  
+ * @author David Fiedler
  * 
  */
-public class VehicleTrip<T extends TripItem> extends GraphTrip<T> {
+public class VehicleTrip<L> extends Trip<L> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4781120952110023091L;
-	
-	private final String vehicleId;
+	private final Vehicle vehicle;
 
-	public VehicleTrip(LinkedList<T> trip, GraphType graphType, String vehicleId){
-		super(trip, graphType);
-		this.vehicleId = checkNotNull(vehicleId);
+	public VehicleTrip(Vehicle vehicle, L... locations){
+		super(locations);
+		this.vehicle = checkNotNull(vehicle);
 	}
 
-	public String getVehicleId() {
-		return vehicleId;
+	public Vehicle getVehicle() {
+		return vehicle;
 	}
-
-	@Override
-	public VehicleTrip clone() {
-		LinkedList<TripItem> clonedTrip = new LinkedList<TripItem>();
-		for (TripItem node : locations) {
-			clonedTrip.addLast(new TripItem(node.tripPositionByNodeId));
-
-		}
-		return new VehicleTrip(clonedTrip, graphType, vehicleId);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder("VehicleTrip");
-		stringBuilder.append('\n');
-		stringBuilder.append(graphType);
-		stringBuilder.append('(');
-		if (locations.isEmpty() == false) {
-			stringBuilder.append(locations.getFirst().tripPositionByNodeId);
-			stringBuilder.append("------------>");
-			stringBuilder.append(locations.getLast().tripPositionByNodeId);
-		}
-
-//		if (locations.isEmpty() == false) {
-//			for (TripItem tripItem : locations) {
-//				stringBuilder.append(" ---> ");
-//				stringBuilder.append(tripItem);
-//			}
-//		}
-
-		stringBuilder.append(')');
-		stringBuilder.append(' ');
-		//stringBuilder.append(super.toString());
-		return stringBuilder.toString();
-	}
-
 }

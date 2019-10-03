@@ -60,7 +60,7 @@ public class CongestedDriveFactory extends ActivityFactory implements PhysicalVe
 
 	@Override
 	public <A extends Agent & Driver> CongestedDrive create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
-		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
+		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), target);
 		return new CongestedDrive(activityInitializer, agent, congestionModel, trip,vehicle);
 	}
 }

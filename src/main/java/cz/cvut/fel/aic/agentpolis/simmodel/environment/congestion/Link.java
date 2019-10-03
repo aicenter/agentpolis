@@ -89,7 +89,7 @@ public class Link {
 			nextLane = getLaneForTripEnd();
 			vehicleData.setTripFinished(true);
 		} else {
-			SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
+			SimulationNode nextLocation = trip.removeFirstLocation();
 			nextLane = getLaneByNextNode(nextLocation);
 		}
 

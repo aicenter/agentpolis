@@ -78,7 +78,7 @@ public class StandardDriveFactory extends ActivityFactory implements PhysicalVeh
 
 	@Override
 	public <A extends Agent & Driver> Drive<A> create(A agent, PhysicalVehicle vehicle, SimulationNode target) {
-		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition().getId(), target.getId());
+		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), target);
 
 		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider,
 				agent, vehicle, trip, tripIdGenerator.getId());

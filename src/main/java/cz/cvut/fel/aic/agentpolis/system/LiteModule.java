@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis;
+package cz.cvut.fel.aic.agentpolis.system;
 
 import com.google.inject.AbstractModule;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;

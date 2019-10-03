@@ -16,11 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package cz.cvut.fel.aic.agentpolis;
+package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.AStarShortestPath;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.utils.PositionUtil;
 import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
@@ -31,8 +30,7 @@ import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
  */
 
 @Singleton
-public class EuclideanTraveltimeHeuristic implements AStarAdmissibleHeuristic<SimulationNode>, 
-		AStarShortestPath.Heuristic<SimulationNode>{
+public class EuclideanTraveltimeHeuristic implements AStarAdmissibleHeuristic<SimulationNode>{
 	
 	private final PositionUtil positionUtil;
 
@@ -49,11 +47,6 @@ public class EuclideanTraveltimeHeuristic implements AStarAdmissibleHeuristic<Si
 			positionUtil.getPosition(v).distance(positionUtil.getPosition(v1)) * 100);
 		
 		return Math.round((double) distance / 3600 * 1000);
-	}
-
-	@Override
-	public double getHeuristicEstimate(SimulationNode current, SimulationNode goal) {
-		return getCostEstimate(current, goal);
 	}
 
 }

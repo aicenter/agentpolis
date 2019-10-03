@@ -18,11 +18,9 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
-import cz.cvut.fel.aic.geographtools.Node;
 
 import java.util.Arrays;
 
-import java.util.LinkedList;
 import java.util.Objects;
 import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
@@ -35,51 +33,103 @@ public class Trip<L> {
 	
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Trip.class);
 	
-	protected final LinkedList<L> locations;
+	private static boolean checkLocations = false;
 
-	public LinkedList<L> getLocations() {
-		return locations;
+	public static void setCheckLocations(boolean check_locations) {
+		Trip.checkLocations = check_locations;
 	}
+	
+	
+	
+	
+	protected final L[] locations;
+	
+	
+	private int currentFirstLocationIndex;
+
+	
+	
 
 	public Trip(L... locations) {
-		this(new LinkedList<>(Arrays.asList(locations)));
-	}
-
-	public Trip(LinkedList<L> locations) {
-		try {
-			checkLocations(locations);
-		} catch (TripException ex) {
-			LOGGER.error(ex.getMessage(), ex);
+		if(checkLocations){
+			try {
+				checkLocations(locations);
+			} catch (TripException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 		this.locations = locations;
+		currentFirstLocationIndex = 0;
 	}
 
-	public Trip(L startLocation, L endLocation) {
-		if (startLocation == null || endLocation == null) {
-			try {
-				throw new TripException();
-			} catch (TripException ex) {
-				LOGGER.error(ex.getMessage(), ex);
-			}
+
+//	public void extendTrip(L location) {
+//		if(checkLocations){
+//			if (location == null) {
+//				try {
+//					throw new TripException();
+//				} catch (TripException ex) {
+//					LOGGER.error(ex.getMessage(), ex);
+//				}
+//			}
+//		}
+//		locations = new L[];
+//	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
 		}
-
-		locations = new LinkedList<>();
-		locations.add(startLocation);
-		locations.add(endLocation);
-	}
-
-
-	public void extendTrip(L location) {
-		if (location == null) {
-			try {
-				throw new TripException();
-			} catch (TripException ex) {
-				LOGGER.error(ex.getMessage(), ex);
-			}
+		if (obj == null) {
+			return false;
 		}
-		locations.addLast(location);
+//		if (getClass() != obj.getClass()) {
+//			return false;
+//		}
+		final Trip<?> other = (Trip<?>) obj;
+		return Objects.equals(this.locations, other.locations);
+	}
+	
+	public L[] getLocations() {
+		if(currentFirstLocationIndex == 0){
+			return locations;
+		}
+		return Arrays.copyOfRange(locations, currentFirstLocationIndex, locations.length);
+	}
+	
+	public L[] getAllLocations() {
+		return locations;
+	}
+	
+	
+	
+	public L getFirstLocation() {
+		return locations[currentFirstLocationIndex];
+	}
+	
+	public L removeFirstLocation() {
+		return locations[currentFirstLocationIndex++];
+	}
+	
+	public L getLastLocation() {
+		return locations[locations.length - 1];
+	}
+	
+	public boolean isEmpty() {
+		return locations.length == currentFirstLocationIndex;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Trip of type + ").append(locations[0].getClass());
+		sb.append("[");
+		String locString = Arrays.stream(locations).map(String::valueOf).collect(Collectors.joining(", "));
+		sb.append(locString).append("]");
+		return sb.toString();
+	}
+	
 	public String locationsToString() {
 		String str = "";
 
@@ -89,82 +139,13 @@ public class Trip<L> {
 
 		return str;
 	}
-
-	public L getAndRemoveFirstLocation() {
-		return locations.poll();
-	}
-	
-	public L getFirstLocation() {
-		return locations.peek();
-	}
-	
-	public L removeFirstLocation() {
-		return locations.removeFirst();
-	}
-	
-
-	public boolean isEmpty() {
-		return locations.isEmpty();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Trip of type + ").append(locations.getFirst().getClass());
-		for(L location: locations){
-			sb.append(location.toString());
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Trip<?> other = (Trip<?>) obj;
-		if (!Objects.equals(this.locations, other.locations)) {
-			return false;
-		}
-		return true;
-	}
-	
-	// TEMPORARY SOLUTION, should go to node trip class!!
-	public String locationIdsToString(){
-		int[] locationIds = getLoacationIds();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Trip of type + ").append(locations.getFirst().getClass());
-		sb.append("[");
-		String locString = Arrays.stream(locationIds).mapToObj(String::valueOf).collect(Collectors.joining(", "));
-		sb.append(locString).append("]");
-		return sb.toString();
-	}
-	
-	
-
-	private void checkLocations(LinkedList<L> locations) throws TripException {
+		
+	private void checkLocations(L[] locations) throws TripException {
 		for (L location : locations) {
 			if (location == null) {
 				throw new TripException();
 			}
 		}
-	}
-// TEMPORARY SOLUTION, should go to node trip class!!
-	public int[] getLoacationIds() {
-		int[] ids = new int[locations.size()];
-		int index = 0;
-		for(L location: locations){
-			Node node = (Node) location;
-			ids[index] = node.id;
-			index++;
-		}
-		return ids;
 	}
 	
 }
