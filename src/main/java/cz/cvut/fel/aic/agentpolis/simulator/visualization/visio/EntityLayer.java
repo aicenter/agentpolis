@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
-import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.alite.vis.Vis;
@@ -31,6 +30,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.util.*;
 import javax.vecmath.Point2d;
 
@@ -86,6 +86,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 
 	@Override
 	public void paint(Graphics2D canvas) {
+		canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		Dimension dim = Vis.getDrawingDimension();
 
 		EntityStorage<E>.EntityIterator entityIterator = entityStorage.new EntityIterator();
@@ -137,7 +138,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		int y1 = (int) (entityPosition.getY() - radius);
 		int x2 = (int) (entityPosition.getX() + radius);
 		int y2 = (int) (entityPosition.getY() + radius);
-		if (rectangleOverlaps(x1, y1, x2, y2, dim)) {
+		if (VisioUtils.rectangleOverlaps(x1, y1, x2, y2, dim)) {
 			canvas.fillOval(x1, y1, width, width);
 
 			if (entities.size() > 1 && Vis.getZoomFactor() > agentpolisConfig.visio.minZoomToShowStackEntitiesCount) {
@@ -210,24 +211,6 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 				&& point.getY() < dimension.height;
 	}
 
-	/**
-	 * Returns {@code true} iff the rectangle represented by given coordinates
-	 * {@code x1,y1,x2,y2} overlaps the given {@code dimension}
-	 * 
-	 * @param x1
-	 *			x coordinate of one corner
-	 * @param y1
-	 *			y coordinate of one corner
-	 * @param x2
-	 *			x coordinate of the opposite corner
-	 * @param y2
-	 *			y coordinate of the opposite corner
-	 * @param dimension
-	 * @return
-	 */
-	protected static boolean rectangleOverlaps(int x1, int y1, int x2, int y2, Dimension dimension) {
-		assert x1 <= x2 && y1 <= y2;
-		return x2 > 0 && x1 < dimension.width && y2 > 0 && y1 < dimension.height;
-	}
+	
 
 }

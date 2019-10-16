@@ -21,10 +21,7 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanners;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
@@ -34,7 +31,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.NearestE
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
 
@@ -56,162 +52,56 @@ public class TripsUtil {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TripsUtil.class);
 	
-	protected static final Set<GraphType> GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
+	protected static final Set<GraphType> HIGHWAY_GRAPH_TYPES = new HashSet(Arrays.asList(EGraphType.HIGHWAY));
 
 
-	protected final ShortestPathPlanners pathPlanners;
+	protected final ShortestPathPlanner pathPlanner;
 
 	private final NearestElementUtils nearestElementUtils;
 	private final Graph<SimulationNode, SimulationEdge> network;
 
 
+	
+	
 	@Inject
-	public TripsUtil(ShortestPathPlanners pathPlanners, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
-		this.pathPlanners = pathPlanners;
+	public TripsUtil(ShortestPathPlanner pathPlanner, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
+		this.pathPlanner = pathPlanner;
 		this.nearestElementUtils = nearestElementUtils;
 		this.network = network.getNetwork();
 	}
-
-
-	public VehicleTrip locationsToVehicleTrip(List<Node> locations, boolean precomputedPaths, PhysicalVehicle vehicle) {
-		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-
-		VehicleTrip finalTrip = null;
-		LinkedList<TripItem> tripItems = new LinkedList<>();
-
-		int startNodeId = locations.get(0).getId();
-
-		if (precomputedPaths) {
-			tripItems.add(new TripItem(startNodeId));
-		}
-
-		for (int i = 1; i < locations.size(); i++) {
-			int targetNodeId = locations.get(i).getId();
-			if (startNodeId == targetNodeId) {
-				try {
-					throw new Exception("There can't be two identical locations in a row");
-				} catch (Exception ex) {
-					LOGGER.error(null, ex);
-				}
-			}
-
-			if (precomputedPaths) {
-				tripItems.add(new TripItem(targetNodeId));
-			} else {
-				try {
-					VehicleTrip partialTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
-					while (partialTrip.hasNextTripItem()) {
-						tripItems.add(partialTrip.getAndRemoveFirstTripItem());
-					}
-
-				} catch (TripPlannerException ex) {
-					LOGGER.error(null, ex);
-				}
-			}
-			startNodeId = targetNodeId;
-		}
-
-		finalTrip = new VehicleTrip(tripItems, EGraphType.HIGHWAY, vehicle.getId());
-
-		return finalTrip;
-	}
-
-	public VehicleTrip createTrip(int startNodeId, int targetNodeId, PhysicalVehicle vehicle) {
-		if (startNodeId == targetNodeId) {
-			try {
-				throw new Exception("Start node cannot be the same as end node");
-			} catch (Exception ex) {
-			   LOGGER.error(null, ex);
-			}
-		}
-		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(GRAPH_TYPES);
-
-		VehicleTrip finalTrip = null;
-		try {
-			finalTrip = pathPlanner.findTrip(vehicle.getId(), startNodeId, targetNodeId);
-		} catch (TripPlannerException ex) {
-			LOGGER.error(null, ex);
-		}
-
-		return finalTrip;
-	}
-
-	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId) {
-		return createTrip(startNodeId, targetNodeId, GRAPH_TYPES);
-	}
-
-	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, GraphType graphType) {
-		return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
-	}
-
-	public Trip<SimulationNode> createTrip(GPSLocation startLocation, GPSLocation targetLocation, GraphType graphType) {
-		int startNodeId = nearestElementUtils.getNearestElement(startLocation, graphType).id;
-		int targetNodeId = nearestElementUtils.getNearestElement(targetLocation, graphType).id;
-		return createTrip(startNodeId, targetNodeId, new HashSet(Arrays.asList(graphType)));
-	}
-
-	public Trip<SimulationNode> createTrip(int startNodeId, int targetNodeId, Set<GraphType> graphTypes) {
-		if (startNodeId == targetNodeId) {
+	
+	
+	
+	public Trip<SimulationNode> createTrip(SimulationNode fromNode, SimulationNode toNode, Set<GraphType> graphTypes) {
+		if (fromNode == toNode) {
 			try {
 				throw new Exception("Start node cannot be the same as end node");
 			} catch (Exception ex) {
 				LOGGER.error(null, ex);
 			}
 		}
-		ShortestPathPlanner pathPlanner = pathPlanners.getPathPlanner(graphTypes);
-
-		Trip finalTrip = null;
-		try {
-			finalTrip = pathPlanner.findTrip(startNodeId, targetNodeId);
-		} catch (TripPlannerException ex) {
-			LOGGER.error(null, ex);
-		}
-
-		return finalTrip;
+		
+		return pathPlanner.findShortestPath(fromNode, toNode, graphTypes);
+	}
+	
+	public Trip<SimulationNode> createTrip(SimulationNode fromNode, SimulationNode toNode, GraphType graphType) {
+		return createTrip(fromNode, toNode, new HashSet(Arrays.asList(graphType)));
+	}
+	
+	public Trip<SimulationNode> createTrip(SimulationNode fromNode, SimulationNode toNode) {
+		return createTrip(fromNode, toNode, HIGHWAY_GRAPH_TYPES);
+	}
+	
+	public VehicleTrip createTrip(SimulationNode fromNode, SimulationNode toNode, PhysicalVehicle vehicle) {
+		Trip trip = createTrip(fromNode, toNode, HIGHWAY_GRAPH_TYPES);
+		VehicleTrip vehicleTrip = new VehicleTrip<>(vehicle, trip.getLocations());
+		return vehicleTrip;
 	}
 
-	public static Trip<SimulationNode> mergeTrips(Trip<SimulationNode>... trips) {
-		int i = 0;
-		Trip<SimulationNode> firstTrip = null;
-		do {
-			firstTrip = trips[i];
-			i++;
-		} while (firstTrip == null);
-
-		Trip<SimulationNode> newTrip = new Trip<SimulationNode>(firstTrip.getLocations());
-
-		for (int j = i; j < trips.length; j++) {
-			Trip<SimulationNode> trip = trips[j];
-			if (trip != null) {
-				for (SimulationNode location : trip.getLocations()) {
-					if (!newTrip.getLocations().peekLast().equals(location)) {
-						newTrip.extendTrip(location);
-					}
-				}
-			}
-		}
-		return newTrip;
-	}
-
-	public static VehicleTrip mergeTripsOld(VehicleTrip<TripItem>... trips) {
-		int i = 0;
-		VehicleTrip firstTrip = null;
-		do {
-			firstTrip = trips[i];
-			i++;
-		} while (firstTrip == null);
-
-		VehicleTrip<TripItem> newTrip = new VehicleTrip<>(new LinkedList<>(), firstTrip.getGraphType(), firstTrip.getVehicleId());
-
-		for (int j = 0; j < trips.length; j++) {
-			VehicleTrip<TripItem> trip = trips[j];
-			if (trip != null) {
-				for (TripItem location : trip.getLocations()) {
-					newTrip.extendTrip(location);
-				}
-			}
-		}
-		return newTrip;
+	@Deprecated
+	public static VehicleTrip mergeTripsOld(VehicleTrip<SimulationNode>... trips) {	
+		SimulationNode[] locations = Arrays.stream(trips).map(Trip::getLocations).toArray(SimulationNode[]::new);		
+		return new VehicleTrip(trips[0].getVehicle(), locations);
 	}
 
 	/**
@@ -219,14 +109,14 @@ public class TripsUtil {
 	 * @param trip Trip
 	 * @return Trip duration in milliseconds.
 	 */
-	public long getTripDuration(Trip<? extends Node> trip) {
+	public long getTripDuration(Trip<SimulationNode> trip) {
 		long duration = 0;
 
-		LinkedList<? extends Node> locations = trip.getLocations();
-		if (locations.size() >= 2) {
-			Node startNode = locations.getFirst();
-			for (int i = 1; i < locations.size(); i++) {
-				Node targetNode = locations.get(i);
+		SimulationNode[] locations = trip.getLocations();
+		if (locations.length >= 2) {
+			Node startNode = locations[0];
+			for (int i = 1; i < locations.length; i++) {
+				Node targetNode = locations[i];
 				SimulationEdge edge = network.getEdge(startNode, targetNode);
 				duration += MoveUtil.computeMinDuration(edge);
 				startNode = targetNode;
@@ -237,7 +127,7 @@ public class TripsUtil {
 	}
 
 	public int[] getLocationIndexes(Trip<SimulationNode> trip){
-		int[] indexes = new int[trip.getLocations().size()];
+		int[] indexes = new int[trip.getLocations().length];
 		int i = 0;
 		for(SimulationNode location: trip.getLocations()){
 			indexes[i] = location.getIndex();

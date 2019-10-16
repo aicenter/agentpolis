@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Point2d;
@@ -29,8 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.GraphTrip;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.TripItem;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
@@ -132,18 +130,18 @@ public class VisioPositionUtil {
 		return getEdge(entityPositionNodeId, targetNodeId, EGraphType.HIGHWAY).getLengthCm();
 	}
 
-	public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip) {
+	public int getTripLengthInMeters(Trip<SimulationNode> graphTrip) {
 		return getTripLengthInMeters(graphTrip, null);
 	}
 
-	public int getTripLengthInMeters(GraphTrip<TripItem> graphTrip, Node stopPosition) {
+	public int getTripLengthInMeters(Trip<SimulationNode> graphTrip, Node stopPosition) {
 		int length = 0;
 
-		List<TripItem> locations = graphTrip.getLocations();
+		SimulationNode[] locations = graphTrip.getAllLocations();
 
-		int startNodeId = locations.get(0).tripPositionByNodeId;
-		for (int i = 1; i < locations.size(); i++) {
-			int targetNodeId = locations.get(i).tripPositionByNodeId;
+		int startNodeId = locations[0].getId();
+		for (int i = 1; i < locations.length; i++) {
+			int targetNodeId = locations[i].getId();
 			length += getEdgeLength(startNodeId, targetNodeId);
 
 			if (stopPosition != null && stopPosition.id == targetNodeId) {

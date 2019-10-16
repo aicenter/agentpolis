@@ -135,7 +135,7 @@ public class Connection extends EventHandlerAdapter {
 
 	void startDriving(VehicleTripData vehicleData) {
 		Trip<SimulationNode> trip = vehicleData.getTrip();
-		SimulationNode nextLocation = trip.getAndRemoveFirstLocation();
+		SimulationNode nextLocation = trip.removeFirstLocation();
 
 		Connection nextConnection = congestionModel.connectionsMappedByNodes.get(nextLocation);
 		Link nextLink = getNextLink(nextConnection);

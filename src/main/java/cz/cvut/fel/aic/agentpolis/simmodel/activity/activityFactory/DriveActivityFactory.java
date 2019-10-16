@@ -85,7 +85,7 @@ public class DriveActivityFactory extends ActivityFactory {
 
 	public <AG extends Agent & Driver> Drive<AG> create(AG agent, Vehicle vehicle, SimulationNode targetPosition) {
 		vehicleCheck(vehicle);
-		Trip<SimulationNode> trip = tripsUtil.createTrip(vehicle.getPosition().getId(), targetPosition.getId());
+		Trip<SimulationNode> trip = tripsUtil.createTrip(vehicle.getPosition(), targetPosition);
 		return new Drive<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, vehicle, trip,
 				tripIdGenerator.getId());
 	}

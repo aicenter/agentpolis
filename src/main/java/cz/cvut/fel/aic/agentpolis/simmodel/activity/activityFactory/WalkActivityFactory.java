@@ -71,7 +71,7 @@ public class WalkActivityFactory extends ActivityFactory {
 				tripIdGenerator.getId());
 	}
 
-	public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, Node targetPosition) {
+	public <AG extends Agent & MovingAgent> Walk<AG> create(AG agent, SimulationNode targetPosition) {
 		Trip<SimulationNode> trip = tripsUtil.createTrip(agent.getPosition(), targetPosition, EGraphType.PEDESTRIAN);
 		return new Walk<>(activityInitializer, transportNetworks, moveActivityFactory, eventProcessor, timeProvider, agent, trip,
 				tripIdGenerator.getId());

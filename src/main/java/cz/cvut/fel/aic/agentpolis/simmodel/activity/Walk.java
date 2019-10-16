@@ -74,7 +74,7 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
 	@Override
 	protected void performAction() {
-		from = trip.getAndRemoveFirstLocation();
+		from = trip.removeFirstLocation();
 		move();
 
 	}
@@ -90,7 +90,7 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 	}
 
 	private void move() {
-		to = trip.getAndRemoveFirstLocation();
+		to = trip.removeFirstLocation();
 		SimulationEdge edge = graph.getEdge(from, to);
 
 		runChildActivity(moveActivityFactory.create(agent, edge, from, to));

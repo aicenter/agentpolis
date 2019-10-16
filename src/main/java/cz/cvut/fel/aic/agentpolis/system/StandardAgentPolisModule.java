@@ -21,14 +21,14 @@ package cz.cvut.fel.aic.agentpolis.system;
 import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.EuclideanTraveltimeHeuristic;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.path.ShortestPathPlanner.ShortestPathPlannerFactory;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.AStarShortestPathPlanner;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.ShortestPathPlanner;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.VisioInitializer;
@@ -43,7 +43,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.RailwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TramwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
-import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
@@ -52,6 +51,7 @@ import java.time.ZonedDateTime;
 
 import ninja.fido.config.Configuration;
 import ninja.fido.config.GeneratedConfig;
+import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
 
 public class StandardAgentPolisModule extends AbstractModule implements AgentPolisMainModule{
 	
@@ -77,6 +77,10 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Override
 	protected void configure() {
 		
+		if(agentpolisConfig.debug){
+			Trip.setCheckLocations(true);
+		}
+		
 		bindConstant().annotatedWith(Names.named("mapSrid")).to(agentpolisConfig.srid);
 
 		bind(Transformer.class).toInstance(new Transformer(agentpolisConfig.srid));
@@ -85,8 +89,9 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		
 		bind(TimeProvider.class).to(StandardTimeProvider.class);
 		
-		install(new FactoryModuleBuilder().implement(ShortestPathPlanner.class, ShortestPathPlanner.class)
-			.build(ShortestPathPlannerFactory.class));
+		bind(ShortestPathPlanner.class).to(AStarShortestPathPlanner.class);
+		
+		bind(AStarAdmissibleHeuristic.class).to(EuclideanTraveltimeHeuristic.class);
 		
 		bindVisioInitializer();
 		configureNext();

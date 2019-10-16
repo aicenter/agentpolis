@@ -83,7 +83,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 	@Override
 	protected void performAction() {
 		agent.startDriving(vehicle);
-		from = trip.getAndRemoveFirstLocation();
+		from = trip.removeFirstLocation();
 		move();
 	}
 
@@ -100,7 +100,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 	}
 
 	private void move() {
-		to = trip.getAndRemoveFirstLocation();
+		to = trip.removeFirstLocation();
 		SimulationEdge edge = graph.getEdge(from, to);
 
 		runChildActivity(moveActivityFactory.create(agent, edge, from, to));
