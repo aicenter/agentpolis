@@ -26,7 +26,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.Node;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -71,7 +70,8 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 		AStarShortestPath<SimulationNode,DefaultWeightedEdge> planner 
 				= shortestPathPlannersMappedByGraphTypes.get(graphTypes);
 		GraphPath<SimulationNode,DefaultWeightedEdge> path = planner.getPath(from, to);
-		return new Trip<>(path.getVertexList().toArray(SimulationNode[]::new));
+		SimulationNode[] locations = path.getVertexList().stream().toArray(SimulationNode[]::new);
+		return new Trip<>(locations);
 	}
 
 

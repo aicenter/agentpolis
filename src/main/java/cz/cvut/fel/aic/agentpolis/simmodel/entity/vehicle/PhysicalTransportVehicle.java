@@ -38,11 +38,28 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
 	protected final List<T> transportedEntities;
 
 	private final int vehiclePassengerCapacity; // number of passenger, including driver
+	
+		
+	private boolean highlited;
 
+	
+	
+	
 	public int getCapacity() {
 		return vehiclePassengerCapacity;
 	}
+	
+	public boolean isHighlited() {
+		return highlited;
+	}
 
+	public void setHighlited(boolean highlited) {
+		this.highlited = highlited;
+	}
+
+	
+	
+	
 	public PhysicalTransportVehicle(String vehicleId, EntityType type, float lengthInMeters, int vehiclePassengerCapacity,
 			GraphType usingGraphTypeForMoving, SimulationNode position, int maxVelocity) {
 		super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);

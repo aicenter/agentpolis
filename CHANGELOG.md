@@ -1,7 +1,13 @@
 # 7.0.0
-- Trip refactoring - new more systematic trip system, location backed by arrays
+
+## Changed
+- Trip refactoring - new more systematic trip system, locations backed by array
 - JGraphT version updated
 - Dijkstra replaced by Astar in path planning
+
+## Added
+- vehicle highlighting by switching to static size
+
 
 # 6.0.0
 

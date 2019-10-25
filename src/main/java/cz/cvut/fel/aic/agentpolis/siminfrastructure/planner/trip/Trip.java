@@ -139,6 +139,10 @@ public class Trip<L> {
 
 		return str;
 	}
+	
+	public int getSize(){
+		return locations.length - currentFirstLocationIndex;
+	}
 		
 	private void checkLocations(L[] locations) throws TripException {
 		for (L location : locations) {

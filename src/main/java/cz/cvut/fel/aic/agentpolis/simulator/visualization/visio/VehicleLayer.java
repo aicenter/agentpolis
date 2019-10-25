@@ -43,6 +43,8 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> extends EntityLayer<V> {
 
 	private Path2D representativeShape;
+	
+	private Path2D representativeShapeStatic;
 
 	public VehicleLayer(EntityStorage<V> driverStorage, AgentpolisConfig agentpolisConfig) {
 		this(driverStorage, agentpolisConfig, agentpolisConfig.visio.showStackedEntities, true);
@@ -85,14 +87,14 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 
 	@Override
 	protected void drawEntities(List<V> entities, Point2d entityPosition, Graphics2D canvas, Dimension dim) {
-		V representative = entities.get(0);
-
-		Color color = getEntityDrawColor(representative);
-		canvas.setColor(color);
-
 		if (pointInside(entityPosition, dim)) {
+			V representative = entities.get(0);
+			Color color = getEntityDrawColor(representative);
+			canvas.setColor(color);
+			boolean transformSizeForEntity = checkIfTransformSize(representative);
+			
 			drawEntityCount(entities,entityPosition, canvas, color);
-			drawEntityShape(representative, entityPosition, canvas);
+			drawEntityShape(representative, entityPosition, canvas, transformSizeForEntity);
 		}
 	}
 
@@ -106,7 +108,8 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 		}
 	}
 
-	protected void drawEntityShape(V representative, Point2d entityPosition, Graphics2D canvas) {
+	protected void drawEntityShape(V representative, Point2d entityPosition, Graphics2D canvas, 
+			boolean transformSizeForEntity) {
 		double angle = getAngle(representative);
 		/* desired order of the transformations */
 		/* rotate against center of the shape */
@@ -116,17 +119,22 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 				entityPosition.getY());
 
 		/* transformations are applied in inverse order */
-		if (transformSize) {
+		Shape s;
+		if (transformSizeForEntity) {
 			double zoomFactor = Math.max(Vis.getZoomFactor(), agentpolisConfig.visio.minEntityZoom);
 			/* scale according to zoom factor */
 			AffineTransform scale = AffineTransform.getScaleInstance(zoomFactor, zoomFactor);
 
 			scale.concatenate(rotate);
 			translate.concatenate(scale);
+			
+			s = getShape(representative).createTransformedShape(translate);
 		} else {
 			translate.concatenate(rotate);
+			
+			s = getStaticShape(representative).createTransformedShape(translate);
 		}
-		Shape s = getShape(representative).createTransformedShape(translate);
+		
 		canvas.fill(s);
 	}
 
@@ -152,14 +160,17 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 
 	protected Path2D getShape(V representative) {
 		if (representativeShape == null) {
-			if (transformSize) {
-				representativeShape = createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
-			} else {
-				representativeShape = createCarShape(getVehicleStaticLength(representative),
-						getVehicleStaticWidth(representative));
-			}
+			representativeShape = createCarShape(getVehicleLength(representative), getVehicleWidth(representative));
 		}
 		return representativeShape;
+	}
+	
+	protected Path2D getStaticShape(V representative) {
+		if (representativeShapeStatic == null) {
+			representativeShapeStatic = createCarShape(getVehicleStaticLength(representative),
+					getVehicleStaticWidth(representative));
+		}
+		return representativeShapeStatic;
 	}
 
 	public static Path2D createCarShape(final float length, final float width) {
@@ -169,6 +180,10 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 		p0.lineTo(-length / 2, width / 2);
 		p0.closePath();
 		return p0;
+	}
+
+	public boolean checkIfTransformSize(V representative) {
+		return transformSize;
 	}
 
 }

@@ -52,8 +52,8 @@ def _save_map_for_ap():
 # roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
 
 # 5 compute edge parameters
-roadmaptools.compute_edge_parameters.compute_edge_parameters(
-	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
+# roadmaptools.compute_edge_parameters.compute_edge_parameters(
+# 	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
 
 # 6 finalization: split to node and edges, node id and index generation
 _save_map_for_ap()
