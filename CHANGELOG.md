@@ -4,9 +4,11 @@
 - Trip refactoring - new more systematic trip system, locations backed by array
 - JGraphT version updated
 - Dijkstra replaced by Astar in path planning
+- getEntityPositionInTime and drawEntityShape methods in vehicle layer made public
 
 ## Added
 - vehicle highlighting by switching to static size
+- VisioUtils.printTextWithBackgroud method now has a transparency option
 
 
 # 6.0.0
