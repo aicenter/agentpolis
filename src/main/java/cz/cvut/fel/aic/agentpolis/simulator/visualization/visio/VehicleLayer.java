@@ -61,7 +61,7 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 	}
 
 	@Override
-	protected Point2d getEntityPositionInTime(V vehicle, long time) {
+	public Point2d getEntityPositionInTime(V vehicle, long time) {
 		return positionUtil.getCanvasPositionInterpolatedInTime(vehicle, time);
 	}
 
@@ -108,7 +108,7 @@ public abstract class VehicleLayer<V extends AgentPolisEntity & MovingEntity> ex
 		}
 	}
 
-	protected void drawEntityShape(V representative, Point2d entityPosition, Graphics2D canvas, 
+	public void drawEntityShape(V representative, Point2d entityPosition, Graphics2D canvas, 
 			boolean transformSizeForEntity) {
 		double angle = getAngle(representative);
 		/* desired order of the transformations */

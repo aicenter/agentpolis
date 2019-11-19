@@ -33,6 +33,16 @@ public class VisioUtils {
 	
 	public static void printTextWithBackgroud(Graphics2D canvas, String text, Point position, Color textColor, 
 			Color backgroundColor){
+		printTextWithBackgroud(canvas, text, position, textColor, backgroundColor, 0);
+	}
+	
+	public static void printTextWithBackgroud(Graphics2D canvas, String text, Point position, Color textColor, 
+			Color backgroundColor, int backgroundTransparency){
+		
+		if(backgroundTransparency > 0){
+			backgroundColor = new Color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(),
+					backgroundTransparency);
+		}
 		
 		// background
 		FontMetrics fm = canvas.getFontMetrics();
