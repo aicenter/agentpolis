@@ -15,6 +15,8 @@
 
 ## FIxed
 - `DelayData` are now deleted after each `Move` action, preventing some bugs related to expected travel time
+- concurrency exceptions related `EtityLayer.entityPositionMap` fixed
+- `VisioPositionUtil.getPositionInterpolatedInTime` method now handle the case where the vehicle just finished the move action
 
 
 ## Changed

@@ -52,8 +52,6 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 	protected final AgentpolisConfig agentpolisConfig;
 	
 
-	private Map<Point2d, List<E>> entityPositionMap;
-
 	protected VisioPositionUtil positionUtil;
 
 	protected TimeProvider timeProvider;
@@ -93,6 +91,7 @@ public abstract class EntityLayer<E extends AgentPolisEntity> extends AbstractLa
 		E entity;
 		long time = timeProvider.getCurrentSimTime();
 		
+		Map<Point2d, List<E>> entityPositionMap = null;
 		if (showStackedEntitiesCount) {
 			entityPositionMap = new HashMap<>();
 		}

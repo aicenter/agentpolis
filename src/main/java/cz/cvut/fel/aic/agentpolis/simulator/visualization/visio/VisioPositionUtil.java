@@ -205,14 +205,23 @@ public class VisioPositionUtil {
 
 	public GPSLocation getPositionInterpolatedInTime(SimulationEdge edge, MovingEntity agent, long time) {
 		DelayData delayData = agent.getDelayData();
-		double portionCompleted = (double) (time - delayData.getDelayStartTime()) / delayData.getDelay();
-		if (portionCompleted > 1)
-			portionCompleted = 1;
+		
+		double portionOfEdgeDistance;
+		
+		// delay data is set to null when the move action is finished
+		if(delayData == null){
+			portionOfEdgeDistance = 1;
+		}
+		else{
+			double portionCompleted = (double) (time - delayData.getDelayStartTime()) / delayData.getDelay();
+			if (portionCompleted > 1)
+				portionCompleted = 1;
+			double distanceOfDrivenInterval = delayData.getDelayDistance();
+			portionOfEdgeDistance = (delayData.getStartDistanceOffset()
+					+ distanceOfDrivenInterval * portionCompleted) / edge.getLengthCm();
+			portionOfEdgeDistance = Math.min(Math.max(0.0, portionOfEdgeDistance), 1.0);
+		}
 
-		double distanceOfDrivenInterval = delayData.getDelayDistance();
-		double portionOfEdgeDistance = (delayData.getStartDistanceOffset()
-				+ distanceOfDrivenInterval * portionCompleted) / edge.getLengthCm();
-		portionOfEdgeDistance = Math.min(Math.max(0.0, portionOfEdgeDistance), 1.0);
 		ShapeUtils.PositionAndAngle positionAndAngleOnPath = shapeUtils.getPositionAndAngleOnPath(edge.shape,
 				portionOfEdgeDistance);
 		movingAgentAngle.put(agent, positionAndAngleOnPath.angle);
