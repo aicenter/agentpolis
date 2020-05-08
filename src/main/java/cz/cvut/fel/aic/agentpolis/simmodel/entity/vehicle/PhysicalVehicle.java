@@ -63,8 +63,8 @@ public class PhysicalVehicle extends Vehicle {
 	}
 
 	@Override
-	public int getVelocity() {
-		return maxVelocity;
+	public double getVelocity() {
+		return (double) maxVelocity;
 	}
 
 }
