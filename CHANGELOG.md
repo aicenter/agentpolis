@@ -5,6 +5,7 @@
 - JGraphT version updated
 - Dijkstra replaced by Astar in path planning
 - getEntityPositionInTime and drawEntityShape methods in vehicle layer made public
+- parent updated to 3.0.0
 
 ## Added
 - vehicle highlighting by switching to static size
