@@ -36,17 +36,17 @@ public class ShapeUtils {
 
 	public PositionAndAngle getPositionAndAngleOnPath(EdgeShape shape, double portion) {
 		assert portion >= 0. && portion <= 1.0;
-		double distance = portion * shape.shapeLength;
+		double distance = portion * shape.getShapeLength();
 		int segment = 0;
-		while (shape.segmentCumulativeLength[segment] < distance) {
+		while (shape.getSegmentCumulativeLength()[segment] < distance) {
 			segment++;
 		}
-		double distanceOnPreviousSegments = (segment > 0 ? shape.segmentCumulativeLength[segment - 1] : 0.0);
+		double distanceOnPreviousSegments = (segment > 0 ? shape.getSegmentCumulativeLength()[segment - 1] : 0.0);
 		double distanceOnSegment = distance - distanceOnPreviousSegments;
-		double segmentLength = shape.segmentCumulativeLength[segment] - distanceOnPreviousSegments;
+		double segmentLength = shape.getSegmentCumulativeLength()[segment] - distanceOnPreviousSegments;
 		double segmentPortion = distanceOnSegment / segmentLength;
-		GPSLocation pointOnPath = getPointOnVector(shape.backingMap.get(segment), shape.backingMap.get(segment + 1), segmentPortion);
-		double angle = shape.segmentAngles[segment];
+		GPSLocation pointOnPath = getPointOnVector(shape.getBackingMap().get(segment), shape.getBackingMap().get(segment + 1), segmentPortion);
+		double angle = shape.getSegmentAngles()[segment];
 
 		return new PositionAndAngle(pointOnPath, angle);
 	}

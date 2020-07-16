@@ -34,10 +34,10 @@ public class EdgeShape implements Iterable<GPSLocation>, Serializable {
 
 	private static final long serialVersionUID = -837444965512183266L;
 
-	final List<GPSLocation> backingMap;
-	double[] segmentAngles;
-	double[] segmentCumulativeLength;
-	double shapeLength;
+	private final List<GPSLocation> backingMap;
+	private final double[] segmentAngles;
+	private final double[] segmentCumulativeLength;
+	private double shapeLength;
 
 	public EdgeShape(List<GPSLocation> backingMap) {
 		if (backingMap == null || backingMap.size() < 2)
@@ -88,6 +88,22 @@ public class EdgeShape implements Iterable<GPSLocation>, Serializable {
 	public double getShapeLength() {
 		return shapeLength;
 	}
+
+        public List<GPSLocation> getBackingMap() {
+            return backingMap;
+        }
+
+        public double[] getSegmentAngles() {
+            return segmentAngles;
+        }
+
+        public double[] getSegmentCumulativeLength() {
+            return segmentCumulativeLength;
+        }
+        
+        
+        
+        
 
 	@Override
 	public boolean equals(Object o) {
