@@ -1,3 +1,9 @@
+# 7.1.0
+## FIxed
+- New York Map envelope added to default config
+- prepare map script> uncommented to be ready for new users
+
+
 # 7.0.0
 
 ## Changed
