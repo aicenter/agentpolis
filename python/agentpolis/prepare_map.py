@@ -1,4 +1,4 @@
-from agentpolis.init import config
+from init import config
 
 import time
 import roadmaptools.download_map
@@ -40,20 +40,20 @@ def _save_map_for_ap():
 
 
 # # 1 download the map
-# roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
+roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
 
 # # 2 cleanup
-# roadmaptools.clean_geojson.clean_geojson_files(config.raw_filepath, config.cleaned_filepath)
+roadmaptools.clean_geojson.clean_geojson_files(config.raw_filepath, config.cleaned_filepath)
 
 # # 3 simplification
-# roadmaptools.simplify_graph.simplify_geojson(config.roadmaptools.cleaned_geojson_file, config.simplified_filepath)
+roadmaptools.simplify_graph.simplify_geojson(config.cleaned_filepath, config.simplified_filepath)
 
 # # 4 reduction to single component
-# roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
+roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
 
 # 5 compute edge parameters
-# roadmaptools.compute_edge_parameters.compute_edge_parameters(
-# 	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
+roadmaptools.compute_edge_parameters.compute_edge_parameters(
+	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
 
 # 6 finalization: split to node and edges, node id and index generation
 _save_map_for_ap()
