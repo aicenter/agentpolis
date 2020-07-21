@@ -1,7 +1,12 @@
-# 7.1.0
+# 8.0.0
+
 ## FIxed
 - New York Map envelope added to default config
 - prepare map script> uncommented to be ready for new users
+
+## Changed
+- edge shape members made private
+
 
 
 # 7.0.0
