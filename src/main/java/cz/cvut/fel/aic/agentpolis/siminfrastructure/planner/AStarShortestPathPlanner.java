@@ -43,7 +43,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 @Singleton
 public class AStarShortestPathPlanner implements ShortestPathPlanner{
 	
-	private final Map<Set<GraphType>, AStarShortestPath<SimulationNode, DefaultWeightedEdge>> 
+	private final Map<Set<GraphType>, DefaultDirectedWeightedGraph<SimulationNode, DefaultWeightedEdge>> 
 			shortestPathPlannersMappedByGraphTypes;
 	
 	private final TransportNetworks transportNetworks;
@@ -67,8 +67,10 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 		if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
 			createShortestPathPlanner(graphTypes);
 		}
-		AStarShortestPath<SimulationNode,DefaultWeightedEdge> planner 
-				= shortestPathPlannersMappedByGraphTypes.get(graphTypes);
+		DefaultDirectedWeightedGraph<SimulationNode, DefaultWeightedEdge> Graph = 
+                        shortestPathPlannersMappedByGraphTypes.get(graphTypes);
+                AStarShortestPath<SimulationNode,DefaultWeightedEdge> planner 
+				= new AStarShortestPath(Graph, heuristic);
 		GraphPath<SimulationNode,DefaultWeightedEdge> path = planner.getPath(from, to);
 		SimulationNode[] locations = path.getVertexList().stream().toArray(SimulationNode[]::new);
 		return new Trip<>(locations);
@@ -105,10 +107,8 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 
 		}
 		
-		AStarShortestPath<SimulationNode,DefaultWeightedEdge> jGraphTFinder 
-				= new AStarShortestPath(jGraphTGraph, heuristic);
 		
-		shortestPathPlannersMappedByGraphTypes.put(graphTypes, jGraphTFinder);
+		shortestPathPlannersMappedByGraphTypes.put(graphTypes, jGraphTGraph);
 	}
 	
 }
