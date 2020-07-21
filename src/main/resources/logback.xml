@@ -2,7 +2,7 @@
 <configuration debug="false">
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} |%5p | %t | %M\(%F:%L\) | %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %highlight(%-5level) %-100(%logger{0}.%M: %m) [%t|%c.%M:%L]%n</pattern>
         </encoder>
     </appender>
     
@@ -12,7 +12,7 @@
         <!-- set immediateFlush to false for much higher logging throughput -->
         <immediateFlush>true</immediateFlush>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %5p %t %c.%M\(%F:%L\) %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %highlight(%-5level) %-100(%logger{0}.%M: %m) [%t|%c.%M:%L]%n</pattern>
         </encoder>
     </appender>
     
