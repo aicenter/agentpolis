@@ -1,15 +1,9 @@
-# 8.0.0
+
+# 7.0.0
 
 ## FIxed
 - New York Map envelope added to default config
-- prepare map script> uncommented to be ready for new users
-
-## Changed
-- edge shape members made private
-
-
-
-# 7.0.0
+- prepare map script uncommented to be ready for new users
 
 ## Changed
 - Trip refactoring - new more systematic trip system, locations backed by array
@@ -17,6 +11,7 @@
 - Dijkstra replaced by Astar in path planning
 - getEntityPositionInTime and drawEntityShape methods in vehicle layer made public
 - parent updated to 3.0.0
+- edge shape members made private
 
 ## Added
 - vehicle highlighting by switching to static size
