@@ -12,6 +12,7 @@
 - getEntityPositionInTime and drawEntityShape methods in vehicle layer made public
 - parent updated to 3.0.0
 - edge shape members made private
+- log format changed: package structure discarded
 
 ## Added
 - vehicle highlighting by switching to static size
