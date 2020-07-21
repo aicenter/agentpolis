@@ -63,7 +63,7 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 	
 
 	@Override
-	public Trip<SimulationNode> findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes) {
+	public synchronized Trip<SimulationNode> findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes) {
 		if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
 			createShortestPathPlanner(graphTypes);
 		}
