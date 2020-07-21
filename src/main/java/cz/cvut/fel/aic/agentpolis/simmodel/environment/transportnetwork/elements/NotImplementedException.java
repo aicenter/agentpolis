@@ -24,7 +24,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
  */
 public class NotImplementedException extends RuntimeException {
     
-    private static final String EXCEPTION_MESSAGE = "Code is not implemented.";
+    private static final String EXCEPTION_MESSAGE = "This operation is not implemented yet.";
 
     public NotImplementedException() {
         super(EXCEPTION_MESSAGE);

@@ -13,10 +13,12 @@
 - parent updated to 3.0.0
 - edge shape members made private
 - log format changed: package structure discarded
+- not implemented exception in Lane class changed to our exception
 
 ## Added
 - vehicle highlighting by switching to static size
 - VisioUtils.printTextWithBackgroud method now has a transparency option
+- Not implemented exception class
 
 
 # 6.0.0
