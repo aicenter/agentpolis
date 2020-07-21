@@ -4,6 +4,7 @@
 ## FIxed
 - New York Map envelope added to default config
 - prepare map script uncommented to be ready for new users
+- AstarShortestPathPlanner concurrency bug fixed
 
 ## Changed
 - Trip refactoring - new more systematic trip system, locations backed by array
