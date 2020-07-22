@@ -5,6 +5,8 @@
 - New York Map envelope added to default config
 - prepare map script uncommented to be ready for new users
 - AstarShortestPathPlanner concurrency bug fixed
+- EntityLayer: concurrency bug related to entity position map fixed
+- Bug fix in vehicle plan layer, it now correctly handles the cases when the vehicle just finished the move
 
 ## Changed
 - Trip refactoring - new more systematic trip system, locations backed by array
