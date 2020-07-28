@@ -81,8 +81,7 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 			Trip.setCheckLocations(true);
 		}
 		
-		bindConstant().annotatedWith(Names.named("mapSrid")).to(agentpolisConfig.srid);
-
+		
 		bind(Transformer.class).toInstance(new Transformer(agentpolisConfig.srid));
 
 		bind(AgentpolisConfig.class).toInstance(agentpolisConfig);
