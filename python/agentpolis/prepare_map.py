@@ -1,5 +1,4 @@
-from init import config
-
+import agentpolis.init as ap
 import time
 import roadmaptools.download_map
 import roadmaptools.clean_geojson
@@ -12,6 +11,7 @@ import roadmaptools.prepare_geojson_to_agentpolisdemo
 
 from roadmaptools.printer import print_info
 
+config = None
 
 def _compute_edge_parameters():
 	print_info('Estimating travel speed (using max speed)... ', end='')
@@ -38,22 +38,26 @@ def _save_map_for_ap():
 
 	print_info('done. (%.2f secs)' % (time.time() - start_time))
 
+def _prepare_map():
+	# # 1 download the map
+	roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
 
-# # 1 download the map
-roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
+	# # 2 cleanup
+	roadmaptools.clean_geojson.clean_geojson_files(config.raw_filepath, config.cleaned_filepath)
 
-# # 2 cleanup
-roadmaptools.clean_geojson.clean_geojson_files(config.raw_filepath, config.cleaned_filepath)
+	# # 3 simplification
+	roadmaptools.simplify_graph.simplify_geojson(config.cleaned_filepath, config.simplified_filepath)
 
-# # 3 simplification
-roadmaptools.simplify_graph.simplify_geojson(config.cleaned_filepath, config.simplified_filepath)
+	# # 4 reduction to single component
+	roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
 
-# # 4 reduction to single component
-roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
+	# 5 compute edge parameters
+	roadmaptools.compute_edge_parameters.compute_edge_parameters(
+		config.sanitized_filepath, config.file_with_computed_parameters_filepath)
 
-# 5 compute edge parameters
-roadmaptools.compute_edge_parameters.compute_edge_parameters(
-	config.sanitized_filepath, config.file_with_computed_parameters_filepath)
-
-# 6 finalization: split to node and edges, node id and index generation
-_save_map_for_ap()
+	# 6 finalization: split to node and edges, node id and index generation
+	_save_map_for_ap()
+	
+if __name__ == '__main__':
+	config = ap.config
+	_prepare_map()
