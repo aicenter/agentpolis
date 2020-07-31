@@ -31,8 +31,8 @@ public class VehicleTrip<L> extends Trip<L> {
 
 	private final Vehicle vehicle;
 
-	public VehicleTrip(Vehicle vehicle, L... locations){
-		super(locations);
+	public VehicleTrip(int tripId,Vehicle vehicle, L... locations){
+		super(tripId,locations);
 		this.vehicle = checkNotNull(vehicle);
 	}
 

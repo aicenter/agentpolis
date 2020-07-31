@@ -18,7 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import java.util.Set;
@@ -28,5 +27,5 @@ import java.util.Set;
  * @author david
  */
 public interface ShortestPathPlanner {
-	public Trip<SimulationNode> findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes);
+	public SimulationNode[] findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes);
 }

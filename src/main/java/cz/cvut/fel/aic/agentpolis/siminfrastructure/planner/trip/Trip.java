@@ -46,11 +46,13 @@ public class Trip<L> {
 	
 	
 	private int currentFirstLocationIndex;
+	
+	protected int tripId;
 
 	
 	
 
-	public Trip(L... locations) {
+	public Trip(int tripId,L... locations) {
 		if(checkLocations){
 			try {
 				checkLocations(locations);
@@ -59,6 +61,7 @@ public class Trip<L> {
 			}
 		}
 		this.locations = locations;
+		this.tripId = tripId;
 		currentFirstLocationIndex = 0;
 	}
 
@@ -101,7 +104,10 @@ public class Trip<L> {
 	public L[] getAllLocations() {
 		return locations;
 	}
-	
+
+	public int getTripId() {
+	    return tripId;
+	}
 	
 	
 	public L getFirstLocation() {
