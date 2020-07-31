@@ -86,7 +86,7 @@ public class Utils {
 				int y = 100 * i * size;
 				int nodeId = i * width + j;
                                 
-                                System.out.println("New Node("+i+", "+x+", "+y);
+
                                 
 				SimulationNode node = new SimulationNode(nodeId, 0, y, x, 0, projection, 0);
 				graphBuilder.addNode(node);
