@@ -61,7 +61,7 @@ public class TestThreeNodes {
 		
 		Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
 		
-		Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
+		Trip<SimulationNode> trip = new Trip<>(0,node0, node1, node2);
 		
 		DriveTest driveTest = new DriveTest();
 		driveTest.run(graph, trip);

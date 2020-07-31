@@ -65,7 +65,7 @@ public class TestThreeNodes2Cars {
 		Trip<SimulationNode>[] trips = new Trip[2];
 		
 		for(int i = 0; i < trips.length; i++){
-			Trip<SimulationNode> trip = new Trip<>(node0, node1, node2);
+			Trip<SimulationNode> trip = new Trip<>(i,node0, node1, node2);
 			trips[i] = trip;
 		}
 		

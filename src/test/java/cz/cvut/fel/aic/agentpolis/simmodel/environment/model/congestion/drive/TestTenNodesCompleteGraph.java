@@ -49,7 +49,7 @@ public class TestTenNodesCompleteGraph {
 		CongestionModelTest congestionModelTest = new CongestionModelTest();
 		congestionModelTest.run(graph);
 		
-		Trip<SimulationNode> trip = new Trip<>(graph.getNode(0), graph.getNode(5), graph.getNode(9), graph.getNode(3),
+		Trip<SimulationNode> trip = new Trip<>(0,graph.getNode(0), graph.getNode(5), graph.getNode(9), graph.getNode(3),
 		graph.getNode(1), graph.getNode(2), graph.getNode(4), graph.getNode(8), graph.getNode(7), graph.getNode(6));
 		
 		scenario.run(graph, trip);

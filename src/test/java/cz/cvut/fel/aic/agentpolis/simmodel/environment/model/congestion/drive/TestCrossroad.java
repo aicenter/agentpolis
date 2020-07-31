@@ -68,12 +68,12 @@ public class TestCrossroad {
 		Trip<SimulationNode>[] trips = new Trip[20];
 
 		for (int i = 0; i < trips.length / 2; i++) {
-			Trip<SimulationNode> trip = new Trip<>(node0, node1, node3);
+			Trip<SimulationNode> trip = new Trip<>(i,node0, node1, node3);
 			trips[i] = trip;
 		}
 
 		for (int i = trips.length / 2; i < trips.length; i++) {
-			Trip<SimulationNode> trip = new Trip<>(node2, node1, node3);
+			Trip<SimulationNode> trip = new Trip<>(i,node2, node1, node3);
 			trips[i] = trip;
 		}
 
