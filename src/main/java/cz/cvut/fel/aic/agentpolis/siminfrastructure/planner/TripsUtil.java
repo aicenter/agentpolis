@@ -58,7 +58,7 @@ public class TripsUtil {
 
 	protected final ShortestPathPlanner pathPlanner;
 	
-	private final IdGenerator tripIdGenerator;
+	protected final IdGenerator tripIdGenerator;
 
 	private final NearestElementUtils nearestElementUtils;
 	private final Graph<SimulationNode, SimulationEdge> network;
@@ -102,11 +102,11 @@ public class TripsUtil {
 		return vehicleTrip;
 	}
 
-	/*@Deprecated
+	@Deprecated
 	public static VehicleTrip mergeTripsOld(VehicleTrip<SimulationNode>... trips) {	
 		SimulationNode[] locations = Arrays.stream(trips).map(Trip::getLocations).toArray(SimulationNode[]::new);		
-		return new VehicleTrip(trips[0].getVehicle(), locations);
-	}*/
+		return new VehicleTrip(0,trips[0].getVehicle(), locations);
+	}
 
 	/**
 	 * Computes trip minimum duration in milliseconds.
