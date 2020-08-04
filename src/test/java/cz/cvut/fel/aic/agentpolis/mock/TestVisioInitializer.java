@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2019 Czech Technical University in Prague.
  *
  * This library is free software; you can redistribute it and/or
@@ -20,57 +20,37 @@ package cz.cvut.fel.aic.agentpolis.mock;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.CarLayer;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestVehicleLayer;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.BikewayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.MetrowayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.PedestrianNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.RailwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TramwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.DefaultVisioInitializer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.HighwayLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.NodeIdLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.SimulationControlLayer;
+import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.*;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.GridLayer;
-import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.LayerManagementLayer;
-import java.awt.Color;
+
+import java.awt.*;
 
 /**
- *
  * @author fido
  */
 @Singleton
-public class TestVisioInitializer extends DefaultVisioInitializer{
-	
+public class TestVisioInitializer extends DefaultVisioInitializer {
+
 	protected final LayerManagementLayer layerManagementLayer;
-	
+
 	private final HighwayLayer highwayLayer;
-	
-	private final TestVehicleLayer testVehicleLayer;
-	
+
 	private final NodeIdLayer nodeIdLayer;
-	
+
 	private final CarLayer carLayer;
-	
-	
-	
-	
+
+
 	@Inject
-	public TestVisioInitializer(Simulation simulation, PedestrianNetwork pedestrianNetwork, BikewayNetwork bikewayNetwork,
-								HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
-								RailwayNetwork railwayNetwork, LayerManagementLayer layerManagementLayer,
+	public TestVisioInitializer(Simulation simulation, HighwayNetwork highwayNetwork, LayerManagementLayer layerManagementLayer,
 								SimulationControlLayer simulationControlLayer, HighwayLayer highwayLayer,
-								TestVehicleLayer testVehicleLayer, NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer, AgentpolisConfig config) {
-		super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-				simulationControlLayer, gridLayer, config);
+								NodeIdLayer nodeIdLayer, GridLayer gridLayer, CarLayer carLayer) {
+		super(simulation, highwayNetwork, simulationControlLayer, gridLayer);
 		this.layerManagementLayer = layerManagementLayer;
 		this.highwayLayer = highwayLayer;
-		this.testVehicleLayer = testVehicleLayer;
 		this.nodeIdLayer = nodeIdLayer;
 		this.carLayer = carLayer;
 	}
@@ -87,12 +67,12 @@ public class TestVisioInitializer extends DefaultVisioInitializer{
 //		super.initEntityLayers(simulation, projection); 
 		VisManager.registerLayer(layerManagementLayer.createManageableLayer("Cars", carLayer));
 	}
-	
+
 	@Override
 	protected void initLayersAfterEntityLayers() {
 		VisManager.registerLayer(layerManagementLayer.createManageableLayer("Node ids", nodeIdLayer));
 		VisManager.registerLayer(layerManagementLayer);
 	}
-	
-	
+
+
 }

@@ -44,8 +44,8 @@ public class TestVisioInitializer extends DefaultVisioInitializer {
 								HighwayNetwork highwayNetwork, TramwayNetwork tramwayNetwork, MetrowayNetwork metrowayNetwork,
 								RailwayNetwork railwayNetwork, NodeIdLayer nodeIdLayer, HighwayLayer highwayLayer,
 								SimulationControlLayer simulationControlLayer, GridLayer gridLayer, MapTilesLayer mapTiles, AgentpolisConfig config) {
-		super(simulation, pedestrianNetwork, bikewayNetwork, highwayNetwork, tramwayNetwork, metrowayNetwork, railwayNetwork,
-				simulationControlLayer, gridLayer, config);
+		super(simulation, highwayNetwork,
+				simulationControlLayer, gridLayer);
 		this.nodeIdLayer = nodeIdLayer;
 		this.highwayLayer = highwayLayer;
 		this.backgroundLayer = ColorLayer.create(Color.white);

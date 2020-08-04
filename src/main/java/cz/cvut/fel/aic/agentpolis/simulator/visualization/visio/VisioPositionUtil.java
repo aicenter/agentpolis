@@ -54,6 +54,8 @@ public class VisioPositionUtil {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(VisioPositionUtil.class);
 
+	private static final int MERCATOR_SRID = 3857;
+
 	private final Map<Integer, ? extends Node> nodesFromAllGraphs;
 
 	private final Graph<SimulationNode, SimulationEdge> highwayNetwork;
@@ -93,9 +95,9 @@ public class VisioPositionUtil {
 	}
 
 	public Point2d getCanvasPosition(GPSLocation position) {
-		GPSLocation WGS84position = getWebMercatorPosition(position);
-		return new Point2d(Vis.transX(WGS84position.getLongitudeProjected()),
-				Vis.transY(WGS84position.getLatitudeProjected()));
+		GPSLocation mercatorPosition = toMercatorProjection(position);
+		return new Point2d(Vis.transX(mercatorPosition.getLongitudeProjected()),
+				Vis.transY(mercatorPosition.getLatitudeProjected()));
 	}
 
 	public Point2d getCanvasPosition(int nodeId) {
@@ -110,20 +112,12 @@ public class VisioPositionUtil {
 		return new Point2d(Vis.transX(position.x), Vis.transY(position.y));
 	}
 
-	public static GPSLocation getWebMercatorPosition(GPSLocation position) {
-		return GPSLocationTools.createGPSLocation(position.getLatitude(), position.getLongitude(), 0, 3857); // 3857 -
-																												// Web
-																												// Mercator
-																												// projection
+	public static GPSLocation toMercatorProjection(GPSLocation position) {
+		return toMercatorProjection(position.getLatitude(), position.getLongitude());
 	}
 
-	public static GPSLocation getWGS84PositionFromCustomProjection(int projectedlatitude1E2, int projectedlongitude1E2,
-			int customprojectionSRID) {
-		GPSLocation customProjection = GPSLocationTools.createGPSLocationFromProjected(projectedlatitude1E2,
-				projectedlongitude1E2, 0, customprojectionSRID);
-		GPSLocation webMercator = GPSLocationTools.createGPSLocation(customProjection.getLatitude(),
-				customProjection.getLongitude(), 0, 3857); // 3857 - Web Mercator
-		return webMercator;
+	public static GPSLocation toMercatorProjection(double wgs84Latitude, double wgs84Longitude){
+		return GPSLocationTools.createGPSLocation(wgs84Latitude, wgs84Longitude, 0, MERCATOR_SRID);
 	}
 
 	private int getEdgeLength(int entityPositionNodeId, int targetNodeId) {
