@@ -17,6 +17,9 @@
 - edge shape members made private
 - log format changed: package structure discarded
 - not implemented exception in Lane class changed to our exception
+- DefaultVisioInitializer 
+	- constructor changed (unused networks and config discarded)
+	- centroid for initial view is now computed from GPS coordinate instead of the projected coordinates
 
 ## Added
 - vehicle highlighting by switching to static size
