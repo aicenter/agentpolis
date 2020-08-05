@@ -4,26 +4,28 @@
 ## FIxed
 - New York Map envelope added to default config
 - prepare map script uncommented to be ready for new users
-- AstarShortestPathPlanner concurrency bug fixed
-- EntityLayer: concurrency bug related to entity position map fixed
+- `AstarShortestPathPlanner` concurrency bug fixed
+- `EntityLayer`: concurrency bug related to entity position map fixed
 - Bug fix in vehicle plan layer, it now correctly handles the cases when the vehicle just finished the move
 
 ## Changed
-- Trip refactoring - new more systematic trip system, locations backed by array
-- JGraphT version updated
+- `Trip` refactoring 
+	- new more systematic trip system, locations backed by array
+	- Trip ID moved to trip
+- `JGraphT` version updated
 - Dijkstra replaced by Astar in path planning
-- getEntityPositionInTime and drawEntityShape methods in vehicle layer made public
+- `getEntityPositionInTime` and `drawEntityShape` methods in vehicle layer made public
 - parent updated to 3.0.0
-- edge shape members made private
+- `EdgeShape` members made private
 - log format changed: package structure discarded
 - not implemented exception in Lane class changed to our exception
-- DefaultVisioInitializer 
+- `DefaultVisioInitializer` 
 	- constructor changed (unused networks and config discarded)
 	- centroid for initial view is now computed from GPS coordinate instead of the projected coordinates
 
 ## Added
 - vehicle highlighting by switching to static size
-- VisioUtils.printTextWithBackgroud method now has a transparency option
+- `VisioUtils.printTextWithBackgroud` method now has a transparency option
 - Not implemented exception class
 
 
