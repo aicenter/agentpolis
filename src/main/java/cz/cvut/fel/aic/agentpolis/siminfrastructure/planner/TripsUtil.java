@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.VehicleTrip;
+import cz.cvut.fel.aic.agentpolis.simmodel.IdGenerator;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
@@ -56,6 +57,8 @@ public class TripsUtil {
 
 
 	protected final ShortestPathPlanner pathPlanner;
+	
+	protected final IdGenerator tripIdGenerator;
 
 	private final NearestElementUtils nearestElementUtils;
 	private final Graph<SimulationNode, SimulationEdge> network;
@@ -64,10 +67,11 @@ public class TripsUtil {
 	
 	
 	@Inject
-	public TripsUtil(ShortestPathPlanner pathPlanner, NearestElementUtils nearestElementUtils, HighwayNetwork network) {
+	public TripsUtil(ShortestPathPlanner pathPlanner, NearestElementUtils nearestElementUtils, HighwayNetwork network,IdGenerator tripIdGenerator) {
 		this.pathPlanner = pathPlanner;
 		this.nearestElementUtils = nearestElementUtils;
 		this.network = network.getNetwork();
+		this.tripIdGenerator = tripIdGenerator;
 	}
 	
 	
@@ -81,7 +85,7 @@ public class TripsUtil {
 			}
 		}
 		
-		return pathPlanner.findShortestPath(fromNode, toNode, graphTypes);
+		return new Trip<>(tripIdGenerator.getId(), pathPlanner.findShortestPath(fromNode, toNode, graphTypes));
 	}
 	
 	public Trip<SimulationNode> createTrip(SimulationNode fromNode, SimulationNode toNode, GraphType graphType) {
@@ -94,14 +98,14 @@ public class TripsUtil {
 	
 	public VehicleTrip createTrip(SimulationNode fromNode, SimulationNode toNode, PhysicalVehicle vehicle) {
 		Trip trip = createTrip(fromNode, toNode, HIGHWAY_GRAPH_TYPES);
-		VehicleTrip vehicleTrip = new VehicleTrip<>(vehicle, trip.getLocations());
+		VehicleTrip vehicleTrip = new VehicleTrip<>(tripIdGenerator.getId(),vehicle, trip.getLocations());
 		return vehicleTrip;
 	}
 
 	@Deprecated
 	public static VehicleTrip mergeTripsOld(VehicleTrip<SimulationNode>... trips) {	
 		SimulationNode[] locations = Arrays.stream(trips).map(Trip::getLocations).toArray(SimulationNode[]::new);		
-		return new VehicleTrip(trips[0].getVehicle(), locations);
+		return new VehicleTrip(0,trips[0].getVehicle(), locations);
 	}
 
 	/**

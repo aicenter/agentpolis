@@ -55,8 +55,6 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
 	private final StandardTimeProvider timeProvider;
 
-	private final int tripId;
-
 
 	private SimulationNode from;
 
@@ -68,15 +66,13 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 	public Drive(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
 				 VehicleMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, 
 				 StandardTimeProvider timeProvider,
-				 A agent, Vehicle vehicle, Trip<SimulationNode> trip,
-				 int tripId) {
+				 A agent, Vehicle vehicle, Trip<SimulationNode> trip) {
 		super(activityInitializer, agent);
 		this.vehicle = vehicle;
 		this.trip = trip;
 		this.moveActivityFactory = moveActivityFactory;
 		this.eventProcessor = eventProcessor;
 		this.timeProvider = timeProvider;
-		this.tripId = tripId;
 		graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
 	}
 
@@ -109,7 +105,7 @@ public class Drive<A extends Agent & Driver> extends PhysicalVehicleDrive<A> {
 
 	private void triggerVehicleEnteredEdgeEvent() {
 		SimulationEdge edge = graph.getEdge(from, to);
-		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getStaticId(), tripId, agent);
+		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getStaticId(),trip.getTripId(), agent);
 		eventProcessor.addEvent(DriveEvent.VEHICLE_ENTERED_EDGE, null, null, transit);
 	}
 

@@ -20,7 +20,6 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -63,7 +62,7 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 	
 
 	@Override
-	public Trip<SimulationNode> findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes) {
+	public SimulationNode[] findShortestPath(SimulationNode from, SimulationNode to, Set<GraphType> graphTypes) {
 		if(!shortestPathPlannersMappedByGraphTypes.containsKey(graphTypes)){
 			createShortestPathPlanner(graphTypes);
 		}
@@ -73,7 +72,7 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 				= new AStarShortestPath(Graph, heuristic);
 		GraphPath<SimulationNode,DefaultWeightedEdge> path = planner.getPath(from, to);
 		SimulationNode[] locations = path.getVertexList().stream().toArray(SimulationNode[]::new);
-		return new Trip<>(locations);
+		return locations;
 	}
 
 

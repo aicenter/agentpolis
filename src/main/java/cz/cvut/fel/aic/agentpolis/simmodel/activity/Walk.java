@@ -51,7 +51,6 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
 	private final StandardTimeProvider timeProvider;
 
-	private final int tripId;
 
 
 	private SimulationNode from;
@@ -60,14 +59,12 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
 	public Walk(ActivityInitializer activityInitializer, TransportNetworks transportNetworks,
 				PedestrianMoveActivityFactory moveActivityFactory, TypedSimulation eventProcessor, StandardTimeProvider timeProvider,
-				A agent, Trip<SimulationNode> trip,
-				int tripId) {
+				A agent, Trip<SimulationNode> trip) {
 		super(activityInitializer, agent);
 		this.trip = trip;
 		this.moveActivityFactory = moveActivityFactory;
 		this.eventProcessor = eventProcessor;
 		this.timeProvider = timeProvider;
-		this.tripId = tripId;
 		graph = transportNetworks.getGraph(EGraphType.PEDESTRIAN);
 	}
 
@@ -99,7 +96,7 @@ public class Walk<A extends Agent & MovingAgent> extends Activity<A> {
 
 	private void triggerVehicleEnteredEdgeEvent() {
 		SimulationEdge edge = graph.getEdge(from, to);
-		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getStaticId(), tripId, agent);
+		Transit transit = new Transit(timeProvider.getCurrentSimTime(), edge.getStaticId(), trip.getTripId(), agent);
 		eventProcessor.addEvent(DriveEvent.PEDESTRIAN_ENTERED_EDGE, null, null, transit);
 	}
 }
