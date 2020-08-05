@@ -105,7 +105,7 @@ public class TripsUtil {
 	@Deprecated
 	public static VehicleTrip mergeTripsOld(VehicleTrip<SimulationNode>... trips) {	
 		SimulationNode[] locations = Arrays.stream(trips).map(Trip::getLocations).toArray(SimulationNode[]::new);		
-		return new VehicleTrip(0,trips[0].getVehicle(), locations);
+		return new VehicleTrip(trips[0].getTripId(),trips[0].getVehicle(), locations);
 	}
 
 	/**
