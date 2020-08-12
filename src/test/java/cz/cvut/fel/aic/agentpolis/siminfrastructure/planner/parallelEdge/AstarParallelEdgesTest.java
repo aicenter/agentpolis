@@ -19,30 +19,24 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge;
 
 import com.google.inject.Injector;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.TestModuleAstar;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.*;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.AStarShortestPathPlanner;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripsUtil;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.TestAgentPolisInitializer;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init.MapInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
-
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.*;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 
@@ -77,8 +71,8 @@ public class AstarParallelEdgesTest {
                 //both short and long edge 
                 fil.write("{\"type\": \"FeatureCollection\", \"features\": [{\"type\": \"Feature\", \"id\": 2, \"geometry\": {\"type\": \"LineString\", \"coordinates\": [[0.0, 0.0],[0.008, 0.0001],[0.01, 0.0]]}, \"properties\": {\"highway\": \"residential\", \"maxspeed\": 40.0, \"id\": \"2\", \"lanes\": 1, \"utm_coords\": [[-652669530, 1058827799], [-652668236, 1058827461]], \"length\": 20, \"from_id\": \"1\", \"to_id\": \"2\"}}, {\"type\": \"Feature\", \"id\": 1, \"geometry\": {\"type\": \"LineString\", \"coordinates\": [[0.0, 0.0], [0.01, 0.0]]}, \"properties\": {\"highway\": \"residential\", \"maxspeed\": 40.0, \"id\": \"1\", \"lanes\": 1, \"utm_coords\": [[-652669530, 1058827799], [-652668236, 1058827461]], \"length\": 15, \"from_id\": \"1\", \"to_id\": \"2\"}}]}");
                 
-//just the longer edge - test should always fail
-//              fil.write("{\"type\": \"FeatureCollection\", \"features\": [{\"type\": \"Feature\", \"id\": 2, \"geometry\": {\"type\": \"LineString\", \"coordinates\": [[0.0, 0.0],[0.008, 0.0001],[0.01, 0.0]]}, \"properties\": {\"highway\": \"residential\", \"maxspeed\": 40.0, \"id\": \"2\", \"lanes\": 1, \"utm_coords\": [[-652669530, 1058827799], [-652668236, 1058827461]], \"length\": 20, \"from_id\": \"1\", \"to_id\": \"2\"}}]}");
+                //just the longer edge - test should always fail
+                //fil.write("{\"type\": \"FeatureCollection\", \"features\": [{\"type\": \"Feature\", \"id\": 2, \"geometry\": {\"type\": \"LineString\", \"coordinates\": [[0.0, 0.0],[0.008, 0.0001],[0.01, 0.0]]}, \"properties\": {\"highway\": \"residential\", \"maxspeed\": 40.0, \"id\": \"2\", \"lanes\": 1, \"utm_coords\": [[-652669530, 1058827799], [-652668236, 1058827461]], \"length\": 20, \"from_id\": \"1\", \"to_id\": \"2\"}}]}");
                 fil.close();
         }
         
@@ -101,14 +95,12 @@ public class AstarParallelEdgesTest {
                 AgentpolisConfig config = new AgentpolisConfig();
                 TestModuleAstar tma = new TestModuleAstar(config, null);                
                 
-                LOGGER.info("Creating single edged graph");
                 Injector injector = new TestAgentPolisInitializer(tma).initialize();
 
                 MapInitializer mapInitializer = injector.getInstance(TestGeojsonMapInitializer.class);
                 MapData mapData = mapInitializer.getMap();                
                 long singleEdgeSolution = computeSolution(mapData, injector);
                 
-                LOGGER.info("Creating graph with parallel edges");
                 injector = new TestAgentPolisInitializer(tma).initialize();
                 
                 mapInitializer = injector.getInstance(TestGeojsonMapInitializer1.class);
@@ -116,15 +108,16 @@ public class AstarParallelEdgesTest {
                 long parallelEdgesSolution = computeSolution(mapData, injector);
 
                 Assert.assertEquals(singleEdgeSolution, parallelEdgesSolution);
+                
                                                         
         }
         
         public long computeSolution(MapData mapData, Injector injector){                	
 		injector.getInstance(AllNetworkNodes.class).setAllNetworkNodes(mapData.nodesFromAllGraphs);
 		injector.getInstance(Graphs.class).setGraphs(mapData.graphByType);
-                Map<Integer, SimulationNode> map = injector.getInstance(AllNetworkNodes.class).getAllNetworkNodes();                
-                
+                Map<Integer, SimulationNode> map = injector.getInstance(AllNetworkNodes.class).getAllNetworkNodes();                                
                 TripsUtil tu = injector.getInstance(TripsUtil.class);
+                
                 return tu.getTripDuration(tu.createTrip(map.get(0), map.get(1)));                
         }
 }
