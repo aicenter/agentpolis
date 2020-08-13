@@ -18,6 +18,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
+import com.google.inject.name.Names;
 import cz.cvut.fel.aic.agentpolis.mock.TestVisioInitializer;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.system.StandardAgentPolisModule;
@@ -42,6 +43,13 @@ public class TestModule extends StandardAgentPolisModule{
 		agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
 		agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
 	}
+
+    @Override
+    protected void configureNext() {
+        super.configureNext(); 
+        int lineWidth = 24;
+        bind(int.class).annotatedWith(Names.named("HighwayLayer edge width")).toInstance(lineWidth);
+    }
 	
 	
 

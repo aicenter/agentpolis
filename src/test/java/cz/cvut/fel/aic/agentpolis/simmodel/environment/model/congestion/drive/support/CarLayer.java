@@ -70,7 +70,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 
 	@Override
 	protected Color getEntityDrawColor(DriveAgent driveAgent) {
-		return Color.CYAN;
+		return Color.BLUE;
 	}
 
 	// not used
@@ -131,11 +131,16 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 //		return p0;
 //	}
 	
-	private static Path2D createCarShape(final float s) {
+        /**
+         * 
+         * @param s lenght of car in [cm]
+         * @return 
+         */
+	private static Path2D createCarShape(final float s) {                 
 		final GeneralPath p0 = new GeneralPath();
-		p0.moveTo(-s,0f);
+		p0.moveTo(-s/10.0,0f);
 		p0.lineTo(0, 1f);
-		p0.lineTo(-s,2f);
+		p0.lineTo(-s/10.0,2f);
 		p0.closePath();
 		return p0;
 	}
