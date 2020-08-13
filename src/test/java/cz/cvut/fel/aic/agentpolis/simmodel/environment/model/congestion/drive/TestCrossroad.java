@@ -22,16 +22,11 @@ import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestGraphCreator;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
+import cz.cvut.fel.aic.geographtools.Graph;;
 import org.junit.Test;
 
-import java.util.Arrays;
 
 /**
  * @author fido
@@ -40,7 +35,8 @@ public class TestCrossroad {
 
 	@Test
 	public void run() {
-                Graph<SimulationNode, SimulationEdge> graph = TestGraphCreator.createTshapedCrossroad();
+                DriveTest driveTest = new DriveTest();
+                Graph<SimulationNode, SimulationEdge> graph = TestGraphCreator.createTshapedCrossroad(driveTest);
 		                          
                 SimulationNode node0 = graph.getNode(0);
                 SimulationNode node1 = graph.getNode(1);
@@ -64,7 +60,7 @@ public class TestCrossroad {
 			trips[i] = trip;
 		}
 
-		DriveTest driveTest = new DriveTest();
+		
 		driveTest.run(graph, trips);
 	}
 	

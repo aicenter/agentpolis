@@ -22,16 +22,11 @@ import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestGraphCreator;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
 import org.junit.Test;
 
-import java.util.Arrays;
 
 /**
  *
@@ -41,8 +36,8 @@ public class TestThreeNodes {
 	
 	@Test 
 	public void run() throws Throwable{   
-                
-                Graph<SimulationNode, SimulationEdge> graph = TestGraphCreator.create3x1Line();
+                DriveTest driveTest = new DriveTest();
+                Graph<SimulationNode, SimulationEdge> graph = TestGraphCreator.create3x1Line(driveTest);
                 
 		SimulationNode node0 = graph.getNode(0);
 		SimulationNode node1 = graph.getNode(1);
@@ -50,7 +45,7 @@ public class TestThreeNodes {
 		
 		Trip<SimulationNode> trip = new Trip<>(0,node0, node1, node2);
 		
-		DriveTest driveTest = new DriveTest();
+		
 		driveTest.run(graph, trip);
 	}
 	

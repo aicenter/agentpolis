@@ -32,15 +32,14 @@ import java.util.Arrays;
  * @author travnja5
  */
 public class TestGraphCreator {
-        public static Graph<SimulationNode, SimulationEdge> create3x1Line(){
-                Transformer projection = new Transformer(26912);
-                return Utils.getGridGraph(3, projection, 1);
+        public static Graph<SimulationNode, SimulationEdge> create3x1Line(DriveTest driveTest){                
+                return Utils.getGridGraph(3, driveTest.getInjector().getInstance(Transformer.class), 1);
         }
         
-        public static Graph<SimulationNode, SimulationEdge> createTshapedCrossroad(){
+        public static Graph<SimulationNode, SimulationEdge> createTshapedCrossroad(DriveTest driveTest){
             GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-                int GRID = 50000;
-                Transformer projection = new Transformer(26912);
+                int GRID = 5000;
+                Transformer projection = driveTest.getInjector().getInstance(Transformer.class);
                 
                 SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0,  projection, 0);
 		SimulationNode node1 = new SimulationNode(1, 0, 0, GRID, 0, projection, 0);
