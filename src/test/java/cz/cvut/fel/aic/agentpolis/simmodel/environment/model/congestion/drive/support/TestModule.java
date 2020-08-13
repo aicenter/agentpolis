@@ -37,17 +37,17 @@ public class TestModule extends StandardAgentPolisModule{
 //			agentpolisConfig.showVisio = false;
 //		}
 
-		agentpolisConfig.visio.showVisio = VisualTests.SHOW_VISIO;
-		
+		agentpolisConfig.visio.showVisio = VisualTests.SHOW_VISIO;		
 		agentpolisConfig.congestionModel.batchSize = 1;
 		agentpolisConfig.congestionModel.maxFlowPerLane = 5.0;
 		agentpolisConfig.congestionModel.defaultCrossroadDrivingLanes = 2;
+                agentpolisConfig.congestionModel.fundamentalDiagramDelay = true;               
 	}
 
     @Override
     protected void configureNext() {
         super.configureNext(); 
-        int lineWidth = 24;
+        int lineWidth = 4;
         bind(int.class).annotatedWith(Names.named("HighwayLayer edge width")).toInstance(lineWidth);
     }
 	

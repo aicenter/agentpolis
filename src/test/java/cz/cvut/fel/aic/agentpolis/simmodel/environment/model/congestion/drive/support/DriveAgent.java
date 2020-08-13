@@ -86,8 +86,10 @@ public class DriveAgent extends Agent implements Driver<PhysicalVehicle>{
 		return delayData;
 	}
 
-
-
+        
+        /**
+         * @return vehicle speed in [m/s]
+         */
 	@Override
 	public int getVelocity() {
 		return 15;

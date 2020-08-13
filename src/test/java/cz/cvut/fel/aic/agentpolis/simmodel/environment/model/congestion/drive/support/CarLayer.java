@@ -64,7 +64,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 		Vehicle vehicle = entity.getVehicle();
 		if(vehicle == null){
 			return positionUtil.getCanvasPosition(entity);
-		}
+		}              
 		return positionUtil.getCanvasPositionInterpolatedForVehicleInTime(vehicle, time);
 	}
 
@@ -76,7 +76,7 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
 	// not used
 	@Override
 	protected int getEntityTransformableRadius(DriveAgent driveAgent) {
-		return 0;
+                return 0;		
 	}
 
 	@Override
@@ -138,9 +138,9 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
          */
 	private static Path2D createCarShape(final float s) {                 
 		final GeneralPath p0 = new GeneralPath();
-		p0.moveTo(-s/10.0,0f);
-		p0.lineTo(0, 1f);
-		p0.lineTo(-s/10.0,2f);
+		p0.moveTo(+s*0.006f, 0f);
+		p0.lineTo(-s*0.006f, +s*0.005f);
+		p0.lineTo(-s*0.006f, -s*0.005f);
 		p0.closePath();
 		return p0;
 	}

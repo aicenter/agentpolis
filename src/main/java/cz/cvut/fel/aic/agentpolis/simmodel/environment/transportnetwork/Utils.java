@@ -32,7 +32,7 @@ import java.util.Arrays;
  */
 public class Utils {
 	
-	private static final int DEFAULT_RADIUS = 500;
+	private static final int DEFAULT_RADIUS = 5000;
 	
 	private static final int DEFAULT_GRID_SIZE = 5000; //in cm -> 50m
 	
@@ -47,10 +47,10 @@ public class Utils {
 		for (int i = 0; i < nodeCount; i++) {
 			double angle = 2 * Math.PI / nodeCount * i;
 
-			int x = 100 * (int) Math.round(radius * Math.cos(angle));
-			int y = 100 * (int) Math.round(radius * Math.sin(angle));
+			int x = 100*(int) Math.round(radius * Math.cos(angle));
+			int y = 100*(int) Math.round(radius * Math.sin(angle));
 
-
+                        
 			SimulationNode node = new SimulationNode(i, 0, x, y, 0, projection, 0);
 
 			graphBuilder.addNode(node);
@@ -85,7 +85,6 @@ public class Utils {
 				int x = 100 * j * size;
 				int y = 100 * i * size;
 				int nodeId = i * width + j;
-                                
                                 
 				SimulationNode node = new SimulationNode(nodeId, 0, y, x, 0, projection, 0);
 				graphBuilder.addNode(node);

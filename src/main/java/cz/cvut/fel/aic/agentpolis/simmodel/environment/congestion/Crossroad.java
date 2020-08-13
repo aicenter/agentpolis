@@ -200,14 +200,13 @@ public class Crossroad extends Connection {
 		// first vehicle
 		VehicleTripData vehicleTripData = chosenLane.getFirstWaitingVehicle();
 		
-		double vehicleLength = vehicleTripData.getVehicle().getLengthCm();
+		double vehicleLength = (int)((double)vehicleTripData.getVehicle().getLengthCm()/100.0);
 		
 		// vehicle ends on this node
 		if (vehicleTripData.isTripFinished()) {
 			scheduleEndDriving(vehicleTripData, chosenLane);
 			
 			metersTransferedThisBatch += vehicleLength;
-			
 			return false;
 		}
 

@@ -95,7 +95,7 @@ public class Lane extends EventHandlerAdapter {
 
 	void removeFromQueue(VehicleTripData vehicleData) {
 		currentlyUsedCapacityInCm -= vehicleData.getVehicle().getLengthCm();
-		waitingQueueInMeters -= vehicleData.getVehicle().getLengthCm();
+		waitingQueueInMeters -= (int)((double)vehicleData.getVehicle().getLengthCm()/100.0);
 		waitingQueue.remove();
 
 		updateVehiclesInQueue(vehicleData.getVehicle().getLengthCm());
@@ -133,7 +133,7 @@ public class Lane extends EventHandlerAdapter {
 			VehicleQueueData vehicleQueueData = drivingQueue.pollFirst();
 			VehicleTripData vehicleTripData = vehicleQueueData.getVehicleTripData();
 			waitingQueue.addLast(vehicleQueueData);
-			waitingQueueInMeters += vehicleTripData.getVehicle().getLengthCm();
+			waitingQueueInMeters += (int)((double)vehicleTripData.getVehicle().getLengthCm()/100.0);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
-		double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInCm;
+		double freeCapacity = linkCapacityInMeters*100 - currentlyUsedCapacityInCm;
 		return freeCapacity > vehicle.getLengthCm();
 	}
 
