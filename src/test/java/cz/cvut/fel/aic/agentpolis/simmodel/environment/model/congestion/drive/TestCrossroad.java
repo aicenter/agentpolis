@@ -42,11 +42,6 @@ public class TestCrossroad {
                 SimulationNode node1 = graph.getNode(1);
                 SimulationNode node2 = graph.getNode(2);
                 SimulationNode node3 = graph.getNode(3);
-
-                System.out.println(node0.toString());
-                System.out.println(node1.toString());
-                System.out.println(node2.toString());
-                System.out.println(node3.toString());
                 
 		Trip<SimulationNode>[] trips = new Trip[20];
 
