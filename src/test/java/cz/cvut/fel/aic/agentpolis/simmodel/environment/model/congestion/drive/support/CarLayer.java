@@ -138,9 +138,13 @@ public class CarLayer  extends EntityLayer<DriveAgent>{
          */
 	private static Path2D createCarShape(final float s) {                 
 		final GeneralPath p0 = new GeneralPath();
-		p0.moveTo(+s*0.006f, 0f);
-		p0.lineTo(-s*0.006f, +s*0.005f);
-		p0.lineTo(-s*0.006f, -s*0.005f);
+		p0.moveTo(+s*0.005f, 0f);
+                p0.lineTo(-s*0.003f, +s*0.004f);
+		p0.lineTo(-s*0.005f, +s*0.0035f);
+                p0.lineTo(-s*0.003f, +s*0.0005f);
+                p0.lineTo(-s*0.003f, -s*0.0005f);
+		p0.lineTo(-s*0.005f, -s*0.0035f);
+                p0.lineTo(-s*0.003f, -s*0.004f);
 		p0.closePath();
 		return p0;
 	}
