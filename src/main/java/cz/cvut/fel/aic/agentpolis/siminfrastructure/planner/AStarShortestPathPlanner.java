@@ -97,24 +97,12 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 						jGraphTGraph.addVertex(edge.toNode);
 					}
                                         
-                                        long duration = Math.round((double) edge.getLengthCm() / edge.getAllowedMaxSpeedInCmPerSecond() * 1000);
-                                        
-					if (jGraphTGraph.containsEdge(edge.fromNode, edge.toNode)){
-                                            DefaultWeightedEdge old = jGraphTGraph.getEdge(edge.fromNode, edge.toNode);
-                                            if(jGraphTGraph.getEdgeWeight(old) <= duration){
-                                                    continue;
-                                            }                
-                                            jGraphTGraph.removeEdge(old);
-                                        }
-                                        DefaultWeightedEdge newEdge = jGraphTGraph.addEdge(edge.fromNode, edge.toNode);					
-                                        jGraphTGraph.setEdgeWeight(newEdge, duration);
-					
+                    DefaultWeightedEdge newEdge = jGraphTGraph.addEdge(edge.fromNode, edge.toNode);
+					long duration = Math.round((double) edge.getLengthCm() / edge.getAllowedMaxSpeedInCmPerSecond() * 1000);
+					jGraphTGraph.setEdgeWeight(newEdge, duration);
 				}
-
 			}
-
 		}
-		
 		
 		shortestPathPlannersMappedByGraphTypes.put(graphTypes, jGraphTGraph);
 	}
