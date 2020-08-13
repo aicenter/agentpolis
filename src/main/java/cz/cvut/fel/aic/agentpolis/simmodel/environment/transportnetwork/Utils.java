@@ -34,7 +34,7 @@ public class Utils {
 	
 	private static final int DEFAULT_RADIUS = 500;
 	
-	private static final int DEFAULT_GRID_SIZE = 200;
+	private static final int DEFAULT_GRID_SIZE = 5000; //in cm -> 50m
 	
 	public static Graph<SimulationNode, SimulationEdge> getCompleteGraph(int nodeCount, Transformer projection){
 		return getCompleteGraph(nodeCount, projection, DEFAULT_RADIUS);
@@ -57,9 +57,9 @@ public class Utils {
 
 			for (int j = 0; j < i; j++) {
 				SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(i), graphBuilder.getNode(j), 
-						0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
+						0, 0, DEFAULT_GRID_SIZE, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(i), graphBuilder.getNode(j))));
 				SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(j), graphBuilder.getNode(i), 
-						0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
+						0, 0, DEFAULT_GRID_SIZE, 40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(j), graphBuilder.getNode(i))));
 
 				graphBuilder.addEdge(edge1);
 				graphBuilder.addEdge(edge2);
@@ -85,7 +85,8 @@ public class Utils {
 				int x = 100 * j * size;
 				int y = 100 * i * size;
 				int nodeId = i * width + j;
-
+                                
+                                
 				SimulationNode node = new SimulationNode(nodeId, 0, y, x, 0, projection, 0);
 				graphBuilder.addNode(node);
 				
@@ -108,9 +109,9 @@ public class Utils {
 	}
 	
 	private static void createEdges(int id1, int id2, GraphBuilder<SimulationNode, SimulationEdge> graphBuilder){
-		SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(id1), graphBuilder.getNode(id2), 0, 0, 100, 
+		SimulationEdge edge1 = new SimulationEdge(graphBuilder.getNode(id1), graphBuilder.getNode(id2), 0, 0, DEFAULT_GRID_SIZE, 
 				40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(id1), graphBuilder.getNode(id2))));
-		SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(id2), graphBuilder.getNode(id1), 0, 0, 100, 
+		SimulationEdge edge2 = new SimulationEdge(graphBuilder.getNode(id2), graphBuilder.getNode(id1), 0, 0, DEFAULT_GRID_SIZE, 
 				40, 1, new EdgeShape(Arrays.asList(graphBuilder.getNode(id2), graphBuilder.getNode(id1))));
 
 		graphBuilder.addEdge(edge1);
