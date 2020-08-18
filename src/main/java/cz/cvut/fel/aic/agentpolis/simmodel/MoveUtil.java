@@ -39,7 +39,7 @@ public final class MoveUtil {
 	 * @param lengthInCm Distance in centimeters per second.
 	 * @return Required time in milliseconds.
 	 */
-	public static long computeDuration(int velocityInCmPerSecond, int lengthInCm) {
+	public static long computeDuration(double velocityInCmPerSecond, int lengthInCm) {
 
 		// Compute duration on edge (in miliseconds)
 		long duration = Math.round((double) lengthInCm / velocityInCmPerSecond * 1000);
@@ -53,21 +53,21 @@ public final class MoveUtil {
 
 	}
 
-	public static int computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
-		int postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
-		int driverMaximalVelocityCmPerSecond = entity.getVelocity() * 100;
-		return Integer.min(driverMaximalVelocityCmPerSecond, postedSpeedCmPerSecond);
+	public static double computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
+		double postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		double driverMaximalVelocityCmPerSecond = entity.getVelocity() * 100;
+		return Double.min(driverMaximalVelocityCmPerSecond, postedSpeedCmPerSecond);
 	}
 	
 	public static long computeDuration(MovingEntity entity, SimulationEdge edge){
 		int distance = edge.getLengthCm();
-		int velocity = computeAgentOnEdgeVelocity(entity, edge);
+		double velocity = computeAgentOnEdgeVelocity(entity, edge);
 		return computeDuration(velocity, distance);
 	}
 	
 	public static long computeMinDuration(SimulationEdge edge){
 		int distanceCm = edge.getLengthCm();
-		int velocityCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		double velocityCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
 		return computeDuration(velocityCmPerSecond, distanceCm);
 	}
 }

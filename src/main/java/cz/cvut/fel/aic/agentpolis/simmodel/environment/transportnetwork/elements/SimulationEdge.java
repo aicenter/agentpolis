@@ -72,8 +72,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 		return allowedMaxSpeedInKmh;
 	}
 	
-	public int getAllowedMaxSpeedInCmPerSecond(){
-		return (int) Math.round((double) getAllowedMaxSpeedInKmh() / 3.6 * 1E2);
+	public double getAllowedMaxSpeedInCmPerSecond(){
+		return (double) getAllowedMaxSpeedInKmh() / 3.6 * 1E2;
 	}
 	
 
