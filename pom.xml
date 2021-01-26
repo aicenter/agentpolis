@@ -52,8 +52,6 @@
 		</plugins>
 	</build>
 
-
-
 	<dependencies>
 		
 		<!-- AIC projects -->
@@ -74,7 +72,7 @@
 		<dependency>
 			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>graph-importer</artifactId>
-                        <version>4.0.0-SNAPSHOT</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- External lib -->
@@ -93,10 +91,12 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
+			<version>5.0.0-BETA-1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
+			<version>5.0.0-BETA-1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
