@@ -34,11 +34,26 @@ public final class ResourceReader {
 	}
 
 	public static final InputStream getResourceAsStream(String relativePath) {
-	return ResourceReader.class.getResourceAsStream(relativePath);
+		return ResourceReader.class.getResourceAsStream(relativePath);
 	}
 
-	public static final URL getPathToResource(String relativePath) {
-	return ResourceReader.class.getResource(relativePath);
+	
+	/**
+	 * Converts a package path to the corresponding file URL
+	 * @param packagePath Absolute or relative package path. Note that an absolute package path has to start with a slash
+	 * @return URL of the located source.
+	 */
+	public static final URL getPathToResource(String packagePath) {
+		return ResourceReader.class.getResource(packagePath);
 	}
-
+	
+	/**
+	 * Converts a package path to the corresponding absolute file path. 
+	 * @param packagePath Absolute or relative package path. Note that an absolute package path has to start with a slash.
+	 * @return Absolute file path.
+	 */
+	public static String getAbsoultePathToResource(String packagePath){
+		String path = getPathToResource(packagePath).getPath();
+		return path.replaceFirst("^\\/(.:\\/)", "$1"); // this removes the leading slash on Windows
+	}
 }

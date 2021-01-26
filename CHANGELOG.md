@@ -22,11 +22,13 @@
 - `DefaultVisioInitializer` 
 	- constructor changed (unused networks and config discarded)
 	- centroid for initial view is now computed from GPS coordinate instead of the projected coordinates
+- Guice version raised
 
 ## Added
 - vehicle highlighting by switching to static size
 - `VisioUtils.printTextWithBackgroud` method now has a transparency option
 - Not implemented exception class
+- ResourceReader.getAbsoultePathToResource method
 
 
 # 6.0.0
