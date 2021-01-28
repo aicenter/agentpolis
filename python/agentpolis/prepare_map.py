@@ -1,5 +1,6 @@
 import agentpolis.init as ap
 import time
+import os
 import roadmaptools.download_map
 import roadmaptools.clean_geojson
 import roadmaptools.simplify_graph
@@ -38,7 +39,11 @@ def _save_map_for_ap():
 
 	print_info('done. (%.2f secs)' % (time.time() - start_time))
 
+
 def _prepare_map():
+	# create map dir
+	os.makedirs(config.map_dir)
+
 	# # 1 download the map
 	roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
 
@@ -57,7 +62,8 @@ def _prepare_map():
 
 	# 6 finalization: split to node and edges, node id and index generation
 	_save_map_for_ap()
-	
+
+
 if __name__ == '__main__':
 	config = ap.config
 	_prepare_map()

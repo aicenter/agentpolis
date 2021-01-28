@@ -7,6 +7,7 @@
 - `AstarShortestPathPlanner` concurrency bug fixed
 - `EntityLayer`: concurrency bug related to entity position map fixed
 - Bug fix in vehicle plan layer, it now correctly handles the cases when the vehicle just finished the move
+- Python script for map preparation now creates the map dir if it not exists
 
 ## Changed
 - `Trip` refactoring 
@@ -29,6 +30,7 @@
 - `VisioUtils.printTextWithBackgroud` method now has a transparency option
 - Not implemented exception class
 - ResourceReader.getAbsoultePathToResource method
+- new sample config file for Plzen
 
 
 # 6.0.0
