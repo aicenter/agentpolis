@@ -95,7 +95,7 @@ public class Lane extends EventHandlerAdapter {
 
 	void removeFromQueue(VehicleTripData vehicleData) {
 		currentlyUsedCapacityInCm -= vehicleData.getVehicle().getLengthCm();
-		waitingQueueInMeters -= vehicleData.getVehicle().getLengthCm();
+		waitingQueueInMeters -= (int)((double)vehicleData.getVehicle().getLengthCm()/100.0);
 		waitingQueue.remove();
 
 		updateVehiclesInQueue(vehicleData.getVehicle().getLengthCm());
@@ -133,7 +133,7 @@ public class Lane extends EventHandlerAdapter {
 			VehicleQueueData vehicleQueueData = drivingQueue.pollFirst();
 			VehicleTripData vehicleTripData = vehicleQueueData.getVehicleTripData();
 			waitingQueue.addLast(vehicleQueueData);
-			waitingQueueInMeters += vehicleTripData.getVehicle().getLengthCm();
+			waitingQueueInMeters += (int)((double)vehicleTripData.getVehicle().getLengthCm()/100.0);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	boolean queueHasSpaceForVehicle(PhysicalVehicle vehicle) {
-		double freeCapacity = linkCapacityInMeters - currentlyUsedCapacityInCm;
+		double freeCapacity = linkCapacityInMeters*100 - currentlyUsedCapacityInCm;
 		return freeCapacity > vehicle.getLengthCm();
 	}
 
@@ -216,7 +216,9 @@ public class Lane extends EventHandlerAdapter {
 		double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle, edge);
 
 		double speed = freeFlowVelocity;
-		if (link.congestionModel.addFundamentalDiagramDelay) {
+                
+                //may use congestionModel.on ??
+		if (link.congestionModel.addFundamentalDiagramDelay) {                   
 			speed = computeCongestedSpeed(freeFlowVelocity, edge);
 		}
 
@@ -224,7 +226,7 @@ public class Lane extends EventHandlerAdapter {
 	}
 
 	private double computeCongestedSpeed(double freeFlowVelocity, SimulationEdge edge) {
-		double carsPerKilometer = getDrivingCarsCountOnLane() / edge.shape.getShapeLength() * 1000.0;
+		double carsPerKilometer = (double)getDrivingCarsCountOnLane() / edge.shape.getShapeLength() * 1000.0;
 
 		double congestedSpeed;
 		if (carsPerKilometer < 20) {
@@ -234,7 +236,7 @@ public class Lane extends EventHandlerAdapter {
 		} else {
 			congestedSpeed = freeFlowVelocity * calculateSpeedCoefficient(carsPerKilometer);
 		}
-		LOGGER.info("Congested speed: {}cars / km -> {}m / s", carsPerKilometer, congestedSpeed);
+		LOGGER.info("Congested speed: {}cars/km -> {}m/s", carsPerKilometer, congestedSpeed/100f);
 
 		return congestedSpeed;
 	}

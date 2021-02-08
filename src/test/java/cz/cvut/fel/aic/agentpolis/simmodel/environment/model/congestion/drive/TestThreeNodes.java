@@ -21,14 +21,12 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive;
 import cz.cvut.fel.aic.agentpolis.VisualTests;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.DriveTest;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestGraphCreator;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
-import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import org.junit.Test;
 
-import java.util.Arrays;
 
 /**
  *
@@ -37,33 +35,17 @@ import java.util.Arrays;
 public class TestThreeNodes {
 	
 	@Test 
-	public void run() throws Throwable{
-		GraphBuilder<SimulationNode, SimulationEdge> graphBuilder = new GraphBuilder<>();
-
-		SimulationNode node0 = new SimulationNode(0, 0, 0, 0, 0, 0, 0, 0);
-		SimulationNode node1 = new SimulationNode(1, 0, 0, 0, 10000, 10000, 0, 0);
-		SimulationNode node2 = new SimulationNode(2, 0, 0, 0, 20000, 20000, 0, 0);
-		
-		graphBuilder.addNode(node0);
-		graphBuilder.addNode(node1);
-		graphBuilder.addNode(node2);
-
-		SimulationEdge edge1 = new SimulationEdge(node0, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node0,node1)));
-		SimulationEdge edge2 = new SimulationEdge(node1, node0, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node0)));
-		SimulationEdge edge3 = new SimulationEdge(node1, node2, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node1,node2)));
-		SimulationEdge edge4 = new SimulationEdge(node2, node1, 0, 0, 100, 40, 1, new EdgeShape(Arrays.asList(node2,node1)));
-
-
-		graphBuilder.addEdge(edge1);
-		graphBuilder.addEdge(edge2);
-		graphBuilder.addEdge(edge3);
-		graphBuilder.addEdge(edge4);
-		
-		Graph<SimulationNode, SimulationEdge> graph = graphBuilder.createGraph();
+	public void run() throws Throwable{   
+                DriveTest driveTest = new DriveTest();
+                Graph<SimulationNode, SimulationEdge> graph = TestGraphCreator.create3x1Line(driveTest);
+                
+		SimulationNode node0 = graph.getNode(0);
+		SimulationNode node1 = graph.getNode(1);
+		SimulationNode node2 = graph.getNode(2);
 		
 		Trip<SimulationNode> trip = new Trip<>(0,node0, node1, node2);
 		
-		DriveTest driveTest = new DriveTest();
+		
 		driveTest.run(graph, trip);
 	}
 	
