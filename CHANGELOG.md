@@ -24,6 +24,8 @@
 	- constructor changed (unused networks and config discarded)
 	- centroid for initial view is now computed from GPS coordinate instead of the projected coordinates
 - Guice version raised
+- logback config removed to enable config in client projects
+- Alite version raised to 2.1.0 SNAPSHOT
 
 ## Added
 - vehicle highlighting by switching to static size

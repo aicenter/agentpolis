@@ -58,6 +58,7 @@
 		<dependency>
 			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>alite</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>jgrapht-jdk1.6</groupId>
