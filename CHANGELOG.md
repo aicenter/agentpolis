@@ -34,6 +34,9 @@
 - ResourceReader.getAbsoultePathToResource method
 - new sample config file for Plzen
 
+## Removed
+- old process_map.py script for preparing map. Current script for the same purpose is agentpolis/prepare_map.py
+
 
 # 6.0.0
 
