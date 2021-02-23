@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
 
 /**

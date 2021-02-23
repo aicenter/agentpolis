@@ -34,7 +34,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;

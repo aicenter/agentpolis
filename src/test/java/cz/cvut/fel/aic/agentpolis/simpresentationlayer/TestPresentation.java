@@ -31,10 +31,9 @@ import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.agentpolis.simulator.creator.SimulationCreator;
 import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.geographtools.Graph;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
 
 public class TestPresentation {
 

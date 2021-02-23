@@ -27,7 +27,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
-
 import java.util.LinkedList;
 import org.slf4j.LoggerFactory;
 

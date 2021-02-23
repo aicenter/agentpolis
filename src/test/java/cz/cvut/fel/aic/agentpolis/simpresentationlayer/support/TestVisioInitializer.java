@@ -28,7 +28,6 @@ import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.VisLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
 import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
-
 import java.awt.*;
 
 @Singleton

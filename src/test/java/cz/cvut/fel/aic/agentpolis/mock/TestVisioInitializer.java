@@ -26,7 +26,6 @@ import cz.cvut.fel.aic.agentpolis.simulator.visualization.visio.*;
 import cz.cvut.fel.aic.alite.simulation.Simulation;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.common.ColorLayer;
-
 import java.awt.*;
 
 /**

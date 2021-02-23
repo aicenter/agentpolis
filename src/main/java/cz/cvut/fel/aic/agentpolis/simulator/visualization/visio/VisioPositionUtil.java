@@ -18,16 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.vecmath.Point2d;
-
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
@@ -48,6 +40,10 @@ import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
 import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
+import java.util.HashMap;
+import java.util.Map;
+import javax.vecmath.Point2d;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class VisioPositionUtil {

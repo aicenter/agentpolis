@@ -21,17 +21,15 @@ package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
-import cz.cvut.fel.aic.agentpolis.simmodel.TimeConsumingActivity;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
+import cz.cvut.fel.aic.agentpolis.simmodel.TimeConsumingActivity;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 import cz.cvut.fel.aic.geographtools.Edge;
-
-
 import org.slf4j.LoggerFactory;
 
 /**

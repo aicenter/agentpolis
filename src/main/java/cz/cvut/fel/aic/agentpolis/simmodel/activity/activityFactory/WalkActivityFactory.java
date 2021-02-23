@@ -31,7 +31,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphTy
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
-import cz.cvut.fel.aic.geographtools.Node;
 
 /**
  * @author schaemar

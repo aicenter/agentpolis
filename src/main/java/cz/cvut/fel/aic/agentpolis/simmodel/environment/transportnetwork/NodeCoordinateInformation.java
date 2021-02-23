@@ -18,9 +18,8 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 
-import java.io.Serializable;
-
 import com.google.common.collect.ImmutableMap;
+import java.io.Serializable;
 import org.locationtech.jts.geom.Coordinate;
 
 /**

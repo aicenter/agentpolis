@@ -20,7 +20,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
 
 import cz.cvut.fel.aic.geographtools.Edge;
 import java.math.BigInteger;
-
 import java.util.List;
 
 /**

@@ -19,26 +19,23 @@
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge;
 
 import com.google.inject.Injector;
-import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.*;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.TripsUtil;
-
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.parallelEdge.utils.*;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init.MapInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.AllNetworkNodes;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
-
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  *

@@ -18,21 +18,20 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support;
 
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestCongestionModel;
 import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
-import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.TestCongestionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Connection;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Crossroad;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
+import cz.cvut.fel.aic.agentpolis.system.AgentPolisInitializer;
 import cz.cvut.fel.aic.geographtools.Graph;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

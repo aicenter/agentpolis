@@ -22,11 +22,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simpresentationlayer.support.GraphInitializer;
 import cz.cvut.fel.aic.geographtools.Graph;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-
 import java.util.Collection;
 import java.util.Iterator;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class TestCorrectDistance {
 

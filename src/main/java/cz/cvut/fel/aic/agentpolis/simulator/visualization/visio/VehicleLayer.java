@@ -18,14 +18,6 @@
  */
 package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
-import java.util.List;
-
-import javax.vecmath.Point2d;
-
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
@@ -33,6 +25,12 @@ import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.alite.vis.Vis;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
+import java.util.List;
+import javax.vecmath.Point2d;
 
 /**
  * //TODO: maybe rename to MovingEntityLayer + rename *vehicle* methods

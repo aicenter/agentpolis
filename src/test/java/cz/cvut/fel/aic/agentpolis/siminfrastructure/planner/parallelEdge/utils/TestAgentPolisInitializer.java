@@ -22,7 +22,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
-import cz.cvut.fel.aic.agentpolis.system.StandardAgentPolisModule;
 
 /**
  *

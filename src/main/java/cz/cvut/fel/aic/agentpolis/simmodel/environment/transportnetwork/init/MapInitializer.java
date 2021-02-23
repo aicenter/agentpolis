@@ -25,11 +25,9 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.MapData;
 import cz.cvut.fel.aic.geographtools.Graph;
-import org.slf4j.LoggerFactory;
-
-
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class MapInitializer {

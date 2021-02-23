@@ -20,14 +20,12 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.TransportNetworks;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.util.NearestElementUtil;
 import cz.cvut.fel.aic.geographtools.util.NearestElementUtilPair;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

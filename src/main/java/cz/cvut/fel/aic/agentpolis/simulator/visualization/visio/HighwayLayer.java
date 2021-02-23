@@ -27,11 +27,10 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.geographtools.Graph;
-
-import javax.vecmath.Point2d;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
+import javax.vecmath.Point2d;
 
 /**
  * @author fido

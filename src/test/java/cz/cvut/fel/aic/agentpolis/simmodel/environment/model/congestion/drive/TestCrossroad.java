@@ -24,7 +24,7 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.su
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support.TestGraphCreator;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.geographtools.Graph;;
+import cz.cvut.fel.aic.geographtools.Graph;
 import org.junit.Test;
 
 

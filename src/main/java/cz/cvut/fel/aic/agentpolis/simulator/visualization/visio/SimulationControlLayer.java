@@ -26,8 +26,6 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
 import cz.cvut.fel.aic.alite.vis.layer.toggle.KeyToggleLayer;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -37,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import javax.swing.*;
 import org.slf4j.LoggerFactory;
 
 /**

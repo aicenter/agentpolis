@@ -18,11 +18,10 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 
-import cz.cvut.fel.aic.agentpolis.utils.CollectionUtil;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-
+import cz.cvut.fel.aic.agentpolis.utils.CollectionUtil;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.network
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-
 import java.util.Map;
 
 /**

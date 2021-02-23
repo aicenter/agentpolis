@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

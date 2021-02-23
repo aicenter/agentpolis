@@ -19,17 +19,15 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.load;
 
 import com.google.inject.Inject;
-import cz.cvut.fel.aic.agentpolis.utils.CollectionUtil;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.AgentPolisEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.EntityStorage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
+import cz.cvut.fel.aic.agentpolis.utils.CollectionUtil;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.Node;
-
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;

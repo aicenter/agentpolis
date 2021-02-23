@@ -19,7 +19,6 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
 import com.google.inject.Singleton;
-
 import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.LoggerFactory;

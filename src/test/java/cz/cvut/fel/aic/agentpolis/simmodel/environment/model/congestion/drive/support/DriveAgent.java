@@ -19,12 +19,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.drive.support;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.mock.CongestionTestType;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 
 /**
  *

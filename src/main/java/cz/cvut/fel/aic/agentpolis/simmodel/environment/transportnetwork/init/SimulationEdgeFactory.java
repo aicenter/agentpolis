@@ -26,7 +26,6 @@ import cz.cvut.fel.aic.geographtools.GraphBuilder;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.client.EdgeFactory;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.internal.InternalEdge;
 import java.math.BigInteger;
-
 import java.util.List;
 
 public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,SimulationEdge> {

@@ -20,21 +20,20 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Lane;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.Link;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks.HighwayNetwork;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.geographtools.Graph;
-
-import javax.vecmath.Point2d;
-import javax.vecmath.Vector2d;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import javax.vecmath.Point2d;
+import javax.vecmath.Vector2d;
 
 /**
  * Created by martin on 6/27/17.

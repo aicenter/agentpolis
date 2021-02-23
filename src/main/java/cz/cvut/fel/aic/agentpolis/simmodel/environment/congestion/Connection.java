@@ -22,13 +22,13 @@ import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.Event;
 import cz.cvut.fel.aic.alite.common.event.EventHandlerAdapter;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEndData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleEventData;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.connection.VehicleTransferData;
 import org.slf4j.LoggerFactory;
 
 /**

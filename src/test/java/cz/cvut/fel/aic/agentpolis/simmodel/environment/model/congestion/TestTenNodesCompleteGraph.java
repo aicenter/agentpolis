@@ -19,13 +19,12 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion;
 
 import com.google.inject.Injector;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support.CongestionModelTest;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.Utils;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
-
 import org.junit.Test;
 
 /**

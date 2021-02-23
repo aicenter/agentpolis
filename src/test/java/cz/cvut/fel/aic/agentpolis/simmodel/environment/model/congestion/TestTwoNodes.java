@@ -25,10 +25,8 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.geographtools.Graph;
 import cz.cvut.fel.aic.geographtools.GraphBuilder;
-import cz.cvut.fel.aic.geographtools.util.Transformer;
-import org.junit.Test;
-
 import java.util.Arrays;
+import org.junit.Test;
 
 /**
  * @author fido

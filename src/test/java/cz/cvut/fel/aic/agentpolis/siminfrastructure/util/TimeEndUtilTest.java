@@ -18,19 +18,15 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.EDayInWeek;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
+import java.time.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TimeEndUtilTest {
 

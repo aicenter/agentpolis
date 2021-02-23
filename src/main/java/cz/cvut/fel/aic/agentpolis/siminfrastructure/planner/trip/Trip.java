@@ -20,10 +20,9 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 
 import java.util.Arrays;
-
 import java.util.Objects;
-import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
+import org.slf4j.LoggerFactory;
 
 /**
  * @param <L> locationType

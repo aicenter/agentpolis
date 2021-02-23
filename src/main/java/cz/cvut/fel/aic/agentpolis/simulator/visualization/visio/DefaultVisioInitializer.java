@@ -28,9 +28,8 @@ import cz.cvut.fel.aic.alite.vis.layer.common.HelpLayer;
 import cz.cvut.fel.aic.alite.vis.layer.common.VisInfoLayer;
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
-
-import javax.vecmath.Point2d;
 import java.util.function.ToDoubleFunction;
+import javax.vecmath.Point2d;
 
 public class DefaultVisioInitializer implements VisioInitializer {
 

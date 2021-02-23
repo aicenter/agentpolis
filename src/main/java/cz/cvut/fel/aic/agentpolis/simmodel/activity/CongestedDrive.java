@@ -19,15 +19,14 @@
 package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
-import cz.cvut.fel.aic.agentpolis.simmodel.Activity;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
 import cz.cvut.fel.aic.agentpolis.simmodel.Message;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
-import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionMessage;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.congestion.CongestionModel;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
 
 /**
  *

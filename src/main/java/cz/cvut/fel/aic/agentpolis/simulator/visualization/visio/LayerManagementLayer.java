@@ -23,13 +23,16 @@ import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
 import cz.cvut.fel.aic.alite.vis.layer.VisLayer;
-
-import javax.vecmath.Point2d;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import javax.vecmath.Point2d;
 
 
 @Singleton

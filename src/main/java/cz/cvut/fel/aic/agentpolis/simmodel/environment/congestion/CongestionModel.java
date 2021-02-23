@@ -35,7 +35,6 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.networks
 import cz.cvut.fel.aic.agentpolis.simulator.SimulationProvider;
 import cz.cvut.fel.aic.alite.common.event.EventHandler;
 import cz.cvut.fel.aic.geographtools.Graph;
-
 import java.security.ProviderException;
 import java.util.*;
 import java.util.Map.Entry;

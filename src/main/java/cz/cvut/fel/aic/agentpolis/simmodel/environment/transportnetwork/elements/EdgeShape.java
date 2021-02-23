@@ -21,7 +21,6 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.element
 import cz.cvut.fel.aic.geographtools.GPSLocation;
 import cz.cvut.fel.aic.geographtools.util.AngleUtil;
 import cz.cvut.fel.aic.geographtools.util.GPSLocationTools;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;

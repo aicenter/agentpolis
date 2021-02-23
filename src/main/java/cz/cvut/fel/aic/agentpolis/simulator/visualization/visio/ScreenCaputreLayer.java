@@ -21,11 +21,10 @@ package cz.cvut.fel.aic.agentpolis.simulator.visualization.visio;
 import cz.cvut.fel.aic.alite.vis.Vis;
 import cz.cvut.fel.aic.alite.vis.VisManager;
 import cz.cvut.fel.aic.alite.vis.layer.AbstractLayer;
-
-import javax.vecmath.Point2d;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.vecmath.Point2d;
 
 public class ScreenCaputreLayer extends AbstractLayer {
 
