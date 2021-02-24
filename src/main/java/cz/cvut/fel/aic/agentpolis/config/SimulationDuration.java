@@ -1,5 +1,6 @@
 package cz.cvut.fel.aic.agentpolis.config;
 
+import java.lang.Integer;
 import java.util.Map;
 
 public class SimulationDuration {

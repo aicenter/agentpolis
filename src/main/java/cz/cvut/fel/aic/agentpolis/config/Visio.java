@@ -1,5 +1,7 @@
 package cz.cvut.fel.aic.agentpolis.config;
 
+import java.lang.Boolean;
+import java.lang.Double;
 import java.util.Map;
 
 public class Visio {

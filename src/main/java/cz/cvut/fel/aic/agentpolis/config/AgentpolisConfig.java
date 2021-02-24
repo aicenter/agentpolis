@@ -1,5 +1,8 @@
 package cz.cvut.fel.aic.agentpolis.config;
 
+import java.lang.Boolean;
+import java.lang.Integer;
+import java.lang.String;
 import java.util.Map;
 import ninja.fido.config.GeneratedConfig;
 
