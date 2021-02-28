@@ -33,6 +33,7 @@ from roadmaptools.printer import print_info
 
 config = None
 
+
 def _compute_edge_parameters():
 	print_info('Estimating travel speed (using max speed)... ', end='')
 	start_time = time.time()
@@ -59,7 +60,7 @@ def _save_map_for_ap():
 	print_info('done. (%.2f secs)' % (time.time() - start_time))
 
 
-def _prepare_map():
+def prepare_map():
 	# create map dir
 	os.makedirs(config.map_dir)
 
@@ -85,4 +86,4 @@ def _prepare_map():
 
 if __name__ == '__main__':
 	config = ap.config
-	_prepare_map()
+	prepare_map()

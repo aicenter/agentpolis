@@ -26,8 +26,10 @@ setup(
 	description='service scripts for agentpolis simulation framework',
 	author='David Fiedler',
 	author_email='david.fido.fiedler@gmail.com',
-	license='MIT',
+	license='LGPL',
 	packages=setuptools.find_packages(),
+	url = 'https://github.com/aicenter/agentpolis',
 	install_requires=['roadmaptools==4.1.0','fconfig', 'tqdm', 'typing'],
-	python_requires='>=3.6'
+	python_requires='>=3.6',
+	package_data={'agentpolis.resources': ['*.cfg']}
 )
