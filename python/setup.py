@@ -28,6 +28,6 @@ setup(
 	author_email='david.fido.fiedler@gmail.com',
 	license='MIT',
 	packages=setuptools.find_packages(),
-	install_requires=['roadmaptools==4.0.0','fconfig', 'tqdm', 'typing'],
+	install_requires=['roadmaptools==4.1.0','fconfig', 'tqdm', 'typing'],
 	python_requires='>=3.6'
 )
