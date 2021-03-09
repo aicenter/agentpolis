@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>agentpolis</artifactId>
-	<version>7.0.0-SNAPSHOT</version>
+	<version>7.0.0</version>
 	<packaging>jar</packaging>
 
 	<description>The AgentPolis contains the core functionalities for building you own transport model. It provides the
@@ -33,7 +33,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 	<parent>
 		<groupId>cz.cvut.fel.aic</groupId>
 		<artifactId>aicenter-parent</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.0</version>
 	</parent>
 	
 	<build>
@@ -77,7 +77,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 		<dependency>
 			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>alite</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>jgrapht-jdk1.6</groupId>
@@ -92,7 +91,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 		<dependency>
 			<groupId>cz.cvut.fel.aic</groupId>
 			<artifactId>graph-importer</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- External lib -->
