@@ -17,6 +17,8 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public String pathToSaveRecordings;
 
+  public Integer maxVehicleSpeedInMeters;
+
   public Visio visio;
 
   public String mapNodesFilepath;
@@ -42,6 +44,7 @@ public class AgentpolisConfig implements GeneratedConfig {
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
     this.srid = (Integer) agentpolisConfig.get("srid");
     this.pathToSaveRecordings = (String) agentpolisConfig.get("path_to_save_recordings");
+    this.maxVehicleSpeedInMeters = (Integer) agentpolisConfig.get("max_vehicle_speed_in_meters");
     this.visio = new Visio((Map) agentpolisConfig.get("visio"));
     this.mapNodesFilepath = (String) agentpolisConfig.get("map_nodes_filepath");
     this.simulationDuration = new SimulationDuration((Map) agentpolisConfig.get("simulation_duration"));

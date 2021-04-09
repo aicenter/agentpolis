@@ -21,6 +21,12 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.EntityType;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.EGraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.GraphType;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -43,19 +49,34 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 @Singleton
 public class AStarShortestPathPlanner implements ShortestPathPlanner{
 	
+	public static class VehicleType implements EntityType{
+
+		@Override
+		public String getDescriptionEntityType() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
+		
+	}
+	
 	private final Map<Set<GraphType>, DefaultDirectedWeightedGraph<SimulationNode, DefaultWeightedEdge>> 
 			shortestPathPlannersMappedByGraphTypes;
 	
 	private final TransportNetworks transportNetworks;
 	
 	private final AStarAdmissibleHeuristic heuristic;
+	
+	private final AgentpolisConfig config;
 
 	
 	@Inject
-	public AStarShortestPathPlanner(TransportNetworks transportNetworks, AStarAdmissibleHeuristic heuristic) {
+	public AStarShortestPathPlanner(
+			TransportNetworks transportNetworks, 
+			AStarAdmissibleHeuristic heuristic,
+			AgentpolisConfig config) {
 		shortestPathPlannersMappedByGraphTypes = new HashMap<>();
 		this.transportNetworks = transportNetworks;
 		this.heuristic = heuristic;
+		this.config = config;
 	}
 	
 	
@@ -69,7 +90,7 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 		}
 		DefaultDirectedWeightedGraph<SimulationNode, DefaultWeightedEdge> Graph = 
                         shortestPathPlannersMappedByGraphTypes.get(graphTypes);
-                AStarShortestPath<SimulationNode,DefaultWeightedEdge> planner 
+		AStarShortestPath<SimulationNode,DefaultWeightedEdge> planner 
 				= new AStarShortestPath(Graph, heuristic);
 		GraphPath<SimulationNode,DefaultWeightedEdge> path = planner.getPath(from, to);
 		SimulationNode[] locations = path.getVertexList().stream().toArray(SimulationNode[]::new);
@@ -81,6 +102,14 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 		DefaultDirectedWeightedGraph<SimulationNode, DefaultWeightedEdge> jGraphTGraph
 				= new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 		Set<Integer> addedNodes = new HashSet<>();
+		
+		Vehicle referenceVehicle = new PhysicalVehicle(
+				"Test vehicle", 
+				new AStarShortestPathPlanner.VehicleType(), 
+				4, 
+				EGraphType.HIGHWAY, 
+				null,
+				config.maxVehicleSpeedInMeters);
 
 		for (GraphType graphType : graphTypes) {
 			Graph<SimulationNode, SimulationEdge> graph = transportNetworks.getGraph(graphType);
@@ -99,8 +128,15 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 					}
                                         
                     DefaultWeightedEdge newEdge = jGraphTGraph.addEdge(edge.fromNode, edge.toNode);
-					long duration = Math.round((double) edge.getLengthCm() / edge.getAllowedMaxSpeedInCmPerSecond() * 1000);
-					jGraphTGraph.setEdgeWeight(newEdge, duration);
+					long travelTime;
+					if(graphType == EGraphType.HIGHWAY){
+						travelTime = MoveUtil.computeDuration(referenceVehicle, edge);
+					}
+					else{
+						travelTime = MoveUtil.computeMinDuration(edge);
+					}
+//					long duration = Math.round((double) edge.getLengthCm() / edge.getAllowedMaxSpeedInCmPerSecond() * 1000);
+					jGraphTGraph.setEdgeWeight(newEdge, travelTime);
 				}
 			}
 		}

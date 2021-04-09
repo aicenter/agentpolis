@@ -19,12 +19,14 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
+import cz.cvut.fel.aic.geographtools.WKTPrintableCoord;
+
 /**
  * The atomic representation of position in a trip
  *
  * @author Zbynek Moler
  */
-public class TripItem {
+public class TripItem implements WKTPrintableCoord{
 
 	public final int tripPositionByNodeId;
 
@@ -51,6 +53,11 @@ public class TripItem {
 
 	public String toString() {
 		return Long.toString(tripPositionByNodeId);
+	}
+
+	@Override
+	public String toWKTCoordinate() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 }
