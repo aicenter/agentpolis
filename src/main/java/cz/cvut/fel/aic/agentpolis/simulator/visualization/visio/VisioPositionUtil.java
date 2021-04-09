@@ -215,6 +215,8 @@ public class VisioPositionUtil {
 
 		ShapeUtils.PositionAndAngle positionAndAngleOnPath = shapeUtils.getPositionAndAngleOnPath(edge.shape,
 				portionOfEdgeDistance);
+		assert positionAndAngleOnPath.point.latE6 < 90000000;
+		
 		movingAgentAngle.put(agent, positionAndAngleOnPath.angle);
 		return positionAndAngleOnPath.point;
 	}

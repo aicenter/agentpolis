@@ -19,6 +19,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.SpeedUnit;
 import cz.cvut.fel.aic.geographtools.Edge;
 import java.math.BigInteger;
 import java.util.List;
@@ -30,6 +31,11 @@ import java.util.List;
  * @author Zdenek Bousa
  */
 public class SimulationEdge extends Edge<SimulationNode> {
+	
+	private static final double METERS_PER_SECOND_RATIO_TO_KILOMETERS_PER_HOUR = 3.6;
+	
+	private static final double METERS_PER_SECOND_RATIO_TO_MILES_PER_HOUR = 2.2369362920544;
+	
 	/**
 	 * unique ID for each edge, also recognize directions
 	 */
@@ -55,9 +61,11 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	private List<Lane> lanesTurn; // not implemented // TODO: lanes turning
 
 	/**
-	 * maximal allowed speed in meters per second
+	 * maximal allowed speed in maxSpeedUnit
 	 */
-	private final int allowedMaxSpeedInKmh;
+	private final int allowedMaxSpeed;
+	
+	private final SpeedUnit maxSpeedUnit;
 
 	public final EdgeShape shape;
 
@@ -68,12 +76,16 @@ public class SimulationEdge extends Edge<SimulationNode> {
 		return staticId;
 	}
 	
-	public int getAllowedMaxSpeedInKmh() {
-		return allowedMaxSpeedInKmh;
+	public int getAllowedMaxSpeed() {
+		return allowedMaxSpeed;
 	}
 	
 	public double getAllowedMaxSpeedInCmPerSecond(){
-		return (double) getAllowedMaxSpeedInKmh() / 3.6 * 1E2;
+		if(maxSpeedUnit == SpeedUnit.KILOMETERS_PER_HOUR){
+			return (double) getAllowedMaxSpeed() * 1E2 / METERS_PER_SECOND_RATIO_TO_KILOMETERS_PER_HOUR;
+		}
+		
+		return (double) getAllowedMaxSpeed() * 1E2 / METERS_PER_SECOND_RATIO_TO_MILES_PER_HOUR;
 	}
 	
 
@@ -86,7 +98,15 @@ public class SimulationEdge extends Edge<SimulationNode> {
 						  int allowedMaxSpeedInKmh,
 						  int lanesCount,
 						  EdgeShape edgeShape) {
-		this(fromNode, toNode, null, id, oppositeWayId, lengthInCentimeters, allowedMaxSpeedInKmh, lanesCount, edgeShape);
+		this(fromNode, 
+				toNode, 
+				null, id, 
+				oppositeWayId, 
+				lengthInCentimeters, 
+				allowedMaxSpeedInKmh, 
+				lanesCount, 
+				edgeShape,
+				SpeedUnit.KILOMETERS_PER_HOUR);
 	}
 	
 	/**
@@ -100,6 +120,7 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	 *							 Input should be correct, it is not validated!
 	 * @param lanesCount		   total number of lanes for ModeOfTransport-car
 	 * @param edgeShape			instance of EdgeShape representing the shape of the road edge
+	 * @param maxSpeedUnit
 	 */
 	public SimulationEdge(SimulationNode fromNode,
 						  SimulationNode toNode,
@@ -109,11 +130,13 @@ public class SimulationEdge extends Edge<SimulationNode> {
 						  int lengthInCentimeters,
 						  int allowedMaxSpeedInKmh,
 						  int lanesCount,
-						  EdgeShape edgeShape) {
+						  EdgeShape edgeShape,
+						  SpeedUnit maxSpeedUnit) {
 		super(fromNode, toNode, lengthInCentimeters);
 
 		this.id = id;
-		this.allowedMaxSpeedInKmh = allowedMaxSpeedInKmh;
+		this.allowedMaxSpeed = allowedMaxSpeedInKmh;
+		this.maxSpeedUnit = maxSpeedUnit;
 		this.staticId = staticId;
 
 		if (oppositeWayId >= -1) {

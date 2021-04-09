@@ -56,7 +56,7 @@ public class GeojsonMapInitializer extends MapInitializer{
 		String serializedGraphFile = config.pathToSerializedGraph;
 		GeoJSONReader importer = new GeoJSONReader(edgeFile, nodeFile, serializedGraphFile, projection);
 
-		// beware that the simplifiction is alredy done in python preprocessing an is broken in java
+		// beware that the simplifiction is alredy done in python preprocessing and it is broken in java
 		GraphCreator<SimulationNode, SimulationEdge> graphCreator = new GraphCreator(
 				true, false, importer, new SimulationNodeFactory(), new SimulationEdgeFactory());
 

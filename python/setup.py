@@ -22,7 +22,7 @@ from setuptools import setup
 
 setup(
 	name='agentpolis',
-	version='0.1.1',
+	version='0.2.0',
 	description='service scripts for agentpolis simulation framework',
 	author='David Fiedler',
 	author_email='david.fido.fiedler@gmail.com',

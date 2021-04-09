@@ -22,13 +22,15 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.Vehicle;
+import cz.cvut.fel.aic.geographtools.WKTPrintableCoord;
 
 /**
  *  
  * @author David Fiedler
+ * @param <L>
  * 
  */
-public class VehicleTrip<L> extends Trip<L> {
+public class VehicleTrip<L extends WKTPrintableCoord> extends Trip<L> {
 
 	private final Vehicle vehicle;
 

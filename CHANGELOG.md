@@ -18,6 +18,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 
+# 8.0.0
+
+## FIxed
+- 
+
+## Changed
+- `Trip` coordinated now have to be WKT printable
+- Speed is now stored internally in the original units (km, miles), another property `maxSpeedUnit` was added to `Edge` to store the unit type.
+- `EventProcessor` in `provideTimeProvider` method mad nullable to support easier injection for scripts that does not need the simulation, but need the travel time providers. It should be reverted as soon as Issue #54 will be resolved.
+
+## Added
+- `Trip` WKT export
+
 # 7.0.0
 
 ## FIxed

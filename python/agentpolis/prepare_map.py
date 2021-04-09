@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-import agentpolis.init as ap
+from agentpolis.init import config
 import time
 import os
 import roadmaptools.download_map
@@ -30,8 +30,6 @@ import roadmaptools.export_nodes_and_id_maker
 import roadmaptools.prepare_geojson_to_agentpolisdemo
 
 from roadmaptools.printer import print_info
-
-config = None
 
 
 def _compute_edge_parameters():
@@ -61,19 +59,23 @@ def _save_map_for_ap():
 
 
 def prepare_map():
-	# create map dir
-	os.makedirs(config.map_dir)
 
-	# # 1 download the map
-	roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
+	# 0 create map dir
+	os.makedirs(config.map_dir, exist_ok=True)
 
-	# # 2 cleanup
+	# 1 download the map
+	if config.area_name == "EMPTY":
+		roadmaptools.download_map.download_cities([tuple(config.map_envelope.values())], config.raw_filepath)
+	else:
+		roadmaptools.download_map.download_by_name(config.area_name, config.raw_filepath)
+
+	# 2 cleanup
 	roadmaptools.clean_geojson.clean_geojson_files(config.raw_filepath, config.cleaned_filepath)
 
-	# # 3 simplification
+	# 3 simplification
 	roadmaptools.simplify_graph.simplify_geojson(config.cleaned_filepath, config.simplified_filepath)
 
-	# # 4 reduction to single component
+	# 4 reduction to single component
 	roadmaptools.sanitize.sanitize(config.simplified_filepath, config.sanitized_filepath)
 
 	# 5 compute edge parameters
@@ -85,5 +87,4 @@ def prepare_map():
 
 
 if __name__ == '__main__':
-	config = ap.config
 	prepare_map()

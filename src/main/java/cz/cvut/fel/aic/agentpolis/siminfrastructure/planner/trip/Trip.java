@@ -24,12 +24,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
+import cz.cvut.fel.aic.geographtools.WKTPrintableCoord;
 
 /**
  * @param <L> locationType
  * @author F.I.D.O.
  */
-public class Trip<L> {
+public class Trip<L extends WKTPrintableCoord> {
 	
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Trip.class);
 	
@@ -145,6 +146,14 @@ public class Trip<L> {
 
 		return str;
 	}
+	
+	public String toWKT(){
+		StringBuilder sb = new StringBuilder("LINESTRING (");
+		sb.append(Arrays.stream(locations).map(l -> l.toWKTCoordinate()).collect(Collectors.joining(", ")));
+		sb.append(")");
+		return sb.toString();
+	}
+	
 	
 	public int getSize(){
 		return locations.length - currentFirstLocationIndex;

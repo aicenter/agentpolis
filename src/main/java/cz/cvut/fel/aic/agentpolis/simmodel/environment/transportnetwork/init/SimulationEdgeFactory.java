@@ -19,6 +19,7 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.init;
 
+import cz.cvut.fel.aic.agentpolis.simmodel.SpeedUnit;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.EdgeShape;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationNode;
@@ -28,19 +29,46 @@ import cz.cvut.fel.aic.graphimporter.structurebuilders.client.EdgeFactory;
 import cz.cvut.fel.aic.graphimporter.structurebuilders.internal.InternalEdge;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,SimulationEdge> {
 
 	@Override
 	public SimulationEdge createEdge(InternalEdge internalEdge, GraphBuilder<SimulationNode,SimulationEdge> graphBuilder) {
-		List<GPSLocation> coordinatesList = internalEdge.get("coordinateList");
-		EdgeShape edgeShape = new EdgeShape(coordinatesList);
-		SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
-		SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
-		return new SimulationEdge(fromNode, toNode, new BigInteger(((String) internalEdge.get("id"))),
-				internalEdge.get("uniqueWayID"), internalEdge.get("oppositeWayUniqueId"), internalEdge.getLengthCm(),
-				internalEdge.get("allowedMaxSpeedInMpS"),
-				internalEdge.get("lanesCount"), edgeShape);
+		try {
+			List<GPSLocation> coordinatesList = internalEdge.get("coordinateList");
+			EdgeShape edgeShape = new EdgeShape(coordinatesList);
+			SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
+			SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
+			String speedUnitStr = internalEdge.get("speed_unit");
+			SpeedUnit speedUnit;
+			switch(speedUnitStr){
+				case "kmh":
+					speedUnit = SpeedUnit.KILOMETERS_PER_HOUR;
+					break;
+				case "mph":
+					speedUnit = SpeedUnit.MILES_PER_HOUR;
+					break;
+				default:
+					throw new Exception(String.format("Invalid speed unit string: %s", speedUnitStr));
+			}
+			return new SimulationEdge(
+					fromNode,
+					toNode,
+					new BigInteger(((String) internalEdge.get("id"))),
+					internalEdge.get("uniqueWayID"),
+					internalEdge.get("oppositeWayUniqueId"),
+					internalEdge.getLengthCm(),
+					internalEdge.get("allowedMaxSpeedInMpS"),
+					internalEdge.get("lanesCount"),
+					edgeShape,
+					speedUnit
+			);
+		} catch (Exception ex) {
+			Logger.getLogger(SimulationEdgeFactory.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
 	}
 
 }

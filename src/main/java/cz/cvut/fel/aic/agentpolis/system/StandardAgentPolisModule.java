@@ -47,6 +47,7 @@ import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.io.File;
 import java.time.ZonedDateTime;
+import javax.annotation.Nullable;
 import ninja.fido.config.Configuration;
 import ninja.fido.config.GeneratedConfig;
 import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
@@ -164,9 +165,10 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 		return new TransportNetworks(graphs.getGraphs());
 	}
 
+	// TODO: Remove nullable as soon as Issue #54 will be solved
 	@Provides
 	@Singleton
-	StandardTimeProvider provideTimeProvider(EventProcessor eventProcessor) {
+	StandardTimeProvider provideTimeProvider(@Nullable EventProcessor eventProcessor) {
 		return new StandardTimeProvider(eventProcessor, ZonedDateTime.now());
 	}
 
