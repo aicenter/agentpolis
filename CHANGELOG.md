@@ -30,6 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ## Added
 - `Trip` WKT export
+- support for measured speed
 
 # 7.0.0
 

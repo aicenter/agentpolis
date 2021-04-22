@@ -68,6 +68,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	private final SpeedUnit maxSpeedUnit;
 
 	public final EdgeShape shape;
+	
+	private final double measuredSpeed;
 
 	
 	
@@ -79,6 +81,12 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	public int getAllowedMaxSpeed() {
 		return allowedMaxSpeed;
 	}
+
+	public double getMeasuredSpeed() {
+		return measuredSpeed;
+	}
+	
+
 	
 	public double getAllowedMaxSpeedInCmPerSecond(){
 		if(maxSpeedUnit == SpeedUnit.KILOMETERS_PER_HOUR){
@@ -86,6 +94,14 @@ public class SimulationEdge extends Edge<SimulationNode> {
 		}
 		
 		return (double) getAllowedMaxSpeed() * 1E2 / METERS_PER_SECOND_RATIO_TO_MILES_PER_HOUR;
+	}
+	
+	public double getMeasuredSpeedInCmPerSecond(){
+		if(maxSpeedUnit == SpeedUnit.KILOMETERS_PER_HOUR){
+			return (double) getMeasuredSpeed() * 1E2 / METERS_PER_SECOND_RATIO_TO_KILOMETERS_PER_HOUR;
+		}
+		
+		return (double) getMeasuredSpeed() * 1E2 / METERS_PER_SECOND_RATIO_TO_MILES_PER_HOUR;
 	}
 	
 
@@ -106,7 +122,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 				allowedMaxSpeedInKmh, 
 				lanesCount, 
 				edgeShape,
-				SpeedUnit.KILOMETERS_PER_HOUR);
+				SpeedUnit.KILOMETERS_PER_HOUR,
+				0);
 	}
 	
 	/**
@@ -131,7 +148,8 @@ public class SimulationEdge extends Edge<SimulationNode> {
 						  int allowedMaxSpeedInKmh,
 						  int lanesCount,
 						  EdgeShape edgeShape,
-						  SpeedUnit maxSpeedUnit) {
+						  SpeedUnit maxSpeedUnit,
+						  double measuredSpeed) {
 		super(fromNode, toNode, lengthInCentimeters);
 
 		this.id = id;
@@ -152,6 +170,7 @@ public class SimulationEdge extends Edge<SimulationNode> {
 		}
 
 		this.shape = edgeShape;
+		this.measuredSpeed = measuredSpeed;
 	}
 
 	/**

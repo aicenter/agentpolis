@@ -55,7 +55,8 @@ public final class MoveUtil {
 	}
 
 	public static double computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
-		double postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+//		double postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		double postedSpeedCmPerSecond = edge.getMeasuredSpeedInCmPerSecond();
 		double driverMaximalVelocityCmPerSecond = entity.getVelocity() * 100;
 		return Double.min(driverMaximalVelocityCmPerSecond, postedSpeedCmPerSecond);
 	}

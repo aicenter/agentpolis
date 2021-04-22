@@ -43,6 +43,7 @@ public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,Simulat
 			SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
 			String speedUnitStr = internalEdge.get("speed_unit");
 			SpeedUnit speedUnit;
+			double measuredSpeed = internalEdge.containsParam("measured_speed") ? internalEdge.get("measured_speed"): 0;
 			switch(speedUnitStr){
 				case "kmh":
 					speedUnit = SpeedUnit.KILOMETERS_PER_HOUR;
@@ -63,7 +64,8 @@ public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,Simulat
 					internalEdge.get("allowedMaxSpeedInMpS"),
 					internalEdge.get("lanesCount"),
 					edgeShape,
-					speedUnit
+					speedUnit,
+					measuredSpeed
 			);
 		} catch (Exception ex) {
 			Logger.getLogger(SimulationEdgeFactory.class.getName()).log(Level.SEVERE, null, ex);
