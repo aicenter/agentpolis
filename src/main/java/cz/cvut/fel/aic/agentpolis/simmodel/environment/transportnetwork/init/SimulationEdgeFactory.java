@@ -41,7 +41,7 @@ public class SimulationEdgeFactory implements EdgeFactory<SimulationNode,Simulat
 			EdgeShape edgeShape = new EdgeShape(coordinatesList);
 			SimulationNode fromNode = graphBuilder.getNode(internalEdge.getFromNode().id);
 			SimulationNode toNode = graphBuilder.getNode(internalEdge.getToNode().id);
-			String speedUnitStr = internalEdge.get("speed_unit");
+			String speedUnitStr = internalEdge.containsParam("speed_unit") ? internalEdge.get("speed_unit") : "kmh";
 			SpeedUnit speedUnit;
 			double measuredSpeed = internalEdge.containsParam("measured_speed") ? internalEdge.get("measured_speed"): 0;
 			switch(speedUnitStr){
