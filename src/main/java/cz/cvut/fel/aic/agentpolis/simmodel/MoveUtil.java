@@ -19,6 +19,9 @@
  */
 package cz.cvut.fel.aic.agentpolis.simmodel;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.MovingEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
 
@@ -28,9 +31,14 @@ import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements
  *
  * @author Zbynek Moler
  */
+@Singleton
 public final class MoveUtil {
+	
+	private final AgentpolisConfig config;
 
-	private MoveUtil() {
+	@Inject
+	public MoveUtil(AgentpolisConfig config) {
+		this.config = config;
 	}
 
 	/**
@@ -54,14 +62,20 @@ public final class MoveUtil {
 
 	}
 
-	public static double computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
-		double postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
-//		double postedSpeedCmPerSecond = edge.getMeasuredSpeedInCmPerSecond();
+	public double computeAgentOnEdgeVelocity(MovingEntity entity, SimulationEdge edge) {
+		double postedSpeedCmPerSecond;
+		if(config.useMeasuredSpeed){
+			postedSpeedCmPerSecond = edge.getMeasuredSpeedInCmPerSecond();
+		}
+		else{
+			postedSpeedCmPerSecond = edge.getAllowedMaxSpeedInCmPerSecond();
+		}
+		
 		double driverMaximalVelocityCmPerSecond = entity.getVelocity() * 100;
 		return Double.min(driverMaximalVelocityCmPerSecond, postedSpeedCmPerSecond);
 	}
 	
-	public static long computeDuration(MovingEntity entity, SimulationEdge edge){
+	public long computeDuration(MovingEntity entity, SimulationEdge edge){
 		int distance = edge.getLengthCm();
 		double velocity = computeAgentOnEdgeVelocity(entity, edge);
 		return computeDuration(velocity, distance);

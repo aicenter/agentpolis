@@ -66,17 +66,21 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
 	private final AStarAdmissibleHeuristic heuristic;
 	
 	private final AgentpolisConfig config;
+	
+	private final MoveUtil moveUtil;
 
 	
 	@Inject
 	public AStarShortestPathPlanner(
 			TransportNetworks transportNetworks, 
 			AStarAdmissibleHeuristic heuristic,
-			AgentpolisConfig config) {
+			AgentpolisConfig config,
+			MoveUtil moveUtil) {
 		shortestPathPlannersMappedByGraphTypes = new HashMap<>();
 		this.transportNetworks = transportNetworks;
 		this.heuristic = heuristic;
 		this.config = config;
+		this.moveUtil = moveUtil;
 	}
 	
 	
@@ -130,7 +134,7 @@ public class AStarShortestPathPlanner implements ShortestPathPlanner{
                     DefaultWeightedEdge newEdge = jGraphTGraph.addEdge(edge.fromNode, edge.toNode);
 					long travelTime;
 					if(graphType == EGraphType.HIGHWAY){
-						travelTime = MoveUtil.computeDuration(referenceVehicle, edge);
+						travelTime = moveUtil.computeDuration(referenceVehicle, edge);
 					}
 					else{
 						travelTime = MoveUtil.computeMinDuration(edge);

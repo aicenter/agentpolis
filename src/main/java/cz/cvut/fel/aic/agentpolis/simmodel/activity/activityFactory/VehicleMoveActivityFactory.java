@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.Move;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.VehicleMove;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
@@ -36,15 +37,22 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 @Singleton
 public class VehicleMoveActivityFactory extends ActivityFactory {
 	private final TypedSimulation eventProcessor;
+	
+	private final MoveUtil moveUtil;
 
 	@Inject
-	public VehicleMoveActivityFactory(TypedSimulation eventProcessor) {
+	public VehicleMoveActivityFactory(TypedSimulation eventProcessor, MoveUtil moveUtil) {
 		this.eventProcessor = eventProcessor;
+		this.moveUtil = moveUtil;
 	}
 
 
-	public <AG extends Agent & Driver> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+	public <AG extends Agent & Driver> Move<AG> create(
+			AG agent, 
+			SimulationEdge edge, 
+			SimulationNode from, 
+			SimulationNode to) {
 		return new VehicleMove<>(activityInitializer,
-				eventProcessor, agent, edge, from, to);
+				eventProcessor, agent, edge, from, to, moveUtil);
 	}
 }

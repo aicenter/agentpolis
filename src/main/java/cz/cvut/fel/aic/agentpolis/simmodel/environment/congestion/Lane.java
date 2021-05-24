@@ -62,6 +62,8 @@ public class Lane extends EventHandlerAdapter {
 	private boolean wakeConnectionAfterTransfer;
 
 	private final SimulationProvider simulationProvider;
+	
+	private final MoveUtil moveUtil;
 
 
 	private boolean eventScheduled;
@@ -81,12 +83,13 @@ public class Lane extends EventHandlerAdapter {
 
 
 	public Lane(Link link, double linkCapacityInMeters, TimeProvider timeProvider,
-				SimulationProvider simulationProvider) {
+				SimulationProvider simulationProvider, MoveUtil moveUtil) {
 		this.link = link;
 		this.simulationProvider = simulationProvider;
 		this.linkCapacityInMeters = linkCapacityInMeters > MIN_LINK_CAPACITY_IN_METERS
 				? linkCapacityInMeters : MIN_LINK_CAPACITY_IN_METERS;
 		this.timeProvider = timeProvider;
+		this.moveUtil = moveUtil;
 		this.drivingQueue = new LinkedList<>();
 		this.waitingQueue = new LinkedList<>();
 		eventScheduled = false;
@@ -213,7 +216,7 @@ public class Lane extends EventHandlerAdapter {
 
 	double computeSpeed(PhysicalVehicle vehicle) {
 		SimulationEdge edge = link.edge;
-		double freeFlowVelocity = MoveUtil.computeAgentOnEdgeVelocity(vehicle, edge);
+		double freeFlowVelocity = moveUtil.computeAgentOnEdgeVelocity(vehicle, edge);
 
 		double speed = freeFlowVelocity;
                 

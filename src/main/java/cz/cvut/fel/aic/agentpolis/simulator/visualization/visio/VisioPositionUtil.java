@@ -163,6 +163,7 @@ public class VisioPositionUtil {
 	}
 
 	public Point2d getCanvasPositionInterpolatedForVehicleInTime(Vehicle vehicle, long time) {
+		assert vehicle != null;
 		return getCanvasPositionInterpolatedInTime(vehicle, EGraphType.HIGHWAY, time);
 	}
 

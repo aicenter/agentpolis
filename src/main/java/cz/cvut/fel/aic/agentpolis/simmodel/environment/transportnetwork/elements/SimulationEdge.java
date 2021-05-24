@@ -83,6 +83,7 @@ public class SimulationEdge extends Edge<SimulationNode> {
 	}
 
 	public double getMeasuredSpeed() {
+		assert measuredSpeed > 0;
 		return measuredSpeed;
 	}
 	

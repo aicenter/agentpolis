@@ -44,15 +44,23 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 	protected final SimulationEdge edge;
 	protected final SimulationNode from;
 	protected final SimulationNode to;
+	
+	private final MoveUtil moveUtil;
 
 
 	public Move(ActivityInitializer activityInitializer,
-				TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
+				TypedSimulation eventProcessor, 
+				A agent, 
+				SimulationEdge edge, 
+				SimulationNode from, 
+				SimulationNode to,
+				MoveUtil moveUtil) {
 		super(activityInitializer, agent);
 		this.eventProcessor = eventProcessor;
 		this.edge = edge;
 		this.from = from;
 		this.to = to;
+		this.moveUtil = moveUtil;
 	}
 
 
@@ -81,7 +89,7 @@ public class Move<A extends Agent & MovingAgent> extends TimeConsumingActivity<A
 		long duration = 0;
 		if (checkFeasibility(edge)) {
 			agent.setTargetNode(to);
-			duration = MoveUtil.computeDuration(agent, edge);
+			duration = moveUtil.computeDuration(agent, edge);
 			agent.setDelayData(new DelayData(duration, eventProcessor.getCurrentTime(), edge.getLengthCm()));
 		} else {
 			LOGGER.error("The agent with id: {} is not able to execute movement. Agent will freeze "

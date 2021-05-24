@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityFactory;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.activity.Move;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.MovingAgent;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.transportnetwork.elements.SimulationEdge;
@@ -35,14 +36,21 @@ import cz.cvut.fel.aic.alite.common.event.typed.TypedSimulation;
 @Singleton
 public class PedestrianMoveActivityFactory extends ActivityFactory {
 	private final TypedSimulation eventProcessor;
+	
+	private final MoveUtil moveUtil;
 
 	@Inject
-	public PedestrianMoveActivityFactory(TypedSimulation eventProcessor) {
+	public PedestrianMoveActivityFactory(TypedSimulation eventProcessor,MoveUtil moveUtil) {
 		this.eventProcessor = eventProcessor;
+		this.moveUtil = moveUtil;
 	}
 
 
-	public <AG extends Agent & MovingAgent> Move<AG> create(AG agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-		return new Move<>(activityInitializer, eventProcessor, agent, edge, from, to);
+	public <AG extends Agent & MovingAgent> Move<AG> create(
+			AG agent, 
+			SimulationEdge edge, 
+			SimulationNode from, 
+			SimulationNode to) {
+		return new Move<>(activityInitializer, eventProcessor, agent, edge, from, to, moveUtil);
 	}
 }

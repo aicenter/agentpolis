@@ -22,6 +22,7 @@ package cz.cvut.fel.aic.agentpolis.simmodel.activity;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.ActivityInitializer;
 import cz.cvut.fel.aic.agentpolis.simmodel.Agent;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
@@ -38,8 +39,13 @@ import java.util.List;
 public class VehicleMove<A extends Agent & Driver> extends Move<A> {
 
 	public VehicleMove(ActivityInitializer activityInitializer,
-					   TypedSimulation eventProcessor, A agent, SimulationEdge edge, SimulationNode from, SimulationNode to) {
-		super(activityInitializer, eventProcessor, agent, edge, from, to);
+					   TypedSimulation eventProcessor, 
+					   A agent, 
+					   SimulationEdge edge, 
+					   SimulationNode from,
+					   SimulationNode to,
+					   MoveUtil moveUtil) {
+		super(activityInitializer, eventProcessor, agent, edge, from, to, moveUtil);
 
 	}
 

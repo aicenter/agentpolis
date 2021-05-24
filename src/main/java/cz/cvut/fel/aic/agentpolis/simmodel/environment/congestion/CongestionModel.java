@@ -24,6 +24,7 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
+import cz.cvut.fel.aic.agentpolis.simmodel.MoveUtil;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.DelayData;
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.Driver;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle.PhysicalVehicle;
@@ -56,6 +57,8 @@ public class CongestionModel {
 	private final AgentpolisConfig config;
 
 	private final SimulationProvider simulationProvider;
+	
+	private final MoveUtil moveUtil;
 
 	final TimeProvider timeProvider;
 
@@ -77,14 +80,20 @@ public class CongestionModel {
 
 
 	@Inject
-	public CongestionModel(TransportNetworks transportNetworks, AgentpolisConfig config,
-						   SimulationProvider simulationProvider, TimeProvider timeProvider, ShapeUtils shapeUtils)
+	public CongestionModel(
+			TransportNetworks transportNetworks, 
+			AgentpolisConfig config,
+			SimulationProvider simulationProvider, 
+			TimeProvider timeProvider, 
+			ShapeUtils shapeUtils,
+			MoveUtil moveUtil)
 			throws ModelConstructionFailedException, ProviderException {
 		this.graph = transportNetworks.getGraph(EGraphType.HIGHWAY);
 		this.config = config;
 		this.simulationProvider = simulationProvider;
 		this.timeProvider = timeProvider;
 		this.shapeUtils = shapeUtils;
+		this.moveUtil = moveUtil;
 		connectionsMappedByNodes = new HashMap<>();
 		linksMappedByEdges = new HashMap<>();
 		links = new LinkedList<>();
@@ -160,7 +169,7 @@ public class CongestionModel {
 			Connection toConnection = connectionsMappedByNodes.get(toNode);
 			for (SimulationEdge outEdge : nextEdges) {
 				SimulationNode nextNode = outEdge.toNode;
-				Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider);
+				Lane newLane = new Lane(link, link.getLength(), timeProvider, simulationProvider, moveUtil);
 				link.addLane(newLane, nextNode);
 				Link outLink = linksMappedByEdges.get(outEdge);
 				if (toConnection instanceof Crossroad) {
