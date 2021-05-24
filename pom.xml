@@ -109,12 +109,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>5.0.0-BETA-1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>5.0.0-BETA-1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -131,11 +129,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>
-			<groupId>jgrapht-jdk1.6</groupId>
-			<artifactId>jgrapht-jdk1.6</artifactId>
-			<version>0.8.2</version>
-		</dependency>-->
 		<dependency>
 			<groupId>javax.vecmath</groupId>
 			<artifactId>vecmath</artifactId>
