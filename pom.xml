@@ -152,7 +152,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 			<releases />
 			<id>atg-repo</id>
 			<name>atg-repo</name>
-			<url>http://jones.felk.cvut.cz/artifactory/repo</url>
+			<url>https://jones.felk.cvut.cz/artifactory/repo</url>
 		</repository>
 	</repositories>
 
