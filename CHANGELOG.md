@@ -20,9 +20,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # 8.0.0
 
-## FIxed
-- 
-
 ## Changed
 - `Trip` coordinated now have to be WKT printable
 - Speed is now stored internally in the original units (km, miles), another property `maxSpeedUnit` was added to `Edge` to store the unit type.
