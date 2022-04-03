@@ -34,9 +34,9 @@ import java.util.logging.Logger;
  * @author fido
  * @param <T>
  */
-public class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements TransportEntity<T> {
+public class PhysicalTransportVehicle extends PhysicalVehicle implements TransportEntity {
 
-	protected final List<T> transportedEntities;
+	protected final List<TransportableEntity> transportedEntities;
 
 	private final int vehiclePassengerCapacity; // number of passenger, including driver
 	
@@ -69,15 +69,15 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
 	}
 
 	@Override
-	public List<T> getTransportedEntities() {
+	public List<TransportableEntity> getTransportedEntities() {
 		return transportedEntities;
 	}
 
-	public void pickUp(T entity) {
+	public void pickUp(TransportableEntity entity) {
 		PickUp.pickUp(entity, transportedEntities.size() == vehiclePassengerCapacity, this, transportedEntities);
 	}
 
-	public void dropOff(T entityToDropOff) {
+	public void dropOff(TransportableEntity entityToDropOff) {
 		boolean success = transportedEntities.remove(entityToDropOff);
 		if (!success) {
 			try {
@@ -93,7 +93,7 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
 	@Override
 	public void setPosition(SimulationNode position) {
 		super.setPosition(position);
-		for (T transportedEntity : transportedEntities) {
+		for (TransportableEntity transportedEntity : transportedEntities) {
 			transportedEntity.setPosition(position);
 		}
 	}

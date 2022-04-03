@@ -30,9 +30,9 @@ import java.util.List;
  * @param <T>
  * @author fido
  */
-public abstract class TransportVehicle<T extends TransportableEntity> extends Vehicle implements TransportEntity<T> {
+public abstract class TransportVehicle<T extends TransportableEntity> extends Vehicle implements TransportEntity {
 
-	protected final List<T> transportedEntities;
+	protected final List<TransportableEntity> transportedEntities;
 
 	public void pickUp(T person) {
 		PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
@@ -55,16 +55,16 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 	}
 
 	@Override
-	public List<T> getTransportedEntities() {
+	public List<TransportableEntity> getTransportedEntities() {
 		return transportedEntities;
 	}
 
 //	@Override
 //	public abstract int getCapacity();
 	public void dropOffAll() {
-		Iterator<T> transportedEntitiesIterator = transportedEntities.iterator();
+		Iterator<TransportableEntity> transportedEntitiesIterator = transportedEntities.iterator();
 		while (transportedEntitiesIterator.hasNext()) {
-			T transportedEntity = transportedEntitiesIterator.next();
+			TransportableEntity transportedEntity = transportedEntitiesIterator.next();
 			transportedEntitiesIterator.remove();
 			setDropOffForTransportable(transportedEntity);
 		}
@@ -76,7 +76,7 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 				+ "id=" + super.getId() + ", entitiesOnBoard=" + transportedEntities.size() + "}";
 	}
 
-	private void setDropOffForTransportable(T entityToDropOff) {
+	private void setDropOffForTransportable(TransportableEntity entityToDropOff) {
 		entityToDropOff.setTransportingEntity(null);
 		entityToDropOff.setLastFromPosition(getLastFromPosition());
 	}

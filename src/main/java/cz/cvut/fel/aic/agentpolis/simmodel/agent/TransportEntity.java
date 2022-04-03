@@ -28,9 +28,9 @@ import java.util.List;
  * @author fido
  * @param <T>
  */
-public interface TransportEntity<T extends TransportableEntity> extends MovingEntity{
+public interface TransportEntity extends MovingEntity{
 	
-	public List<T> getTransportedEntities();
+	public List<TransportableEntity> getTransportedEntities();	// this method is used only to get the size of the list, to the genericity is not necessary
 	
 	public int getCapacity();
 	

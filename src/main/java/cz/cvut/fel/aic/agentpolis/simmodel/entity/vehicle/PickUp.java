@@ -28,19 +28,18 @@ import java.util.logging.Logger;
 /**
  *
  * @author martin
- * @param <T>
- * @param <E>
+ * @param <>
+ * @param <>
  */
-public final class PickUp<T extends TransportableEntity, E extends TransportEntity> {
+public final class PickUp {
 
-	public static <T extends TransportableEntity, E extends TransportEntity> void pickUp(T entity,
-			boolean isVehicleFull, E transportingEntity, List<T> transportedEntities) {
+	public static  void pickUp (TransportableEntity entity, boolean isVehicleFull, TransportEntity transportingEntity, List<TransportableEntity> transportedEntities) {
 		if (isVehicleFull) {
 			try {
 				throw new Exception(
 						String.format("Cannot pick up entity, the vehicle is full! [%s]", entity));
 			} catch (Exception ex) {
-				Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(TransportEntity.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 		if(entity.getTransportingEntity() != null){
