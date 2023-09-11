@@ -29,7 +29,7 @@ setup(
 	license='LGPL',
 	packages=setuptools.find_packages(),
 	url = 'https://github.com/aicenter/agentpolis',
-	install_requires=['roadmaptools==4.1.0','fconfig', 'tqdm', 'typing'],
+	install_requires=['roadmaptools>=5.0.0','fconfig', 'tqdm', 'typing'],
 	python_requires='>=3.6',
 	package_data={'agentpolis.resources': ['*.cfg']}
 )
