@@ -33,12 +33,20 @@ public class SimpleTransportVehicle<T extends TransportableEntity> extends Physi
     }
 
     @Override
-    boolean canTransport(T entity) {
-        return false;
+    public boolean canTransport(T entity) {
+        return true;
     }
 
     @Override
-    boolean hasCapacityFor(T entity) {
+    public boolean hasCapacityFor(T entity) {
         return getCapacity() > getTransportedEntities().size();
+    }
+
+    @Override
+    public void runPostPickUpActions(T entity) {
+    }
+
+    @Override
+    public void runPostDropOffActions(T entity) {
     }
 }

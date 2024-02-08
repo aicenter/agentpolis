@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Abstract class for transport vehicles without physical properties (length, ...)
  * @param <T>
  * @author fido
  */
@@ -35,12 +36,12 @@ public abstract class TransportVehicle<T extends TransportableEntity> extends Ve
 	protected final List<T> transportedEntities;
 
 	public void pickUp(T person) {
-		PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
+		PickUp.pickUp(person, this);
 	}
 
 	public void pickUp(List<T> entitiesToPickup) {
 		for (T person : entitiesToPickup) {
-			PickUp.pickUp(person, transportedEntities.size() == this.getCapacity(), this, transportedEntities);
+			PickUp.pickUp(person, this);
 		}
 	}
 

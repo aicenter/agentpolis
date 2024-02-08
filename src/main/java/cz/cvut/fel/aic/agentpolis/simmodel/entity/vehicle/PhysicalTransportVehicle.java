@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Transport vehicle with dimensions.
  * @author fido
  * @param <T>
  */
@@ -72,13 +72,12 @@ public abstract class PhysicalTransportVehicle<T extends TransportableEntity> ex
 
 
 
-	abstract boolean canTransport(T entity);
+	public abstract boolean canTransport(T entity);
 
-	abstract boolean hasCapacityFor(T entity);
 
 
 	public void pickUp(T entity) {
-		PickUp.pickUp(entity, !hasCapacityFor(entity), this, transportedEntities);
+		PickUp.pickUp(entity, this);
 	}
 
 	public void dropOff(T entityToDropOff) {
@@ -92,6 +91,8 @@ public abstract class PhysicalTransportVehicle<T extends TransportableEntity> ex
 			}
 		}
         entityToDropOff.setTransportingEntity(null);
+
+		runPostDropOffActions(entityToDropOff);
 	}
 
 	@Override

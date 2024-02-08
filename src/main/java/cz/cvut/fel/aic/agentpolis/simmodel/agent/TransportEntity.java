@@ -30,10 +30,13 @@ import java.util.List;
  */
 public interface TransportEntity<T extends TransportableEntity> extends MovingEntity{
 	
-	public List<T> getTransportedEntities();
-	
-	public int getCapacity();
-	
-	public Driver getDriver();
-	
+	List<T> getTransportedEntities();
+
+	Driver getDriver();
+
+	boolean hasCapacityFor(T entity);
+
+    void runPostPickUpActions(T entity);
+
+	void runPostDropOffActions(T entity);
 }
