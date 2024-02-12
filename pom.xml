@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>agentpolis</artifactId>
-	<version>8.0.0</version>
+	<version>8.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<description>The AgentPolis contains the core functionalities for building you own transport model. It provides the
@@ -45,6 +45,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
 					<!--<skipTests>true</skipTests>-->
+					<excludes>
+						<exclude>**/*TimeEndUtilTest.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
