@@ -20,13 +20,13 @@ public class SimpleTransportVehicle<T extends TransportableEntity> extends Physi
 
 
     public SimpleTransportVehicle(
-        int vehiclePassengerCapacity,
         String vehicleId,
         EntityType type,
         float lengthInMeters,
         GraphType usingGraphTypeForMoving,
         SimulationNode position,
-        int maxVelocity
+        int maxVelocity,
+        int vehiclePassengerCapacity
     ) {
         super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
         this.vehiclePassengerCapacity = vehiclePassengerCapacity;
