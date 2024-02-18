@@ -49,4 +49,8 @@ public class SimpleTransportVehicle<T extends TransportableEntity> extends Physi
     @Override
     public void runPostDropOffActions(T entity) {
     }
+
+	public int getFreeCapacity() {
+        return getCapacity() - getTransportedEntities().size();
+	}
 }
