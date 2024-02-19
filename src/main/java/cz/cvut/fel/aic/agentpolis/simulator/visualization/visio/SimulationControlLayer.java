@@ -34,6 +34,7 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import javax.swing.*;
@@ -205,29 +206,10 @@ public class SimulationControlLayer extends AbstractLayer {
 		canvas.setFont(font);
 	}
 
-	private static final long DAY_IN_MILLIS = Duration.ofDays(1).toMillis();
-	private static final long HOUR_IN_MILLIS = Duration.ofHours(1).toMillis();
-	private static final long MIN_IN_MILLIS = Duration.ofMinutes(1).toMillis();
-	private static final long SECONDS_IN_MILLIS = Duration.ofSeconds(1).toMillis();
-	private static final Format formatter = new SimpleDateFormat("HH:mm:ss");
-	private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd");
-
 	private String converSimTimeForVis(StandardTimeProvider timeProvider) {
-
-		long timeFromSimulationStart = timeProvider.getCurrentSimTime();
-
-		long timeInDayRange = timeFromSimulationStart % DAY_IN_MILLIS;
-		long hours = timeInDayRange / HOUR_IN_MILLIS;
-		long min = (timeInDayRange % HOUR_IN_MILLIS) / MIN_IN_MILLIS;
-		long sec = (timeInDayRange % MIN_IN_MILLIS) / SECONDS_IN_MILLIS;
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, (int) hours);
-		calendar.set(Calendar.MINUTE, (int) min);
-		calendar.set(Calendar.SECOND, (int) sec);
-
-		return formatter.format(calendar.getTime()) + " " + timeProvider.getCurrentDayInWeek().toString() + " " +
-			   fmt.format(timeProvider.getCurrentDate());
+		ZonedDateTime currentSimDateTime = timeProvider.getCurrentSimDateTime();
+		return currentSimDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")) + " " +
+			currentSimDateTime.getDayOfWeek() + " " + currentSimDateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"));
 	}
 
 	@Override

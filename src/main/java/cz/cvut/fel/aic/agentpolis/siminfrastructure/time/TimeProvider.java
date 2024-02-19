@@ -19,15 +19,25 @@
  */
 package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 /**
  *	Simulation time provider interface
  * @author fido
  */
 public interface TimeProvider {
-	
+
 	/**
 	 * Provides simulation time.
+	 *
 	 * @return Simulation time in milliseconds.
 	 */
 	public long getCurrentSimTime();
+
+
+	/**
+	 * Provides a date and time that represents the current simulation time.
+	 **/
+	ZonedDateTime getCurrentSimDateTime();
 }
