@@ -25,6 +25,7 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.AStarShortestPathPla
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.EuclideanTraveltimeHeuristic;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.ShortestPathPlanner;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.planner.trip.Trip;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.DateTimeParser;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.StandardTimeProvider;
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 import cz.cvut.fel.aic.agentpolis.simmodel.environment.Graphs;
@@ -46,7 +47,9 @@ import cz.cvut.fel.aic.geographtools.GraphSpec2D;
 import cz.cvut.fel.aic.geographtools.util.Transformer;
 import cz.cvut.fel.aic.geographtools.util.Utils2D;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.annotation.Nullable;
 import ninja.fido.config.Configuration;
 import ninja.fido.config.GeneratedConfig;
@@ -169,7 +172,15 @@ public class StandardAgentPolisModule extends AbstractModule implements AgentPol
 	@Provides
 	@Singleton
 	StandardTimeProvider provideTimeProvider(@Nullable EventProcessor eventProcessor) {
-		return new StandardTimeProvider(eventProcessor, ZonedDateTime.now());
+		ZonedDateTime startTime = null;
+		if(agentpolisConfig.startTime.isEmpty()){
+			startTime = ZonedDateTime.now();
+		}
+		else{
+			startTime = DateTimeParser.parseDateTime(agentpolisConfig.startTime);
+
+		}
+		return new StandardTimeProvider(eventProcessor, startTime);
 	}
 
 	protected void bindVisioInitializer() {

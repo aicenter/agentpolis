@@ -21,6 +21,8 @@ package cz.cvut.fel.aic.agentpolis.simmodel.environment.model.congestion.support
 
 import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 
+import java.time.ZonedDateTime;
+
 /**
  *
  * @author fido
@@ -28,8 +30,18 @@ import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.TimeProvider;
 public class TestTimeProvider implements TimeProvider{
 
 	@Override
-	public long getCurrentSimTime() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public ZonedDateTime getInitDateTime() {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
-	
+
+	@Override
+	public long getCurrentSimTime() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public ZonedDateTime getCurrentSimDateTime() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
 }

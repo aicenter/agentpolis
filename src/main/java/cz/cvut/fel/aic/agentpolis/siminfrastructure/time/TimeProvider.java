@@ -28,6 +28,8 @@ import java.time.ZonedDateTime;
  */
 public interface TimeProvider {
 
+	ZonedDateTime getInitDateTime();
+
 	/**
 	 * Provides simulation time.
 	 *
@@ -40,4 +42,8 @@ public interface TimeProvider {
 	 * Provides a date and time that represents the current simulation time.
 	 **/
 	ZonedDateTime getCurrentSimDateTime();
+
+
+
+	ZonedDateTime getDateTimeFromSimTime(long simTime);
 }

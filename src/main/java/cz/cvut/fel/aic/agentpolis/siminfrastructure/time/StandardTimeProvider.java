@@ -24,7 +24,6 @@ import com.google.inject.Singleton;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
 
 import java.time.*;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,12 @@ public class StandardTimeProvider implements TimeProvider{
 	/**
 	 * The date when the simulation was started.
 	 */
-	private final ZonedDateTime initDate;
+	private final ZonedDateTime initDateTime;
+
+	@Override
+	public ZonedDateTime getInitDateTime() {
+		return initDateTime;
+	}
 
 	/**
 	 * The default date will be set to MONDAY {@code 2014-09-08}.
@@ -61,11 +65,15 @@ public class StandardTimeProvider implements TimeProvider{
 	public StandardTimeProvider(EventProcessor eventProcessor) {
 		this(eventProcessor, LocalDate.parse("2014-09-08"));
 		LOGGER.warn("Init date was set to default ({}). "
-						+ "Some features may not work properly - e.g. Public transport", initDate);
+						+ "Some features may not work properly - e.g. Public transport", initDateTime);
 	}
 
 	public StandardTimeProvider(EventProcessor eventProcessor, LocalDate initDate) {
 		this(eventProcessor, initDate.atStartOfDay(ZoneId.systemDefault()));
+	}
+
+	public StandardTimeProvider(EventProcessor eventProcessor, LocalDateTime initDateTime) {
+		this(eventProcessor, ZonedDateTime.of(initDateTime, ZoneId.systemDefault()));
 	}
 
 	public StandardTimeProvider(EventProcessor eventProcessor, ZonedDateTime initDate) {
@@ -75,7 +83,7 @@ public class StandardTimeProvider implements TimeProvider{
 //			LOGGER.warn("Init day is not day start (00:00). It will be set to the start of the day.");
 //			initDate = initDate.with(ChronoField.MILLI_OF_DAY, 0);
 //		}
-		this.initDate = initDate;
+		this.initDateTime = initDate;
 		this.initDayInWeek = EDayInWeek.getDayInWeekBasedOnIndex(initDate.getDayOfWeek().ordinal());
 	}
 
@@ -226,12 +234,17 @@ public class StandardTimeProvider implements TimeProvider{
 	 * @return
 	 */
 	public ZonedDateTime getCurrentDate() {
-		return initDate.plusDays((int) getCurrentDayFlag());
+		return initDateTime.plusDays((int) getCurrentDayFlag());
 	}
 
 	@Override
 	public ZonedDateTime getCurrentSimDateTime() {
-		return initDate.plus(getCurrentSimTime(), ChronoUnit.MILLIS);
+		return initDateTime.plus(getCurrentSimTime(), ChronoUnit.MILLIS);
+	}
+
+	@Override
+	public ZonedDateTime getDateTimeFromSimTime(long simTime) {
+		return initDateTime.plus(simTime, ChronoUnit.MILLIS);
 	}
 
 	/**
