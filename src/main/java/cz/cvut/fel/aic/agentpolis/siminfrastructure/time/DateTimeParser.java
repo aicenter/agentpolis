@@ -11,7 +11,7 @@ public class DateTimeParser {
 		return ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
 	}
 
-	public static ZonedDateTime parseDateTimeFromMillis(long millis) {
+	public static ZonedDateTime createDateTimeFromMillis(long millis) {
 		return ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(millis), ZoneId.systemDefault());
 	}
 
@@ -20,7 +20,7 @@ public class DateTimeParser {
 			return parseDateTime(unknownFormat);
 		}
 		else {
-			return parseDateTimeFromMillis(Long.parseLong(unknownFormat));
+			return createDateTimeFromMillis(Long.parseLong(unknownFormat));
 		}
 	}
 }
