@@ -22,11 +22,8 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.time;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.alite.common.event.EventProcessor;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
+
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +37,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class StandardTimeProvider implements TimeProvider{
 
-		private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StandardTimeProvider.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StandardTimeProvider.class);
 
 	private final static long HOUR_24 = Duration.ofHours(24).toMillis();
 	private final static long NEXT_DAY_FLAG = 1;
@@ -48,7 +45,16 @@ public class StandardTimeProvider implements TimeProvider{
 
 	private final EventProcessor eventProcessor;
 	private final EDayInWeek initDayInWeek;
-	private final ZonedDateTime initDate;
+
+	/**
+	 * The date when the simulation was started.
+	 */
+	private final ZonedDateTime initDateTime;
+
+	@Override
+	public ZonedDateTime getInitDateTime() {
+		return initDateTime;
+	}
 
 	/**
 	 * The default date will be set to MONDAY {@code 2014-09-08}.
@@ -59,21 +65,25 @@ public class StandardTimeProvider implements TimeProvider{
 	public StandardTimeProvider(EventProcessor eventProcessor) {
 		this(eventProcessor, LocalDate.parse("2014-09-08"));
 		LOGGER.warn("Init date was set to default ({}). "
-						+ "Some features may not work properly - e.g. Public transport", initDate);
+						+ "Some features may not work properly - e.g. Public transport", initDateTime);
 	}
 
 	public StandardTimeProvider(EventProcessor eventProcessor, LocalDate initDate) {
 		this(eventProcessor, initDate.atStartOfDay(ZoneId.systemDefault()));
 	}
 
+	public StandardTimeProvider(EventProcessor eventProcessor, LocalDateTime initDateTime) {
+		this(eventProcessor, ZonedDateTime.of(initDateTime, ZoneId.systemDefault()));
+	}
+
 	public StandardTimeProvider(EventProcessor eventProcessor, ZonedDateTime initDate) {
 		super();
 		this.eventProcessor = eventProcessor;
-		if (initDate.get(ChronoField.MILLI_OF_DAY) != 0) {
-			LOGGER.warn("Init day is not day start (00:00). It will be set to the start of the day.");
-			initDate = initDate.with(ChronoField.MILLI_OF_DAY, 0);
-		}
-		this.initDate = initDate;
+//		if (initDate.get(ChronoField.MILLI_OF_DAY) != 0) {
+//			LOGGER.warn("Init day is not day start (00:00). It will be set to the start of the day.");
+//			initDate = initDate.with(ChronoField.MILLI_OF_DAY, 0);
+//		}
+		this.initDateTime = initDate;
 		this.initDayInWeek = EDayInWeek.getDayInWeekBasedOnIndex(initDate.getDayOfWeek().ordinal());
 	}
 
@@ -224,16 +234,17 @@ public class StandardTimeProvider implements TimeProvider{
 	 * @return
 	 */
 	public ZonedDateTime getCurrentDate() {
-		return initDate.plusDays((int) getCurrentDayFlag());
+		return initDateTime.plusDays((int) getCurrentDayFlag());
 	}
 
-	/**
-	 * Returns current date with time.
-	 *
-	 * @return
-	 */
-	public ZonedDateTime getCurrentZonedDateTime() {
-		return initDate.plus(getCurrentSimTime(), ChronoUnit.MILLIS);
+	@Override
+	public ZonedDateTime getCurrentSimDateTime() {
+		return initDateTime.plus(getCurrentSimTime(), ChronoUnit.MILLIS);
+	}
+
+	@Override
+	public ZonedDateTime getDateTimeFromSimTime(long simTime) {
+		return initDateTime.plus(simTime, ChronoUnit.MILLIS);
 	}
 
 	/**
@@ -245,7 +256,7 @@ public class StandardTimeProvider implements TimeProvider{
 	 * @return
 	 */
 	public long computeWaitTime(ZonedDateTime date, long millisInDay) {
-		return getCurrentZonedDateTime().until(date, ChronoUnit.MILLIS) + millisInDay;
+		return getCurrentSimDateTime().until(date, ChronoUnit.MILLIS) + millisInDay;
 	}
 
 }

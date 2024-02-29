@@ -30,51 +30,54 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Transport vehicle with dimensions.
  * @author fido
  * @param <T>
  */
-public class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements TransportEntity<T> {
+public abstract class PhysicalTransportVehicle<T extends TransportableEntity> extends PhysicalVehicle implements
+		TransportEntity<T> {
 
 	protected final List<T> transportedEntities;
 
-	private final int vehiclePassengerCapacity; // number of passenger, including driver
-	
-		
-	private boolean highlited;
 
-	
-	
-	
-	public int getCapacity() {
-		return vehiclePassengerCapacity;
-	}
-	
-	public boolean isHighlited() {
-		return highlited;
-	}
+	private boolean highlighted;
 
-	public void setHighlited(boolean highlited) {
-		this.highlited = highlited;
-	}
 
-	
-	
-	
-	public PhysicalTransportVehicle(String vehicleId, EntityType type, float lengthInMeters, int vehiclePassengerCapacity,
-			GraphType usingGraphTypeForMoving, SimulationNode position, int maxVelocity) {
-		super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
-		this.vehiclePassengerCapacity = vehiclePassengerCapacity;
-		transportedEntities = new LinkedList<>();
-	}
 
 	@Override
 	public List<T> getTransportedEntities() {
 		return transportedEntities;
 	}
 
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
+
+
+	public PhysicalTransportVehicle(
+		String vehicleId,
+		EntityType type,
+		float lengthInMeters,
+		GraphType usingGraphTypeForMoving,
+		SimulationNode position,
+		int maxVelocity
+	) {
+		super(vehicleId, type, lengthInMeters, usingGraphTypeForMoving, position, maxVelocity);
+		transportedEntities = new LinkedList<>();
+	}
+
+
+
+	public abstract boolean canTransport(T entity);
+
+
+
 	public void pickUp(T entity) {
-		PickUp.pickUp(entity, transportedEntities.size() == vehiclePassengerCapacity, this, transportedEntities);
+		PickUp.pickUp(entity, this);
 	}
 
 	public void dropOff(T entityToDropOff) {
@@ -87,11 +90,13 @@ public class PhysicalTransportVehicle<T extends TransportableEntity> extends Phy
 				Logger.getLogger(PhysicalTransportVehicle.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		entityToDropOff.setTransportingEntity(null);
+        entityToDropOff.setTransportingEntity(null);
+
+		runPostDropOffActions(entityToDropOff);
 	}
 
 	@Override
-	public void setPosition(SimulationNode position) {
+    public void setPosition(SimulationNode position) {
 		super.setPosition(position);
 		for (T transportedEntity : transportedEntities) {
 			transportedEntity.setPosition(position);

@@ -21,21 +21,21 @@ package cz.cvut.fel.aic.agentpolis.simmodel.entity.vehicle;
 
 import cz.cvut.fel.aic.agentpolis.simmodel.agent.TransportEntity;
 import cz.cvut.fel.aic.agentpolis.simmodel.entity.TransportableEntity;
-import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author martin
- * @param <T>
- * @param <E>
  */
-public final class PickUp<T extends TransportableEntity, E extends TransportEntity> {
+public final class PickUp {
 
-	public static <T extends TransportableEntity, E extends TransportEntity> void pickUp(T entity,
-			boolean isVehicleFull, E transportingEntity, List<T> transportedEntities) {
-		if (isVehicleFull) {
+	public static <T extends TransportableEntity, E extends TransportEntity<T>> void pickUp(
+		T entity,
+		E transportingEntity
+	) {
+		if (!transportingEntity.hasCapacityFor(entity)) {
 			try {
 				throw new Exception(
 						String.format("Cannot pick up entity, the vehicle is full! [%s]", entity));
@@ -52,8 +52,9 @@ public final class PickUp<T extends TransportableEntity, E extends TransportEnti
 			}
 		}
 		else{
-			transportedEntities.add(entity);
+			transportingEntity.getTransportedEntities().add(entity);
 			entity.setTransportingEntity(transportingEntity);
+			transportingEntity.runPostPickUpActions(entity);
 		}
 	}
 

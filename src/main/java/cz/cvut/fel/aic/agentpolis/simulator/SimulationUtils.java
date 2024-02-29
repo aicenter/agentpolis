@@ -22,6 +22,10 @@ package cz.cvut.fel.aic.agentpolis.simulator;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
+import cz.cvut.fel.aic.agentpolis.siminfrastructure.time.DateTimeParser;
+import org.slf4j.LoggerFactory;
+
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -29,21 +33,36 @@ import cz.cvut.fel.aic.agentpolis.config.AgentpolisConfig;
  */
 @Singleton
 public class SimulationUtils {
+
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SimulationUtils.class);
 	
 	private final AgentpolisConfig config;
+
+	private final long simulationDuration;
+
+
+
+	public long getSimulationDuration(){
+		return simulationDuration;
+	}
+
 
 	
 	@Inject
 	public SimulationUtils(AgentpolisConfig config) {
 		this.config = config;
-	}
-	
-	
-	
-	public long computeSimulationDuration(){
-		long simulationDuration = config.simulationDuration.seconds + config.simulationDuration.minutes * 60 
-				+ config.simulationDuration.hours * 60 * 60 + config.simulationDuration.days * 60 * 60 * 24;
-		simulationDuration *= 1000;
-		return simulationDuration;
+
+		if(config.endTime.isEmpty()) {
+			simulationDuration = (config.simulationDuration.seconds + config.simulationDuration.minutes * 60
+				+ config.simulationDuration.hours * 60 * 60 + config.simulationDuration.days * 60 * 60 * 24) * 1000;
+		}
+		else{
+			if(config.simulationDuration != null){
+				LOGGER.warn("Both end_time and simulation_duration are set. Using end_time.");
+			}
+			ZonedDateTime endTime = DateTimeParser.parseDateTime(config.endTime);
+			ZonedDateTime startTime = DateTimeParser.parseDateTime(config.startTime);
+			simulationDuration = endTime.toInstant().toEpochMilli() - startTime.toInstant().toEpochMilli();
+		}
 	}
 }

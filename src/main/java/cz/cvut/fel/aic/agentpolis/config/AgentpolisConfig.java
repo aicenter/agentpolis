@@ -9,6 +9,8 @@ import ninja.fido.config.GeneratedConfig;
 public class AgentpolisConfig implements GeneratedConfig {
   public Boolean debug;
 
+  public String endTime;
+
   public CongestionModel congestionModel;
 
   public String log4jXmlDir;
@@ -16,6 +18,8 @@ public class AgentpolisConfig implements GeneratedConfig {
   public Integer srid;
 
   public String pathToSaveRecordings;
+
+  public String startTime;
 
   public Integer maxVehicleSpeedInMeters;
 
@@ -42,10 +46,12 @@ public class AgentpolisConfig implements GeneratedConfig {
 
   public AgentpolisConfig fill(Map agentpolisConfig) {
     this.debug = (Boolean) agentpolisConfig.get("debug");
+    this.endTime = (String) agentpolisConfig.get("end_time");
     this.congestionModel = new CongestionModel((Map) agentpolisConfig.get("congestion_model"));
     this.log4jXmlDir = (String) agentpolisConfig.get("log4j_xml_dir");
     this.srid = (Integer) agentpolisConfig.get("srid");
     this.pathToSaveRecordings = (String) agentpolisConfig.get("path_to_save_recordings");
+    this.startTime = (String) agentpolisConfig.get("start_time");
     this.maxVehicleSpeedInMeters = (Integer) agentpolisConfig.get("max_vehicle_speed_in_meters");
     this.useMeasuredSpeed = (Boolean) agentpolisConfig.get("use_measured_speed");
     this.visio = new Visio((Map) agentpolisConfig.get("visio"));

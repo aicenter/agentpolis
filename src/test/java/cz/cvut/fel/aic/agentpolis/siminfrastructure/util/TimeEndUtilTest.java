@@ -293,7 +293,7 @@ public class TimeEndUtilTest {
 				Duration.ofDays(7).toMillis() + Duration.ofHours(10).toMillis());
 
 		assertEquals(parse("2014-09-17"), timeEnvUtil.getCurrentDate());
-		assertEquals(parse("2014-09-17T10:00:00"), timeEnvUtil.getCurrentZonedDateTime());
+		assertEquals(parse("2014-09-17T10:00:00"), timeEnvUtil.getCurrentSimDateTime());
 
 	}
 
@@ -305,7 +305,7 @@ public class TimeEndUtilTest {
 				Duration.ofDays(7).toMillis() + Duration.ofHours(10).toMillis());
 
 		assertEquals(parse("2014-09-17"), timeEnvUtil.getCurrentDate());
-		assertEquals(parse("2014-09-17T10:00:00"), timeEnvUtil.getCurrentZonedDateTime());
+		assertEquals(parse("2014-09-17T10:00:00"), timeEnvUtil.getCurrentSimTime());
 
 	}
 
