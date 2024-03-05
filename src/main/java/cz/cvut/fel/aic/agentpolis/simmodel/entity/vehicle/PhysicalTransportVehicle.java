@@ -58,6 +58,7 @@ public abstract class PhysicalTransportVehicle<T extends TransportableEntity> ex
 	}
 
 
+
 	public PhysicalTransportVehicle(
 		String vehicleId,
 		EntityType type,
