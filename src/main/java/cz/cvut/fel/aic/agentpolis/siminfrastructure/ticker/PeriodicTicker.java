@@ -55,6 +55,9 @@ public class PeriodicTicker extends EventHandlerAdapter{
 		this.simulation = simulation;
 		routineMap = new HashMap();
 		tickLength = Integer.MAX_VALUE;
+
+		// add first tick event to 1 millisecond to handle events that are scheduled to 0
+		createTick(1);
 	}
 
 	
@@ -67,6 +70,17 @@ public class PeriodicTicker extends EventHandlerAdapter{
 	@Override
 	public void handleEvent(Event event) {
 		long simulationTime = simulation.getCurrentTime();
+
+		// handle first tick event
+		if(simulationTime == 1){
+			for(List<Routine> routines: routineMap.values()){
+				for (Routine r: routines) {
+					if(r.tickAtStart()){
+						r.doRoutine();
+					}
+				}
+			}
+		}
 		
 		// check if tick wasn't updated
 		if(simulationTime != nextTickTime){

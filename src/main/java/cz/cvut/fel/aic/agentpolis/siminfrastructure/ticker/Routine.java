@@ -25,4 +25,6 @@ package cz.cvut.fel.aic.agentpolis.siminfrastructure.ticker;
  */
 public interface Routine {
 	public void doRoutine();
+
+	public boolean tickAtStart();
 }
