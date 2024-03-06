@@ -49,4 +49,10 @@ public class TestTimeProvider implements TimeProvider{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
+	public long getSimTimeFromDateTime(ZonedDateTime dateTime) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+
 }
