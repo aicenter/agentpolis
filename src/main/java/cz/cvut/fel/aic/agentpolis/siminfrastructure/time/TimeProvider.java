@@ -44,6 +44,17 @@ public interface TimeProvider {
 	ZonedDateTime getCurrentSimDateTime();
 
 
-
+	/**
+	 * Provides a datetime that represents the provided simulation time.
+	 * @param simTime Simulation time in milliseconds.
+	 * @return ZonedDateTime
+	 **/
 	ZonedDateTime getDateTimeFromSimTime(long simTime);
+
+	/**
+	 * Provides the number of milliseconds between the start of the simulation and the provided datetime.
+	 * @param dateTime ZonedDateTime
+	 * @return time in milliseconds that represents the provided datetime.
+	 **/
+	long getSimTimeFromDateTime(ZonedDateTime dateTime);
 }

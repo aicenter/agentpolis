@@ -247,6 +247,11 @@ public class StandardTimeProvider implements TimeProvider{
 		return initDateTime.plus(simTime, ChronoUnit.MILLIS);
 	}
 
+	@Override
+	public long getSimTimeFromDateTime(ZonedDateTime dateTime) {
+		return initDateTime.until(dateTime, ChronoUnit.MILLIS);
+	}
+
 	/**
 	 * Calculate number of millis between {@code date + millisInDay} and current date time.
 	 *
